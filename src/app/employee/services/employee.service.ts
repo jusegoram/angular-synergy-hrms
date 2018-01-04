@@ -10,7 +10,7 @@ export class EmployeeService {
     constructor(private http: Http) {}
 
     getEmployees() {
-    return this.http.get('http://localhost:3000/employee/getall' )
+    return this.http.get('https://blink-test.herokuapp.com/employee/getall' )
        .map(
            (response: Response) => {
             const employees = response.json().obj;
@@ -39,7 +39,7 @@ export class EmployeeService {
         const obj = { id: param };
         const body = JSON.stringify(obj);
         const params = '?id=' + param;
-        return this.http.get('http://localhost:3000/employee/getDetail' + params)
+        return this.http.get('https://blink-test.herokuapp.com/employee/getDetail' + params)
             .map(
            (response: Response) => {
             const employee = response.json().obj;
@@ -63,7 +63,7 @@ export class EmployeeService {
     save(employee: IEmployee) {
         const body = JSON.stringify(employee);
         const headers = new Headers({'Content-Type': 'application/json'});
-        return this.http.post('http://localhost:3000/user/signin', body, {headers: headers})
+        return this.http.post('https://blink-test.herokuapp.com/user/signin', body, {headers: headers})
             .map((response: Response) => response.json())
             .catch((error: Response) => Observable.throw(error.json()));
     }

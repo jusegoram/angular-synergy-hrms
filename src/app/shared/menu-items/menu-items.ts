@@ -73,7 +73,7 @@ export class MenuItems {
     const token = localStorage.getItem('token')
         ? '?token=' + localStorage.getItem('token')
         : '';
-    return this.http.get('http://localhost:3000/menu' + token)
+    return this.http.get('https://blink-test.herokuapp.com/menu' + token)
         .map(
         (response: Response) => {
             const menus = response.json().obj;
@@ -101,7 +101,7 @@ export class MenuItems {
   addMenu() {
     const body = JSON.stringify(MENUITEMS[2]);
     const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.post('http://localhost:3000/menu', body, { headers: headers })
+    return this.http.post('https://blink-test.herokuapp.com/menu', body, { headers: headers })
         .map((response: Response) => response.json())
         .catch((error: Response) => Observable.throw(error.json()));
   }
