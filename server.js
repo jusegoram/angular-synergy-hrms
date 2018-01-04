@@ -23,7 +23,7 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 
-mongoose.connect("mongodb://heroku_wg2qw500:dv8b85v1qtdkvv29iq35ti2m1s@ds139067.mlab.com:39067/heroku_wg2qw500", {
+mongoose.connect(MONGODB_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
