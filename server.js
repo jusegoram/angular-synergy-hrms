@@ -23,7 +23,7 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 
-mongoose.connect(MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
