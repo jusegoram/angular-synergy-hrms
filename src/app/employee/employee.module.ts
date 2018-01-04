@@ -19,7 +19,7 @@ import { MaterialSharedModule } from '../shared/material.shared.module';
 import { CommonModule } from '@angular/common';
 import { EmployeeService } from './services/employee.service';
 import { HttpModule } from '@angular/http';
-import { FileSelectDirective } from 'ng2-file-upload';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   imports: [
@@ -30,6 +30,7 @@ import { FileSelectDirective } from 'ng2-file-upload';
     FlexLayoutModule,
     MaterialSharedModule,
     HttpModule,
+    FileUploadModule
   ],
   declarations: [
     UploadComponent,
@@ -40,8 +41,7 @@ import { FileSelectDirective } from 'ng2-file-upload';
     PersonalComponent,
     FamilyComponent,
     PositionComponent,
-    PayrollComponent,
-    FileSelectDirective ],
+    PayrollComponent ],
   providers: [
     EmployeeService]
 })
