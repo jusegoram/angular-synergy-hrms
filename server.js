@@ -23,7 +23,7 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 
-mongoose.connect(HOST + DB_PORT + COLLECTION, {
+mongoose.connect("mongodb://heroku_wg2qw500:dv8b85v1qtdkvv29iq35ti2m1s@ds139067.mlab.com:39067/heroku_wg2qw500", {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+          res.header("Access-Control-Allow-Origin", "https://blink-test.herokuapp.com");
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();
