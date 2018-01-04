@@ -1,0 +1,44 @@
+<mat-accordion class="container">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Personal 
+      </mat-panel-title>
+      <mat-panel-description>
+        Information
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div fxLayout="column"  fxLayoutGap="10px">
+    <div fxLayout="row"  fxLayoutGap="10px">
+    <mat-form-field>
+      <input matInput placeholder="Address">
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput placeholder="Last Address Update" [matDatepicker]="addressPicker" (focus)="addressPicker.open()" readonly>
+      </mat-form-field>
+      <mat-datepicker #addressPicker></mat-datepicker>
+  </div>
+  <div fxLayout="row"  fxLayoutGap="10px">
+      <mat-form-field>
+        <input matInput placeholder="Cellular Phone Number">
+      </mat-form-field>
+  
+      <mat-form-field>
+        <input matInput placeholder="Home Telephone Number">
+      </mat-form-field>
+    </div>
+    <div fxLayout="row"  fxLayoutGap="10px">
+        <mat-form-field>
+          <input matInput placeholder="Email Address">
+        </mat-form-field>
+    
+        <mat-form-field>
+            <input matInput placeholder="Last Email Update" [matDatepicker]="emailPicker" (focus)="emailPicker.open()" readonly>
+          </mat-form-field>
+          <mat-datepicker #emailPicker></mat-datepicker>
+      </div>
+    </div>
+    <button mat-raised-button>submit</button>
+  </mat-expansion-panel>
+</mat-accordion>

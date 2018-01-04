@@ -1,0 +1,116 @@
+<div class="app mat-typography" [dir]="dir" [ngClass]="{'app-dark': dark, 'boxed': boxed, 'collapsed-sidebar': collapseSidebar, 'compact-sidebar': compactSidebar, 'side-panel-opened': sidePanelOpened, 'side-panel-closed': !sidePanelOpened }">
+  <mat-toolbar class="main-header" color="primary">
+    <button (click)="sidemenu.toggle()" mat-icon-button>
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div class="branding">
+      <div class="logo"></div>
+    </div>
+    <div class="search-bar" fxFlex>
+      <form class="search-form" fxShow="false" fxShow.gt-xs>
+        <mat-icon>search</mat-icon>
+        <input type="text" placeholder="Search" autofocus="true" />
+      </form>
+    </div>
+    <button appToggleFullscreen mat-icon-button>
+      <mat-icon>fullscreen</mat-icon>
+    </button>
+    <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible">
+      <mat-icon>notifications</mat-icon>
+     <!-- <span class="notification-label"></span> -->
+    </button>
+    <button [matMenuTriggerFor]="user" mat-icon-button class="ml-xs">
+      <mat-icon>person</mat-icon>
+    </button>
+    <mat-menu #user="matMenu" x-position="before">
+      <button mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        Settings
+      </button>
+      <button mat-menu-item>
+        <mat-icon>account_box</mat-icon>
+        Profile
+      </button>
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>exit_to_app</mat-icon>
+        Sign Out
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="app-inner">
+    <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()" (open)="sidePanelOpened = true"  
+    (close)="sidePanelOpened = false" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()" [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
+      <mat-nav-list appAccordion class="navigation" (click)="updatePS()">
+        <mat-list-item appAccordionLink *ngFor="let menuitem of menus" group="{{menuitem.state}}">
+          <a appAccordionToggle class="relative" [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name | translate }}</span>
+            <span fxFlex></span>
+            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a appAccordionToggle class="relative" href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name | translate }}</span>
+            <span fxFlex></span>
+            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a appAccordionToggle class="relative" href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name | translate }}</span>
+            <span fxFlex></span>
+            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+          </a>
+          <a appAccordionToggle class="relative" href="javascript:;" *ngIf="menuitem.type === 'sub'">
+            <mat-icon>{{ menuitem.icon }}</mat-icon>
+            <span>{{ menuitem.name | translate }}</span>
+            <span fxFlex></span>
+            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <mat-icon class="menu-caret">arrow_drop_down</mat-icon>
+          </a>
+          <mat-nav-list class="sub-menu" *ngIf="menuitem.type === 'sub'">
+            <mat-list-item *ngFor="let childitem of menuitem.children" routerLinkActive="open">
+              <a [routerLink]="['/', menuitem.state, childitem.state ]" class="relative">{{ childitem.name | translate }}</a>
+            </mat-list-item>
+          </mat-nav-list>
+          
+        </mat-list-item>
+      </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav #end position="end" class="chat-panel" mode="over" opened="false">
+      <mat-tab-group [selectedIndex]="1" mat-stretch-tabs>
+        <mat-tab>
+          <ng-template matTabLabel>Today</ng-template>
+          <div class="scroll">
+            <mat-list class="pt-1 pb-1">
+              <mat-list-item>
+                <div fxLayout="column">
+                  <h1 class="ma-0">{{ today | date:'EEEE' }}</h1>
+                  <h3 class="mat-text-muted ma-0"><span>{{ today | date:'dd' }}</span>&nbsp;<span>{{ today | date:'MMMM' }}</span></h3>
+                </div>
+              </mat-list-item>
+            </mat-list>
+            <mat-nav-list>
+              <mat-divider></mat-divider>
+              <h3 mat-subheader class="text-uppercase font-weight-bold">Weather</h3>
+              <mat-list-item>
+                 <a matLine href="javascript:;">{{ today | date:'shortTime' }}</a>
+                 <p matLine class="mat-text-muted">London</p>
+                 <span class="mat-h1 mr-1">
+                   <span class="pe-is-w-blizzard"></span>
+                 </span>
+                 <span class="mat-h1">26°</span>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              </mat-nav-list>
+          </div>
+        </mat-tab>
+        
+      </mat-tab-group>
+    </mat-sidenav>
+    <div [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-container>
+
+</div>

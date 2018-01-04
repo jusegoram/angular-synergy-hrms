@@ -1,0 +1,54 @@
+<div class="pa-1">
+  <div class="mat-elevation-z8 example-container">
+  <div class="example-header">
+      <mat-form-field>
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+  </div>
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="selected">
+      <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
+      <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
+    </ng-container>
+
+    <!-- Position Column -->
+
+    <ng-container matColumnDef="employeeID">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.firstName +' '+element.lastName}} </mat-cell>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="position">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Position </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.positionid}} </mat-cell>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="details">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
+      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element.id}"><button mat-raised-button color="accent"> details</button></a></mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-paginator #paginator
+  [pageSize]="10"
+  [pageSizeOptions]="[10, 20, 30]">
+  </mat-paginator>
+</div>
+</div>

@@ -1,0 +1,47 @@
+<div class="pa-1">
+  <mat-toolbar class="header mat-elevation-z8 mat-indigo-500" >
+    <span>Details</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar>
+  <div fxLayout="row">
+    <mat-card class="image-card pa-1">
+            <div fxLayout="column" fxLayoutGap="10px">
+      <div class="user-image-container">
+        <img class="user-image" src="../../../assets/images/default-user.jpg" />
+      </div>
+      <button mat-button ><mat-icon>add_circle</mat-icon> Add Image</button>
+      <button mat-raised-button color="primary">Update</button>
+            </div>
+    </mat-card>
+    <mat-card class="main-info">
+    <div fxLayout="column" class ="ma-3">
+      <mat-form-field>
+        <input matInput placeholder="Employee ID" [value]="this.currentEmployee?.employeeId" [readonly]="currentRole">
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="First Name" [value]="this.currentEmployee?.firstName" readonly>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput placeholder="Last Name" [value]="this.currentEmployee?.lastName" readonly>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Birth Date" [matDatepicker]="birthDatePicker" (focus)="birthDatePicker.open()" [value]="this.currentEmployee?.birthDate" readonly>
+      </mat-form-field>
+        <mat-datepicker #birthDatePicker></mat-datepicker>
+      <mat-form-field>
+        <input matInput placeholder="Social Security" [value]="this.currentEmployee?.socialSecurity" readonly>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Campaign" [value]="this.currentEmployee?.campaign" readonly>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Status" [value]="this.currentEmployee?.status" readonly>
+        </mat-form-field>
+    </div>
+    </mat-card>
+  </div>
+  <personal-info></personal-info>
+  <family-info></family-info>
+  <position-info></position-info>
+  <payroll-info ></payroll-info>
+</div>

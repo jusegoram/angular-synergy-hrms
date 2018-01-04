@@ -1,0 +1,16 @@
+.example-container {
+    display: block;
+    width: 100% !important; 
+  }
+  
+  .mat-table {
+    overflow: hidden;
+  }
+  
+  .mat-header-cell.mat-sort-header-sorted {
+    color: black;
+  }
+  .example-header {
+    min-height: 64px;
+    padding: 8px 24px 0;
+  }

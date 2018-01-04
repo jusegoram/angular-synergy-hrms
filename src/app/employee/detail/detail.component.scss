@@ -1,0 +1,23 @@
+.header {
+    width: 100% !important;
+    margin-bottom: 5px;
+}
+.fill-remaining-space {   
+    flex: 1 1 auto;
+  }
+.image-card{
+    max-width: 154px;
+    margin:5px;
+}
+.main-info{
+    padding: 5px;
+    flex: 1 1 auto;
+}
+.user-image{
+    max-width: 140px;
+    margin: 5px;
+    height: auto;
+}
+.user-image-container {
+    max-width: 150px;
+}
