@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
-
 // const URL = '/api/';
-const URL = 'http://localhost:3000/upload';
+const URL = 'https://blink-test.herokuapp.com/upload';
 
 @Component({
   selector: 'app-form-upload',
