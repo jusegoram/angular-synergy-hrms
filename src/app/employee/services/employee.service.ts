@@ -14,19 +14,20 @@ export class EmployeeService {
        .map(
            (response: Response) => {
             const employees = response.json().obj;
-           let transformedEmployees: IEmployee[] = [];
-            for (let employee of employees){
+           const transformedEmployees: IEmployee[] = [];
+            for (const employee of employees){
                 transformedEmployees.push( new IEmployee(
                     employee._id,
                     employee.employeeId,
                     employee.firstName,
+                    employee.middleName,
                     employee.lastName,
                     employee.birthDate,
                     employee.socialSecurity,
+                    employee.client,
                     employee.campaign,
-                    employee.positionid,
-                    '',
-                    employee.status
+                    employee.status,
+                    employee.hireDate,
                 ));
             }
             this.employees = transformedEmployees;
@@ -45,16 +46,17 @@ export class EmployeeService {
             const employee = response.json().obj;
            let transformedEmployee: IEmployee;
             transformedEmployee = new IEmployee(
-                    employee._id,
-                    employee.employeeId,
-                    employee.firstName,
-                    employee.lastName,
-                    employee.birthDate,
-                    employee.socialSecurity,
-                    employee.campaign,
-                    employee.positionid,
-                    '',
-                    employee.status
+                employee._id,
+                employee.employeeId,
+                employee.firstName,
+                employee.middleName,
+                employee.lastName,
+                employee.birthDate,
+                employee.socialSecurity,
+                employee.client,
+                employee.campaign,
+                employee.status,
+                employee.hireDate,
                 );
             return transformedEmployee;
            })
