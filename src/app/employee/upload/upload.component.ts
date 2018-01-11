@@ -10,8 +10,34 @@ const URL = 'https://blink-test.herokuapp.com/upload';
 })
 export class UploadComponent {
 
-  public uploader: FileUploader = new FileUploader({
+  public employeeUploader: FileUploader = new FileUploader({
     url: URL,
+    isHTML5: true
+  });
+
+  public educationUploader: FileUploader = new FileUploader({
+    url: URL + '/education',
+    isHTML5: true
+  });
+
+  public familyUploader: FileUploader = new FileUploader({
+    url: URL + '/family',
+    isHTML5: true
+  });
+
+
+  public payrollUploader: FileUploader = new FileUploader({
+    url: URL + '/payroll',
+    isHTML5: true
+  });
+
+  public personalUploader: FileUploader = new FileUploader({
+    url: URL + '/personal',
+    isHTML5: true
+  });
+
+  public positionUploader: FileUploader = new FileUploader({
+    url: URL + '/position',
     isHTML5: true
   });
 }
