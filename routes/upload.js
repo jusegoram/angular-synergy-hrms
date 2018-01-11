@@ -7,6 +7,11 @@ var multer = require('multer');
 var mongoose = require('mongoose');
 var csv = require('fast-csv');
 var Employee = require ('../models/employee/employee');
+var Position = require ('../models/employee/employee-position');
+var Personal = require ('../models/employee/employee-personal');
+var Payroll = require ('../models/employee/employee-payroll');
+var Family = require ('../models/employee/employee-family');
+var Education = require ('../models/employee/employee-education');
 // set the directory for the uploads to the uploaded to
 var DIR = 'uploads/';
 
@@ -50,4 +55,151 @@ router.post('/', function (req, res) {
 
 });
 
+router.post('/position', function (req, res) {
+    upload(req, res, function (err) {
+        var position = [];
+        var positionFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }  
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            position.push(data);
+            console.log(position);
+        })
+        .on('end', function(){
+            Position.create(position,function(err, documents){
+                if (err){
+                    console.log(err);
+                } 
+            });
+            console.log('upload finished');
+        });
+        return res.send(position.length + ' position were uploaded');
+        
+    });
+
+});
+
+router.post('/personal', function (req, res) {
+    upload(req, res, function (err) {
+        var personal = [];
+        var personalFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }  
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            personal.push(data);
+            console.log(personal);
+        })
+        .on('end', function(){
+            Personal.create(personal,function(err, documents){
+                if (err){
+                    console.log(err);
+                } 
+            });
+            console.log('upload finished');
+        });
+        return res.send(personal.length + ' personal of employees were uploaded');
+        
+    });
+
+});
+
+
+router.post('/payroll', function (req, res) {
+    upload(req, res, function (err) {
+        var payroll = [];
+        var payrollFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }  
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            payroll.push(data);
+            console.log(payroll);
+        })
+        .on('end', function(){
+            Payroll.create(payroll,function(err, documents){
+                if (err){
+                    console.log(err);
+                } 
+            });
+            console.log('upload finished');
+        });
+        return res.send(payroll.length + 'payroll of employees were uploaded');
+        
+    });
+
+});
+
+
+router.post('/family', function (req, res) {
+    upload(req, res, function (err) {
+        var family = [];
+        var familyFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }  
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            family.push(data);
+            console.log(family);
+        })
+        .on('end', function(){
+            Family.create(family,function(err, documents){
+                if (err){
+                    console.log(err);
+                } 
+            });
+            console.log('upload finished');
+        });
+        return res.send(family.length + ' employees were uploaded');
+        
+    });
+
+});
+
+
+router.post('/education', function (req, res) {
+    upload(req, res, function (err) {
+        var education = [];
+        var educationFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }  
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            education.push(data);
+            console.log(education);
+        })
+        .on('end', function(){
+            Education.create(education,function(err, documents){
+                if (err){
+                    console.log(err);
+                } 
+            });
+            console.log('upload finished');
+        });
+        return res.send(education.length + 'education of employees were uploaded');
+        
+    });
+
+});
 module.exports = router;
