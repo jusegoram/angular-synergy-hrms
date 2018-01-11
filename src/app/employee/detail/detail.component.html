@@ -16,7 +16,7 @@
     <mat-card class="main-info">
     <div fxLayout="column" class ="ma-3">
       <mat-form-field>
-        <input matInput placeholder="Employee ID" [value]="this.currentEmployee?.employeeId" [readonly]="currentRole">
+        <label>{{this.currentEmployee?.employeeId}}</label>
       </mat-form-field>
       <mat-form-field>
         <input matInput placeholder="First Name" [value]="this.currentEmployee?.firstName" readonly>
@@ -29,12 +29,16 @@
       </mat-form-field>
         <mat-datepicker #birthDatePicker></mat-datepicker>
       <mat-form-field>
-        <input matInput placeholder="Social Security" [value]="this.currentEmployee?.socialSecurity" readonly>
+          <label>{{this.currentEmployee?.socialSecurity}}</label>
       </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Client" [value]="this.currentEmployee?.client" readonly>
+        </mat-form-field>
       <mat-form-field>
           <input matInput placeholder="Campaign" [value]="this.currentEmployee?.campaign" readonly>
         </mat-form-field>
         <mat-form-field>
+          <!-- SHould be a dropdown menu-->
             <input matInput placeholder="Status" [value]="this.currentEmployee?.status" readonly>
         </mat-form-field>
     </div>
