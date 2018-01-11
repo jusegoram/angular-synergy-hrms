@@ -35,7 +35,7 @@ export class DetailComponent implements OnInit {
       }
     );
     console.log(this.currentRole);
-    if (this.currentRole === 3 || this.currentRole === 4) {
+    if (this.currentRole === 1 || this.currentRole === 4) {
     return false;
       }else {
         return true;

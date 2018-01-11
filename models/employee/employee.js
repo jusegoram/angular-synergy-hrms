@@ -15,7 +15,7 @@ var schema = new Schema({
     supervisorid: { type: String , required: false},
     status: { type: String, required: true },// active, resignation, dissmisal, termination, undefined, aplicant, trainee
     hireDate:{ type: Date, required: true },
-    terminationDate:{ type: Date, required: true }
+    terminationDate:{ type: Date, required: false }
 });
 
 schema.plugin(mongooseUniqueValidator);
