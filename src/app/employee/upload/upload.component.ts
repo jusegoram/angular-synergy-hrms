@@ -30,7 +30,7 @@ export class UploadComponent {
   });
 
    onSelectChange() {
-    this.URL = environment.siteUri + '404';
+    this.URL = environment.siteUri + this.selected;
     this.uploader = new FileUploader({
       url: this.URL,
       isHTML5: true
