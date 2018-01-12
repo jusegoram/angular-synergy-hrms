@@ -2,6 +2,7 @@
   <mat-toolbar class="header mat-elevation-z8 mat-indigo-500" >
     <span>Details</span>
     <span class="fill-remaining-space"></span>
+    <span> Employee ID:{{' '+this.currentEmployee?.employeeId}} </span>
   </mat-toolbar>
   <div fxLayout="row">
     <mat-card class="image-card pa-1">
@@ -15,32 +16,37 @@
     </mat-card>
     <mat-card class="main-info">
     <div fxLayout="column" class ="ma-3">
+      
+        <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
+    
       <mat-form-field>
-        <label>{{this.currentEmployee?.employeeId}}</label>
+        <input matInput placeholder="First Name" [value]="this.currentEmployee?.firstName  | titlecase" readonly>
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="First Name" [value]="this.currentEmployee?.firstName" readonly>
-      </mat-form-field>
-      <mat-form-field>
-        <input matInput placeholder="Last Name" [value]="this.currentEmployee?.lastName" readonly>
-      </mat-form-field>
-      <mat-form-field>
-          <input matInput placeholder="Birth Date" [matDatepicker]="birthDatePicker" (focus)="birthDatePicker.open()" [value]="this.currentEmployee?.birthDate" readonly>
-      </mat-form-field>
-        <mat-datepicker #birthDatePicker></mat-datepicker>
-      <mat-form-field>
-          <label>{{this.currentEmployee?.socialSecurity}}</label>
-      </mat-form-field>
-      <mat-form-field>
-          <input matInput placeholder="Client" [value]="this.currentEmployee?.client" readonly>
+          <input matInput placeholder="Middle Name" [value]="this.currentEmployee?.middleName  | titlecase" readonly>
         </mat-form-field>
       <mat-form-field>
-          <input matInput placeholder="Campaign" [value]="this.currentEmployee?.campaign" readonly>
+        <input matInput placeholder="Last Name" [value]="this.currentEmployee?.lastName  | titlecase" readonly>
+      </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Birth Date" [matDatepicker]="birthDatePicker" (focus)="birthDatePicker.open()" [value]="this.currentEmployee?.birthDate | date: 'MM/dd/yyyy' "readonly>
+      </mat-form-field>
+        <mat-datepicker #birthDatePicker></mat-datepicker>
+      
+          <!-- <label>{{this.currentEmployee?.socialSecurity}}</label> -->
+          
+      <mat-form-field>
+          <input matInput placeholder="Client" [value]="this.currentEmployee?.client | titlecase" readonly>
+        </mat-form-field>
+      <mat-form-field>
+          <input matInput placeholder="Campaign" [value]="this.currentEmployee?.campaign | titlecase" readonly>
         </mat-form-field>
         <mat-form-field>
           <!-- SHould be a dropdown menu-->
-            <input matInput placeholder="Status" [value]="this.currentEmployee?.status" readonly>
+            <input matInput placeholder="Status" [value]="this.currentEmployee?.status | titlecase" readonly>
         </mat-form-field>
+        <label>Social Security</label>
+        <span>{{this.currentEmployee?.socialSecurity}}</span>
     </div>
     </mat-card>
   </div>

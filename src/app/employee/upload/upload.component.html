@@ -1,482 +1,87 @@
-<div class="pa-1">
-  <!-- Employee main info-->
-  <mat-card>
-    <mat-card-title>Employee File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="employeeUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="employeeUploader" />
-        </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ employeeUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="employeeUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="employeeUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="employeeUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{employeeUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="employeeUploader.uploadAll()" [disabled]="!employeeUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="employeeUploader.cancelAll()" [disabled]="!employeeUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="employeeUploader.clearQueue()" [disabled]="!employeeUploader.queue.length">Remove all</button>
-        </div>
+<mat-card>
+  <mat-card-title>File upload</mat-card-title>
+  <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
+
+  <mat-card-content> 
+    <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
+      <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
+        <h4 class="mt-0">Select Upload Type</h4>
+          
+        <mat-form-field>
+              <mat-select placeholder="Upload Type" [(ngModel)]="selected" (change)="onSelectChange()" >
+                  <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+        <h4 class="mt-0">Selected {{selected}}</h4>
+       <h4 class="mt-0">Select files</h4>
+
+        <p>Multiple</p>
+        <input type="file" class="upload-button" ng2FileSelect [uploader]="uploader" multiple  /><br/>
+
+        <div class="clearfix mb-1"></div>
+
+        <p>Single</p>
+        <input type="file" class="upload-button" ng2FileSelect [uploader]="uploader" />
       </div>
-    </mat-card-content>
-  </mat-card>
-<!-- Employee position info-->
-  <mat-card>
-    <mat-card-title>Employee Position File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="positionUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="positionUploader" />
+      <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
+        <h4 class="mt-0"  fxLayout="row">
+          <span fxFlex>Upload queue</span>
+          <span>Queue length: {{ uploader?.queue?.length }}</span>
+        </h4>
+
+        <ngx-datatable
+          class="material ml-0 mr-0"
+          [rows]="uploader.queue"
+          [columnMode]="'flex'"
+          [headerHeight]="50"
+          [footerHeight]="0"
+          [rowHeight]="'auto'">
+          <ngx-datatable-column name="Name" [flexGrow]="1">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row?.file?.name }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Size" *ngIf="uploader.options.isHTML5" [flexGrow]="1">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row?.file?.size/1024/1024 | number:'.2' }} MB
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Progress" *ngIf="uploader.options.isHTML5" [flexGrow]="1">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="status" [flexGrow]="1">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
+              <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
+              <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="action" [flexGrow]="3">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <button mat-raised-button mat-button-sm color="primary" type="button"
+                (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
+              <button mat-raised-button mat-button-sm color="warn" type="button"
+                (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
+              <button mat-raised-button mat-button-sm color="accent" type="button"
+                (click)="row.remove()">Remove
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+
+        <div class="mb-1">
+          <p>Queue progress:</p>
+          <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
         </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ positionUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="positionUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="positionUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="positionUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{positionUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="positionUploader.uploadAll()" [disabled]="!positionUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="positionUploader.cancelAll()" [disabled]="!positionUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="positionUploader.clearQueue()" [disabled]="!positionUploader.queue.length">Remove all</button>
-        </div>
+        <button mat-raised-button mat-button-sm color="primary" type="button"
+          (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
+        <button mat-raised-button mat-button-sm color="warn" type="button"
+          (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">Cancel all</button>
+        <button mat-raised-button mat-button-sm color="accent" type="button"
+          (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">Remove all</button>
       </div>
-    </mat-card-content>
-  </mat-card>
-<!-- Employee personal info-->
-  <mat-card>
-    <mat-card-title>Employee Personal Information File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="personalUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="personalUploader" />
-        </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ personalUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="personalUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="personalUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="personalUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{personalUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="personalUploader.uploadAll()" [disabled]="!personalUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="personalUploader.cancelAll()" [disabled]="!personalUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="personalUploader.clearQueue()" [disabled]="!personalUploader.queue.length">Remove all</button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-<!-- Employee payroll info-->
-  <mat-card>
-    <mat-card-title>Employee Payroll Information File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="payrollUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="payrollUploader" />
-        </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ payrollUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="payrollUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="payrollUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="payrollUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{payrollUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="payrollUploader.uploadAll()" [disabled]="!payrollUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="payrollUploader.cancelAll()" [disabled]="!payrollUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="payrollUploader.clearQueue()" [disabled]="!payrollUploader.queue.length">Remove all</button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-<!-- Employee family info-->
-  <mat-card>
-    <mat-card-title>Employee Family Information File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="familyUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="familyUploader" />
-        </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ familyUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="familyUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="familyUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="familyUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{familyUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="familyUploader.uploadAll()" [disabled]="!familyUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="familyUploader.cancelAll()" [disabled]="!familyUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="familyUploader.clearQueue()" [disabled]="!familyUploader.queue.length">Remove all</button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-<!-- Employee education info-->
-  <mat-card>
-    <mat-card-title>Employee Education Information File upload</mat-card-title>
-    <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-  
-    <mat-card-content> 
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-          <h4 class="mt-0">Select files</h4>
-  
-          <p>Multiple</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="educationUploader" multiple  /><br/>
-  
-          <div class="clearfix mb-1"></div>
-  
-          <p>Single</p>
-          <input type="file" class="upload-button" ng2FileSelect [uploader]="educationUploader" />
-        </div>
-        <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
-            <span fxFlex>Upload queue</span>
-            <span>Queue length: {{ educationUploader?.queue?.length }}</span>
-          </h4>
-  
-          <ngx-datatable
-            class="material ml-0 mr-0"
-            [rows]="educationUploader.queue"
-            [columnMode]="'flex'"
-            [headerHeight]="50"
-            [footerHeight]="0"
-            [rowHeight]="'auto'">
-            <ngx-datatable-column name="Name" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.name }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Size" *ngIf="educationUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row?.file?.size/1024/1024 | number:'.2' }} MB
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="Progress" *ngIf="educationUploader.options.isHTML5" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <mat-progress-bar mode="determinate" value="{{row.progress}}"></mat-progress-bar>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="status" [flexGrow]="1">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <span *ngIf="row.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="row.isCancel"><mat-icon>cancel</mat-icon></span>
-                <span *ngIf="row.isError"><mat-icon>error</mat-icon></span>
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column name="action" [flexGrow]="3">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <button mat-raised-button mat-button-sm color="primary" type="button"
-                  (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
-                <button mat-raised-button mat-button-sm color="warn" type="button"
-                  (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
-                <button mat-raised-button mat-button-sm color="accent" type="button"
-                  (click)="row.remove()">Remove
-                </button>
-              </ng-template>
-            </ngx-datatable-column>
-          </ngx-datatable>
-  
-          <div class="mb-1">
-            <p>Queue progress:</p>
-            <mat-progress-bar mode="determinate" value="{{educationUploader.progress}}"></mat-progress-bar>
-          </div>
-          <button mat-raised-button mat-button-sm color="primary" type="button"
-            (click)="educationUploader.uploadAll()" [disabled]="!educationUploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-raised-button mat-button-sm color="warn" type="button"
-            (click)="educationUploader.cancelAll()" [disabled]="!educationUploader.isUploading">Cancel all</button>
-          <button mat-raised-button mat-button-sm color="accent" type="button"
-            (click)="educationUploader.clearQueue()" [disabled]="!educationUploader.queue.length">Remove all</button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
+    </div>
+  </mat-card-content>
+</mat-card>

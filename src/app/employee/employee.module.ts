@@ -4,7 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
+import { FormsModule } from '@angular/forms';
 import { UploadComponent } from './upload/upload.component';
 import { ReportComponent } from './report/report.component';
 import { DownloadComponent } from './download/download.component';
@@ -30,7 +30,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     FlexLayoutModule,
     MaterialSharedModule,
     HttpModule,
-    FileUploadModule
+    FileUploadModule,
+    FormsModule,
   ],
   declarations: [
     UploadComponent,

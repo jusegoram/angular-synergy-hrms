@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-    employeeid: { type: String, required: true },
+    employeeId: { type: String, required: true },
     address: { type: String, required: true },
     addressDate: { type: Date, required: true },
     celNumber: { type: String, required: true },

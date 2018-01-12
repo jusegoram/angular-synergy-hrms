@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  siteUri: 'https://blink-test.herokuapp.com'
+  siteUri: 'http://localhost:3000'
 };

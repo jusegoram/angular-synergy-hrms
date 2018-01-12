@@ -3,6 +3,7 @@ import { SessionService } from './../../session/services/session.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Http, Headers, Response } from '@angular/http';
+import {environment } from '../../../environments/environment';
 
 export class BadgeItem {
   constructor(
@@ -65,6 +66,7 @@ const MENUITEMS = [
 
 @Injectable()
 export class MenuItems {
+  Uri = environment.siteUri;
   constructor(private sessionService: SessionService, private http: Http) {
 
   }
@@ -73,7 +75,7 @@ export class MenuItems {
     const token = localStorage.getItem('token')
         ? '?token=' + localStorage.getItem('token')
         : '';
-    return this.http.get('https://blink-test.herokuapp.com/menu' + token)
+    return this.http.get(this.Uri + '/menu' + token)
         .map(
         (response: Response) => {
             const menus = response.json().obj;
@@ -101,7 +103,7 @@ export class MenuItems {
   addMenu() {
     const body = JSON.stringify(MENUITEMS[2]);
     const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.post('https://blink-test.herokuapp.com/menu', body, { headers: headers })
+    return this.http.post(this.Uri + '/menu', body, { headers: headers })
         .map((response: Response) => response.json())
         .catch((error: Response) => Observable.throw(error.json()));
   }

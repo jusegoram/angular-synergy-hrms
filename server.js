@@ -1,3 +1,4 @@
+
 //Require all imports
 const express = require('express');
 const path = require('path');
@@ -22,8 +23,12 @@ const app = express();
 const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
+const TEST_URI = HOST + DB_PORT + COLLECTION;
+const PROD_URI = process.env.MONGODB_URI;
 
-mongoose.connect(process.env.MONGODB_URI, {
+const TEST_URL = 'http://localhost:3000';
+const PROD_URL = 'https://blink-test.herokuapp.com';
+mongoose.connect(TEST_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
@@ -40,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", "https://blink-test.herokuapp.com");
+          res.header("Access-Control-Allow-Origin", "http://localhost:3000");
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();

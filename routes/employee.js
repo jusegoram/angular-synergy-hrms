@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Employee = require('../models/employee/employee');
+var EmployeePosition = require("../models/employee/employee-position");
 var jwt = require('jsonwebtoken');
 var positions = [
     { id: '1001', name:'ED 1' },
@@ -67,5 +68,21 @@ router.get('/getDetail', function(req, res, next){
         });
     });
 });
+
+router.get('/getDetail/position', function(req, res, next){
+    EmployeePosition.find({ employeeID: req.query.employeeId}, function(err, result){
+    if (err) {
+        return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+        });
+    }
+    res.status(200).json({
+        message: 'Employee position request succesfull',
+        obj: result
+    });
+});
+});
+
 
 module.exports = router;
