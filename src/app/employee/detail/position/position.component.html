@@ -1,4 +1,4 @@
-<mat-accordion class="container">
+<mat-accordion class="container" >
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -15,7 +15,11 @@
             </mat-form-field>
         </div>
         <mat-table #table [dataSource]="dataSource" matSort>
-    
+            <ng-container matColumnDef="positionid">
+                <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.positionid}} </mat-cell>
+              </ng-container>
+
           <ng-container matColumnDef="position">
             <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
@@ -25,13 +29,13 @@
     
           <ng-container matColumnDef="startDate">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.startDate}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
           </ng-container>
       
           <!-- Name Column -->
           <ng-container matColumnDef="endDate">
             <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.endDate}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
           </ng-container>
   
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -45,14 +49,11 @@
     <div fxLayout="row">
       <mat-form-field>
         <mat-select placeholder="Position" [(value)]="selected">
-            <mat-option>None</mat-option>
-            <mat-option value="option1">Option 1</mat-option>
-            <mat-option value="option2">Option 2</mat-option>
-            <mat-option value="option3">Option 3</mat-option>
+            <mat-option *ngFor="let position of positions" [value]="position.id">{{position.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       
-      <p>Position ID:{{selected}}</p>
+      <span> ID: {{selected}}</span>
     <span class="fill-remaining-space"></span>
     <mat-form-field>
       <input matInput placeholder="Start" [matDatepicker]="startPicker" (focus)="startPicker.open()" readonly>

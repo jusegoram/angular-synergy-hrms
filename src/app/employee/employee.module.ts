@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { EmployeeService } from './services/employee.service';
 import { HttpModule } from '@angular/http';
 import { FileUploadModule } from 'ng2-file-upload';
+import { AvatarComponent } from './detail/avatar/avatar.component';
 
 @NgModule({
   imports: [
@@ -42,7 +43,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     PersonalComponent,
     FamilyComponent,
     PositionComponent,
-    PayrollComponent ],
+    PayrollComponent,
+    AvatarComponent ],
   providers: [
     EmployeeService]
 })

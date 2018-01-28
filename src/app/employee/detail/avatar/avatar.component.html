@@ -1,0 +1,9 @@
+<mat-card class="image-card pa-1">
+  <div fxLayout="column" fxLayoutGap="10px">
+<div class="user-image-container">
+<img class="user-image" src="../../../assets/images/default-user.jpg" />
+</div>
+<button mat-button [disabled]="!this.authorization"><mat-icon>add_circle</mat-icon> Add Image</button>
+<button mat-raised-button color="primary" form="ngForm" *ngIf="this.authorization">Update</button>
+  </div>
+</mat-card>

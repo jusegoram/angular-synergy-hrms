@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'payroll-info',
@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./payroll.component.css']
 })
 export class PayrollComponent implements OnInit {
-
+  @Input() employeeId: string;
+  @Input() authorization: boolean;
   constructor() { }
 
   ngOnInit() {

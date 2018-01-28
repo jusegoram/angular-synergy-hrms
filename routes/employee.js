@@ -70,7 +70,7 @@ router.get('/getDetail', function(req, res, next){
 });
 
 router.get('/getDetail/position', function(req, res, next){
-    EmployeePosition.find({ employeeID: req.query.employeeId}, function(err, result){
+    EmployeePosition.find({ employeeId: req.query.employeeId}, function(err, result){
     if (err) {
         return res.status(500).json({
             title: 'An error occurred',
@@ -83,6 +83,34 @@ router.get('/getDetail/position', function(req, res, next){
     });
 });
 });
+
+router.put('/update', function (req, res, next) {
+    Employee.findById(req.query.id, function(err, doc){
+        doc.employeeId = req.body.employeeId;
+        doc.firstName = req.body.firstName;
+        doc.middleName = req.body.middleName;
+        doc.lastName = req.body.lastName;
+        doc.birthDate = req.body.birthDate;
+        doc.socialSecurity = req.body.socialSecurity;
+        doc.client = req.body.client;
+        doc.campaign = req.body.campaign;
+        doc.supervisorid = req.body.supervisorid;
+        doc.status = req.body.status;
+        doc.hireDate = req.body.hireDate;
+        doc.terminationDate = req.body.terminationDate;
+        doc.save();
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occurred',
+                error: err
+            });
+        }
+        res.status(200).json({
+            message: 'Employee update request succesfull',
+            obj: doc
+        });
+    });
+   });
 
 
 module.exports = router;

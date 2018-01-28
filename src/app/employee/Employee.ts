@@ -10,7 +10,6 @@ export class IEmployee {
               public campaign: string,
               public status: string,
               public hireDate: Date,
-              public position?: number,
               public terminationDate?: Date,
             ) { }
   }

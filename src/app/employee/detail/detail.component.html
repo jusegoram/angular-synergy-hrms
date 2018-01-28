@@ -5,53 +5,52 @@
     <span> Employee ID:{{' '+this.currentEmployee?.employeeId}} </span>
   </mat-toolbar>
   <div fxLayout="row">
-    <mat-card class="image-card pa-1">
-            <div fxLayout="column" fxLayoutGap="10px">
-      <div class="user-image-container">
-        <img class="user-image" src="../../../assets/images/default-user.jpg" />
-      </div>
-      <button mat-button ><mat-icon>add_circle</mat-icon> Add Image</button>
-      <button mat-raised-button color="primary">Update</button>
-            </div>
-    </mat-card>
+    <avatar-detail [employeeId]="this.currentEmployee?.employeeId" [authorization]="this.isAuth"></avatar-detail>
     <mat-card class="main-info">
-    <div fxLayout="column" class ="ma-3">
-      
         <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
-    
+        <form class="ma-3"fxLayout="column" [formGroup]="myForm" id="ngForm" (ngSubmit)="onSubmit()">
       <mat-form-field>
-        <input matInput placeholder="First Name" [value]="this.currentEmployee?.firstName  | titlecase" readonly>
+        <input matInput  formControlName="firstName" placeholder="First Name" [ngModel]="this.currentEmployee?.firstName  | titlecase" (ngModelChange)="this.currentEmployee.firstName=$event" [readonly]="!isAuth">
       </mat-form-field>
       <mat-form-field>
-          <input matInput placeholder="Middle Name" [value]="this.currentEmployee?.middleName  | titlecase" readonly>
+          <input matInput formControlName="middleName"  placeholder="Middle Name" [ngModel]="this.currentEmployee?.middleName  | titlecase" (ngModelChange)="this.currentEmployee.middleName=$event"[readonly]="!isAuth">
         </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="Last Name" [value]="this.currentEmployee?.lastName  | titlecase" readonly>
+        <input matInput  formControlName="lastName" placeholder="Last Name" [ngModel]="this.currentEmployee?.lastName  | titlecase" (ngModelChange)="this.currentEmployee.lastName=$event"[readonly]="!isAuth">
       </mat-form-field>
       <mat-form-field>
-          <input matInput placeholder="Birth Date" [matDatepicker]="birthDatePicker" (focus)="birthDatePicker.open()" [value]="this.currentEmployee?.birthDate | date: 'MM/dd/yyyy' "readonly>
+          <input matInput  formControlName="birthDate" placeholder="Birth Date" [matDatepicker]="birthDatePicker" (focus)="birthDatePicker.open()" [value]="this.currentEmployee?.birthDate | date: 'MM/d/yyyy' " [ngModel]="this.currentEmployee?.birthDate | date: 'MM/d/yyyy' " (ngModelChange)="this.currentEmployee.birthDate=$event" [disabled]="!isAuth">
       </mat-form-field>
         <mat-datepicker #birthDatePicker></mat-datepicker>
       
           <!-- <label>{{this.currentEmployee?.socialSecurity}}</label> -->
           
       <mat-form-field>
-          <input matInput placeholder="Client" [value]="this.currentEmployee?.client | titlecase" readonly>
+          <input matInput formControlName="client"  placeholder="Client" [ngModel]="this.currentEmployee?.client | titlecase" (ngModelChange)="this.currentEmployee.client=$event"  [readonly]="!isAuth">
         </mat-form-field>
       <mat-form-field>
-          <input matInput placeholder="Campaign" [value]="this.currentEmployee?.campaign | titlecase" readonly>
+          <input matInput formControlName="campaign" placeholder="Campaign" [ngModel]="this.currentEmployee?.campaign | titlecase"  (ngModelChange)="this.currentEmployee.campaign=$event"  [readonly]="!isAuth">
         </mat-form-field>
         <mat-form-field>
-          <!-- SHould be a dropdown menu-->
-            <input matInput placeholder="Status" [value]="this.currentEmployee?.status | titlecase" readonly>
+          <mat-select  formControlName="status" placeholder="Status" [ngModel]="this.currentEmployee?.status" (ngModelChange)="this.currentEmployee.status=$event"[disabled]="!isAuth">
+              <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
+          </mat-select>
         </mat-form-field>
+        <mat-form-field>
+          <input matInput  formControlName="hireDate" placeholder="Hire Date" [matDatepicker]="hireDatePicker" (focus)="hireDatePicker.open()" [value]="this.currentEmployee?.hireDate | date: 'MM/d/yyyy' " [ngModel]="this.currentEmployee?.hireDate | date: 'MM/d/yyyy' " (ngModelChange)="this.currentEmployee.hireDate=$event" [disabled]="!isAuth">
+      </mat-form-field>
+        <mat-datepicker #hireDatePicker></mat-datepicker>
+        <mat-form-field *ngIf="this.currentEmployee?.status === 'termination'">
+          <input matInput  formControlName="terminationDate" placeholder="Termination Date" [matDatepicker]="terminationDatePicker" (focus)="terminationDatePicker.open()" [value]="this.currentEmployee?.terminationDate | date: 'MM/d/yyyy' " [ngModel]="this.currentEmployee?.terminationDate | date: 'MM/d/yyyy' " (ngModelChange)="this.currentEmployee.terminationDate=$event" [disabled]="!isAuth">
+      </mat-form-field>
+        <mat-datepicker #terminationDatePicker></mat-datepicker>
         <label>Social Security</label>
         <span>{{this.currentEmployee?.socialSecurity}}</span>
-    </div>
+      </form>
     </mat-card>
   </div>
-  <personal-info></personal-info>
+  <personal-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></personal-info>
   <family-info></family-info>
-  <position-info></position-info>
-  <payroll-info ></payroll-info>
+  <position-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></position-info>
+  <payroll-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></payroll-info>
 </div>

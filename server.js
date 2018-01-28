@@ -28,7 +28,7 @@ const PROD_URI = process.env.MONGODB_URI;
 
 const TEST_URL = 'http://localhost:3000';
 const PROD_URL = 'https://blink-test.herokuapp.com';
-mongoose.connect(TEST_URI, {
+mongoose.connect(PROD_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
