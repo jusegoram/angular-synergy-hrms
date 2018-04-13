@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
  });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", PROD_URL);
+          res.header("Access-Control-Allow-Origin", PROD_URL + ":" + process.env.PORT);
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();
