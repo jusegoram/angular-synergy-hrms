@@ -48,7 +48,7 @@ router.get('/personal', function (req, res, next) {
         'addressDate',
         'celNumber',
         'telNumber',
-        'emailAdress',
+        'emailAddress',
         'emailDate'
 
     ];

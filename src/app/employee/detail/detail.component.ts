@@ -73,11 +73,11 @@ export class DetailComponent implements OnInit {
   );
   this.employeeService.updateEmployee(employee)
       .subscribe(
-          data => {this.snackBar.open('Employee information UPDATED!', 'Ok', {
+          data => {this.snackBar.open('Employee information updated successfully', 'thank you', {
             duration: 2000,
           });
         },
-          error => {this.snackBar.open('Error updating information, please try again', 'Ok' , {
+          error => {this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again' , {
             duration: 2000,
           });
         }

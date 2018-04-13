@@ -7,31 +7,14 @@ var User = require('../models/user');
 
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    var userID = token.user._id;
-    User.findById(userID, function (err, user) {
-        if (err) {
-            return res.status(500).json({
-                title: 'An error occurred',
-                error: err
-            });
-        }if (req.query.token === '') {
-            return res.status(500).json({
-                title: 'No user Found!',
-                message: 'user not found'
-            });
-        }if (user.role === null){
-            return res.status(500).json({
-                title: 'No user Found!',
-                message: 'user not found'
-            });
-        }
+    var user = token.user;
         res.status(200).json({
             message: 'role succesfull',
             userRole: user.role
-        });
     });
-    
 });
+    
+
 
 router.post('/', function (req, res, next) {
     var user = new User({

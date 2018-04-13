@@ -1,9 +1,14 @@
 
 //Require all imports
+var fs = require('fs');
 const express = require('express');
 const path = require('path');
 var debug = require('debug')('node-rest:server');
 const http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
+var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
+var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
 var logger = require('morgan');
 const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -26,8 +31,8 @@ const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
 const PROD_URI = process.env.MONGODB_URI;
 
-const TEST_URL = 'http://localhost:3000';
-const PROD_URL = 'https://blink-test.herokuapp.com';
+const TEST_URL = "https://localhost:8443";
+const PROD_URL = "https://blink-test.herokuapp.com";
 mongoose.connect(PROD_URI, {
   useMongoClient: true,
  });
@@ -40,12 +45,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 
+
+// ...
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
-
+app.use(function(req, res, next) {
+  if(!req.secure) {
+    return res.redirect(PROD_URL);
+  }
+  next();
+});
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", "https://blink-test.herokuapp.com");
+          res.header("Access-Control-Allow-Origin", PROD_URL);
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();
@@ -73,7 +85,9 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-const server = http.createServer(app);
+// var httpsServer = https.createServer(credentials, app);
+var server = https.createServer(app);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -81,6 +95,11 @@ const server = http.createServer(app);
 server.listen(port, () => console.log(`API running on localhost:${port}`));
 server.on('error', onError);
 server.on('listening', onListening);
+
+// httpsServer.listen(port, () => console.log(`API running on localhost:${port}`));
+// httpsServer.on('error', onError);
+// httpsServer.on('listening', onListening);
+
 /**
  * Normalize a port into a number, string, or false.
  */

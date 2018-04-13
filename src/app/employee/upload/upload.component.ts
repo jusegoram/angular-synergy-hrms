@@ -33,7 +33,9 @@ export class UploadComponent {
     this.URL = environment.siteUri + this.selected;
     this.uploader = new FileUploader({
       url: this.URL,
-      isHTML5: true
+      isHTML5: true,
+      allowedMimeType:["text/csv"],
+      allowedFileType: ["csv"]
     });
     console.log(this.URL);
   }

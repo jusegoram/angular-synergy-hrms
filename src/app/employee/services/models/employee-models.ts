@@ -15,7 +15,7 @@ constructor(public id: string,
             public addressDate: string,
             public celNumber: string,
             public telNumber: string,
-            public emailAdress: string,
+            public emailAddress: string,
             public emailDate: string
             ) { }
 }

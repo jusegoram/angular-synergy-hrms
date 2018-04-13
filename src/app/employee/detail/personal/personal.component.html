@@ -1,4 +1,4 @@
-<mat-accordion class="container" (click)="loadInfo()">
+<mat-accordion class="container">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -8,37 +8,76 @@
         Information
       </mat-panel-description>
     </mat-expansion-panel-header>
+    <form class="ma-3"fxLayout="column" [formGroup]="myForm" 
+                                        id="ngForm" 
+                                        (ngSubmit)="onSubmit()">
     <div fxLayout="column"  fxLayoutGap="10px">
     <div fxLayout="row"  fxLayoutGap="10px">
     <mat-form-field>
-      <input matInput placeholder="Address">
+      <input matInput formControlName="address" 
+                      placeholder="Address" 
+                      [value]="this.dataSource?.address | uppercase" 
+                      [ngModel]="this.dataSource?.address | uppercase" 
+                      (ngModelChange)="this.dataSource.address=$event"
+                      [readonly]="!isAuth">
     </mat-form-field>
 
     <mat-form-field>
-        <input matInput placeholder="Last Address Update" [matDatepicker]="addressPicker" (focus)="addressPicker.open()" readonly>
+        <input matInput formControlName="addressDate" 
+                        placeholder="Last Address Update" 
+                        [matDatepicker]="addressPicker" 
+                        (focus)="addressPicker.open()" 
+                        [value]="this.dataSource?.addressDate | date: 'MM/d/yyyy' " 
+                        [ngModel]="this.dataSource?.addressDate | date: 'MM/d/yyyy'" 
+                        (ngModelChange)="this.dataSource.addressDate=$event"
+                        [disabled]="!isAuth">
       </mat-form-field>
       <mat-datepicker #addressPicker></mat-datepicker>
   </div>
   <div fxLayout="row"  fxLayoutGap="10px">
       <mat-form-field>
-        <input matInput placeholder="Cellular Phone Number">
+        <input matInput formControlName="celNumber" 
+                        placeholder="Cellular Phone Number" 
+                        [value]="this.dataSource?.celNumber | uppercase" 
+                        [ngModel]="this.dataSource?.celNumber | uppercase" 
+                        (ngModelChange)="this.dataSource.celNumber=$event"
+                        [readonly]="!isAuth">
       </mat-form-field>
   
       <mat-form-field>
-        <input matInput placeholder="Home Telephone Number">
+        <input matInput formControlName="telNumber" 
+                        placeholder="Home Telephone Number" 
+                        [value]="this.dataSource?.telNumber | uppercase" 
+                        [ngModel]="this.dataSource?.telNumber | uppercase" 
+                        (ngModelChange)="this.dataSource.telNumber=$event"
+                        [readonly]="!isAuth">
       </mat-form-field>
     </div>
     <div fxLayout="row"  fxLayoutGap="10px">
         <mat-form-field>
-          <input matInput placeholder="Email Address">
+          <input matInput formControlName="emailAddress" 
+                          placeholder="Email Address" 
+                          [value]="this.dataSource?.emailAddress | lowercase" 
+                          [ngModel]="this.dataSource?.emailAddress | uppercase" 
+                          (ngModelChange)="this.dataSource.emailAddress=$event"
+                          [readonly]="!isAuth">
         </mat-form-field>
     
         <mat-form-field>
-            <input matInput placeholder="Last Email Update" [matDatepicker]="emailPicker" (focus)="emailPicker.open()" readonly>
+            <input matInput formControlName="emailDate" 
+                            placeholder="Last Email Update" 
+                            [matDatepicker]="emailPicker" 
+                            (focus)="emailPicker.open()" 
+                            [value]="this.dataSource?.emailDate | date: 'MM/d/yyyy' " 
+                            [ngModel]="this.dataSource?.emailDate | date: 'MM/d/yyyy'" 
+                            (ngModelChange)="this.dataSource.emailDate=$event"
+                            [disabled]="!isAuth">
+
           </mat-form-field>
           <mat-datepicker #emailPicker></mat-datepicker>
       </div>
     </div>
-    <button mat-raised-button>submit</button>
+    <button mat-raised-button *ngIf="isAuth">submit</button>
+  </form>
   </mat-expansion-panel>
 </mat-accordion>

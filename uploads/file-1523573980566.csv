@@ -1,0 +1,2 @@
+employeeId,firstName,middleName,lastName,birthDate,socialSecurity,client,campaign,status,hireDate,terminationDate
+100002,juan,sebastian,gomez,10/02/95,503970,development,development,active,02/02/15,

@@ -32,25 +32,22 @@ router.post('/', function (req, res) {
             var employeeFile = req.file;
             if (err) {
             // An error occurred when uploading
-            console.log(err);
-            return res.status(422).send("an Error occured");
-            }  
+                return res.status(422).send("an Error occured");
+            } if( employeeFile.mimetype != "text/csv" ){
+                return res.status(400).send("Sorry only CSV files can be processed for upload");    
+            }
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
                 employees.push(data);
-                console.log(employees);
             })
             .on('end', function(){
-                Employee.create(employees,function(err, documents){
-                    if (err){
-                        console.log(err);
-                    } 
-                });
-                console.log('upload finished');
+                
+                for(i = 0; i < employees.length; i++){
+                    Employee.create(employees[i]);
+                }
+                return res.status(200).send("Employees without duplicates were added");
             });
-            return res.send(employees.length + ' employees were uploaded');
-            
         });
 
 });
@@ -63,7 +60,10 @@ router.post('/position', function (req, res) {
         // An error occurred when uploading
         console.log(err);
         return res.status(422).send("an Error occured");
-        }  
+        } 
+        if(employeeFile.mimetype != "text/csv"){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");    
+        }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
@@ -78,7 +78,7 @@ router.post('/position', function (req, res) {
             });
             console.log('upload finished');
         });
-        return res.send(position.length + ' position were uploaded');
+        return res.status(200).send('the job position information of employees was uploaded');
         
     });
 
@@ -93,6 +93,9 @@ router.post('/personal', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }  
+        if(employeeFile.mimetype != "text/csv"){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");    
+        }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
@@ -107,7 +110,7 @@ router.post('/personal', function (req, res) {
             });
             console.log('upload finished');
         });
-        return res.send(personal.length + ' personal of employees were uploaded');
+        return res.status(200).send('the personal information of employees was uploaded');
         
     });
 
@@ -123,6 +126,9 @@ router.post('/payroll', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }  
+        if(employeeFile.mimetype != "text/csv"){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");    
+        }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
@@ -137,7 +143,7 @@ router.post('/payroll', function (req, res) {
             });
             console.log('upload finished');
         });
-        return res.send(payroll.length + 'payroll of employees were uploaded');
+        return res.status(200).send('the payroll information of employees was uploaded');
         
     });
 
@@ -153,6 +159,9 @@ router.post('/family', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }  
+        if(employeeFile.mimetype != "text/csv"){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");    
+        }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
@@ -167,7 +176,7 @@ router.post('/family', function (req, res) {
             });
             console.log('upload finished');
         });
-        return res.send(family.length + ' employees were uploaded');
+        return res.status(200).send('the family information of employees was uploaded');
         
     });
 
@@ -183,6 +192,9 @@ router.post('/education', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }  
+        if(employeeFile.mimetype != "text/csv"){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");    
+        }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
@@ -197,7 +209,7 @@ router.post('/education', function (req, res) {
             });
             console.log('upload finished');
         });
-        return res.send(education.length + 'education of employees were uploaded');
+        return res.status(200).send('the education information of employees was uploaded');
         
     });
 

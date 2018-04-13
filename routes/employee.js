@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Employee = require('../models/employee/employee');
 var EmployeePosition = require("../models/employee/employee-position");
+var EmployeePersonal = require("../models/employee/employee-personal");
 var jwt = require('jsonwebtoken');
 var positions = [
     { id: '1001', name:'ED 1' },
@@ -54,6 +55,8 @@ router.get('/getall', function(req, res, next) {
         });
     });
 });
+
+//get and update main detail page
 router.get('/getDetail', function(req, res, next){
     Employee.findById(req.query.id, function(err, result){
         if (err) {
@@ -67,21 +70,6 @@ router.get('/getDetail', function(req, res, next){
             obj: result
         });
     });
-});
-
-router.get('/getDetail/position', function(req, res, next){
-    EmployeePosition.find({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-        return res.status(500).json({
-            title: 'An error occurred',
-            error: err
-        });
-    }
-    res.status(200).json({
-        message: 'Employee position request succesfull',
-        obj: result
-    });
-});
 });
 
 router.put('/update', function (req, res, next) {
@@ -112,5 +100,58 @@ router.put('/update', function (req, res, next) {
     });
    });
 
+// get and update personal page
+router.get('/getDetail/personal', function(req, res, next){
+    EmployeePersonal.find({ employeeId: req.query.employeeId}, function(err, result){
+    if (err) {
+        return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+        });
+    }
+    res.status(200).json({
+        message: 'Employee personal info request succesfull',
+        obj: result
+    });
+});
+});
+router.put('/update/personal', function (req, res, next) {
+    EmployeePersonal.findById(req.query.id, function(err, doc){
+        doc.address = req.body.address;
+        doc.addressDate = req.body.addressDate;
+        doc.celNumber = req.body.celNumber;
+        doc.telNumber = req.body.telNumber;
+        doc.emailAddress = doc.emailAddress;
+        doc.emailDate = req.body.emailDate;
+        doc.save();
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occurred',
+                error: err
+            });
+        }
+        res.status(200).json({
+            message: 'Employee personal info update request succesfull',
+            obj: doc
+        });
+    });
+});
+
+
+// get and update position page
+router.get('/getDetail/position', function(req, res, next){
+    EmployeePosition.find({ employeeId: req.query.employeeId}, function(err, result){
+    if (err) {
+        return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+        });
+    }
+    res.status(200).json({
+        message: 'Employee position request succesfull',
+        obj: result
+    });
+});
+});
 
 module.exports = router;

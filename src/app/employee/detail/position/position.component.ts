@@ -44,7 +44,7 @@ positions = [
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['employeeId']) {
+    if (this.employeeId != null && changes['employeeId']) {
       this.employeeService.getPositions(this.employeeId).subscribe(
         (employeePosition: EmployeePosition[] ) => {
           this.dataSource = new MatTableDataSource(employeePosition);
