@@ -49,12 +49,12 @@ app.use(cookieParser());
 // ...
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
- app.use(function(req, res, next) {
-   if(!req.secure) {
-     return res.redirect(PROD_URL);
-  }
-  next();
- });
+//  app.use(function(req, res, next) {
+ //   if(!req.secure) {
+ //     return res.redirect(PROD_URL);
+ //  }
+//   next();
+//  });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
           res.header("Access-Control-Allow-Origin", PROD_URL + ":" + process.env.PORT);
