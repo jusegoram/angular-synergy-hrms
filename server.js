@@ -5,7 +5,7 @@ const express = require('express');
 const path = require('path');
 var debug = require('debug')('node-rest:server');
 const http = require('http');
-var https = require('https');
+// var https = require('https');
 var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
 var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
 var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
@@ -49,12 +49,12 @@ app.use(cookieParser());
 // ...
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
-app.use(function(req, res, next) {
-  if(!req.secure) {
-    return res.redirect(PROD_URL);
+ app.use(function(req, res, next) {
+   if(!req.secure) {
+     return res.redirect(PROD_URL);
   }
   next();
-});
+ });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
           res.header("Access-Control-Allow-Origin", PROD_URL);
@@ -86,7 +86,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 // var httpsServer = https.createServer(credentials, app);
-var server = https.createServer(app);
+var server = http.createServer(app);
 
 
 /**
