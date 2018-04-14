@@ -25,6 +25,7 @@ export class UploadComponent {
     {value: '/upload/education', viewValue: 'Employee Education'}
   ];
   public uploader: FileUploader = new FileUploader({
+    allowedMimeType:["text/csv"],
     url: this.URL,
     isHTML5: true
   });
@@ -32,10 +33,9 @@ export class UploadComponent {
    onSelectChange() {
     this.URL = environment.siteUri + this.selected;
     this.uploader = new FileUploader({
-      url: this.URL,
-      isHTML5: true,
       allowedMimeType:["text/csv"],
-      allowedFileType: ["csv"]
+      url: this.URL,
+      isHTML5: true
     });
     console.log(this.URL);
   }

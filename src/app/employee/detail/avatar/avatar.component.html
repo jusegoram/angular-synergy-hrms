@@ -3,7 +3,8 @@
 <div class="user-image-container">
 <img class="user-image" src="../../../assets/images/default-user.jpg" />
 </div>
-<button mat-button [disabled]="!this.authorization"><mat-icon>add_circle</mat-icon> Add Image</button>
+<button mat-button [disabled]="!this.authorization"><mat-icon>add_circle</mat-icon> Add Image
+<input type="file" ng2FileSelect [uploader]="uploader"></button>
 <button mat-raised-button color="primary" form="ngForm" *ngIf="this.authorization">Update</button>
   </div>
 </mat-card>
