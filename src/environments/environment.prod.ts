@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  siteUri: 'https://blink-test.herokuapp.com'
+  siteUri: "https://synergydev.herokuapp.com"
 };

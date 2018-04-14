@@ -32,7 +32,7 @@ const TEST_URI = HOST + DB_PORT + COLLECTION;
 const PROD_URI = process.env.MONGODB_URI;
 
 const TEST_URL = "https://localhost:8443";
-const PROD_URL = "https://blink-test.herokuapp.com";
+const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(PROD_URI, {
   useMongoClient: true,
  });
