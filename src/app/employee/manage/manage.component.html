@@ -5,7 +5,9 @@
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
       <div fxFlex="auto"></div>
-      <button mat-icon-button svgIcon="add"></button>
+      <button mat-raised-button>
+        <mat-icon>add</mat-icon>
+    </button>
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
 
