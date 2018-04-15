@@ -8,8 +8,9 @@
 <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
   <input type="file" #fileInput ng2FileSelect [uploader]="uploader" />
 </span>
-<button mat-button *ngIf="this.authorization" (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+<button mat-button *ngIf="this.authorization" (click)="uploader.uploadAll()">
   <mat-icon>file_upload</mat-icon>
+  Upload
 </button>
 <button mat-raised-button color="primary" form="ngForm" *ngIf="this.authorization">Update</button>
   
