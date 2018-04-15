@@ -25,6 +25,8 @@ var storage = multer.diskStorage({
   });
 var upload = multer({storage: storage}).single('file');
 
+
+
 //our file upload function.
 router.post('/', function (req, res) {
         upload(req, res, function (err) {
@@ -213,5 +215,25 @@ router.post('/education', function (req, res) {
         
     });
 
+});
+
+router.post('/avatars', function(req, res){
+    var avatarStorage = multer.diskStorage({
+        destination:'uploads/avatars',
+        filename: function (req, file, cb) {
+          cb(null,req.query.employeeId + path.extname(file.originalname));
+        }
+      });
+      var avatarUpload = multer({storage: avatarStorage}).single('file');
+
+      avatarUpload(req, res, function (err) {
+        if(err){
+            res.status(400).send("error in the upload");
+        }
+        if(req.file.mimetype != "image/jpeg"){
+            res.status(400).send("only jpeg is allowed");
+        }
+        res.status(200).send("avatar uploaded successfully");
+      });
 });
 module.exports = router;

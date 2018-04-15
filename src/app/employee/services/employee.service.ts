@@ -1,17 +1,25 @@
 import { IEmployee } from '../Employee';
 import { EmployeePosition, EmployeePersonal } from './models/employee-models';
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Http, Headers, Response, ResponseType, ResponseContentType } from '@angular/http';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
+import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 @Injectable()
 export class EmployeeService {
     employees: IEmployee[];
     constructor(private http: Http) {}
     siteURI = environment.siteUri;
+
+getAvatar(param: string): Observable<Response>{
+    const obj = { id: param };
+    const body = JSON.stringify(obj);
+    const params = '?id=' + param;
+return this.http.get(this.siteURI + '/employee/getDetail/avatar' + params, {responseType: ResponseContentType.Blob});
+}
 getEmployees() {
-return this.http.get(this.siteURI + '/employee/getall' )
+return this.http.get(this.siteURI + '/employee/getall')
     .map(
         (response: Response) => {
         const employees = response.json().obj;

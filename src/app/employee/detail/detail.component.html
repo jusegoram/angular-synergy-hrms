@@ -5,7 +5,7 @@
     <span> Employee ID:{{' '+this.currentEmployee?.employeeId}} </span>
   </mat-toolbar>
   <div fxLayout="row">
-    <avatar-detail [employeeId]="this.currentEmployee?.employeeId" [authorization]="this.isAuth"></avatar-detail>
+    <avatar-detail [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></avatar-detail>
     <mat-card class="main-info">
         <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
         <form class="ma-3"fxLayout="column" [formGroup]="myForm" id="ngForm" (ngSubmit)="onSubmit()">

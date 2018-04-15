@@ -31,7 +31,7 @@ const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
 const PROD_URI = process.env.MONGODB_URI;
 
-const TEST_URL = "https://localhost:8443";
+const TEST_URL = "http://localhost:3000";
 const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(PROD_URI, {
   useMongoClient: true,
@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //  });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", PROD_URL + ":" + process.env.PORT);
+          res.header("Access-Control-Allow-Origin", PROD_URL + ":" + port);
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();

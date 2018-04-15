@@ -4,6 +4,7 @@ var Employee = require('../models/employee/employee');
 var EmployeePosition = require("../models/employee/employee-position");
 var EmployeePersonal = require("../models/employee/employee-personal");
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
 var positions = [
     { id: '1001', name:'ED 1' },
     { id: '1002', name:'Rep 2: A' },
@@ -152,6 +153,23 @@ router.get('/getDetail/position', function(req, res, next){
         obj: result
     });
 });
+});
+
+router.get('/getDetail/avatar', function(req, res, next){
+    var avatar = req.query.id + ".jpg";
+    fs.readFile('uploads/avatars/'+ avatar , function (err, content) { 
+        if (err) {
+            fs.readFile('uploads/avatars/default-avatar.jpg' , function (err, content){
+                res.writeHead(200,{'Content-type':'image/jpg'});
+                res.end(content);
+            });
+        } else {
+            //specify the content type in the response will be an image
+            res.writeHead(200,{'Content-type':'image/jpg'});
+            res.end(content);
+        }
+    });
+
 });
 
 module.exports = router;
