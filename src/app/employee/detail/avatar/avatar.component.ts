@@ -16,14 +16,12 @@ export class AvatarComponent implements OnInit {
   public uploader: FileUploader = new FileUploader({
     allowedMimeType:["image/jpeg"],
     url: this.URL,
-    isHTML5: true,
-    additionalParameter: {
-      id: this.employeeId
-    }
+    isHTML5: true
   });
 
 
   ngOnInit() {
+    console.log(this.employeeId);
   }
 
 }
