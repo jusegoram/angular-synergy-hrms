@@ -14,7 +14,7 @@ export class AvatarComponent implements OnInit {
   constructor() { }
 
   public uploader: FileUploader = new FileUploader({
-    allowedMimeType:["image/jpg"],
+    allowedMimeType:["image/jpeg"],
     url: this.URL,
     isHTML5: true
   });
