@@ -20,7 +20,7 @@ export class AvatarComponent implements OnChanges{
    URL = environment.siteUri + this.selected;
 
    ngOnChanges(changes: SimpleChanges) {
-    if (this.employeeId != null && changes['employeeId']) {
+    if (this.employeeId !== "" && changes['employeeId']) {
       this.loadAvatar(this.employeeId);
     }
   }

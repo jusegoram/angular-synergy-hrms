@@ -18,11 +18,15 @@ var mongoose = require('mongoose');
 
 // Get our API routes
 const appRoutes = require('./routes/app');
-const userRoutes = require('./routes/user');
-const menuRoutes = require('./routes/menu');
-const uploadRoutes = require('./routes/upload');
-const templateRoutes = require('./routes/template');
-const employeeRoutes = require('./routes/employee');
+// administration routes
+const userRoutes = require('./routes/administration/user');
+const menuRoutes = require('./routes/administration/menu');
+const payrollRoutes = require('./routes/administration/payroll');
+const admEmployeeRoutes= require('./routes/administration/employee');
+//employee routes
+const uploadRoutes = require('./routes/app/employee/upload');
+const templateRoutes = require('./routes/app/employee/template');
+const employeeRoutes = require('./routes/app/employee/employee');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
@@ -33,7 +37,7 @@ const PROD_URI = process.env.MONGODB_URI;
 
 const TEST_URL = "http://localhost:3000";
 const PROD_URL = process.env.HEROKU_URL;
-mongoose.connect(PROD_URI, {
+mongoose.connect(TEST_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
@@ -57,7 +61,7 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //  });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", PROD_URL + ":" + port);
+          res.header("Access-Control-Allow-Origin", TEST_URL);
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();
@@ -66,9 +70,11 @@ app.use(function(req, res, next) { //allow cross origin requests
 // Set our api routes
 app.use('/user', userRoutes);
 app.use('/menu', menuRoutes);
+app.use('/payroll', payrollRoutes);
 app.use('/upload', uploadRoutes);
 app.use('/template', templateRoutes);
 app.use('/employee', employeeRoutes);
+app.use('/admEmp', admEmployeeRoutes);
 app.use('/', appRoutes);
 
 // Catch all other routes and return the index file

@@ -2,8 +2,8 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 
-var Menus = require('../models/menu');
-var Users = require('../models/user');
+var Menus = require('../../models/administration/menu');
+var Users = require('../../models/administration/user');
 router.get('/', function(req, res, next) {
     var token = jwt.decode(req.query.token);
     var userID = token.user._id;

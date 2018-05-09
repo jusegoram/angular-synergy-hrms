@@ -47,23 +47,30 @@
         </mat-paginator>
       </div>
     <div fxLayout="row">
+        <mat-form-field>
+            <mat-select placeholder="Department"  (change)="setPositions($event.value)">
+                <mat-option *ngFor="let department of departments" [value]="department.id">{{department.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
       <mat-form-field>
-        <mat-select placeholder="Position" [(value)]="selected">
-            <mat-option *ngFor="let position of positions" [value]="position.id">{{position.name}}</mat-option>
+        <mat-select placeholder="Position" (change)="position = $event.value">
+            <mat-option *ngFor="let position of positions" [value]="position.name">{{position.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      
-      <span> ID: {{selected}}</span>
     <span class="fill-remaining-space"></span>
     <mat-form-field>
-      <input matInput placeholder="Start" [matDatepicker]="startPicker" (focus)="startPicker.open()" readonly>
-    </mat-form-field>
-    <mat-datepicker #startPicker></mat-datepicker>
+      <input matInput placeholder="Start" [matDatepicker]="startPicker" [(ngModel)]="this.start">
+      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+      <mat-datepicker #startPicker></mat-datepicker>
+  </mat-form-field>
     <mat-form-field>
-      <input matInput placeholder="End" [matDatepicker]="endPicker" (focus)="endPicker.open()" readonly>
+      <input matInput placeholder="End" [matDatepicker]="endPicker" [(ngModel)]="this.end" >
+      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+      <mat-datepicker #endPicker></mat-datepicker>
     </mat-form-field>
-    <mat-datepicker #endPicker></mat-datepicker>
-    <button mat-icon-button><mat-icon>add_circle</mat-icon></button>
+    <button mat-icon-button (click)="onAdd()"><mat-icon>add_circle</mat-icon></button>
+    <button mat-icon-button (click)="onCheck()"><mat-icon>check_circle</mat-icon></button>
+
   </div>
   </mat-expansion-panel>
 </mat-accordion>

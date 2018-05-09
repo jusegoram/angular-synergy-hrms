@@ -7,13 +7,9 @@ router.get('/', function (req, res, next) {
         'firstName',
         'middleName',
         'lastName',
-        'birthDate',
+        'gender',
         'socialSecurity',
-        'client',
-        'campaign',
-        'status',
-        'hireDate',
-        'terminationDate'
+        'status'
     ];
  
     var csv = json2csv({ data: '', fields: fields });
@@ -44,13 +40,17 @@ router.get('/position', function (req, res, next) {
 router.get('/personal', function (req, res, next) {
     var fields = [
         'employeeId',
+        'maritalStatus',
         'address',
+        'town',
+        'district',
         'addressDate',
         'celNumber',
         'telNumber',
+        'birthDate',
+        'birthPlace',
         'emailAddress',
         'emailDate'
-
     ];
  
     var csv = json2csv({ data: '', fields: fields });
@@ -64,9 +64,13 @@ router.get('/personal', function (req, res, next) {
 router.get('/payroll', function (req, res, next) {
     var fields = [
         'employeeId',
+        'TIN',
+        'positionid',
         'payrollType',
         'baseWage',
+        'bankName',
         'bankAccount',
+        'billable'
     ];
  
     var csv = json2csv({ data: '', fields: fields });
@@ -80,11 +84,12 @@ router.get('/payroll', function (req, res, next) {
 router.get('/family', function (req, res, next) {
     var fields = [
         'employeeId',
-        'reference',
+        'referenceName',
         'relationship',
         'celNumber',
         'telNumber',
-        'emailAdress'
+        'emailAdress',
+        'adress',
     ];
  
     var csv = json2csv({ data: '', fields: fields });
@@ -102,6 +107,29 @@ router.get('/education', function (req, res, next) {
         'description',
         'startDate',
         'endDate'
+    ];
+ 
+    var csv = json2csv({ data: '', fields: fields });
+ 
+    res.set("Content-Disposition", "attachment;filename=employee-education-upload.csv");
+    res.set("Content-Type", "application/octet-stream");
+ 
+    res.send(csv);
+});
+
+router.get('/company', function (req, res, next) {
+    var fields = [
+        'employeeId',
+        'client',
+        'campaign',
+        'hireDate',
+        'supervisor',
+        'trainer',
+        'trainingGroupRef',
+        'trainingGroupNum',
+        'terminationDate',
+        'reapplicant',
+        'reapplicantTimes'
     ];
  
     var csv = json2csv({ data: '', fields: fields });

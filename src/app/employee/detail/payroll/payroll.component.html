@@ -1,20 +1,82 @@
-<mat-accordion class="container" >
+<mat-accordion class="container">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Payroll 
+        Payroll
       </mat-panel-title>
       <mat-panel-description>
         Information
       </mat-panel-description>
     </mat-expansion-panel-header>
+    <form class="form"
+          [formGroup]="payrollForm"                                
+          id="payrollForm"                                 
+          (ngSubmit)="onSubmit()">
 
-    <mat-form-field>
-      <input matInput placeholder="First name">
-    </mat-form-field>
+      <mat-form-field>
+          <input matInput formControlName="TIN" 
+          placeholder="Tax Identification Number" 
+          [value]="this.dataSource?.TIN" 
+          [ngModel]="this.dataSource?.TIN" 
+          (ngModelChange)="this.dataSource.TIN=$event"
+          [disabled]="!isAuth">
+      </mat-form-field>
 
-    <mat-form-field>
-      <input matInput placeholder="Age">
-    </mat-form-field>
+      <mat-form-field>
+          <input matInput formControlName="positionid" 
+          placeholder="Position ID" 
+          [value]="this.currentPosition?.positionid" 
+          [ngModel]="this.currentPosition?.positionid" 
+          (ngModelChange)="this.currentPosition.positionid=$event"
+          [disabled]="!isAuth">
+      </mat-form-field>
+
+      <mat-form-field>
+          <mat-select placeholder="Payroll Type" formControlName="payrollType" [ngModel]="this.dataSource?.payrollType">
+            <mat-option *ngFor="let payrollType of payrollTypes" [value]="payrollType.value">
+                {{payrollType.name}}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+          <mat-select placeholder="Bank Name" formControlName="bankName" [ngModel]="this.dataSource?.bankName">
+            <mat-option value="SCOTIABANK">
+                Scotiabank
+            </mat-option>
+            <mat-option value="ATLANTICBANK">
+                Atlantic Bank
+            </mat-option>
+            <mat-option value="BELIZEBANK">
+                Belize Bank
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+          <input matInput formControlName="bankAccount" 
+          placeholder="Bank Account No." 
+          [value]="this.dataSource?.bankAccount" 
+          [ngModel]="this.dataSource?.bankAccount" 
+          (ngModelChange)="this.dataSource.bankAccount=$event"
+          [disabled]="!isAuth">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-select placeholder="Billable" formControlName="billable" [value]="this.dataSource?.billable">
+          <mat-option value="true">
+             Yes
+          </mat-option>
+          <mat-option value="false">
+              No
+           </mat-option>
+           <mat-option value="null">
+              N/A
+           </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  <button mat-raised-button color="primary" class="button" *ngIf="isAuth" form="payrollForm">Save</button>
+  <button mat-raised-button color="accent" class="button" *ngIf="isAuth" form="payrollForm">Update</button>
   </mat-expansion-panel>
 </mat-accordion>

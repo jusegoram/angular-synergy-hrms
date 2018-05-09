@@ -16,11 +16,13 @@ import { FamilyComponent } from '../employee/detail/family/family.component';
 import { PayrollComponent } from '../employee/detail/payroll/payroll.component';
 import { PositionComponent } from '../employee/detail/position/position.component';
 import { MaterialSharedModule } from '../shared/material.shared.module';
-import { CommonModule } from '@angular/common';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { EmployeeService } from './services/employee.service';
 import { HttpModule } from '@angular/http';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
+import { DialogComponent } from './detail/position/dialog/dialog.component';
+import { CommentComponent } from './detail/comment/comment.component';
 
 @NgModule({
   imports: [
@@ -44,9 +46,14 @@ import { AvatarComponent } from './detail/avatar/avatar.component';
     FamilyComponent,
     PositionComponent,
     PayrollComponent,
-    AvatarComponent ],
+    AvatarComponent,
+    DialogComponent,
+    CommentComponent ],
+    entryComponents: [
+    DialogComponent
+    ],
   providers: [
-    EmployeeService]
+    EmployeeService, TitleCasePipe]
 })
 
 export class EmployeeModule {}

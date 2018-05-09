@@ -1,0 +1,10 @@
+.form{
+    margin: 10px;
+    max-height: 250px;
+    display: flex;
+    flex: 0 0 50%;
+   align-items: center;
+   justify-content: center;
+   flex-flow: column wrap;
+   align-content: stretch;
+}

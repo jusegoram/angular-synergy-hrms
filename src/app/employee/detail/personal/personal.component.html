@@ -8,11 +8,46 @@
         Information
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <form class="ma-3"fxLayout="column" [formGroup]="myForm" 
-                                        id="ngForm" 
-                                        (ngSubmit)="onSubmit()">
-    <div fxLayout="column"  fxLayoutGap="10px">
-    <div fxLayout="row"  fxLayoutGap="10px">
+    <form class="form"
+    [formGroup]="myForm"                                
+    id="personalForm"                                 
+    (ngSubmit)="onSubmit()"                        
+     >
+  <mat-form-field>
+      <input matInput formControlName="birthDate" 
+                      placeholder="Birth Date (mm/dd/yyyy)" 
+                      [matDatepicker]="bdayPicker" 
+                      (focus)="bdayPicker.open()" 
+                      [value]="this.dataSource?.birthDate | date: 'MM/dd/yyyy' " 
+                      [ngModel]="this.dataSource?.birthDate | date: 'MM/dd/yyyy'" 
+                      (ngModelChange)="this.dataSource.birthDate=$event"
+                      [disabled]="!isAuth">
+    <mat-datepicker #bdayPicker></mat-datepicker>
+  </mat-form-field>
+    
+  <mat-form-field>
+      <mat-select placeholder="Birth place district" formControlName="birthPlaceDis" [ngModel]="this.dataSource?.birthPlaceDis">
+       <mat-option *ngFor="let district of districts" [value]="district.value">
+          {{district.name}}
+       </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Birth place town" formControlName="birthPlaceTow" [ngModel]="this.dataSource?.birthPlaceTow">
+         <mat-option *ngFor="let town of towns" [value]="town.value">
+            {{town.name}}
+         </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Marital status" formControlName="maritalStatus" [ngModel]="this.dataSource?.maritalStatus">
+       <mat-option *ngFor="let status of marStatus" [value]="status.value">
+          {{status.name}}
+       </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <mat-form-field>
       <input matInput formControlName="address" 
                       placeholder="Address" 
@@ -21,20 +56,32 @@
                       (ngModelChange)="this.dataSource.address=$event"
                       [readonly]="!isAuth">
     </mat-form-field>
-
+    <mat-form-field>
+      <mat-select placeholder="District" formControlName="district" [ngModel]="this.dataSource?.district"> 
+       <mat-option *ngFor="let district of districts" [value]="district.value">
+          {{district.name}}
+       </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-select placeholder="Town" formControlName="town" [ngModel]="this.dataSource?.town">
+         <mat-option *ngFor="let town of towns" [value]="town.value">
+            {{town.name}}
+         </mat-option>
+        </mat-select>
+      </mat-form-field>
     <mat-form-field>
         <input matInput formControlName="addressDate" 
                         placeholder="Last Address Update" 
                         [matDatepicker]="addressPicker" 
                         (focus)="addressPicker.open()" 
-                        [value]="this.dataSource?.addressDate | date: 'MM/d/yyyy' " 
-                        [ngModel]="this.dataSource?.addressDate | date: 'MM/d/yyyy'" 
+                        [value]="this.dataSource?.addressDate | date: 'MM/dd/yyyy' " 
+                        [ngModel]="this.dataSource?.addressDate | date: 'MM/dd/yyyy'" 
                         (ngModelChange)="this.dataSource.addressDate=$event"
                         [disabled]="!isAuth">
-      </mat-form-field>
-      <mat-datepicker #addressPicker></mat-datepicker>
-  </div>
-  <div fxLayout="row"  fxLayoutGap="10px">
+                        <mat-datepicker #addressPicker></mat-datepicker>
+  </mat-form-field>
+      
       <mat-form-field>
         <input matInput formControlName="celNumber" 
                         placeholder="Cellular Phone Number" 
@@ -42,6 +89,7 @@
                         [ngModel]="this.dataSource?.celNumber | uppercase" 
                         (ngModelChange)="this.dataSource.celNumber=$event"
                         [readonly]="!isAuth">
+                      
       </mat-form-field>
   
       <mat-form-field>
@@ -51,9 +99,9 @@
                         [ngModel]="this.dataSource?.telNumber | uppercase" 
                         (ngModelChange)="this.dataSource.telNumber=$event"
                         [readonly]="!isAuth">
+                        
       </mat-form-field>
-    </div>
-    <div fxLayout="row"  fxLayoutGap="10px">
+  
         <mat-form-field>
           <input matInput formControlName="emailAddress" 
                           placeholder="Email Address" 
@@ -65,19 +113,18 @@
     
         <mat-form-field>
             <input matInput formControlName="emailDate" 
-                            placeholder="Last Email Update" 
+                            placeholder="Last Email Update (mm/dd/yyyy)" 
                             [matDatepicker]="emailPicker" 
                             (focus)="emailPicker.open()" 
-                            [value]="this.dataSource?.emailDate | date: 'MM/d/yyyy' " 
-                            [ngModel]="this.dataSource?.emailDate | date: 'MM/d/yyyy'" 
+                            [value]="this.dataSource?.emailDate | date: 'MM/dd/yyyy' " 
+                            [ngModel]="this.dataSource?.emailDate | date: 'MM/dd/yyyy'" 
                             (ngModelChange)="this.dataSource.emailDate=$event"
                             [disabled]="!isAuth">
 
           </mat-form-field>
           <mat-datepicker #emailPicker></mat-datepicker>
-      </div>
-    </div>
-    <button mat-raised-button *ngIf="isAuth">submit</button>
   </form>
+  <button mat-raised-button color="primary" class="button" *ngIf="isAuth" form="personalForm">Save</button>
+  <button mat-raised-button color="accent" class="button" *ngIf="isAuth" form="personalForm">Update</button>
   </mat-expansion-panel>
 </mat-accordion>

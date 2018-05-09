@@ -31,6 +31,12 @@ export class ManageComponent implements OnInit,  AfterViewInit {
     }
       ngOnInit() {
         this.populateTable();
+        if(this.employeeService.clients === null){
+          this.employeeService.getClient().subscribe((result: any) => { });
+        }
+        if(this.employeeService.departments === null){
+          this.employeeService.getDepartment().subscribe((result: any) => { });
+        }
       }
       applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

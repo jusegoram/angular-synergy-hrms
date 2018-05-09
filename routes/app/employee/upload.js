@@ -1,17 +1,18 @@
 var express = require('express');
 var fs         = require('fs');
+var async = require('async');
 //require the express router
 var router = express.Router();
 //require multer for the file uploads & fast-csv for parsing csv
 var multer = require('multer');
 var mongoose = require('mongoose');
 var csv = require('fast-csv');
-var Employee = require ('../models/employee/employee');
-var Position = require ('../models/employee/employee-position');
-var Personal = require ('../models/employee/employee-personal');
-var Payroll = require ('../models/employee/employee-payroll');
-var Family = require ('../models/employee/employee-family');
-var Education = require ('../models/employee/employee-education');
+var Employee = require ('../../../models/employee/employee');
+var Position = require ('../../../models/employee/employee-position');
+var Personal = require ('../../../models/employee/employee-personal');
+var Payroll = require ('../../../models/employee/employee-payroll');
+var Family = require ('../../../models/employee/employee-family');
+var Education = require ('../../../models/employee/employee-education');
 // set the directory for the uploads to the uploaded to
 var DIR = 'uploads/';
 
@@ -41,14 +42,16 @@ router.post('/', function (req, res) {
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
+                data['idasnum'] = parseInt(data['employeeId']+"");
                 employees.push(data);
             })
             .on('end', function(){
-                
+                let counter = 0;
                 for(i = 0; i < employees.length; i++){
                     Employee.create(employees[i]);
+                    counter++
                 }
-                return res.status(200).send("Employees without duplicates were added");
+                return res.status(200).send(counter + "Employees without duplicates were added");
             });
         });
 
@@ -63,25 +66,36 @@ router.post('/position', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         } 
-        if(employeeFile.mimetype != "text/csv"){
+        if(positionFile.mimetype != "text/csv"){
             return res.status(400).send("Sorry only CSV files can be processed for upload");    
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
             position.push(data);
-            console.log(position);
         })
         .on('end', function(){
-            Position.create(position,function(err, documents){
-                if (err){
+            async.each(position, function(pos, callback){
+                Employee.findOne({'employeeId': pos.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        pos.employee = res._id;
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
                     console.log(err);
-                } 
+                }else{
+                    Position.create(position);
+                }
             });
+            
             console.log('upload finished');
-        });
-        return res.status(200).send('the job position information of employees was uploaded');
-        
+            return res.status(200).send(position.length + ' lines of position information for employees was uploaded');
+        }); 
     });
 
 });
@@ -101,21 +115,31 @@ router.post('/personal', function (req, res) {
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
             personal.push(data);
-            console.log(personal);
+            
         })
         .on('end', function(){
-            Personal.create(personal,function(err, documents){
-                if (err){
+            async.each(personal, function(per, callback){
+                Employee.findOne({'employeeId': per.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        per.employee = res._id;
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
                     console.log(err);
-                } 
+                }else{
+                    Personal.create(personal);
+                }
             });
             console.log('upload finished');
+            return res.status(200).send( personal.lenght + ' Registries of personal information of employees was uploaded');
         });
-        return res.status(200).send('the personal information of employees was uploaded');
-        
     });
-
 });
 
 
@@ -134,21 +158,31 @@ router.post('/payroll', function (req, res) {
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
             payroll.push(data);
-            console.log(payroll);
+            
         })
         .on('end', function(){
-            Payroll.create(payroll,function(err, documents){
-                if (err){
+            async.each(payroll, function(pay, callback){
+                Employee.findOne({'employeeId': pay.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        pay.payroll = res._id;
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
                     console.log(err);
-                } 
+                }else{
+                    Payroll.create(payroll);
+                }
             });
             console.log('upload finished');
+            return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
         });
-        return res.status(200).send('the payroll information of employees was uploaded');
-        
     });
-
 });
 
 
@@ -167,21 +201,31 @@ router.post('/family', function (req, res) {
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
             family.push(data);
-            console.log(family);
+            
         })
         .on('end', function(){
-            Family.create(family,function(err, documents){
-                if (err){
+            async.each(family, function(fam, callback){
+                Employee.findOne({'employeeId': fam.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        fam.employee = res._id;
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
                     console.log(err);
-                } 
+                }else{
+                    Family.create(family);
+                }
             });
             console.log('upload finished');
+            return res.status(200).send( family.lenght + ' Registries of payroll information of employees was uploaded');
         });
-        return res.status(200).send('the family information of employees was uploaded');
-        
     });
-
 });
 
 
@@ -200,19 +244,30 @@ router.post('/education', function (req, res) {
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
         .on('data', function(data){
             data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
             education.push(data);
             console.log(education);
         })
         .on('end', function(){
-            Education.create(education,function(err, documents){
-                if (err){
+            async.each(education, function(edu, callback){
+                Employee.findOne({'employeeId': edu.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        edu.employee = res._id;
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
                     console.log(err);
-                } 
+                }else{
+                    Education.create(education);
+                }
             });
             console.log('upload finished');
+            return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
         });
-        return res.status(200).send('the education information of employees was uploaded');
-        
     });
 
 });
@@ -236,4 +291,7 @@ router.post('/avatars', function(req, res){
         res.status(200).send("avatar uploaded successfully");
       });
 });
+
+
+
 module.exports = router;

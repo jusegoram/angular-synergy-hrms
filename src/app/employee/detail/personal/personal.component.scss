@@ -1,0 +1,25 @@
+mat-form-field{
+    min-width: 80px;
+    max-width: 600px;
+}
+.container{
+    margin: 5px;
+    max-height: 20px;
+}
+
+.form{
+    margin: 10px;
+    max-height: 250px;
+    display: flex;
+    flex: 0 0 50%;
+   align-items: center;
+   justify-content: center;
+   flex-flow: column wrap;
+   align-content: stretch;
+}
+
+.button{
+    max-width: 70px;
+    padding: 5px;
+    margin: 20px;
+}

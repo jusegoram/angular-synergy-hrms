@@ -3,8 +3,7 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 
-var User = require('../models/user');
-
+var User = require('../../models/administration/user');
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
     var user = token.user;
@@ -58,12 +57,31 @@ router.post('/signin', function(req, res, next) {
                 error: {message: 'Invalid login credentials'}
             });
         }
-        var token = jwt.sign({user: user}, 'secret', {expiresIn: 7200});
+        var token = jwt.sign({user: user}, 'R34dy1c0n2016**', {expiresIn: 3600});
         res.status(200).json({
             message: 'Successfully logged in',
             token: token,
             userId: user._id
         });
+    });
+    
+});
+
+router.get('/verify', function(req, res, next){
+    var token = jwt.decode(req.query.token);
+
+
+    var isExpiredToken = false;
+
+    var dateNow = new Date();
+    
+    if(token.exp < dateNow.getTime()){
+           isExpiredToken = true;
+    }
+
+    res.status(400).json({
+        message: "token check successful",
+        expired: isExpiredToken,
     });
     
 });
