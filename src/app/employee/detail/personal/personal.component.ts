@@ -16,7 +16,7 @@ export class PersonalComponent implements OnInit, OnChanges {
   @Input() employeeId: string;
   @Input() authorization: boolean;
   isNew = false;
-  
+
   marStatus = [
     { value: 'single', name: 'Single' },
     { value: 'married', name: 'Married/Remarried' },
@@ -34,13 +34,16 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'toledo', name: 'Toledo' }];
 
     towns = [
+      {value: 'august pine ridge', name: 'August Pine Ridge'},
       { value: 'belize city', name: 'Belize City' },
       { value: 'bella vista', name: 'Bella Vista' },
       { value: 'belmopan', name: 'Belmopan' },
       { value: 'benque viejo', name: 'Benque Viejo' },
+      { value: 'burrell boom', name: 'Burrell Boom' },
       { value: 'camalote', name: 'Camalote' },
       { value: 'corozal', name: 'Corozal' },
       { value: 'dangriga', name: 'Dangriga' },
+      {value: 'double head cabbage', name: 'Double Head Cabbage'},
       { value: 'guinea grass', name: 'Guinea Grass' },
       { value: 'independence', name: 'Independence' },
       { value: 'ladyville', name: 'Ladyville' },
@@ -50,27 +53,29 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'punta gorda', name: 'Punta Gorda' },
       { value: 'san ignacio', name: 'San Ignacio' },
       { value: 'san jose', name: 'San Jose' },
+      {value: 'san lazaro village', name: 'San Lazaro Village'},
       { value: 'san narciso', name: 'San Narciso' },
       { value: 'san pedro', name: 'San Pedro' },
+      { value: 'sandhill', name: 'Sandhill Village' },
       { value: 'shipyard', name: 'Shipyard' },
       { value: 'trial farm', name: 'Trial Farm' }];
-    
-
+  myForm: FormGroup;
+  public isAuth = false;
+  public dataSource: EmployeePersonal;
+// sand hill, August Pine Ridge,Double Head Cabbage, San Lazaro Village, libertad village, palmar village, santa rita,
   ngOnChanges(changes: SimpleChanges) {
     if (this.employeeId !== null && changes['employeeId']) {
       this.loadInfo();
-      
+
     }
   }
-  public dataSource: EmployeePersonal;
-//TO DO: add town and district
-  constructor(private employeeService: EmployeeService, 
+// TO DO: add town and district
+  constructor(private employeeService: EmployeeService,
               private sessionService: SessionService,
               public snackBar: MatSnackBar,
-              private activatedRoute: ActivatedRoute,) {
+              private activatedRoute: ActivatedRoute) {
                }
-  myForm: FormGroup;
-  public isAuth = false;
+
   ngOnInit() {
     this.isAuthorized();
     this.myForm = new FormGroup({
@@ -105,34 +110,34 @@ export class PersonalComponent implements OnInit, OnChanges {
   }
   loadInfo(){
     this.employeeService.getPersonal(this.employeeId).subscribe(
-      (employeePersonal:EmployeePersonal[]) => {
+      (employeePersonal: EmployeePersonal[]) => {
        this.dataSource = employeePersonal[0];
-       if(typeof this.dataSource === 'undefined'){
+       if (typeof this.dataSource === 'undefined'){
          this.isNew = true;
-         this.dataSource = new EmployeePersonal("new","","","","","","","","","", new Date()  ,"" ,"","","");
+         this.dataSource = new EmployeePersonal('new', '', '', '', '', '', '', '', '', '', new Date()  , '' , '', '', '');
        }
     });
   }
-  
-  onSubmit(){ 
-    const employeePersonal= new EmployeePersonal(
+
+  onSubmit() {
+    const employeePersonal = new EmployeePersonal(
       this.dataSource.id,
       this.employeeId,
       this.userId,
-      this.myForm.value.maritalStatus, //added to form
+      this.myForm.value.maritalStatus, // added to form
       this.myForm.value.address,
-      this.myForm.value.town,//added to form
-      this.myForm.value.district,//added to form
+      this.myForm.value.town, // added to form
+      this.myForm.value.district, // added to form
       this.myForm.value.addressDate,
       this.myForm.value.celNumber,
       this.myForm.value.telNumber,
-      this.myForm.value.birthDate,//add to form
+      this.myForm.value.birthDate, // add to form
       this.myForm.value.birthPlaceDis,
-      this.myForm.value.birthPlaceTow,//add to form
+      this.myForm.value.birthPlaceTow, // add to form
       this.myForm.value.emailAddress,
       this.myForm.value.emailDate
     );
-    
+
     if (this.isNew) {
       this.employeeService.savePersonal(employeePersonal).subscribe(
         data => {
@@ -160,5 +165,5 @@ export class PersonalComponent implements OnInit, OnChanges {
         }
       );
     }
-  }  
+  }
 }

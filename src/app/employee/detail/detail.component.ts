@@ -7,7 +7,7 @@ import { IEmployee } from '../Employee';
 import { EmployeeCompany, EmployeePosition } from '../services/models/employee-models';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { Client } from '../../admin/employee/models/positions-models';
+import { Client } from '../../administration/employee/models/positions-models';
 
  @Component ({
   selector: 'app-detail',
@@ -165,7 +165,7 @@ export class DetailComponent implements OnInit, OnChanges {
 
   onSubmit() {
     const employee = new IEmployee(
-      this.currentEmployee.id,
+      this.currentEmployee._id,
       this.currentEmployee.employeeId,
       this.mainForm.value.firstName,
       this.mainForm.value.lastName,
@@ -195,7 +195,7 @@ export class DetailComponent implements OnInit, OnChanges {
     const employeeCompany = new EmployeeCompany(
       this.currentCompany.id,
       this.currentEmployee.employeeId,
-      this.currentEmployee.id,
+      this.currentEmployee._id,
       this.companyForm.value.client,
       this.companyForm.value.campaign,
       this.companyForm.value.supervisor,

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
+import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 // const URL = '/api/';
 import { environment } from '../../../environments/environment';
@@ -15,7 +16,7 @@ export class UploadComponent {
 
    selected = '/upload';
    URL = environment.siteUri + this.selected;
-   //http://localhost:3000/upload
+   // http://localhost:3000/upload
   items = [
     {value: '/upload', viewValue: 'Employee Main'},
     {value: '/upload/position', viewValue: 'Employee Position'},
@@ -25,7 +26,7 @@ export class UploadComponent {
     {value: '/upload/education', viewValue: 'Employee Education'}
   ];
   public uploader: FileUploader = new FileUploader({
-    allowedMimeType:["text/csv"],
+    allowedMimeType: ['text/csv'],
     url: this.URL,
     isHTML5: true
   });
@@ -33,7 +34,7 @@ export class UploadComponent {
    onSelectChange() {
     this.URL = environment.siteUri + this.selected;
     this.uploader = new FileUploader({
-      allowedMimeType:["text/csv"],
+      allowedMimeType: ['text/csv'],
       url: this.URL,
       isHTML5: true
     });

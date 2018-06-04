@@ -6,7 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./download.component.scss']
 })
 export class DownloadComponent implements OnInit {
+templates = [
+  {text: 'Main Information', value: '/template'},
+  {text: 'Personal Information', value: '/template/personal'},
+  {text: 'Position Information', value: '/template/position'},
+  {text: 'Payroll Information', value: '/template/payroll'},
+  {text: 'Family Information', value: '/template/family'},
+  {text: 'Education Information', value: '/template/education'},
+];
 
+selected = '/template';
   constructor() { }
 
   ngOnInit() {

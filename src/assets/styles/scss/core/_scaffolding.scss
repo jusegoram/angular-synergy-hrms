@@ -28,7 +28,7 @@ body {
   @include mat-typography-level-to-styles($config, body-1);
   color: rgba(mat-color($foreground, base), 0.87);
   line-height: 1.5;
-  font-family: $mat-font-family;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   &.pace-done {
     background: #6b6b6b;
   }

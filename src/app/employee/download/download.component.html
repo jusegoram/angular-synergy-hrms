@@ -1,86 +1,32 @@
 <div class="pa-1" fxLayout="column">
+  <h1> Employee Module Downloads</h1>
     <mat-card>
     <mat-card-header>
-        <mat-card-title>Employee Upload Template</mat-card-title>
+        <mat-card-title>Template Download</mat-card-title>
         <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
-        <span>Click the download button to download the file required to upload information </span> <br/>
-        <span>this template file is required to upload employee basic information.</span>
+        <ol>
+          <li>
+            Select the template required from the drop down menu
+          </li>
+          <li>
+            If you selected Main Information, Click download
+          </li>
+          <li>
+            Once downloaded, you can open it in excel, fill it in, and finally upload it using the Uploads page.
+          </li>
+        </ol>
+      <mat-form-field>
+        <mat-select [(ngModel)]="selected">
+          <mat-option *ngFor="let option of templates" [value]="option.value">
+            {{option.text}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-        <a href="/template"><button mat-raised-button color="primary"> Download Template </button></a>
+        <a [href]="selected" ><button mat-raised-button color="primary"> Download </button></a>
     </mat-card-actions>
 </mat-card>
-
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Employee Position Template</mat-card-title>
-        <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <span>Clicking the download button will download the CSV.</span>
-        <span>this template file is required to upload employee position information.</span>
-    </mat-card-content>
-    <mat-card-actions>
-        <a href="/template/position"><button mat-raised-button color="primary"> Download Template </button></a>
-    </mat-card-actions>
-</mat-card>
-
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Employee Personal Information Template</mat-card-title>
-        <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <span>Clicking the download button will download the CSV.</span>
-        <span>this template file is required to upload employee personal information.</span>
-    </mat-card-content>
-    <mat-card-actions>
-        <a href="/template/personal"><button mat-raised-button color="primary"> Download Template </button></a>
-    </mat-card-actions>
-</mat-card>
-
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Employee Payroll Information Template</mat-card-title>
-        <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <span>Clicking the download button will download the CSV.</span>
-        <span>this template file is required to upload employee payroll information.</span>
-    </mat-card-content>
-    <mat-card-actions>
-        <a href="/template/payroll"><button mat-raised-button color="primary"> Download Template </button></a>
-    </mat-card-actions>
-</mat-card>
-
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Employee Family Information Template</mat-card-title>
-        <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <span>Clicking the download button will download the CSV.</span>
-        <span>this template file is required to upload employee family information.</span>
-    </mat-card-content>
-    <mat-card-actions>
-        <a href="/template/family"><button mat-raised-button color="primary"> Download Template </button></a>
-    </mat-card-actions>
-</mat-card>
-
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Employee Education Information Template</mat-card-title>
-        <mat-card-subtitle>CSV DOWNLOAD</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <span>Clicking the download button will download the CSV.</span>
-        <span>this template file is required to upload employee education information.</span>
-    </mat-card-content>
-    <mat-card-actions>
-        <a href="/template/education"><button mat-raised-button color="primary"> Download Template </button></a>
-    </mat-card-actions>
-</mat-card>
-
 </div>

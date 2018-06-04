@@ -2,18 +2,18 @@
   <mat-card-title>File upload</mat-card-title>
   <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
 
-  <mat-card-content> 
+  <mat-card-content>
     <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
       <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
         <h4 class="mt-0">Select Upload Type</h4>
-          
+
         <mat-form-field>
-              <mat-select placeholder="Upload Type" [(ngModel)]="selected" (change)="onSelectChange()" >
-                  <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue}}</mat-option>
-              </mat-select>
-            </mat-form-field>
+          <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
+            <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue}}</mat-option>
+          </mat-select>
+        </mat-form-field>
         <h4 class="mt-0">Selected {{selected}}</h4>
-       <h4 class="mt-0">Select files</h4>
+        <h4 class="mt-0">Select files</h4>
 
         <p>Multiple</p>
         <input type="file" class="upload-button" ng2FileSelect [uploader]="uploader" multiple  /><br/>
@@ -61,11 +61,11 @@
           <ngx-datatable-column name="action" [flexGrow]="3">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <button mat-raised-button mat-button-sm color="primary" type="button"
-                (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
+                      (click)="row.upload()" [disabled]="row.isReady || row.isUploading || row.isSuccess">Upload</button>
               <button mat-raised-button mat-button-sm color="warn" type="button"
-                (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
+                      (click)="row.cancel()" [disabled]="!row.isUploading">Cancel</button>
               <button mat-raised-button mat-button-sm color="accent" type="button"
-                (click)="row.remove()">Remove
+                      (click)="row.remove()">Remove
               </button>
             </ng-template>
           </ngx-datatable-column>
@@ -76,11 +76,11 @@
           <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
         </div>
         <button mat-raised-button mat-button-sm color="primary" type="button"
-          (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
+                (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
         <button mat-raised-button mat-button-sm color="warn" type="button"
-          (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">Cancel all</button>
+                (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">Cancel all</button>
         <button mat-raised-button mat-button-sm color="accent" type="button"
-          (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">Remove all</button>
+                (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">Remove all</button>
       </div>
     </div>
   </mat-card-content>

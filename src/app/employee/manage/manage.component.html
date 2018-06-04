@@ -1,24 +1,25 @@
 <div class="pa-1">
+  <h1> Employee Management</h1>
   <div class="mat-elevation-z8 example-container">
   <div class="example-header">
       <mat-form-field>
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
       <div fxFlex="auto"></div>
-      <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: 'new'}">
+     <!-- <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: 'new'}"> -->
       <button mat-icon-button>
         <mat-icon>add_circle</mat-icon>
     </button>
-    </a>
+   <!-- </a> -->
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
+    <!--
+        <ng-container matColumnDef="selected">
+          <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
+          <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef="selected">
-      <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
-      <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
-    </ng-container>
-
-    <!-- Position Column -->
+         Position Column -->
 
     <ng-container matColumnDef="employeeID">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
@@ -28,25 +29,25 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.firstName +' '+element.lastName}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.firstName +' '+ element.middleName + ' ' + element.lastName}} </mat-cell>
     </ng-container>
 
     <!-- Weight Column -->
     <ng-container matColumnDef="position">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Position </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.positionid}} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
     </ng-container>
 
     <!-- Color Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
+      <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
     </ng-container>
 
 
     <ng-container matColumnDef="details">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
-      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element.id}"><button mat-raised-button color="accent"> details</button></a></mat-cell>
+      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}"><button mat-raised-button color="accent"> details</button></a></mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -4,7 +4,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import {ActivatedRoute, Params} from '@angular/router';
-import { Department } from '../../../admin/employee/models/positions-models';
+import { Department } from '../../../administration/employee/models/positions-models';
 
 
 
@@ -50,10 +50,9 @@ export class PositionComponent implements OnChanges {
 
   currentPositions: EmployeePosition[];
   displayedColumns = ['positionid', 'position', 'startDate', 'endDate'];
-  constructor(private employeeService: EmployeeService, 
-              public snackBar: MatSnackBar,
+  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar,
               public dialog: MatDialog,
-              private activatedRoute: ActivatedRoute,) {
+              private activatedRoute: ActivatedRoute ) {
                 this.activatedRoute.queryParams.subscribe((params: Params) => {
                   this.userId = params['id'];
                 });
@@ -61,7 +60,7 @@ export class PositionComponent implements OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.employeeId !== "" && changes['employeeId']) {
+    if ( this.employeeId !== ' ' && changes['employeeId']) {
       this.employeeService.getPositions(this.employeeId).subscribe(
         (employeePosition: EmployeePosition[] ) => {
           this.currentPositions = employeePosition;
@@ -76,11 +75,11 @@ export class PositionComponent implements OnChanges {
     this.dataSource.filter = filterValue;
   }
 
-  onAdd(){
-    let selectedPosition = this.positions.find((result) => result.name === this.position );
-    let currentDate = new Date();
+  onAdd() {
+    const selectedPosition = this.positions.find((result) => result.name === this.position );
+    const currentDate = new Date();
     if (this.start <= currentDate && !this.end) {
-      let newpos = new EmployeePosition("new", this.employeeId,this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
+      const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
       // fix end date
       this.fixEndDate();
       this.currentPositions.push(newpos);
@@ -88,8 +87,8 @@ export class PositionComponent implements OnChanges {
       this.dataSource = new MatTableDataSource(this.currentPositions);
       this.emptyForm();
     } else if (this.end <= currentDate && this.start < this.end) {
-      let newpos = new EmployeePosition("new", this.employeeId,this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
-      let i = this.currentPositions.length;
+      const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
+      const i = this.currentPositions.length;
       // fix end date
       this.fixEndDate();
       this.currentPositions.push(newpos);
@@ -97,14 +96,13 @@ export class PositionComponent implements OnChanges {
     this.dataSource = new MatTableDataSource(this.currentPositions);
     this.emptyForm();
     }else{
-      this.snackBar.open("Sorry, the dates have to be correct")
+      this.snackBar.open('Sorry, the dates have to be correct');
       this.emptyForm();
     }
-    
   }
-  fixEndDate(){
-    if(this.currentPositions){
-    let i = this.currentPositions.length - 1;
+  fixEndDate() {
+    if ( this.currentPositions ) {
+    const i = this.currentPositions.length - 1;
       if (i >= 0 && this.currentPositions[i].endDate === undefined ||
           i >= 0 && this.currentPositions[i].endDate === null) {
         this.currentPositions[i].endDate = this.start;
@@ -113,22 +111,22 @@ export class PositionComponent implements OnChanges {
   }
 
   sendRequest() {
-    let i = this.currentPositions.length;
-    let updatePosition = this.currentPositions[i - 2]
-    if(updatePosition){
+    const i = this.currentPositions.length;
+    const updatePosition = this.currentPositions[i - 2];
+    if (updatePosition) {
     this.employeeService.updatePosition(updatePosition).subscribe(
       data => {},
       error => {});
     }
-    
-    let savePosition = this.currentPositions[i - 1];
+
+    const savePosition = this.currentPositions[i - 1];
     this.employeeService.savePosition(savePosition).subscribe(
       data => {
         this.employeeService.getPositions(this.employeeId).subscribe(
           (employeePosition: EmployeePosition[]) => {
           this.currentPositions = employeePosition;
           this.dataSource = new MatTableDataSource(this.currentPositions);
-          this.snackBar.open("Save and reload completed successfully", "Great!");
+          this.snackBar.open('Save and reload completed successfully', 'Great!');
           });
      },
       error => {
@@ -141,27 +139,27 @@ export class PositionComponent implements OnChanges {
     this.end = null;
   }
   onCheck(){
-    let dialogRef = this.dialog.open(DialogComponent, {
+    const dialogRef = this.dialog.open(DialogComponent, {
       width: '250px',
       data: {}
     });
     let check;
     dialogRef.afterClosed().subscribe(result => {
       check = dialogRef.componentInstance.result;
-      if(check){
-        let i = this.currentPositions.length - 1;
+      if (check) {
+        const i = this.currentPositions.length - 1;
         if (this.end && i >= 0 && this.currentPositions[i].endDate ===  null) {
           this.currentPositions[i].endDate = this.end;
           this.dataSource = new MatTableDataSource(this.currentPositions);
           this.emptyForm();
         }
       }
-      
-    }); 
+
+    });
   }
 
   setPositions(id: string){
-    let i = this.departments.findIndex((result) => result.id === id);
+    const i = this.departments.findIndex((result) => result.id === id);
     this.positions = this.departments[i].positions;
   }
 }

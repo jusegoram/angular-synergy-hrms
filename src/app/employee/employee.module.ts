@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
 import { UploadComponent } from './upload/upload.component';
@@ -23,16 +21,17 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
 import { CommentComponent } from './detail/comment/comment.component';
+import {HttpClientModule} from '@angular/common/http';
 
 @NgModule({
   imports: [
     CommonModule,
     EmployeeRoutingModule,
-    ChartsModule,
-    NgxDatatableModule,
     FlexLayoutModule,
     MaterialSharedModule,
     HttpModule,
+    HttpClientModule,
+    NgxDatatableModule,
     FileUploadModule,
     FormsModule,
   ],
@@ -53,7 +52,7 @@ import { CommentComponent } from './detail/comment/comment.component';
     DialogComponent
     ],
   providers: [
-    EmployeeService, TitleCasePipe]
+    EmployeeService, TitleCasePipe ]
 })
 
 export class EmployeeModule {}

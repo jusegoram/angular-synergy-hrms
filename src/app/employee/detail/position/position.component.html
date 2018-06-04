@@ -2,7 +2,7 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Position 
+        Position
       </mat-panel-title>
       <mat-panel-description>
         Information
@@ -24,20 +24,20 @@
             <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
           </ng-container>
-    
+
           <!-- Position Column -->
-    
+
           <ng-container matColumnDef="startDate">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
           </ng-container>
-      
+
           <!-- Name Column -->
           <ng-container matColumnDef="endDate">
             <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
           </ng-container>
-  
+
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
         </mat-table>
@@ -48,12 +48,12 @@
       </div>
     <div fxLayout="row">
         <mat-form-field>
-            <mat-select placeholder="Department"  (change)="setPositions($event.value)">
+            <mat-select placeholder="AdministrationDepartment"  (selectionChange)="setPositions($event.value)">
                 <mat-option *ngFor="let department of departments" [value]="department.id">{{department.name}}</mat-option>
             </mat-select>
           </mat-form-field>
       <mat-form-field>
-        <mat-select placeholder="Position" (change)="position = $event.value">
+        <mat-select placeholder="Position" (selectionChange)="position = $event.value">
             <mat-option *ngFor="let position of positions" [value]="position.name">{{position.name}}</mat-option>
         </mat-select>
       </mat-form-field>

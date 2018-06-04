@@ -24,9 +24,15 @@ export const AppRoutes: Routes = [
     canLoad: [SessionGuard]
   },
   {
+    path: 'payroll',
+    canActivate: [SessionGuard],
+    loadChildren: './payroll/payroll.module#PayrollModule',
+    canLoad: [SessionGuard]
+  },
+  {
     path: 'admin',
     canActivate: [SessionGuard],
-    loadChildren: './admin/admin.module#AdminModule',
+    loadChildren: './administration/admin.module#AdminModule',
     canLoad: [SessionGuard]
   }]
 }, {

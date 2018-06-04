@@ -26,13 +26,13 @@
                         (ngModelChange)="this.currentEmployee.lastName=$event" [readonly]="!isAuth">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select formControlName="gender" placeholder="Gender" [ngModel]="this.currentEmployee?.gender" (ngModelChange)="this.currentEmployee.gender=$event"
+                    <mat-select formControlName="gender" placeholder="Gender" [ngModel]="this.currentEmployee?.gender | lowercase" (ngModelChange)="this.currentEmployee.gender=$event"
                         [disabled]="!isAuth">
                         <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select formControlName="status" placeholder="Status" [ngModel]="this.currentEmployee?.status" (ngModelChange)="this.currentEmployee.status=$event"
+                    <mat-select formControlName="status" placeholder="Status" [ngModel]="this.currentEmployee?.status | lowercase" (ngModelChange)="this.currentEmployee.status=$event"
                         [disabled]="!isAuth">
                         <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
                     </mat-select>
@@ -62,9 +62,9 @@
                 <section class="mat-title">
                     <h2>Company Information</h2>
                 </section>
-                
+
                 <mat-form-field>
-                    <mat-select placeholder="Client" formControlName="client" [ngModel]="this.currentCompany?.client" (change)="setCampaigns($event.value)">
+                    <mat-select placeholder="Client" formControlName="client" [ngModel]="this.currentCompany?.client | lowercase" (selectionChange)="setCampaigns($event.value)">
                         <mat-option *ngFor="let client of clients" [value]="client.id">
                             {{client.name}}
                         </mat-option>

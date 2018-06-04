@@ -5,8 +5,6 @@ import { MenuItems } from '../../shared/menu-items/menu-items';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 
-import { TranslateService } from '@ngx-translate/core';
-
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { SessionService } from '../../session/services/session.service';
 
@@ -39,10 +37,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   public config: PerfectScrollbarConfigInterface = {};
   menus: Menu[];
   constructor(
-    private router: Router, public menuItems: MenuItems,
-    public translate: TranslateService, zone: NgZone, private sessionService: SessionService) {
-    const browserLang: string = translate.getBrowserLang();
-    translate.use(browserLang.match(/en|fr/) ? browserLang : 'en');
+    private router: Router, public menuItems: MenuItems, zone: NgZone, private sessionService: SessionService) {
     this.mediaMatcher.addListener(mql => zone.run(() => {
       this.mediaMatcher = mql;
     }));
@@ -51,7 +46,6 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.menuItems.getActiveMenus().subscribe((menu) => this.menus = menu);
     this.url = this.router.url;
-
     this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
       document.querySelector('.app-inner > .mat-drawer-content > div').scrollTop = 0;
       this.url = event.url;

@@ -12,23 +12,25 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   employees: IEmployee [];
   selectedEmployees: string[] = [];
-  dataSource: any;
-  displayedColumns = ['selected', 'employeeID', 'name', 'position', 'status', 'details'];
+  // dataSource = any;
+  dataSource = null;
+  displayedColumns = ['employeeID', 'name', 'position', 'status', 'details'];
   constructor(private employeeService: EmployeeService) {
   }
   ngAfterViewInit() {
     this.populateTable();
   }
-  populateTable() {
-    this.employeeService.getEmployees().subscribe(
-      (employees: IEmployee[]) => {
-        this.employees = employees;
-        this.dataSource = new MatTableDataSource(employees);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
 
-      });
-    }
+  populateTable() {
+    this.employeeService.getEmployees()
+      .subscribe(res => {
+        this.dataSource = new MatTableDataSource(res);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+        },
+      error => console.log(error));
+  }
+
       ngOnInit() {
         this.populateTable();
         if(this.employeeService.clients === null){

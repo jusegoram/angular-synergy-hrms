@@ -1,32 +1,32 @@
 
 //Require all imports
-var fs = require('fs');
+const fs = require('fs');
 const express = require('express');
 const path = require('path');
-var debug = require('debug')('node-rest:server');
+const debug = require('debug')('node-rest:server');
 const http = require('http');
 // var https = require('https');
-var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
-var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
-var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
-var logger = require('morgan');
+// var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
+// var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
+// var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
+const logger = require('morgan');
 const bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var multer = require('multer');
-var mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const multer = require('multer');
+const mongoose = require('mongoose');
 // Configure de upload with multer
 
 // Get our API routes
-const appRoutes = require('./routes/app');
+const appRoutes = require('./server/routes/app');
 // administration routes
-const userRoutes = require('./routes/administration/user');
-const menuRoutes = require('./routes/administration/menu');
-const payrollRoutes = require('./routes/administration/payroll');
-const admEmployeeRoutes= require('./routes/administration/employee');
+const userRoutes = require('./server/routes/administration/user');
+const menuRoutes = require('./server/routes/administration/menu');
+const payrollRoutes = require('./server/routes/administration/payroll');
+const admEmployeeRoutes= require('./server/routes/administration/employee');
 //employee routes
-const uploadRoutes = require('./routes/app/employee/upload');
-const templateRoutes = require('./routes/app/employee/template');
-const employeeRoutes = require('./routes/app/employee/employee');
+const uploadRoutes = require('./server/routes/app/employee/upload');
+const templateRoutes = require('./server/routes/app/employee/template');
+const employeeRoutes = require('./server/routes/app/employee/employee');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
@@ -61,11 +61,11 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //  });
 app.use(function(req, res, next) { //allow cross origin requests
           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", TEST_URL);
+          res.header("Access-Control-Allow-Origin", "*");
           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
           res.header("Access-Control-Allow-Credentials", true);
           next();
-  
+
       });
 // Set our api routes
 app.use('/user', userRoutes);
@@ -98,7 +98,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port, () => console.log(`API running on localhost:${port}`));
+server.listen(port, () => console.log(`API running on ${TEST_URL}`));
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -112,17 +112,17 @@ server.on('listening', onListening);
 
 function normalizePort(val) {
     var port = parseInt(val, 10);
-  
+
     if (isNaN(port)) {
       // named pipe
       return val;
     }
-  
+
     if (port >= 0) {
       // port number
       return port;
     }
-  
+
     return false;
   }
 
@@ -135,11 +135,11 @@ function onError(error) {
     if (error.syscall !== 'listen') {
       throw error;
     }
-  
+
     var bind = typeof port === 'string'
       ? 'Pipe ' + port
       : 'Port ' + port;
-  
+
     // handle specific listen errors with friendly messages
     switch (error.code) {
       case 'EACCES':
@@ -154,11 +154,11 @@ function onError(error) {
         throw error;
     }
   }
-  
+
   /**
    * Event listener for HTTP server "listening" event.
    */
-  
+
   function onListening() {
     var addr = server.address();
     var bind = typeof addr === 'string'
@@ -166,4 +166,3 @@ function onError(error) {
       : 'port ' + addr.port;
     debug('Listening on' + bind);
   }
-  
