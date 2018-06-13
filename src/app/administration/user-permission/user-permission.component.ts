@@ -1,5 +1,5 @@
 import { SessionService } from './../../session/services/session.service';
-import { IUser } from '../../session/User';
+import { User } from '../../session/User';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class UserPermissionComponent implements OnInit {
 
       }
     onSubmit() {
-          const user = new IUser(
+          const user = new User(
               this.myForm.value.username,
               this.myForm.value.password,
               this.myForm.value.role,

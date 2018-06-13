@@ -101,7 +101,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this.menuItems.add();
   }
   onLogout() {
-    this.sessionService.authBS.next(false);
+   // this.sessionService.authBS.next(false);
     this.sessionService.logout();
     this.router.navigateByUrl('/signin');
   }

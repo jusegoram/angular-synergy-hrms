@@ -23,7 +23,8 @@ router.get('/', function (req, res, next) {
 router.get('/position', function (req, res, next) {
     var fields = [
         'employeeId',
-        'positionid',
+        'client',
+        'department',
         'position',
         'startDate',
         'endDate'

@@ -2,37 +2,38 @@ let express = require('express');
 let fs = require('fs');
 let async = require('async');
 //require the express router
-var router = express.Router();
+let router = express.Router();
 //require multer for the file uploads & fast-csv for parsing csv
-var multer = require('multer');
-var mongoose = require('mongoose');
-var csv = require('fast-csv');
-var Employee = require ('../../../models/employee/employee-main');
-var Position = require ('../../../models/employee/employee-position');
-var Personal = require ('../../../models/employee/employee-personal');
-var Payroll = require ('../../../models/employee/employee-payroll');
-var Family = require ('../../../models/employee/employee-family');
-var Education = require ('../../../models/employee/employee-education');
+let multer = require('multer');
+let mongoose = require('mongoose');
+let csv = require('fast-csv');
+let EmployeeSchema = require ('../../../models/employee/employee-main');
+let Position = require ('../../../models/employee/employee-position');
+let Personal = require ('../../../models/employee/employee-personal');
+let Payroll = require ('../../../models/employee/employee-payroll');
+let Family = require ('../../../models/employee/employee-family');
+let Education = require ('../../../models/employee/employee-education');
+let Department = require('../../../models/administration/administration-department');
 // set the directory for the uploads to the uploaded to
-var DIR = 'uploads/';
+let DIR = 'uploads/';
 
-var path = require('path')
+let path = require('path')
 //define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
     destination:'uploads/',
     filename: function (req, file, cb) {
       cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
     }
   });
-var upload = multer({storage: storage}).single('file');
+let upload = multer({storage: storage}).single('file');
 
 
 
 //our file upload function.
 router.post('/', function (req, res) {
         upload(req, res, function (err) {
-            var employees = [];
-            var employeeFile = req.file;
+          let employees = [];
+          let employeeFile = req.file;
             if (err) {
             // An error occurred when uploading
                 return res.status(422).send("an Error occured");
@@ -42,16 +43,19 @@ router.post('/', function (req, res) {
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
-                data['idasnum'] = parseInt(data['employeeId']+"");
                 employees.push(data);
             })
-            .on('end', function(){
+            .on('end', function(result){
                 let counter = 0;
-                for(i = 0; i < employees.length; i++){
-                    Employee.create(employees[i]);
-                    counter++
+                for ( i = 0; i < employees.length; i++){
+                    EmployeeSchema.create(employees[i], (err, created) =>{
+                      if(err) return console.log(err);
+                      counter++;
+                      console.log('created' + counter);
+                    });
                 }
-                return res.status(200).send(counter + "Employees without duplicates were added");
+                console.log(result);
+                return res.sendStatus(200);
             });
         });
 
@@ -59,8 +63,8 @@ router.post('/', function (req, res) {
 
 router.post('/position', function (req, res) {
     upload(req, res, function (err) {
-        var position = [];
-        var positionFile = req.file;
+      let position = [];
+      let positionFile = req.file;
         if (err) {
         // An error occurred when uploading
         console.log(err);
@@ -77,19 +81,33 @@ router.post('/position', function (req, res) {
         })
         .on('end', function(){
             async.each(position, function(pos, callback){
-                Employee.findOne({'employeeId': pos.employeeId}, function(err, res){
+              EmployeeSchema.findOne({'employeeId': pos.employeeId}, function(err, res){
                     if(err){
                         callback(err)
                     }else{
+
                         pos.employee = res._id;
-                        callback();
+                        res.save();
+                      Department.position.findOne({'positionid': pos.position}, function(err, result){
+                        if(err) console.log(err);
+                        else {
+                          pos.position = result._id;
+                          callback();
+                        }
+                      });
                     }
-                })
+                });
             }, function(err){
                 if(err){
                     console.log(err);
                 }else{
-                    Position.create(position);
+                    Position.create(position, function (err, res){
+                      EmployeeSchema.update({_id: res[0].employee},{
+                        $push: { position: res[0].position}}, function(err, raw){
+                          console.log(raw||err);
+                        });
+                      console.log(err);
+                    });
                 }
             });
 
@@ -102,8 +120,8 @@ router.post('/position', function (req, res) {
 
 router.post('/personal', function (req, res) {
     upload(req, res, function (err) {
-        var personal = [];
-        var personalFile = req.file;
+      let personal = [];
+      let personalFile = req.file;
         if (err) {
         // An error occurred when uploading
         console.log(err);
@@ -121,11 +139,13 @@ router.post('/personal', function (req, res) {
         })
         .on('end', function(){
             async.each(personal, function(per, callback){
-                Employee.findOne({'employeeId': per.employeeId}, function(err, res){
+              EmployeeSchema.findOne({'employeeId': per.employeeId}, function(err, res){
                     if(err){
                         callback(err)
                     }else{
+                        res.personal = per._id;
                         per.employee = res._id;
+                        res.save();
                         callback();
                     }
                 })
@@ -142,17 +162,16 @@ router.post('/personal', function (req, res) {
     });
 });
 
-
 router.post('/payroll', function (req, res) {
     upload(req, res, function (err) {
-        var payroll = [];
-        var payrollFile = req.file;
+      let payroll = [];
+      let payrollFile = req.file;
         if (err) {
         // An error occurred when uploading
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(employeeFile.mimetype != "text/csv"){
+        if(payrollFile.mimetype != "text/csv"){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -164,11 +183,13 @@ router.post('/payroll', function (req, res) {
         })
         .on('end', function(){
             async.each(payroll, function(pay, callback){
-                Employee.findOne({'employeeId': pay.employeeId}, function(err, res){
+              EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
                     if(err){
                         callback(err)
                     }else{
-                        pay.payroll = res._id;
+                        res.payroll = pay._id;
+                        pay.employee = res._id;
+                        res.save();
                         callback();
                     }
                 })
@@ -185,17 +206,16 @@ router.post('/payroll', function (req, res) {
     });
 });
 
-
 router.post('/family', function (req, res) {
     upload(req, res, function (err) {
-        var family = [];
-        var familyFile = req.file;
+      let family = [];
+      let familyFile = req.file;
         if (err) {
         // An error occurred when uploading
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(employeeFile.mimetype != "text/csv"){
+        if(familyFile.mimetype != "text/csv"){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -207,11 +227,13 @@ router.post('/family', function (req, res) {
         })
         .on('end', function(){
             async.each(family, function(fam, callback){
-                Employee.findOne({'employeeId': fam.employeeId}, function(err, res){
+              EmployeeSchema.findOne({'employeeId': fam.employeeId}, function(err, res){
                     if(err){
                         callback(err)
                     }else{
+                        res.family.push(fam._id);
                         fam.employee = res._id;
+                        res.save();
                         callback();
                     }
                 })
@@ -228,11 +250,10 @@ router.post('/family', function (req, res) {
     });
 });
 
-
 router.post('/education', function (req, res) {
     upload(req, res, function (err) {
-        var education = [];
-        var educationFile = req.file;
+      let education = [];
+      let educationFile = req.file;
         if (err) {
         // An error occurred when uploading
         console.log(err);
@@ -250,11 +271,13 @@ router.post('/education', function (req, res) {
         })
         .on('end', function(){
             async.each(education, function(edu, callback){
-                Employee.findOne({'employeeId': edu.employeeId}, function(err, res){
+              EmployeeSchema.findOne({'employeeId': edu.employeeId}, function(err, res){
                     if(err){
                         callback(err)
                     }else{
+                        res.education.push(edu._id);
                         edu.employee = res._id;
+                        res.save();
                         callback();
                     }
                 })
@@ -273,13 +296,13 @@ router.post('/education', function (req, res) {
 });
 
 router.post('/avatars', function(req, res){
-    var avatarStorage = multer.diskStorage({
+  let avatarStorage = multer.diskStorage({
         destination:'uploads/avatars',
         filename: function (req, file, cb) {
           cb(null,req.query.employeeId + path.extname(file.originalname));
         }
       });
-      var avatarUpload = multer({storage: avatarStorage}).single('file');
+  let avatarUpload = multer({storage: avatarStorage}).single('file');
 
       avatarUpload(req, res, function (err) {
         if(err){

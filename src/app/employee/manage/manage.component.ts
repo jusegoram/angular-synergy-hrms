@@ -1,7 +1,8 @@
-import { IEmployee } from '../Employee';
+import { Employee } from '../Employee';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
 import { EmployeeService } from '../services/employee.service';
+import {SessionService} from '../../session/services/session.service';
 
 @Component ({
     templateUrl: 'manage.component.html',
@@ -10,15 +11,18 @@ import { EmployeeService } from '../services/employee.service';
 export class ManageComponent implements OnInit,  AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  employees: IEmployee [];
+  employees: Employee [];
   selectedEmployees: string[] = [];
   // dataSource = any;
   dataSource = null;
   displayedColumns = ['employeeID', 'name', 'position', 'status', 'details'];
-  constructor(private employeeService: EmployeeService) {
+  constructor(private employeeService: EmployeeService, private sessionService: SessionService) {
   }
   ngAfterViewInit() {
     this.populateTable();
+    this.employeeService.getClient().subscribe((result: any) => { });
+    this.employeeService.getDepartment().subscribe((result: any) => { });
+    this.sessionService.getRole().subscribe((result) => { });
   }
 
   populateTable() {
@@ -33,12 +37,6 @@ export class ManageComponent implements OnInit,  AfterViewInit {
 
       ngOnInit() {
         this.populateTable();
-        if(this.employeeService.clients === null){
-          this.employeeService.getClient().subscribe((result: any) => { });
-        }
-        if(this.employeeService.departments === null){
-          this.employeeService.getDepartment().subscribe((result: any) => { });
-        }
       }
       applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace

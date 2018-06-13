@@ -1,17 +1,18 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
 
-  var Position = new Schema ({
-    positionid: { type: String, required: false },
+let positionSchema = new Schema ({
+    positionId: { type: String, required: false },
     name: { type: String, required: false },
     baseWage: { type: Number, required: false}
   });
+const position = mongoose.model('Administration-Position', positionSchema);
 
-  var AdministrationDepartment = new Schema ({
+let departmentSchema = new Schema ({
     _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
-    positions: { type: [Position], required: false },
+    positions: {  type: [mongoose.Schema.Types.ObjectId], ref: 'Administration-Position', required: false},
   });
-
-module.exports = mongoose.model('Administration-Department', AdministrationDepartment);
+const department = mongoose.model('Administration-Department', departmentSchema);
+module.exports = {position, department};

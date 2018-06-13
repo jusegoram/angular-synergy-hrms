@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {Employee} from '../../Employee';
 
 @Component({
   selector: 'family-info',
@@ -6,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./family.component.css']
 })
 export class FamilyComponent implements OnInit {
-  @Input() employeeId: string;
+  @Input() employee: Employee;
   @Input() authorization: boolean;
   constructor() { }
 

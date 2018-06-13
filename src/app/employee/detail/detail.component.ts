@@ -1,12 +1,12 @@
 import { SessionService } from './../../session/services/session.service';
-
+// import {select, Store} from '@ngrx/store';
 import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
-import { ActivatedRoute, Params } from '@angular/router';
-import { IEmployee } from '../Employee';
-import { EmployeeCompany, EmployeePosition } from '../services/models/employee-models';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import {Employee, EmployeeCompany} from '../Employee';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
 import { Client } from '../../administration/employee/models/positions-models';
 
  @Component ({
@@ -14,30 +14,28 @@ import { Client } from '../../administration/employee/models/positions-models';
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
-export class DetailComponent implements OnInit, OnChanges {
-  campaigns: any[];
-  // TO DO add reaplicant input and select form.
-  // TO DO: add comments component, be able to write a parragraph.
-
-  currentEmployee: IEmployee = new IEmployee('', '', '', '', '', '', 0, '', '');
-  currentPosition: EmployeePosition = new EmployeePosition('', '', '', '', '', null, null);
-  public currentRole: number;
-  public isAuth = false;
-  public clients: Client[];
-  public currentCompany: EmployeeCompany = new EmployeeCompany( '', '',  '', '', '', '', '', '', 0, null, null , false, 0);
-  userId: string;
-  mainForm: FormGroup;
-  companyForm: FormGroup;
-  isNewCompany = false;
-  isNew = false;
-
+export class DetailComponent implements OnInit {
+ employee: Employee;
+ company: any;
+ newCompany:any;
+ isNewCompany: boolean;
+ mainForm: FormGroup;
+ companyForm: FormGroup;
+ clients: any[];
+ campaigns: any[];
   constructor(private employeeService: EmployeeService,
-    private activatedRoute: ActivatedRoute,
-    private sessionService: SessionService,
-    public snackBar: MatSnackBar) { }
+    private route: ActivatedRoute, private sessionService: SessionService,
+    public snackBar: MatSnackBar, private fb: FormBuilder) {
+    this.newCompany = new EmployeeCompany(
+      '',
+      '', '', '',
+      '', '', '',
+      '', null,
+      null, null,
+      null, null);
+    this.isNewCompany = false;
+  }
 
-  // active, resignation, dissmisal, termination, undefined, aplicant, trainee
-  // add bank account, bank name, brithplaceç
 
   // clients = [
   //   {value: 'American IP', viewValue: ''},
@@ -99,84 +97,66 @@ export class DetailComponent implements OnInit, OnChanges {
     {value: 8, viewValue: '8'},
     {value: 9, viewValue: '9'},
     {value: 10, viewValue: '10'}];
-
   genders = [
     { value: 'male', viewValue: 'Male' },
     { value: 'female', viewValue: 'Female' }];
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (this.currentEmployee.employeeId !== '' && changes['currentEmployee']) {
-    }
-  }
   ngOnInit() {
-      this.employeeService.getClient().subscribe((result: any) => { });
-      this.employeeService.getDepartment().subscribe((result: any) => { });
-    this.isAuthorized();
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      this.userId = params['id'];
-    });
-    this.employeeService.getDetails(this.userId)
-      .subscribe((result: IEmployee) => {
-        this.currentEmployee = result;
-        if (typeof this.currentEmployee !== 'undefined') {
-          this.isNew = false;
-        } else {
-          this.isNew = true;
-          this.currentEmployee = new IEmployee('new', '', '', '', '', '', 0, '');
+    this.clients = this.employeeService.clients;
+    this.employee = this.route.snapshot.data['employee'];
+    if (!this.employee.company) {
+      this.employee.company = this.newCompany;
+      this.isNewCompany = true;
+    }
+      this.company = this.employee.company;
+    this.buildForms();
+    if (!this.clients) {
+      this.employeeService.getClient().subscribe(
+        data => {
+          this.clients = data;
+         this.setCampaigns();
         }
-        this.employeeService.getCompany(this.currentEmployee.employeeId)
-                        .subscribe(( company: EmployeeCompany[]) => {
-                          this.currentCompany = company[0];
-                          if (typeof this.currentCompany === 'undefined') {
-                            this.isNewCompany = true;
-                            this.currentCompany = new EmployeeCompany('new',  '', '', '', '', '', '', '', 0, null, null , false, 0);
-                          }
-                          this.employeeService.getCurrentPosition(this.currentEmployee.employeeId)
-                            .subscribe((position: EmployeePosition) => {
-                            this.currentPosition = position;
-                          });
-                          this.setCampaigns(this.currentCompany.client);
-                        });
-              this.clients = this.employeeService.clients;
-      });
-    this.mainForm = new FormGroup({
-      firstName: new FormControl(),
-      middleName: new FormControl(),
-      lastName: new FormControl(),
-      gender: new FormControl(),
-      status: new FormControl(),
-      currentPosition: new FormControl(),
-      currentPositionId: new FormControl(),
-      currentPositionDate: new FormControl(),
-    });
-    this.companyForm = new FormGroup({
-      client: new FormControl(),
-      campaign: new FormControl(),
-      supervisor: new FormControl(),
-      trainer: new FormControl(),
-      trainingGroupRef: new FormControl(),
-      trainingGroupNum: new FormControl(),
-      hireDate: new FormControl(),
-      terminationDate: new FormControl(),
-      reapplicant: new FormControl(),
-      reapplicantTimes: new FormControl(),
-    });
+      );
+    }
+    this.setCampaigns();
   }
 
+  buildForms() {
+    this.mainForm = this.fb.group({
+      firstName: [this.employee.firstName],
+      middleName: [this.employee.middleName],
+      lastName: [this.employee.lastName],
+      gender: [this.employee.gender.toLowerCase()],
+      status: [this.employee.status.toLowerCase()],
+      currentPosition: [],
+      currentPositionId: [],
+      currentPositionDate: []
+    });
+    this.companyForm = this.fb.group({
+      client: [this.company.client],
+      campaign: [this.company.campaign],
+      supervisor: [this.company.supervisor],
+      trainer: [this.company.trainer],
+      trainingGroupRef: [this.company.trainingGroupRef],
+      trainingGroupNum: [this.company.trainingGroupNum],
+      hireDate: [this.company.hireDate],
+      terminationDate: [this.company.terminationDate],
+      reapplicant: [this.company.reapplicant],
+      reapplicantTimes: [this.company.reapplicantTimes],
+    });
+  }
   onSubmit() {
-    const employee = new IEmployee(
-      this.currentEmployee._id,
-      this.currentEmployee.employeeId,
+    const employee = new Employee(
+      this.employee._id,
+      this.employee.employeeId,
       this.mainForm.value.firstName,
       this.mainForm.value.lastName,
-      this.currentEmployee.socialSecurity,
+      this.employee.socialSecurity,
       this.mainForm.value.status,
-      parseInt(this.currentEmployee.employeeId, 10),
       this.mainForm.value.gender, // add to form
       this.mainForm.value.middleName
     );
-    this.employeeService.updateEmployee(employee)
-      .subscribe(
+    this.employeeService.updateEmployee(employee).subscribe(
         data => {
           this.snackBar.open('Employee information updated successfully', 'thank you', {
             duration: 2000,
@@ -186,16 +166,15 @@ export class DetailComponent implements OnInit, OnChanges {
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
-        }
-      );
-
+          console.log(error);
+        });
   }
 
   onCompanySubmit() {
     const employeeCompany = new EmployeeCompany(
-      this.currentCompany.id,
-      this.currentEmployee.employeeId,
-      this.currentEmployee._id,
+      this.company._id,
+      this.employee.employeeId + '',
+      this.employee._id,
       this.companyForm.value.client,
       this.companyForm.value.campaign,
       this.companyForm.value.supervisor,
@@ -207,20 +186,7 @@ export class DetailComponent implements OnInit, OnChanges {
       this.companyForm.value.reapplicant,
       this.companyForm.value.reapplicantTimes,
     );
-    if (this.isNewCompany) {
-      this.employeeService.saveCompany(employeeCompany).subscribe(
-        data => {
-          this.snackBar.open('Employee comapany saved successfully', 'Thank you', {
-            duration: 2000,
-          });
-        },
-        error => {
-          this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
-            duration: 2000,
-          });
-        }
-      );
-    } else {
+    if (!this.isNewCompany) {
       this.employeeService.updateCompany(employeeCompany).subscribe(
         data => {
           this.snackBar.open('Employee comapany information updated successfully', 'Thank you', {
@@ -228,28 +194,33 @@ export class DetailComponent implements OnInit, OnChanges {
           });
         },
         error => {
+          console.log(error);
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
-        }
-      );
+        });
+    } else {
+      this.employeeService.saveCompany(employeeCompany).subscribe(
+        data => {
+          this.snackBar.open('Employee comapany information updated successfully', 'Thank you', {
+            duration: 2000,
+          });
+          this.company = data;
+          this.isNewCompany = false;
+        },
+        error => {
+          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
+        });
     }
   }
-  public isAuthorized(): boolean {
-    this.sessionService.getRole().subscribe(
-      (result: number) => {
-        this.currentRole = result;
-        if (result === 1 || result === 4) {
-          this.isAuth = true;
-          return true;
-        }
-      });
-    this.isAuth = false;
-    return false;
-  }
 
-  setCampaigns(id: string) {
-    const i = this.clients.findIndex((result) => result.id === id);
-    this.campaigns = this.clients[i].campaigns;
+
+   setCampaigns() {
+     if (this.clients) {
+      const i = this.clients.findIndex((result) => result.name === this.companyForm.value.client);
+      this.campaigns = this.clients[i].campaigns;
+    }
   }
 }

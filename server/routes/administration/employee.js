@@ -21,10 +21,7 @@ router.post('/client', function (req, res, next) {
                 error: err
             });
         }
-        res.status(200).json({
-            message: 'saved menu',
-            obj: result
-            });
+        res.status(200).json(result);
         });
     }else {
         res.status(400)
@@ -50,10 +47,7 @@ router.get('/client', function (req, res, next) {
                 message: 'Positions are empty or not found'
             });
         }
-        res.status(200).json({
-            message: 'Position request succesfull',
-            obj: result
-        });
+        res.status(200).json(result);
     });
 });
 
@@ -68,10 +62,7 @@ router.put('/client', function ( req, res, next) {
                 error: err
             });
         }
-        res.status(200).json({
-            message: 'client update request succesfull',
-            obj: doc
-        });
+        res.status(200).json(doc);
     });
 });
 

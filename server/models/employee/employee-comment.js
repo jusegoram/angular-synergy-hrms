@@ -10,4 +10,4 @@ var schema = new Schema({
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
 });
 
-module.exports = mongoose.model('Employee-Education', schema);
+module.exports = mongoose.model('Employee-Comment', schema);

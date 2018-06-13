@@ -4,7 +4,7 @@ export class Client {
         public id: string,
         public name: string,
         public campaigns: Campaign[]) { }
-        } 
+        }
 
 export class Campaign {
     constructor(
@@ -13,18 +13,18 @@ export class Campaign {
         }
 
 export class Department {
-    constructor (   public state: string, 
-                    public id: string,
+    constructor (   public state: string,
+                    public _id: string,
                     public name: string,
                     public positions: Position[] ) { }
-}   
+}
 
 export class Position {
-    constructor( 
-        public id: string,
+    constructor(
+        public _id: string,
         public positionid: string,
         public name: string,
         public baseWage: number,) { }
 }
 
-   
+

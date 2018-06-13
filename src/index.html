@@ -44,6 +44,11 @@
       to { opacity: 0.2; }
     }
   </style>
+  <script>
+    if (global === undefined) {
+      var global = window;
+    }
+  </script>
   <script type="text/javascript">
     window.paceOptions = {
       document: true,

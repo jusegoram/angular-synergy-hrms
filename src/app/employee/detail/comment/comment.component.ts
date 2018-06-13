@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Employee} from '../../Employee';
 
 @Component({
   selector: 'comment-info',
@@ -6,7 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent implements OnInit {
-
+  @Input() employee: Employee;
+  @Input() authorization: boolean;
   constructor() { }
 
   ngOnInit() {

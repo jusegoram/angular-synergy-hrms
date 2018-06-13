@@ -1,9 +1,7 @@
-import { Subscription } from 'rxjs/Subscription';
 import { SessionService } from './../../session/services/session.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { Http, Headers, Response } from '@angular/http';
 import {environment } from '../../../environments/environment';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 export class BadgeItem {
   constructor(
@@ -67,44 +65,24 @@ const MENUITEMS = [
 @Injectable()
 export class MenuItems {
   Uri = environment.siteUri;
-  constructor(private sessionService: SessionService, private http: Http) {
+  constructor(private sessionService: SessionService, private http: HttpClient) {
 
   }
   getActiveMenus() {
     if (this.sessionService.isLoggedIn()) {
-    const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token')
         ? '?token=' + localStorage.getItem('token')
         : '';
-    return this.http.get(this.Uri + '/menu' + token)
-        .map(
-        (response: Response) => {
-            const menus = response.json().obj;
-            let transformedMenus: Menu[] = [];
-            for (let menu of menus) {
-                transformedMenus.push( new Menu(
-                    menu.state,
-                    menu.name,
-                    menu.type,
-                    menu.icon,
-                    menu.badge,
-                    menu.children,
-                    menu.roles
-                ));
-            }
-            return transformedMenus;
-        })
-        .catch((err: Response) => Observable.throw(err));
+      return this.http.get<Array<Menu>>(this.Uri + '/menu' + token);
     }
-}
+  }
 
   add() {
-    this.addMenu().subscribe((response) => console.log(response));
+    this.addMenu('').subscribe((response) => console.log(response));
   }
-  addMenu() {
-    const body = JSON.stringify(MENUITEMS[2]);
-    const headers = new Headers({'Content-Type': 'application/json'});
-    return this.http.post(this.Uri + '/menu', body, { headers: headers })
-        .map((response: Response) => response.json())
-        .catch((error: Response) => Observable.throw(error.json()));
+  addMenu(param: any) {
+    const body = param ;
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post(this.Uri + '/menu', body, { headers: headers });
   }
 }

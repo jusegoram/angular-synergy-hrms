@@ -2,139 +2,121 @@
     <mat-toolbar class="header mat-elevation-z8 mat-indigo-500">
         <span>Details</span>
         <span class="fill-remaining-space"></span>
-        <span> Employee ID:{{' '+this.currentEmployee?.employeeId}} </span>
+        <span> Employee ID:{{this.employee.employeeId}} </span>
     </mat-toolbar>
     <div fxLayout="row">
-        <avatar-detail [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></avatar-detail>
+        <avatar-detail [id]="this.employee._id"></avatar-detail>
         <mat-card class="main-info pa-2">
             <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
 
-            <form class="ma-2" [formGroup]="mainForm" id="mainForm" (ngSubmit)="onSubmit()">
+            <form class="ma-2" [formGroup]="mainForm">
                 <section class="mat-title">
                     <h2>Main Information</h2>
                 </section>
                 <mat-form-field>
-                    <input matInput formControlName="firstName" placeholder="First Name" [ngModel]="this.currentEmployee?.firstName  | titlecase"
-                        (ngModelChange)="this.currentEmployee.firstName=$event" [readonly]="!isAuth">
+                    <input matInput formControlName="firstName" placeholder="First Name">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="middleName" placeholder="Middle Name" [ngModel]="this.currentEmployee?.middleName  | titlecase"
-                        (ngModelChange)="this.currentEmployee.middleName=$event" [readonly]="!isAuth">
+                    <input matInput formControlName="middleName" placeholder="Middle Name">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="lastName" placeholder="Last Name" [ngModel]="this.currentEmployee?.lastName  | titlecase"
-                        (ngModelChange)="this.currentEmployee.lastName=$event" [readonly]="!isAuth">
+                    <input matInput formControlName="lastName" placeholder="Last Name">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select formControlName="gender" placeholder="Gender" [ngModel]="this.currentEmployee?.gender | lowercase" (ngModelChange)="this.currentEmployee.gender=$event"
-                        [disabled]="!isAuth">
+                    <mat-select formControlName="gender" placeholder="Gender">
                         <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select formControlName="status" placeholder="Status" [ngModel]="this.currentEmployee?.status | lowercase" (ngModelChange)="this.currentEmployee.status=$event"
-                        [disabled]="!isAuth">
+                    <mat-select formControlName="status" placeholder="Status">
                         <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="currentPosition" placeholder="Current Position" [ngModel]="this.currentPosition?.position  | titlecase"
-                        (ngModelChange)="this.currentPosition.position=$event" [readonly]="true">
+                    <input matInput formControlName="currentPosition" placeholder="Current Position">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="currentPositionId" placeholder="Positition ID" [ngModel]="this.currentPosition?.positionid  | titlecase"
-                        (ngModelChange)="this.currentPosition.positionid=$event" [readonly]="true">
+                    <input matInput formControlName="currentPositionId" placeholder="Positition ID">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="currentPositionDate" placeholder="Since" [ngModel]="this.currentPosition?.startDate  |  date: 'MM/dd/yyyy'"
-                        (ngModelChange)="this.currentPosition.startDate=$event" [readonly]="true">
+                    <input matInput formControlName="currentPositionDate" placeholder="Since">
                 </mat-form-field>
                 <div>
-                    <h3>Social security:{{" "+this.currentEmployee.socialSecurity}}</h3>
+                    <h3>Social security:{{" "+this.employee.socialSecurity}}</h3>
                 </div>
             </form>
-            <button mat-raised-button color="warn" form="mainForm" *ngIf="isAuth">Update Main</button>
+            <button mat-raised-button color="warn" (click)="onSubmit()">Save</button>
 
             <mat-divider></mat-divider>
-            <form class="ma-2" [formGroup]="companyForm" id="companyForm" (ngSubmit)="onCompanySubmit()">
+            <form class="ma-2" [formGroup]="companyForm" id="companyForm">
                 <section class="mat-title">
                     <h2>Company Information</h2>
                 </section>
 
                 <mat-form-field>
-                    <mat-select placeholder="Client" formControlName="client" [ngModel]="this.currentCompany?.client | lowercase" (selectionChange)="setCampaigns($event.value)">
-                        <mat-option *ngFor="let client of clients" [value]="client.id">
+                    <mat-select placeholder="Client" (selectionChange)="setCampaigns()" formControlName="client" >
+                        <mat-option *ngFor="let client of clients" [value]="client?.name">
                             {{client.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <mat-select placeholder="Campaign" formControlName="campaign" [ngModel]="this.currentCompany?.campaign">
-                        <mat-option *ngFor="let campaign of campaigns" [value]="campaign.name">
+                    <mat-select placeholder="Campaign" formControlName="campaign">
+                        <mat-option *ngFor="let campaign of campaigns" [value]="campaign?.name">
                             {{campaign.name | titlecase}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="supervisor" placeholder="Supervisor Name" [value]="this.currentCompany?.supervisor" [ngModel]="this.currentCompany?.supervisor"
-                        (ngModelChange)="this.currentCompany.supervisor=$event" [disabled]="!isAuth">
+                    <input matInput formControlName="supervisor" placeholder="Supervisor Name" >
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="trainer" placeholder="Trainer" [value]="this.currentCompany?.trainer" [ngModel]="this.currentCompany?.trainer"
-                        (ngModelChange)="this.currentCompany.trainer=$event" [disabled]="!isAuth">
+                    <input matInput formControlName="trainer" placeholder="Trainer" >
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Reference" [value]="this.currentCompany?.trainingGroupRef"
-                        [ngModel]="this.currentCompany?.trainingGroupRef" (ngModelChange)="this.currentCompany.trainingGroupRef=$event"
-                        [disabled]="!isAuth">
+                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Reference">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="trainingGroupNum" placeholder="Training Group No." [value]="this.currentCompany?.trainingGroupNum"
-                        [ngModel]="this.currentCompany?.trainingGroupNum" (ngModelChange)="this.currentCompany.trainingGroupNum=$event"
-                        [disabled]="!isAuth">
+                    <input matInput formControlName="trainingGroupNum" placeholder="Training Group No.">
                 </mat-form-field>
 
                 <mat-form-field>
-                    <input matInput formControlName="hireDate" placeholder="Hire Date (mm/dd/yyyy)" [matDatepicker]="hirePicker" (focus)="hirePicker.open()"
-                        [value]="this.currentCompany?.hireDate | date: 'MM/dd/yyyy' " [ngModel]="this.currentCompany?.hireDate | date: 'MM/dd/yyyy'"
-                        (ngModelChange)="this.currentCompany.hireDate=$event" [disabled]="!isAuth" errorState=f alse>
+                    <input matInput formControlName="hireDate" placeholder="Hire Date (mm/dd/yyyy)" [matDatepicker]="hirePicker" (focus)="hirePicker.open()">
                     <mat-datepicker #hirePicker></mat-datepicker>
                 </mat-form-field>
 
                 <mat-form-field>
                     <input matInput formControlName="terminationDate" placeholder="Termination Date (mm/dd/yyyy)" [matDatepicker]="terminationPicker"
-                        (focus)="terminationPicker.open()" [value]="this.currentCompany?.terminationDate | date: 'MM/dd/yyyy' "
-                        [ngModel]="this.currentCompany?.terminationDate | date: 'MM/dd/yyyy'" (ngModelChange)="this.currentCompany.terminationDate=$event"
-                        [disabled]="!isAuth">
+                        (focus)="terminationPicker.open()">
                     <mat-datepicker #terminationPicker></mat-datepicker>
                 </mat-form-field>
 
                 <!-- reapplicant yes|no && reapplicant times (number)-->
 
-                <mat-checkbox formControlName="reapplicant" [ngModel]="this.currentCompany?.reapplicant" (ngModelChange)="this.currentCompany.reapplicant=$event">Reapplicant</mat-checkbox>
+                <mat-checkbox formControlName="reapplicant" >Reapplicant</mat-checkbox>
 
 
                 <mat-form-field *ngIf="this.companyForm.value.reapplicant">
-                    <mat-select placeholder="How many times?" formControlName="reapplicantTimes" [ngModel]="this.currentCompany?.reapplicantTimes">
+                    <mat-select placeholder="How many times?" formControlName="reapplicantTimes">
                         <mat-option *ngFor="let reaptime of reaptimes" [value]="reaptime.value">
                             {{reaptime.viewValue}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </form>
-            <button mat-raised-button color="warn" form="companyForm" *ngIf="isAuth">Update Company</button>
+            <button mat-raised-button color="warn" (click)="onCompanySubmit()">Save</button>
         </mat-card>
     </div>
-    <position-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></position-info>
-    <payroll-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></payroll-info>
-    <personal-info [employeeId]="this.currentEmployee?.employeeId" [authorization]="isAuth"></personal-info>
-    <family-info></family-info>
-    <comment-info></comment-info>
+    <position-info [employee]="this.employee"></position-info>
+    <payroll-info [payroll]="this.employee.payroll" [employee]="this.employee" ></payroll-info>
+    <personal-info [employee]="this.employee"></personal-info>
+    <family-info [employee]="this.employee"></family-info>
+    <comment-info [employee]="this.employee"></comment-info>
 </div>

@@ -2,7 +2,7 @@ import { SessionService } from '../services/session.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { IUser } from '../User';
+import { User } from '../User';
 
 @Component({
   selector: 'app-signin',
@@ -21,11 +21,11 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit() {
-    const user = new IUser(this.form.value.uname, this.form.value.password);
+    const user = new User(this.form.value.uname, this.form.value.password);
     this.sessionService.signin(user).subscribe((data) => {
-          localStorage.setItem('token', data.token);
-          localStorage.setItem('userId', data.userId);
-          this.sessionService.authBS.next(true);
+          localStorage.setItem('token', data['token']);
+          localStorage.setItem('userId', data['userId']);
+          // this.sessionService.authBS.next(true);
           this.router.navigateByUrl('/main');
       },
       error => {

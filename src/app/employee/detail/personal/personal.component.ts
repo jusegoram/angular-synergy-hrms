@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { EmployeeService } from '../../services/employee.service';
 import { SessionService } from '../../../session/services/session.service';
-import { EmployeePersonal } from '../../services/models/employee-models';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {Employee, EmployeePersonal} from '../../Employee';
+import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Params, ActivatedRoute } from '@angular/router';
 
@@ -13,10 +13,11 @@ import { Params, ActivatedRoute } from '@angular/router';
 })
 export class PersonalComponent implements OnInit, OnChanges {
   userId: string;
-  @Input() employeeId: string;
+  @Input() employee: Employee;
   @Input() authorization: boolean;
   isNew = false;
-
+  personal: any;
+  newPersonal: any;
   marStatus = [
     { value: 'single', name: 'Single' },
     { value: 'married', name: 'Married/Remarried' },
@@ -61,69 +62,68 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'trial farm', name: 'Trial Farm' }];
   myForm: FormGroup;
   public isAuth = false;
-  public dataSource: EmployeePersonal;
 // sand hill, August Pine Ridge,Double Head Cabbage, San Lazaro Village, libertad village, palmar village, santa rita,
   ngOnChanges(changes: SimpleChanges) {
-    if (this.employeeId !== null && changes['employeeId']) {
-      this.loadInfo();
-
-    }
   }
 // TO DO: add town and district
-  constructor(private employeeService: EmployeeService,
-              private sessionService: SessionService,
-              public snackBar: MatSnackBar,
-              private activatedRoute: ActivatedRoute) {
-               }
+  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar, private fb: FormBuilder) {
+    this.newPersonal = new EmployeePersonal(
+      '', '', '', '',
+      '', '', '' , null ,
+      '' , '', null, '',
+      '', '', null);
+    }
 
   ngOnInit() {
-    this.isAuthorized();
-    this.myForm = new FormGroup({
-      birthDate: new FormControl(),
-      birthPlaceDis: new FormControl(),
-      birthPlaceTow: new FormControl(),
-      maritalStatus: new FormControl(),
-      address: new FormControl(),
-      town: new FormControl(),
-      district: new FormControl(),
-      addressDate: new FormControl(),
-      celNumber: new FormControl(),
-      telNumber: new FormControl(),
-      emailAddress: new FormControl(),
-      emailDate: new FormControl()
-    });
-
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      this.userId = params['id'];
+    this.personal = this.employee.personal;
+    if (!this.employee.personal) {
+      this.personal = this.newPersonal;
+      this.isNew = true;
+    }
+    this.buildForm(this.personal);
+  }
+  // public isAuthorized(): boolean {
+  //   this.sessionService.getRole().subscribe(
+  //     (result: number) => {
+  //       if (result === 1 || result === 4) {
+  //         this.isAuth = true;
+  //         return true;
+  //       }
+  //     });
+  //       this.isAuth = false;
+  //       return false;
+  // }
+  // loadInfo() {
+  //   this.employeeService.getPersonal(this.employeeId).subscribe(
+  //     (employeePersonal) => {
+  //      this.dataSource = employeePersonal;
+  //      if (typeof this.dataSource === 'undefined') {
+  //        this.isNew = true;
+  //        this.dataSource = new EmployeePersonal('new', '', '', '', '', '', '', '', '', '', new Date()  , '' , '', '', '');
+  //      }
+  //   });
+  // }
+  buildForm(arg: any) {
+    this.myForm = this.fb.group({
+      birthDate: [arg.birthDate],
+      birthPlaceDis: [arg.birthPlaceDis],
+      birthPlaceTow: [arg.birthPlaceTow],
+      maritalStatus: [arg.maritalStatus],
+      address: [arg.address],
+      town: [arg.town],
+      district: [arg.district],
+      addressDate: [arg.addressDate],
+      celNumber: [arg.celNumber],
+      telNumber: [arg.telNumber],
+      emailAddress: [arg.emailAddress],
+      emailDate: [arg.emailDate]
     });
   }
-  public isAuthorized(): boolean {
-    this.sessionService.getRole().subscribe(
-      (result: number) => {
-        if (result === 1 || result === 4) {
-          this.isAuth = true;
-          return true;
-        }
-      });
-        this.isAuth = false;
-        return false;
-  }
-  loadInfo(){
-    this.employeeService.getPersonal(this.employeeId).subscribe(
-      (employeePersonal: EmployeePersonal[]) => {
-       this.dataSource = employeePersonal[0];
-       if (typeof this.dataSource === 'undefined'){
-         this.isNew = true;
-         this.dataSource = new EmployeePersonal('new', '', '', '', '', '', '', '', '', '', new Date()  , '' , '', '', '');
-       }
-    });
-  }
-
   onSubmit() {
     const employeePersonal = new EmployeePersonal(
-      this.dataSource.id,
-      this.employeeId,
-      this.userId,
+      this.personal._id,
+      this.employee.employeeId + '',
+      this.employee._id,
       this.myForm.value.maritalStatus, // added to form
       this.myForm.value.address,
       this.myForm.value.town, // added to form
@@ -162,6 +162,7 @@ export class PersonalComponent implements OnInit, OnChanges {
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
+          console.log(error);
         }
       );
     }

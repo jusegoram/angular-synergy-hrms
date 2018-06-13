@@ -10,11 +10,11 @@ import { BonusComponent } from './components/bonus/bonus.component';
 import { DeductionComponent } from './components/deduction/deduction.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {MaterialSharedModule} from '../shared/material.shared.module';
-import {HttpModule} from '@angular/http';
 import {FileUploadModule} from 'ng2-file-upload';
 import {FormsModule} from '@angular/forms';
 import {PayrollService} from './services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -23,7 +23,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     PayrollRoutingModule,
     FlexLayoutModule,
     MaterialSharedModule,
-    HttpModule,
+    HttpClientModule,
     FileUploadModule,
     FormsModule,
     NgxDatatableModule

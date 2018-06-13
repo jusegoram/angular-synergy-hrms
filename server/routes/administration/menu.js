@@ -26,10 +26,7 @@ router.get('/', function(req, res, next) {
                 message: 'pages not found'
             });
         }
-        res.status(200).json({
-            message: 'pages request succesfull',
-            obj: result
-        });
+        res.status(200).json(result);
     });
 });
 

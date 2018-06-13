@@ -37,7 +37,7 @@ export class EmployeeComponent implements OnInit {
   ngOnInit() {
     this.departments = [
       { state: 'default',
-        id: '',
+        _id: '',
         name: 'New',
         positions: []
       }
@@ -96,7 +96,7 @@ export class EmployeeComponent implements OnInit {
     });
     if (i >= 0) {
     this.currentDep.positions.push(this.newPos);
-      if (this.departments[i].id !== '') {
+      if (this.departments[i]._id !== '') {
         this.departments[i].state = 'newPosition';
       } else {
         this.departments[i].state = 'new';
@@ -143,7 +143,7 @@ export class EmployeeComponent implements OnInit {
     const i = this.departments.findIndex(result => {
       return result.name === this.newDep;
     });
-    if (this.departments[i].id === '') {
+    if (this.departments[i]._id === '') {
       this.departments[i].state = 'new';
     } else if ( this.departments[i].state !== 'modified' ) {
       this.departments[i].state = 'modified';
@@ -165,14 +165,14 @@ export class EmployeeComponent implements OnInit {
 
   onSaveDep() {
     for (let i = 0; i < this.departments.length; i++ ) {
-      if (this.departments[i].state === 'new'){
-        //save admService
+      if (this.departments[i].state === 'new') {
+        // save admService
         this._admService.saveDepartment(this.departments[i])
         .subscribe(result => {
           this.departments[i].state = 'saved';
         });
         console.log('new identified');
-      }else if (this.departments[i].state === 'newPosition'){
+      }else if (this.departments[i].state === 'newPosition') {
         this._admService.updateDepartment(this.departments[i]).subscribe(
           data => {
             this.snackBar.open('Departments information updated successfully', 'thank you', {
@@ -207,7 +207,7 @@ export class EmployeeComponent implements OnInit {
     }
   }
 
-  onSaveCli(){
+  onSaveCli() {
     for (let i = 0; i < this.clients.length; i++ ) {
       if (this.clients[i].state === 'new') {
         // save admService
@@ -216,7 +216,7 @@ export class EmployeeComponent implements OnInit {
           this.clients[i].state = 'saved';
         });
         console.log('new identified');
-      }else if (this.clients[i].state === 'newPosition'){
+      }else if (this.clients[i].state === 'newPosition') {
         this._admService.updateClient(this.clients[i]).subscribe(result => {
           this.departments[i].state = 'saved';
         });

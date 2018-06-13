@@ -1,15 +1,28 @@
-var express = require('express');
-var router = express.Router();
-var jwt = require('jsonwebtoken');
-var Department = require('../../models/administration/administration-department');
-var mongoose = require('mongoose');
-router.post('/department', function (req, res, next) {
-    var token = jwt.decode(req.query.token);
+let express = require('express');
+let router = express.Router();
+let jwt = require('jsonwebtoken');
+let Department = require('../../models/administration/administration-department');
+let mongoose = require('mongoose');
 
-    var department = new Department({
+
+router.post('/department', function (req, res, next) {
+  let token = jwt.decode(req.query.token);
+  let _positions = [];
+  if (!req.body.positions){
+    let reqArray = req.body.positions;
+    for ( i=0; i < reqArray.length(); i++){
+      _positions.push(new mongoose.Types.ObjectId());
+      Department.position.create(new Department.position({
+        _id: _positions[i],
+        name: reqArray[i].name,
+        baseWage: reqArray[i].baseWage,
+      }));
+    }
+  }
+  let department = new Department.department({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        positions: req.body.positions
+        positions: _positions
     });
     if(parseInt(token.user.role) === 4) {
         department.save(function (err, result) {
@@ -19,58 +32,102 @@ router.post('/department', function (req, res, next) {
                 error: err
             });
         }
-        res.status(200).json({
-            message: 'saved menu',
-            obj: result
-            });
+        res.status(200).json(result);
         });
     }else {
         res.status(400)
     }
+
+});
+
+router.post('/position', function (req, res, next) {
+  let id = new mongoose.Types.ObjectId();
+  let position = new Department.position({
+    _id: id,
+    positionId: req.body.name,
+    name: req.body.name,
+    baseWage: req.body.baseWage
+  });
+  Department.department.findById(req.body.department, function (err, result) {
+    if(err) console.log(err);
+    result.positions.push(id);
+    result.save();
+  });
+  position.save(function (err, result) {
+    if (err) {
+      return res.status(500).json({
+        title: 'An error occurred',
+        error: err
+      });
+    }
+    res.status(200).json(result);
+  });
 });
 
 router.get('/department', function (req, res, next) {
-    Department.find(
-        function (err, result) {
-        if (err) {
-            return res.status(500).json({
-                title: 'An error occurred',
-                error: err
-            });
-        }if (req.query.token === '') {
-            return res.status(500).json({
-                title: 'Not Found',
-                message: 'authentication not found'
-            });
-        }if (result === null) {
-            return res.status(500).json({
-                title: 'Not found',
-                message: 'Positions are empty or not found'
-            });
-        }
-        res.status(200).json({
-            message: 'Position request succesfull',
-            obj: result
+    Department.department.find()
+  .populate('positions').exec(function (err, result) {
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
         });
+      }if (req.query.token === '') {
+        return res.status(500).json({
+          title: 'Not Found',
+          message: 'authentication not found'
+        });
+      }if (result === null) {
+        return res.status(500).json({
+          title: 'Not found',
+          message: 'Positions are empty or not found'
+        });
+      }
+      res.status(200).json(result);
     });
 });
 
+router.get('/position', function (req, res, next) {
+  Department.position.findById(req.query.id, function (err, result) {
+    if(err) res.status(500).json(err);
+    res.status(200).json(result);
+  });
+});
+
 router.put('/department', function ( req, res, next) {
-    Department.findById(req.query.id, function(err, doc) { 
-        doc.name = req.body.name;
-        doc.positions = req.body.positions;
-        doc.save();
+  // let positions = req.body.positions;
+  // if (!positions){
+  //   for(i=0; i < positions.length(); i++) {
+  //     Department.position.findById(positions[i], function (err, result) {
+  //       result.positionId = positions[i].positionId;
+  //       result.name = positions[i].name;
+  //       result.baseWage = positions[i].baseWage;
+  //     });
+  //   }
+  // }
+    Department.department.findById(req.query.id, function(err, result) {
+      result.name = req.body.name;
+      result.save();
         if (err) {
-            return res.status(500).json({
-                title: 'An error occurred',
-                error: err
-            });
+            return res.status(500).json(err);
         }
-        res.status(200).json({
-            message: 'department update request succesfull',
-            obj: doc
-        });
+      res.status(200).json(result);
     });
+});
+
+router.put('/position', function (req, res, next) {
+  let positions = req.body.positions;
+  if (!positions){
+    for( i=0; i < positions.length(); i++) {
+      Department.position.findById(positions[i], function (err, result) {
+        if (err) return res.status(500).json(err);
+        result.positionId = positions[i].positionId;
+        result.name = positions[i].name;
+        result.baseWage = positions[i].baseWage;
+      });
+
+    }
+  }
 });
 
 module.exports = router;

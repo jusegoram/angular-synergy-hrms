@@ -1,0 +1,111 @@
+<div class="pa-1">
+  <mat-toolbar class="header mat-elevation-z8 mat-indigo-500">
+    <span>New Employee</span>
+    <span class="fill-remaining-space"></span>
+    <span></span>
+  </mat-toolbar>
+  <div fxLayout="row">
+    <avatar-detail [id]="" [authorization]="isAuth"></avatar-detail>
+    <mat-card class="main-info pa-2">
+      <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
+
+      <form class="ma-2" [formGroup]="mainForm" id="mainForm" (ngSubmit)="onSubmit()">
+        <section class="mat-title">
+          <h2>Main Information</h2>
+        </section>
+        <mat-form-field>
+          <input matInput formControlName="firstName" placeholder="First Name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="middleName" placeholder="Middle Name">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="lastName" placeholder="Last Name">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="gender" placeholder="Gender" >
+            <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-select formControlName="status" placeholder="Status">
+            <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput formControlName="socialSecurity" placeholder="Social Security No.">
+        </mat-form-field>
+      </form>
+      <span> More fields will appear as soon as you create the employee successfully</span>
+      <button mat-raised-button color="warn" form="mainForm" *ngIf="isAuth">Create Employee</button>
+
+      <mat-divider></mat-divider>
+      <form class="ma-2" [formGroup]="companyForm"  *ngIf="created" id="companyForm" (ngSubmit)="onCompanySubmit()">
+        <section class="mat-title">
+          <h2>Company Information</h2>
+        </section>
+
+        <mat-form-field>
+          <mat-select placeholder="Client" formControlName="client">
+            <mat-option *ngFor="let client of clients" [value]="client.id">
+              {{client.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="Campaign" formControlName="campaign">
+            <mat-option *ngFor="let campaign of campaigns" [value]="campaign.name">
+              {{campaign.name | titlecase}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="supervisor" placeholder="Supervisor Name">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="trainer" placeholder="Trainer">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="trainingGroupRef" placeholder="Training Group Reference">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="trainingGroupNum" placeholder="Training Group No.">
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="hireDate" placeholder="Hire Date (mm/dd/yyyy)" [matDatepicker]="hirePicker" (focus)="hirePicker.open()">
+          <mat-datepicker #hirePicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput formControlName="terminationDate" placeholder="Termination Date (mm/dd/yyyy)" [matDatepicker]="terminationPicker" (focus)="terminationPicker.open()">
+          <mat-datepicker #terminationPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- reapplicant yes|no && reapplicant times (number)-->
+
+        <mat-checkbox formControlName="reapplicant"></mat-checkbox>
+
+
+        <mat-form-field *ngIf="this.companyForm.value.reapplicant">
+          <mat-select placeholder="How many times?" formControlName="reapplicantTimes">
+            <mat-option *ngFor="let reaptime of reaptimes" [value]="reaptime.value">
+              {{reaptime.viewValue}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </form>
+      <button mat-raised-button color="warn" form="companyForm" *ngIf="isAuth">Save Company</button>
+    </mat-card>
+  </div>
+  <position-info *ngIf="created"></position-info>
+  <payroll-info  *ngIf="created"></payroll-info>
+  <personal-info  *ngIf="created"></personal-info>
+  <family-info *ngIf="created"></family-info>
+  <comment-info *ngIf="created"></comment-info>
+</div>

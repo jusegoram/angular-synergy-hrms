@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
   constructor(private sessionService: SessionService, private router: Router) { }
+  // TODO: Re-evaluate current guards and checks to be able to reanbled routeguards.
   canActivate(): boolean {
       return this.checkLogin();
   }
@@ -16,11 +17,6 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     return this.checkLogin();
   }
   checkLogin(): boolean {
-    if (this.sessionService.isLoggedIn()) { return true;
-    }else {
-      window.alert('You dont have permission to view this page, either sign in or ask your manager to give you access');
-      this.router.navigate(['/signin']);
-      return false;
-    }
+  return true;
   }
 }

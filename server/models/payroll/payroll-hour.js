@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 
-var schema = new Schema({
+let schema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   dialerId: { type: String, required: true },
