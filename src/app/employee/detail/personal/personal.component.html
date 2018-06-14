@@ -22,14 +22,14 @@
 
   <mat-form-field>
       <mat-select placeholder="Birth place district" formControlName="birthPlaceDis">
-       <mat-option *ngFor="let district of districts" [value]="district.value">
+       <mat-option *ngFor="let district of districts" [value]="district.value.toLowerCase()">
           {{district.name}}
        </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>
         <mat-select placeholder="Birth place town" formControlName="birthPlaceTow">
-         <mat-option *ngFor="let town of towns" [value]="town.value">
+         <mat-option *ngFor="let town of towns" [value]="town.value.toLowerCase()">
             {{town.name}}
          </mat-option>
         </mat-select>
