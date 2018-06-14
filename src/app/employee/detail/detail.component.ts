@@ -8,6 +8,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Client } from '../../administration/employee/models/positions-models';
+import { DatePipe } from '@angular/common';
 
  @Component ({
   selector: 'app-detail',
@@ -16,8 +17,10 @@ import { Client } from '../../administration/employee/models/positions-models';
 })
 export class DetailComponent implements OnInit {
  employee: Employee;
+ positions: any;
+ latestPos: any;
  company: any;
- newCompany:any;
+ newCompany: any;
  isNewCompany: boolean;
  mainForm: FormGroup;
  companyForm: FormGroup;
@@ -25,7 +28,7 @@ export class DetailComponent implements OnInit {
  campaigns: any[];
   constructor(private employeeService: EmployeeService,
     private route: ActivatedRoute, private sessionService: SessionService,
-    public snackBar: MatSnackBar, private fb: FormBuilder) {
+    public snackBar: MatSnackBar, private fb: FormBuilder, private datePipe: DatePipe) {
     this.newCompany = new EmployeeCompany(
       '',
       '', '', '',
@@ -104,6 +107,7 @@ export class DetailComponent implements OnInit {
   ngOnInit() {
     this.clients = this.employeeService.clients;
     this.employee = this.route.snapshot.data['employee'];
+    this.positions = this.employee.position;
     if (!this.employee.company) {
       this.employee.company = this.newCompany;
       this.isNewCompany = true;
@@ -121,16 +125,24 @@ export class DetailComponent implements OnInit {
     this.setCampaigns();
   }
 
+   transformDate(date: Date) {
+     const dp = new DatePipe(navigator.language);
+     const p = 'M/dd/yyyy';
+     const dtr = dp.transform(date, p);
+     return dtr;
+   }
   buildForms() {
+    const i = this.positions.length - 1;
+    this.latestPos = this.positions[i];
     this.mainForm = this.fb.group({
       firstName: [this.employee.firstName],
       middleName: [this.employee.middleName],
       lastName: [this.employee.lastName],
       gender: [this.employee.gender.toLowerCase()],
       status: [this.employee.status.toLowerCase()],
-      currentPosition: [],
-      currentPositionId: [],
-      currentPositionDate: []
+      currentPosition: [this.latestPos.position.name],
+      currentPositionId: [this.latestPos.position.positionId],
+      currentPositionDate: [this.transformDate(this.latestPos.startDate)]
     });
     this.companyForm = this.fb.group({
       client: [this.company.client],

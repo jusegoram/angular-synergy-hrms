@@ -2,7 +2,9 @@
     "restartable": "rs",
     "ignore": [
       ".git",
-      "node_modules/**/node_modules"
+      ".vscode",
+      "node_modules/**/node_modules",
+      "uploads"
     ],
     "verbose": true,
     "env": {

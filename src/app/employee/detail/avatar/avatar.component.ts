@@ -1,38 +1,34 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, Output } from '@angular/core';
+import { Component, OnInit, Input} from '@angular/core';
 import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { environment } from '../../../../environments/environment';
 import { EmployeeService } from '../../services/employee.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { EventEmitter } from 'events';
 
 @Component({
   selector: 'avatar-detail',
   templateUrl: './avatar.component.html',
   styleUrls: ['./avatar.component.scss'],
 })
-export class AvatarComponent implements OnChanges{
+export class AvatarComponent implements OnInit {
   @Input() id: string;
   @Input() authorization: boolean;
-
-
   imageData: any;
   selected = '/upload/avatars';
-   URL = environment.siteUri + this.selected;
-
-   ngOnChanges(changes: SimpleChanges) {
-    if (this.id !== '' && changes['employeeId']) {
-      this.loadAvatar(this.id);
-      this.authorization = true;
-    }
-  }
-  constructor( private employeeService: EmployeeService,
-               private sanitizer: DomSanitizer) { }
-
+  URL = environment.siteUri + this.selected;
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['image/jpeg'],
     url: this.URL,
     isHTML5: true
   });
+
+
+  ngOnInit(): void {
+    this.loadAvatar(this.id);
+  }
+  constructor(private employeeService: EmployeeService,
+    private sanitizer: DomSanitizer) { }
+
+
 
   public onclick() {
     this.uploader = new FileUploader({
@@ -46,10 +42,10 @@ export class AvatarComponent implements OnChanges{
     this.employeeService.getAvatar(id).subscribe(
       (response) => {
         console.log(response);
-       blob = response;
-       const urlCreator = window.URL;
+        blob = response;
+        const urlCreator = window.URL;
         this.imageData = this.sanitizer.bypassSecurityTrustUrl(
-            urlCreator.createObjectURL(blob));
+          urlCreator.createObjectURL(blob));
       });
   }
 

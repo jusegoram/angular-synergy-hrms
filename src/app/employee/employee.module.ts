@@ -14,7 +14,7 @@ import { FamilyComponent } from '../employee/detail/family/family.component';
 import { PayrollComponent } from '../employee/detail/payroll/payroll.component';
 import { PositionComponent } from '../employee/detail/position/position.component';
 import { MaterialSharedModule } from '../shared/material.shared.module';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
 import { EmployeeService } from './services/employee.service';
 import { HttpModule } from '@angular/http';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -70,7 +70,7 @@ import {EmployeeResolver} from './services/employee.resolver';
       PersonalEditDialogComponent
     ],
   providers: [
-    EmployeeService, EmployeeResolver, TitleCasePipe ]
+    EmployeeService, EmployeeResolver, TitleCasePipe, DatePipe]
 })
 
 export class EmployeeModule {}
