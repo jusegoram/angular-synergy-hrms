@@ -4,7 +4,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { Department, Client } from '../../../administration/employee/models/positions-models';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { noop } from 'rxjs';
 
 
@@ -18,29 +18,29 @@ export class PositionComponent implements OnInit {
   userId: string;
   @Input() employee: any;
   @Input() authorization: boolean;
-// positions = [
-//   { id: '1001', name: 'ED 1' },
-//   { id: '1002', name: 'Rep 2: A' },
-//   { id: '1003', name: 'Rep 3: Silver' },
-//   { id: '1004', name: 'Rep 4: Gold' },
-//   { id: '1005', name: 'Rep 5: Platinum' },
-//   { id: '1006', name: 'Rep 6: Emerald' },
-//   { id: '1007', name: 'Rep 7: ' },
-//   { id: '1008', name: 'Rep 8' },
-//   { id: '1009', name: 'Cleaner I' },
-//   { id: '1010', name: 'Security' },
-//   { id: '1011', name: 'Trainee' },
-//   { id: '1002', name: 'ED 1 - old' },
-//   { id: '1002', name: 'Rep 2: A - old' },
-//   { id: '1003', name: 'Rep 3: Silver - old' },
-//   { id: '1004', name: 'Rep 4: Gold - old' },
-//   { id: '1005', name: 'Rep 5: Platinum - old' },
-//   { id: '1006', name: 'Rep 6: Emerald - old' },
-//   { id: '1007', name: 'Rep 7:  - old' },
-//   { id: '1008', name: 'Rep 8 - old' },
-//   { id: '1122', name: 'Cleaner I - old' },
-//   { id: '1010', name: 'Security - old' },
-//   { id: '1011', name: 'Trainee - old' }];
+  // positions = [
+  //   { id: '1001', name: 'ED 1' },
+  //   { id: '1002', name: 'Rep 2: A' },
+  //   { id: '1003', name: 'Rep 3: Silver' },
+  //   { id: '1004', name: 'Rep 4: Gold' },
+  //   { id: '1005', name: 'Rep 5: Platinum' },
+  //   { id: '1006', name: 'Rep 6: Emerald' },
+  //   { id: '1007', name: 'Rep 7: ' },
+  //   { id: '1008', name: 'Rep 8' },
+  //   { id: '1009', name: 'Cleaner I' },
+  //   { id: '1010', name: 'Security' },
+  //   { id: '1011', name: 'Trainee' },
+  //   { id: '1002', name: 'ED 1 - old' },
+  //   { id: '1002', name: 'Rep 2: A - old' },
+  //   { id: '1003', name: 'Rep 3: Silver - old' },
+  //   { id: '1004', name: 'Rep 4: Gold - old' },
+  //   { id: '1005', name: 'Rep 5: Platinum - old' },
+  //   { id: '1006', name: 'Rep 6: Emerald - old' },
+  //   { id: '1007', name: 'Rep 7:  - old' },
+  //   { id: '1008', name: 'Rep 8 - old' },
+  //   { id: '1122', name: 'Cleaner I - old' },
+  //   { id: '1010', name: 'Security - old' },
+  //   { id: '1011', name: 'Trainee - old' }];
   public dataSource: any;
   public employeePositions: EmployeePosition[];
   public positions: any;
@@ -48,13 +48,15 @@ export class PositionComponent implements OnInit {
   public departments: Department[];
   public clients: Client[];
   positionForm: FormGroup;
-  displayedColumns = ['positionid', 'position', 'startDate', 'endDate'];
+  displayedColumns = ['client', 'department', 'position', 'positionId', 'startDate', 'endDate'];
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar, public dialog: MatDialog, private employeeService: EmployeeService) { }
-ngOnInit() {
-  this.employeeService.getClient().subscribe(data => this.clients = data);
-    this.employeeService.getDepartment().subscribe(data => { this.departments = data; console.log(data); });
+  ngOnInit() {
+    this.employeeService.getClient().subscribe(data => this.clients = data);
+    this.employeeService.getDepartment().subscribe(data => this.departments = data);
+    console.log(this.employee.position);
     this.employeePositions = this.employee.position;
-    this.populateTable();
+    this.populateTable(this.employeePositions);
+    console.log(this.dataSource);
     this.positionForm = this.fb.group({
       client: [''],
       department: [''],
@@ -62,7 +64,7 @@ ngOnInit() {
       start: [''],
       end: [''],
     });
-}
+  }
 
   // ngOnChanges(changes: SimpleChanges): void {
   //   if ( this.employeeId !== ' ' && changes['employeeId']) {
@@ -81,38 +83,38 @@ ngOnInit() {
   }
 
   onAdd() {
-  //   const selectedPosition = this.positions.find((result) => result.name === this.position );
-  //   const currentDate = new Date();
-  //   if (this.start <= currentDate && !this.end) {
-  //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
-  //     // fix end date
-  //     this.fixEndDate();
-  //     this.currentPositions.push(newpos);
-  //     this.sendRequest();
-  //     this.dataSource = new MatTableDataSource(this.currentPositions);
-  //     this.emptyForm();
-  //   } else if (this.end <= currentDate && this.start < this.end) {
-  //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
-  //     const i = this.currentPositions.length;
-  //     // fix end date
-  //     this.fixEndDate();
-  //     this.currentPositions.push(newpos);
-  //     this.sendRequest();
-  //   this.dataSource = new MatTableDataSource(this.currentPositions);
-  //   this.emptyForm();
-  //   }else{
-  //     this.snackBar.open('Sorry, the dates have to be correct');
-  //     this.emptyForm();
-  //   }
-  // }
-  // fixEndDate() {
-  //   if ( this.currentPositions ) {
-  //   const i = this.currentPositions.length - 1;
-  //     if (i >= 0 && this.currentPositions[i].endDate === undefined ||
-  //         i >= 0 && this.currentPositions[i].endDate === null) {
-  //       this.currentPositions[i].endDate = this.start;
-  //     }
-  //   }
+    //   const selectedPosition = this.positions.find((result) => result.name === this.position );
+    //   const currentDate = new Date();
+    //   if (this.start <= currentDate && !this.end) {
+    //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
+    //     // fix end date
+    //     this.fixEndDate();
+    //     this.currentPositions.push(newpos);
+    //     this.sendRequest();
+    //     this.dataSource = new MatTableDataSource(this.currentPositions);
+    //     this.emptyForm();
+    //   } else if (this.end <= currentDate && this.start < this.end) {
+    //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
+    //     const i = this.currentPositions.length;
+    //     // fix end date
+    //     this.fixEndDate();
+    //     this.currentPositions.push(newpos);
+    //     this.sendRequest();
+    //   this.dataSource = new MatTableDataSource(this.currentPositions);
+    //   this.emptyForm();
+    //   }else{
+    //     this.snackBar.open('Sorry, the dates have to be correct');
+    //     this.emptyForm();
+    //   }
+    // }
+    // fixEndDate() {
+    //   if ( this.currentPositions ) {
+    //   const i = this.currentPositions.length - 1;
+    //     if (i >= 0 && this.currentPositions[i].endDate === undefined ||
+    //         i >= 0 && this.currentPositions[i].endDate === null) {
+    //       this.currentPositions[i].endDate = this.start;
+    //     }
+    //   }
     const newPosition = new EmployeePosition(
       '',
       this.employee.employeeId,
@@ -122,26 +124,35 @@ ngOnInit() {
       this.positionForm.value.position._id,
       this.positionForm.value.start,
       this.positionForm.value.end);
-      this.employeeService.savePosition(newPosition)
+    this.employeeService.savePosition(newPosition)
       .subscribe((data: any) => {
         this.snackBar.open('Employee information updated successfully', 'thank you', {
           duration: 2000,
         });
-        this.positions.push(data);
-        this.searchPosDate(data.startDate);
+        this.populateTable(data);
+        this.fixDate(data.startDate);
       }, error => {
         this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
           duration: 2000,
         });
-          return error;
+        return error;
       });
     console.log(newPosition);
     this.clearForm();
   }
-  searchPosDate(arg: Date) {
-    const i = this.positions.lenght() - 1;
-    this.positions[i].endDate = arg;
+
+  // FIXME: employee positions giving errors;
+  fixDate(arg: Date) {
+    const data = this.dataSource.data;
+    if (data[0]) {
+      const i = data.length - 2;
+      data[i].endDate = arg;
+      this.employeeService.updatePosition(data[i]).subscribe(res => {
+        this.dataSource.data = data;
+      });
+    }
   }
+
   sendRequest() {
     // const i = this.currentPositions.length;
     // const updatePosition = this.currentPositions[i - 2];
@@ -167,7 +178,7 @@ ngOnInit() {
     //   });
   }
   clearForm() {
-      this.positionForm.reset();
+    this.positionForm.reset();
   }
   // onCheck() {
   //   const dialogRef = this.dialog.open(DialogComponent, {
@@ -188,9 +199,14 @@ ngOnInit() {
   //
   //   });
   // }
- populateTable() {
-    this.dataSource = new MatTableDataSource(this.positions);
- }
+  populateTable(event: any) {
+    if (this.dataSource) {
+      const data = this.dataSource.data;
+      data.push(event);
+      this.dataSource.data = data;
+      console.log(this.dataSource.data);
+    } else { this.dataSource = new MatTableDataSource(event); }
+  }
   setPositions(event: any) {
     this.positions = event;
   }

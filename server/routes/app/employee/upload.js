@@ -88,7 +88,7 @@ router.post('/position', function (req, res) {
 
                         pos.employee = res._id;
                         res.save();
-                      Department.position.findOne({'positionid': pos.position}, function(err, result){
+                      Department.position.findOne({'positionId': pos.position}, function(err, result){
                         if(err) console.log(err);
                         else {
                           pos.position = result._id;

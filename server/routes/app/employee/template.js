@@ -66,7 +66,7 @@ router.get('/payroll', function (req, res, next) {
     var fields = [
         'employeeId',
         'TIN',
-        'positionid',
+        'positionId',
         'payrollType',
         'baseWage',
         'bankName',

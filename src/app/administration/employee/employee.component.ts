@@ -45,7 +45,7 @@ export class EmployeeComponent implements OnInit {
 
     this.clients = [
       { state: 'default',
-        id: '',
+        _id: '',
         name: 'New',
         campaigns: []
       }
@@ -61,7 +61,6 @@ export class EmployeeComponent implements OnInit {
     this._admService.getClient().subscribe((results: Client[]) => {
       for (const result of results){
         this.clients.push(result);
-        console.log(this.clients);
       }
     });
 
@@ -121,14 +120,12 @@ export class EmployeeComponent implements OnInit {
     });
     if (i >= 0) {
     this.currentCli.campaigns.push(this.newCam);
-    if (this.clients[i].id !== '') {
+    if (this.clients[i]._id !== '') {
       this.clients[i].state = 'newPosition';
     } else {
       this.clients[i].state = 'new';
     }
     this.clients[i].campaigns = this.currentCli.campaigns;
-
-    console.log(this.clients);
     this.newCam = new Campaign('', '');
     } else {
       const submitted = new Client('new', '', this.newCli, []);
@@ -155,7 +152,7 @@ export class EmployeeComponent implements OnInit {
     const i = this.clients.findIndex(result => {
       return result.name === this.newCli;
     });
-    if (this.clients[i].id === '') {
+    if (this.clients[i]._id === '') {
       this.clients[i].state = 'new';
     } else if ( this.clients[i].state !== 'modified' ) {
       this.clients[i].state = 'modified';

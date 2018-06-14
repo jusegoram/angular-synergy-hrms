@@ -8,12 +8,13 @@ let mongoose = require('mongoose');
 router.post('/department', function (req, res, next) {
   let token = jwt.decode(req.query.token);
   let _positions = [];
-  if (!req.body.positions){
+  if (req.body.positions){
     let reqArray = req.body.positions;
-    for ( i=0; i < reqArray.length(); i++){
+    for ( i=0; i < reqArray.length; i++){
       _positions.push(new mongoose.Types.ObjectId());
       Department.position.create(new Department.position({
         _id: _positions[i],
+        positionId: reqArray[i].positionId,
         name: reqArray[i].name,
         baseWage: reqArray[i].baseWage,
       }));
@@ -48,36 +49,37 @@ router.post('/position', function (req, res, next) {
     name: req.body.name,
     baseWage: req.body.baseWage
   });
-  Department.department.findById(req.body.department, function (err, result) {
-    if(err) console.log(err);
-    result.positions.push(id);
-    result.save();
-  });
   position.save(function (err, result) {
     if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
+      return res.status(500).json(err);
     }
+    Department.department.update({_id: req.body.department}, {$push: { positions: id }}, function(err) {
+      if (err) console.log(err);
+    });
     res.status(200).json(result);
   });
+
+
 });
 
 router.get('/department', function (req, res, next) {
-    Department.department.find()
-  .populate('positions').exec(function (err, result) {
+    Department.department.find().populate({
+      path: 'positions',
+      model: 'Administration-Position'
+    }).exec(function (err, result) {
       if (err) {
         return res.status(500).json({
           title: 'An error occurred',
           error: err
         });
-      }if (req.query.token === '') {
+      }
+      if (req.query.token === '') {
         return res.status(500).json({
           title: 'Not Found',
           message: 'authentication not found'
         });
-      }if (result === null) {
+      }
+      if (result === null) {
         return res.status(500).json({
           title: 'Not found',
           message: 'Positions are empty or not found'

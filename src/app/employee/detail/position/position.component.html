@@ -15,15 +15,27 @@
             </mat-form-field>
         </div>
         <mat-table #table [dataSource]="dataSource" matSort>
-            <ng-container matColumnDef="positionid">
-                <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.positionid}} </mat-cell>
+
+            <ng-container matColumnDef="client">
+                <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
               </ng-container>
+
+            <ng-container matColumnDef="positionId">
+                <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.position.positionId}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="department">
+              <mat-header-cell *matHeaderCellDef>Department</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.department}} </mat-cell>
+            </ng-container>
 
           <ng-container matColumnDef="position">
             <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.position}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.position.name}} </mat-cell>
           </ng-container>
+
 
           <!-- Position Column -->
 
@@ -74,7 +86,7 @@
       <mat-datepicker #endPicker></mat-datepicker>
     </mat-form-field>
     <button mat-icon-button (click)="onAdd()"><mat-icon>add_circle</mat-icon></button>
-    <button mat-icon-button (click)="onCheck()"><mat-icon>check_circle</mat-icon></button>
+    <button mat-icon-button (click)="searchPosDate()"><mat-icon>check_circle</mat-icon></button>
 
   </div>
   </mat-expansion-panel>

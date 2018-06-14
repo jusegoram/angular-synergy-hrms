@@ -46,7 +46,12 @@ router.get('/main', function(req, res){
     Employee.find({ _id: req.query.id}, )
       .populate('company')
       .populate('payroll')
-      .populate('position')
+      .populate({
+        path: 'position',
+        model: 'Employee-Position',
+        populate: {path: 'position', model: 'Administration-Position'},
+        options: { sort: { 'startDate': 1 } }
+      })
       .populate('personal')
       .populate('family')
       .populate('education')
@@ -57,6 +62,7 @@ router.get('/main', function(req, res){
       });
 });
 
+//Deprecated: this will be removed if not used in the next month June 13/2018
 router.get('/company', function(req, res, next){
   EmployeeCompany.findOne({ employeeId: req.query.employeeId}, function(err, result){
     if (err) {
@@ -182,12 +188,11 @@ router.put('/position', function (req, res) {
     if (!result)
       return next(new Error('Could not load Document'));
     else {
-    result.employeeId = req.body.employeeId;
-    result.positionid = req.body.positionid;
-    result.position = req.body.position;
-    result.startDate = doc.startDate;
     result.endDate = req.body.endDate;
-      result.save();
+    console.log(result);
+    result.save(function(err, doc){
+      console.log(err||doc);
+    });
       if (err) {
         return res.status(500).json({
           title: 'An error occurred',
@@ -274,7 +279,7 @@ router.put('/payroll', function (req, res, next) {
       return next(new Error('Could not load Document'));
     else {
     result.TIN = req.body.TIN;
-    result.positionid = req.body.positionid;
+    result.positionId = req.body.positionId;
     result.payrollType = req.body.payrollType;
     result.baseWage = req.body.baseWage;
     result.bankName = req.body.bankName;
@@ -344,10 +349,9 @@ router.post('/company', function(req, res){
   });
 });
 router.post('/position', function(req, res){
-  Employee.findById(req.body.employee, (err, employee) => {
     if (req.body.employeeId) {
       let id = new mongoose.Types.ObjectId();
-      let position = new EmployeePosition({
+      let newPosition = new EmployeePosition({
         _id: id,
         employeeId: req.body.employeeId,
         client: req.body.client,
@@ -357,27 +361,24 @@ router.post('/position', function(req, res){
         endDate: req.body.endDate,
         employee: req.body.employee
       });
-      position.save(function (err, result) {
+      newPosition.save(function (err, result) {
         if (err) {
           return res.status(500).json({
             title: 'An error occurred',
             error: err
           });
         }
-        return res.status(201).json(result);
-      });
-      console.log(employee);
-      employee.position.push(id);
-      employee.save(function(err, result){
-        console.log(result + err);
-      });
-      console.log(employee.position);
+        Employee.update({_id: newPosition.employee}, {$push: { position: newPosition }}, function(err){
+        });
+        result.populate({path: 'position', model: 'Administration-Position'}, function(err, pop){
+          return res.status(201).json(pop);
+        })
 
+      });
     } else {
       return res.status(400).message('sorry, the request was either empty or invalid');
     }
   });
-});
 router.post('/personal', function(req, res, next){
   Employee.findById(req.body.employee, (err, employee) => {
     let id = new mongoose.Types.ObjectId();
@@ -388,6 +389,8 @@ router.post('/personal', function(req, res, next){
     address: req.body.address,
     town: req.body.town,
     district: req.body.district,
+    birthPlaceDis:req.body.birthPlaceDis,
+    birthPlaceTow: req.body.birthPlaceTow,
     addressDate: req.body.addressDate,
     celNumber: req.body.celNumber,
     telNumber: req.body.telNumber,
@@ -468,7 +471,7 @@ router.post('/payroll', function(req, res, next){
       _id: id,
       employeeId: req.body.employeeId,
       TIN: req.body.TIN,
-      positionid: req.body.positionid,
+      positionId: req.body.positionId,
       payrollType: req.body.payrollType,
       baseWage: req.body.baseWage,
       bankName: req.body.bankName,

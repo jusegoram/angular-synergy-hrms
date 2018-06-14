@@ -1,14 +1,14 @@
 export class Client {
     constructor(
         public state: string,
-        public id: string,
+        public _id: string,
         public name: string,
         public campaigns: Campaign[]) { }
         }
 
 export class Campaign {
     constructor(
-        public id: string,
+        public _id: string,
         public name: string) { }
         }
 
@@ -22,9 +22,9 @@ export class Department {
 export class Position {
     constructor(
         public _id: string,
-        public positionid: string,
+        public positionId: string,
         public name: string,
-        public baseWage: number,) { }
+        public baseWage: number ) { }
 }
 
 

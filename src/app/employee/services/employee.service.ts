@@ -90,7 +90,7 @@ export class EmployeeService {
     const params = new HttpParams().set( 'id' , company._id );
     return this.httpClient.put(this.siteURI + '/employee/company', body, { headers: headers, params: params });
   }
-  updatePosition(position: EmployeePosition) {
+  updatePosition(position: any) {
     const body = JSON.stringify(position);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const params = new HttpParams().set( 'id' , position._id );

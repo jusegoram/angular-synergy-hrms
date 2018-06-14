@@ -46,7 +46,7 @@ export class PayrollComponent implements OnInit {
     }
     this.payrollForm = this.fb.group({
       TIN: [this.payroll.TIN],
-      positionid: [this.payroll.positionid ],
+      positionId: [this.payroll.positionId ],
       payrollType: [this.payroll.payrollType] ,
       bankName: [this.payroll.bankName],
       bankAccount: [this.payroll.bankAccount],
@@ -61,7 +61,7 @@ export class PayrollComponent implements OnInit {
         this.employee.employeeId,
         this.employee._id,
         this.payrollForm.value.TIN,
-        this.payrollForm.value.positionid,
+        this.payrollForm.value.positionId,
         this.payrollForm.value.payrollType,
         this.payrollForm.value.bankName,
         this.payrollForm.value.bankAccount,
@@ -84,7 +84,7 @@ export class PayrollComponent implements OnInit {
         this.payroll.employeeId,
         this.payroll.employee,
         this.payrollForm.value.TIN,
-        this.payrollForm.value.positionid,
+        this.payrollForm.value.positionId,
         this.payrollForm.value.payrollType,
         this.payrollForm.value.bankName,
         this.payrollForm.value.bankAccount,
