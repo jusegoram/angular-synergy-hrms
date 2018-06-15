@@ -8,7 +8,7 @@ var schema = new Schema({
     description: { type: String, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
 });
 
 module.exports = mongoose.model('Employee-Education', schema);

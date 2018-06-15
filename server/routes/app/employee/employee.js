@@ -12,7 +12,7 @@ let EmployeePayroll = require("../../../models/employee/employee-payroll");
 let EmployeeFamily = require("../../../models/employee/employee-family");
 let EmployeeCompany = require("../../../models/employee/employee-company");
 let EmployeeEducation = require("../../../models/employee/employee-education");
-
+let EmployeeComment = require("../../../models/employee/employee-comment");
 
 
 
@@ -46,16 +46,27 @@ router.get('/main', function(req, res){
     Employee.find({ _id: req.query.id}, )
       .populate('company')
       .populate('payroll')
+      .populate('personal')
       .populate({
         path: 'position',
         model: 'Employee-Position',
         populate: {path: 'position', model: 'Administration-Position'},
         options: { sort: { 'startDate': 1 } }
       })
-      .populate('personal')
-      .populate('family')
-      .populate('education')
-      .populate('comments')
+      .populate({
+        path: 'family',
+        model: 'Employee-Family'
+      })
+      .populate({
+        path: 'education',
+        model: 'Employee-Education',
+        options: { sort: { 'startDate': 1 } }
+      })
+      .populate({
+        path: 'comment',
+        model: 'Employee-Comment',
+        options: { sort: { 'commentDate': 1 } }
+      })
       .exec((err, result) => {
         if (err) res.status(500);
          res.status(200).json(result);
@@ -154,7 +165,6 @@ router.put('/main', function (req, res, next) {
     res.status(200).json(result);
   });
 });
-
 router.put('/company', function (req, res, next) {
   EmployeeCompany.findById(req.query.id, function (err, result) {
     if (!result)
@@ -182,7 +192,6 @@ router.put('/company', function (req, res, next) {
     res.status(200).json(result);
   });
 });
-
 router.put('/position', function (req, res) {
   EmployeePosition.findById(req.query.id, function(err, result){
     if (!result)
@@ -285,6 +294,25 @@ router.put('/payroll', function (req, res, next) {
     result.bankName = req.body.bankName;
     result.bankAccount = req.body.bankAccount;
     result.billable = req.body.billable;
+      result.save();
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
+        });
+      }
+    }
+    res.status(200).json(result);
+  });
+});
+router.put('/comment', function(req, res, next) {
+  EmployeeComment.findById(req.query.id, function(err, result){
+    if (!result)
+      return next(new Error('Could not load Document'));
+    else {
+    result.comment = req.body.comment;
+    result.commentDate = req.body.commentDate;
+    result.submittedBy = doc.submittedBy;
       result.save();
       if (err) {
         return res.status(500).json({
@@ -413,56 +441,60 @@ router.post('/personal', function(req, res, next){
   });
 });
 router.post('/family', function(req, res, next){
-  Employee.findById(req.body.employee, (err, employee) => {
+  if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let family = new EmployeeFamily({
+    let newFamily = new EmployeeFamily({
       _id: id,
+      employeeId: req.body.employeeId,
       referenceName: req.body.referenceName,
       relationship: req.body.relationship,
       celNumber: req.body.celNumber,
       telNumber: req.body.telNumber,
       emailAddress: req.body.emailAddress,
-      addressDate: req.body.addressDate,
-      celNumber: req.body.celNumber,
-      telNumber: req.body.telNumber,
       address: req.body.address,
       employee: req.body.employee
     });
-    employee.family.push(id);
-    family.save(function (err, result) {
+    newFamily.save(function (err, result){
       if (err) {
         return res.status(500).json({
           title: 'An error occurred',
           error: err
         });
       }
-      res.status(201).json(result);
+      Employee.update({_id: newFamily.employee}, {$push: { family: newFamily }}, function(err){
+      });
+      return res.status(200).json(result);
     });
-  });
+  } else {
+    return res.status(400).message('sorry, the request was either empty or invalid');
+  }
 });
 router.post('/education', function(req, res, next){
-  Employee.findById(req.body.employee, (err, employee) => {
+  if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let education = new EmployeeEducation({
+    let newEducation = new EmployeeEducation({
       _id: id,
+      employeeId: req.body.employeeId,
       institution: req.body.institution,
       description: req.body.description,
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       employee: req.body.employee
     });
-    employee.education.push(id);
-    employee.save();
-    education.save(function (err, result) {
+    newEducation.save(function (err, result){
       if (err) {
         return res.status(500).json({
           title: 'An error occurred',
           error: err
         });
       }
-      return res.status(201).json(result);
+      Employee.update({_id: newEducation.employee}, {$push: { education: newEducation }}, function(err){
+      });
+      return res.status(200).json(result);
     });
-  });
+  } else {
+    return res.status(400).message('sorry, the request was either empty or invalid');
+  }
 });
 router.post('/payroll', function(req, res, next){
   Employee.findById(req.body.employee, (err, employee) => {
@@ -492,7 +524,32 @@ router.post('/payroll', function(req, res, next){
     });
   });
 });
-
+router.post('/comment', function(req, res, next){
+  if (req.body.employeeId){
+    let id = new mongoose.Types.ObjectId();
+    let newComment = new EmployeeComment({
+      _id: id,
+      employeeId: req.body.employeeId,
+      comment: req.body.comment,
+      commentDate: req.body.commentDate,
+      submittedBy: req.body.submittedBy,
+      employee: req.body.employee
+    });
+    newComment.save(function (err, result){
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
+        });
+      }
+      Employee.update({_id: newComment.employee}, {$push: { comment: newComment }}, function(err){
+      });
+      return res.status(200).json(result);
+    });
+  } else {
+    return res.status(400).message('sorry, the request was either empty or invalid');
+  }
+});
 
 router.get('/latestPosition', function(req, response ){
    let latest = EmployeePosition.latestPosition(req.query.id, function(err, res){

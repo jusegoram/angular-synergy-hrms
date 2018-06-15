@@ -36,10 +36,11 @@ export class AvatarComponent implements OnInit {
       url: this.URL + '?id=' + this.id,
       isHTML5: true
     });
+    this.employeeService.clearAvatar(this.id);
   }
   loadAvatar(id: string) {
     let blob;
-    this.employeeService.getAvatar(id).subscribe(
+    this.employeeService.cachedAvatar(id).subscribe(
       (response) => {
         console.log(response);
         blob = response;

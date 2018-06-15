@@ -8,9 +8,9 @@ var schema = new Schema({
     relationship: { type: String, required: true },
     celNumber: { type: String, required: true },
     telNumber: { type: String, required: false },
-    emailAdress: { type: String, required: false },
+    emailAddress: { type: String, required: false },
     address: { type: String, required: false },
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
 });
 
 module.exports = mongoose.model('Employee-Family', schema);

@@ -1,11 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { EmployeePosition } from '../../Employee';
 import { EmployeeService } from '../../services/employee.service';
 import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { Department, Client } from '../../../administration/employee/models/positions-models';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { noop } from 'rxjs';
 
 
 
@@ -66,16 +65,6 @@ export class PositionComponent implements OnInit {
     });
   }
 
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   if ( this.employeeId !== ' ' && changes['employeeId']) {
-  //     this.employeeService.getPositions(this.employeeId).subscribe(
-  //       (employeePosition: EmployeePosition[] ) => {
-  //         this.currentPositions = employeePosition;
-  //         this.dataSource = new MatTableDataSource(this.currentPositions);
-  //         this.departments = this.employeeService.departments;
-  //     });
-  //   }
-  // }
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
@@ -83,38 +72,6 @@ export class PositionComponent implements OnInit {
   }
 
   onAdd() {
-    //   const selectedPosition = this.positions.find((result) => result.name === this.position );
-    //   const currentDate = new Date();
-    //   if (this.start <= currentDate && !this.end) {
-    //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
-    //     // fix end date
-    //     this.fixEndDate();
-    //     this.currentPositions.push(newpos);
-    //     this.sendRequest();
-    //     this.dataSource = new MatTableDataSource(this.currentPositions);
-    //     this.emptyForm();
-    //   } else if (this.end <= currentDate && this.start < this.end) {
-    //     const newpos = new EmployeePosition('new', this.employeeId, this.userId, selectedPosition.positionid, selectedPosition.name, this.start, this.end);
-    //     const i = this.currentPositions.length;
-    //     // fix end date
-    //     this.fixEndDate();
-    //     this.currentPositions.push(newpos);
-    //     this.sendRequest();
-    //   this.dataSource = new MatTableDataSource(this.currentPositions);
-    //   this.emptyForm();
-    //   }else{
-    //     this.snackBar.open('Sorry, the dates have to be correct');
-    //     this.emptyForm();
-    //   }
-    // }
-    // fixEndDate() {
-    //   if ( this.currentPositions ) {
-    //   const i = this.currentPositions.length - 1;
-    //     if (i >= 0 && this.currentPositions[i].endDate === undefined ||
-    //         i >= 0 && this.currentPositions[i].endDate === null) {
-    //       this.currentPositions[i].endDate = this.start;
-    //     }
-    //   }
     const newPosition = new EmployeePosition(
       '',
       this.employee.employeeId,
@@ -152,30 +109,9 @@ export class PositionComponent implements OnInit {
       });
     }
   }
-
+// TODO: determine wether to deprecate or fix
   sendRequest() {
-    // const i = this.currentPositions.length;
-    // const updatePosition = this.currentPositions[i - 2];
-    // if (updatePosition) {
-    // this.employeeService.updatePosition(updatePosition).subscribe(
-    //   data => {},
-    //   error => {});
-    // }
-    //
-    // const savePosition = this.currentPositions[i - 1];
-    // this.employeeService.savePosition(savePosition).subscribe(
-    //   data => {
-    //     this.employeeService.getPositions(this.employeeId).subscribe(
-    //       (employeePosition: EmployeePosition[]) => {
-    //       this.currentPositions = employeePosition;
-    //       this.dataSource = new MatTableDataSource(this.currentPositions);
-    //       this.snackBar.open('Save and reload completed successfully', 'Great!');
-    //       });
-    //  },
-    //   error => {
-    //     this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
-    //       duration: 2000});
-    //   });
+
   }
   clearForm() {
     this.positionForm.reset();

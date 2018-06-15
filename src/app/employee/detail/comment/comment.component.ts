@@ -9,6 +9,8 @@ import {Employee} from '../../Employee';
 export class CommentComponent implements OnInit {
   @Input() employee: Employee;
   @Input() authorization: boolean;
+  dataSource: any;
+  displayedColumns = ['comment', 'by', 'date'];
   constructor() { }
 
   ngOnInit() {

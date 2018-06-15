@@ -3,12 +3,13 @@ import { SessionService } from './../../session/services/session.service';
 import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { ActivatedRoute } from '@angular/router';
-import {Employee, EmployeeCompany} from '../Employee';
+import {Employee, EmployeeCompany, Position} from '../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Client } from '../../administration/employee/models/positions-models';
-import { DatePipe } from '@angular/common';
+import { DatePipe, AsyncPipe } from '@angular/common';
+import { async } from '@angular/core/testing';
 
  @Component ({
   selector: 'app-detail',
@@ -104,26 +105,33 @@ export class DetailComponent implements OnInit {
     { value: 'male', viewValue: 'Male' },
     { value: 'female', viewValue: 'Female' }];
 
-  ngOnInit() {
-    this.clients = this.employeeService.clients;
-    this.employee = this.route.snapshot.data['employee'];
-    this.positions = this.employee.position;
-    if (!this.employee.company) {
-      this.employee.company = this.newCompany;
-      this.isNewCompany = true;
-    }
-      this.company = this.employee.company;
-    this.buildForms();
-    if (!this.clients) {
-      this.employeeService.getClient().subscribe(
-        data => {
-          this.clients = data;
-         this.setCampaigns();
-        }
-      );
-    }
-    this.setCampaigns();
-  }
+   ngOnInit() {
+     this.clients = this.employeeService.clients;
+     this.employee = this.route.snapshot.data['employee'];
+     this.positions = this.employee.position;
+     if (!this.positions[0]) {
+       this.latestPos = new Position();
+       console.log(this.positions);
+     }else {
+      const i = this.positions.length - 1;
+      this.latestPos = this.positions[i];
+     }
+     if (!this.employee.company) {
+       this.employee.company = this.newCompany;
+       this.isNewCompany = true;
+     }
+     this.company = this.employee.company;
+     this.buildForms();
+     if (!this.clients) {
+       this.employeeService.getClient().subscribe(
+         data => {
+           this.clients = data;
+           this.setCampaigns();
+         }
+       );
+     }
+     this.setCampaigns();
+   }
 
    transformDate(date: Date) {
      const dp = new DatePipe(navigator.language);
@@ -132,8 +140,6 @@ export class DetailComponent implements OnInit {
      return dtr;
    }
   buildForms() {
-    const i = this.positions.length - 1;
-    this.latestPos = this.positions[i];
     this.mainForm = this.fb.group({
       firstName: [this.employee.firstName],
       middleName: [this.employee.middleName],
@@ -156,6 +162,7 @@ export class DetailComponent implements OnInit {
       reapplicant: [this.company.reapplicant],
       reapplicantTimes: [this.company.reapplicantTimes],
     });
+    console.log(this.employee);
   }
   onSubmit() {
     const employee = new Employee(
@@ -232,7 +239,7 @@ export class DetailComponent implements OnInit {
    setCampaigns() {
      if (this.clients) {
       const i = this.clients.findIndex((result) => result.name === this.companyForm.value.client);
-      this.campaigns = this.clients[i].campaigns;
+      if ( i >= 0 ) {this.campaigns = this.clients[i].campaigns; }
     }
   }
 }

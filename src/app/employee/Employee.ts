@@ -1,19 +1,20 @@
 export class Employee {
-  constructor(public _id: string,
-              public employeeId: number,
-              public firstName: string,
-              public lastName: string,
-              public socialSecurity: string,
-              public status: string,
-              public gender: string,
-              public middleName?: string,
-              public company?: Object,
-              public position?: Object,
-              public payroll?: Object,
-              public personal?: Object,
-              public family?: Object,
-              public education?: Object,
-              public comments?: Object,
+  constructor(
+    public _id: string,
+    public employeeId: number,
+    public firstName: string,
+    public lastName: string,
+    public socialSecurity: string,
+    public status: string,
+    public gender: string,
+    public middleName?: string,
+    public company?: Object,
+    public position?: Object,
+    public payroll?: Object,
+    public personal?: Object,
+    public family?: Object,
+    public education?: Object,
+    public comments?: Object,
             ) { }
   }
 
@@ -28,6 +29,18 @@ export class EmployeePosition {
               public startDate: Date,
               public endDate?: Date,
   ) { }
+}
+
+export class Position {
+  public startDate: Date;
+  public position: any;
+  constructor() {
+    this.startDate = null;
+    this.position = {
+      name: '',
+      positionId: ''
+    };
+  }
 }
 
 
@@ -78,8 +91,18 @@ export class EmployeeFamily {
               public relationship: string,
               public celNumber: string,
               public telNumber: string,
-              public emailAdress: string,
+              public emailAddress: string,
               public address: string
+  ) { }
+}
+export class EmployeeComment {
+  constructor(
+public _id: string,
+public employeeId: string,
+public comment: string,
+public commentDate: Date,
+public submittedBy: string,
+public employee: string
   ) { }
 }
 // updated as of april 22 7:08 2018

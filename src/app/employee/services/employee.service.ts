@@ -1,48 +1,66 @@
-import {Employee, EmployeeCompany, EmployeePayroll, EmployeePersonal, EmployeePosition} from '../Employee';
-import {Injectable} from '@angular/core';
+import { Employee, EmployeeCompany, EmployeePayroll, EmployeePersonal, EmployeePosition, EmployeeFamily, EmployeeComment } from '../Employee';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { publishReplay, refCount, map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import { publishReplay, refCount, map } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
+export class Store {
+  constructor(public id: string, public obs: Observable<any>) {
+  }
+  getObservable(): Observable<any> {
+    return this.obs;
+  }
+}
 
 @Injectable()
 export class EmployeeService {
   siteURI = environment.siteUri;
   _clients: Observable<any> = null;
   clients: any;
+  store: Store[];
+  _avatar: Observable<Blob> = null;
   _departments: Observable<any> = null;
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
-    constructor( protected httpClient: HttpClient) { }
-  //
-  //
-  // Get Client options and Departments options.
+  constructor(protected httpClient: HttpClient) {
+    this.store = [];
+  }
+
+  /**
+   *
+   *
+   * @returns {Observable<any>}
+   * @memberof EmployeeService
+   */
   getClient(): Observable<any> {
-    if ( !this._clients) {
-     this._clients = this.httpClient.get<any>(this.siteURI + '/admEmp/client').pipe(
-       map((data) => {
-         this.clients = data;
-         return data;
-       }),
-       publishReplay(1),
-       refCount()
-     );
+    if (!this._clients) {
+      this._clients = this.httpClient.get<any>(this.siteURI + '/admEmp/client').pipe(
+        map((data) => {
+          this.clients = data;
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
     }
     return this._clients;
   }
-  getDepartment(): Observable <any> {
-    if ( !this._departments) {
-       this._departments = this.httpClient.get<any>(this.siteURI + '/payroll/department').pipe(
-         publishReplay(1),
-         refCount()
-       );
+  getDepartment(): Observable<any> {
+    if (!this._departments) {
+      this._departments = this.httpClient.get<any>(this.siteURI + '/payroll/department').pipe(
+        publishReplay(1),
+        refCount()
+      );
     }
     return this._departments;
   }
- //
- //
- // Get Table data
+  /**
+   *
+   *
+   * @returns {Observable<Array<Employee>>}
+   * @memberof EmployeeService
+   */
   getEmployees(): Observable<Array<Employee>> {
     if (!this._employees) {
       this._employees = this.httpClient.get<Array<Employee>>(this.siteURI + '/employee/populateTable').pipe(
@@ -52,104 +70,170 @@ export class EmployeeService {
     }
     return this._employees;
   }
-  //
-  //
-  // Get all employee data
+  /**
+   *
+   *
+   * @param {string} param
+   * @returns {Observable<Employee>}
+   * @memberof EmployeeService
+   */
   findEmployeeById(param: string): Observable<Employee> {
-      const params = new HttpParams().set( 'id' , param );
-     return this._detail = this.httpClient.get<Employee>(this.siteURI + '/employee/main', { params: params } );
+    const params = new HttpParams().set('id', param);
+    return this._detail = this.httpClient.get<Employee>(this.siteURI + '/employee/main', { params: params });
+  }
+
+  cachedAvatar(param: string): Observable<any> {
+    const i = this.store.findIndex((res) => res.id === param);
+    if (i >= 0) {
+      console.log('found:' + this.store);
+      return this.store[i].getObservable();
+    } else {
+      const newAvatar = new Store(param, this.getAvatar(param));
+      this.store.push(newAvatar);
+      console.log('notfound:' + this.store);
+      return newAvatar.getObservable();
+    }
   }
   getAvatar(param: string): Observable<any> {
-    const params = new HttpParams().set( 'id' , param );
-    return this.httpClient.get(this.siteURI + '/employee/avatar', { params: params, responseType: 'blob' });
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get(this.siteURI + '/employee/avatar', { params: params, responseType: 'blob' }).pipe(
+      publishReplay(1),
+      refCount(),
+    );
   }
   getPositions(param: string): Observable<Array<EmployeePosition>> {
-    const params = new HttpParams().set( 'id' , param );
-    return this.httpClient.get<Array<EmployeePosition>>(this.siteURI + '/employee/position', { params: params } );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeePosition>>(this.siteURI + '/employee/position', { params: params });
   }
   getPersonal(param: string): Observable<EmployeePersonal> {
-    const params = new HttpParams().set( 'id' , param );
+    const params = new HttpParams().set('id', param);
     return this.httpClient.get<EmployeePersonal>(this.siteURI + '/employee/personal', { params: params });
   }
   getPayroll(param: string): Observable<EmployeePayroll> {
-    const params = new HttpParams().set( 'id' , param );
+    const params = new HttpParams().set('id', param);
     return this.httpClient.get<EmployeePayroll>(this.siteURI + '/employee/payroll', { params: params });
   }
-  //
-  //
-  // Update Employee information.
-  updateEmployee( employee: Employee ) {
+  getfamily(param: string): Observable<Array<EmployeeFamily>> {
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeeFamily>>(this.siteURI + '/employee/family', { params: params });
+  }
+  getComment(param: string): Observable<Array<EmployeeComment>> {
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeeComment>>(this.siteURI + '/employee/comment', { params: params });
+  }
+  /**
+   *
+   *
+   * @param {Employee} employee
+   * @returns
+   * @memberof EmployeeService
+   */
+  updateEmployee(employee: Employee) {
     const body = JSON.stringify(employee);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set( 'id' , employee._id );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', employee._id);
     return this.httpClient.put(this.siteURI + '/employee/main', body, { headers: headers, params: params });
   }
   updateCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set( 'id' , company._id );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', company._id);
     return this.httpClient.put(this.siteURI + '/employee/company', body, { headers: headers, params: params });
   }
   updatePosition(position: any) {
     const body = JSON.stringify(position);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set( 'id' , position._id );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', position._id);
 
     return this.httpClient.put(this.siteURI + '/employee/position', body, { headers: headers, params: params });
   }
   updatePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set( 'id' , personal._id );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', personal._id);
 
     return this.httpClient.put(this.siteURI + '/employee/personal', body, { headers: headers, params: params });
   }
   updatePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set( 'id' , payroll._id );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', payroll._id);
 
-    return this.httpClient.put(this.siteURI + '/employee/payroll' , body, { headers: headers, params: params });
+    return this.httpClient.put(this.siteURI + '/employee/payroll', body, { headers: headers, params: params });
   }
-  //
-  //
-  // Save Employee Information.
-  saveEmployee(employee: Employee ) {
-      const body = JSON.stringify(employee);
-      const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.siteURI + '/employee/new' , body, {headers: headers});
+  updateFamily(family: EmployeeFamily) {
+    const body = JSON.stringify(family);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', family._id);
+
+    return this.httpClient.put(this.siteURI + '/employee/personal', body, { headers: headers, params: params });
+  }
+  updateComment(comment: EmployeeComment) {
+    const body = JSON.stringify(comment);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', comment._id);
+
+    return this.httpClient.put(this.siteURI + '/employee/payroll', body, { headers: headers, params: params });
+  }
+  /**
+   *
+   *
+   * @param {Employee} employee
+   * @returns
+   * @memberof EmployeeService
+   */
+  saveEmployee(employee: Employee) {
+    const body = JSON.stringify(employee);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/employee/new', body, { headers: headers });
   }
   saveCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.siteURI + '/employee/company', body, {headers: headers});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/employee/company', body, { headers: headers });
   }
   savePosition(position: EmployeePosition) {
     const body = JSON.stringify(position);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(this.siteURI + '/employee/position', body, { headers: headers });
   }
   savePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(this.siteURI + '/employee/personal', body, { headers: headers });
   }
   savePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.siteURI + '/employee/payroll', body, {headers: headers});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/employee/payroll', body, { headers: headers });
   }
-  //
-  //
-  // Clear Observables
-    clearEmployees() {
-      this._employees = null;
-    }
-    clearClients() {
-      this._clients = null;
-    }
-    clearDepartments() {
-      this._departments = null;
-    }
+  saveFamily(family: EmployeeFamily) {
+    const body = JSON.stringify(family);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/employee/family', body, { headers: headers });
+  }
+  saveComment(comment: EmployeeComment) {
+    const body = JSON.stringify(comment);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/employee/comment', body, { headers: headers });
+  }
+  /**
+   *
+   *
+   * @memberof EmployeeService
+   */
+  clearEmployees() {
+    this._employees = null;
+  }
+  clearClients() {
+    this._clients = null;
+  }
+  clearDepartments() {
+    this._departments = null;
+  }
+  clearAvatar(param: string) {
+    const i = this.store.findIndex((res) => res.id === param);
+    this.store.splice(i, 1);
+  }
 }
 

@@ -6,8 +6,8 @@ var schema = new Schema({
     employeeid: {type: String, required: true},
     comment: {type: String, required: true },
     commentDate: {type: Date, required: true},
-    submittedBy: {type: mongoose.Schem.Types.ObjectId, ref: 'User', required: true},
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
+    submittedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'Administration-User', required: true},
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
 });
 
 module.exports = mongoose.model('Employee-Comment', schema);
