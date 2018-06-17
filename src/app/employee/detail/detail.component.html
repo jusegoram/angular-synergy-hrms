@@ -47,7 +47,7 @@
                     <h3>Social security:{{" "+this.employee.socialSecurity}}</h3>
                 </div>
             </form>
-            <button mat-raised-button color="warn" (click)="onSubmit()">Save</button>
+            <button mat-button color="primary" (click)="onSubmit()"><mat-icon>save</mat-icon> &nbsp; Save</button>
 
             <mat-divider></mat-divider>
             <form class="ma-2" [formGroup]="companyForm" id="companyForm">
@@ -111,7 +111,7 @@
                     </mat-select>
                 </mat-form-field>
             </form>
-            <button mat-raised-button color="warn" (click)="onCompanySubmit()">Save</button>
+            <button mat-button color="primary" (click)="onCompanySubmit()"><mat-icon>save</mat-icon> &nbsp;Save</button>
         </mat-card>
     </div>
     <position-info [employee]="this.employee"></position-info>

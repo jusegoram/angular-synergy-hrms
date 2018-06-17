@@ -39,7 +39,7 @@
 
           <ng-container matColumnDef="emailAddress">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.emailAdress}} </mat-cell>
+            <mat-cell *matCellDef="let element"> {{element.emailAddress}} </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="address">
@@ -49,7 +49,7 @@
 
           <ng-container matColumnDef="edit">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Edit </mat-header-cell>
-              <mat-cell *matCellDef="let element"><button mat-icon-button><mat-icon>border_color</mat-icon></button> </mat-cell>
+              <mat-cell *matCellDef="let element"><button mat-icon-button (click)="editReference(element._id)"><mat-icon>border_color</mat-icon></button> </mat-cell>
             </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -80,7 +80,7 @@
         <mat-form-field class="form">
           <input matInput placeholder="Home Address" formControlName="address">
         </mat-form-field>
-        <button mat-icon-button (click)="onSubmit()"><mat-icon>{{this.isEdit?'check_circle':'add_circle'}}</mat-icon></button>
+        <button mat-icon-button color="primary" (click)="onSubmit()"><mat-icon>{{this.isEdit?'check_circle':'add_circle'}}</mat-icon></button>
       </div>
       </mat-card>
     </div>

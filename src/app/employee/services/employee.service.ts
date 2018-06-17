@@ -166,7 +166,7 @@ export class EmployeeService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', family._id);
 
-    return this.httpClient.put(this.siteURI + '/employee/personal', body, { headers: headers, params: params });
+    return this.httpClient.put(this.siteURI + '/employee/family', body, { headers: headers, params: params });
   }
   updateComment(comment: EmployeeComment) {
     const body = JSON.stringify(comment);

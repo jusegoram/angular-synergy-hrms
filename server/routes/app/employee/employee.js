@@ -249,7 +249,7 @@ router.put('/family', function (req, res, next) {
     result.relationship = req.body.relationship;
     result.celNumber = req.body.celNumber;
     result.telNumber = req.body.telNumber;
-    result.emailAddress = doc.emailAddress;
+    result.emailAddress = req.body.emailAddress;
     result.address = req.body.address;
       result.save();
       if (err) {

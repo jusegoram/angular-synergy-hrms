@@ -15,8 +15,8 @@ export class FamilyComponent implements OnInit {
   public employeeFamily: any;
   public dataSource: any;
   public familyForm: FormGroup;
-  public isEdit: false;
-  displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address'];
+  public isEdit = false;
+  displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address', 'edit'];
   editReferenceId: string;
 
   constructor(
@@ -59,14 +59,18 @@ export class FamilyComponent implements OnInit {
 
   editReference(param: string) {
     const data: any = this.dataSource.data;
-    data.findIndex((res) => res.id === param);
+    console.log(data);
+    const i = data.findIndex((res) => res._id === param);
+    const ref = this.dataSource.data[i];
+    console.log(ref);
     this.editReferenceId = param;
-    this.familyForm.controls['name'].setValue('');
-    this.familyForm.controls['relationship'].setValue('');
-    this.familyForm.controls['celNumber'].setValue('');
-    this.familyForm.controls['telNumber'].setValue('');
-    this.familyForm.controls['emailAddress'].setValue('');
-    this.familyForm.controls['address'].setValue('');
+    this.familyForm.controls['name'].setValue(ref.referenceName);
+    this.familyForm.controls['relationship'].setValue(ref.relationship);
+    this.familyForm.controls['celNumber'].setValue(ref.celNumber);
+    this.familyForm.controls['telNumber'].setValue(ref.telNumber);
+    this.familyForm.controls['emailAddress'].setValue(ref.emailAddress);
+    this.familyForm.controls['address'].setValue(ref.address);
+    this.isEdit = true;
   }
   onSubmit() {
     let current = this.familyForm.value;
@@ -83,6 +87,7 @@ export class FamilyComponent implements OnInit {
         current.address);
         this.employeeService.saveFamily(ref).subscribe(data => {
           this.populateTable(data);
+          this.clearForm();
         }, error => {});
     } else {
       let ref = new EmployeeFamily (
@@ -95,8 +100,7 @@ export class FamilyComponent implements OnInit {
         current.telNumber,
         current.emailAddress,
         current.address);
-        this.employeeService.updateFamily(ref).subscribe(data => {}, error => {});
+        this.employeeService.updateFamily(ref).subscribe(data => {this.isEdit = false; this.clearForm();}, error => {});
     }
   }
-
 }

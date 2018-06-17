@@ -89,7 +89,7 @@ router.get('/family', function (req, res, next) {
         'relationship',
         'celNumber',
         'telNumber',
-        'emailAdress',
+        'emailAddress',
         'adress',
     ];
 
