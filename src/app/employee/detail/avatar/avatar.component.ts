@@ -42,7 +42,6 @@ export class AvatarComponent implements OnInit {
     let blob;
     this.employeeService.cachedAvatar(id).subscribe(
       (response) => {
-        console.log(response);
         blob = response;
         const urlCreator = window.URL;
         this.imageData = this.sanitizer.bypassSecurityTrustUrl(

@@ -85,12 +85,10 @@ export class EmployeeService {
   cachedAvatar(param: string): Observable<any> {
     const i = this.store.findIndex((res) => res.id === param);
     if (i >= 0) {
-      console.log('found:' + this.store);
       return this.store[i].getObservable();
     } else {
       const newAvatar = new Store(param, this.getAvatar(param));
       this.store.push(newAvatar);
-      console.log('notfound:' + this.store);
       return newAvatar.getObservable();
     }
   }

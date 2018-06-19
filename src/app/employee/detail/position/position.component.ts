@@ -52,10 +52,8 @@ export class PositionComponent implements OnInit {
   ngOnInit() {
     this.employeeService.getClient().subscribe(data => this.clients = data);
     this.employeeService.getDepartment().subscribe(data => this.departments = data);
-    console.log(this.employee.position);
     this.employeePositions = this.employee.position;
     this.populateTable(this.employeePositions);
-    console.log(this.dataSource);
     this.positionForm = this.fb.group({
       client: [''],
       department: [''],
@@ -140,7 +138,6 @@ export class PositionComponent implements OnInit {
       const data = this.dataSource.data;
       data.push(event);
       this.dataSource.data = data;
-      console.log(this.dataSource.data);
     } else { this.dataSource = new MatTableDataSource(event); }
   }
   setPositions(event: any) {

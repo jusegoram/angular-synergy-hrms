@@ -14,6 +14,7 @@ let Payroll = require ('../../../models/employee/employee-payroll');
 let Family = require ('../../../models/employee/employee-family');
 let Education = require ('../../../models/employee/employee-education');
 let Department = require('../../../models/administration/administration-department');
+let Comment = require('../../../models/employee/employee-comment');
 // set the directory for the uploads to the uploaded to
 let DIR = 'uploads/';
 
@@ -96,17 +97,16 @@ router.post('/position', function (req, res) {
                         }
                       });
                     }
+                    EmployeeSchema.update({_id: pos.employee},{
+                      $push: { position: pos._id}}, function(err, raw){
+                        console.log(raw||err);
+                      });
                 });
             }, function(err){
                 if(err){
                     console.log(err);
                 }else{
                     Position.create(position, function (err, res){
-                      EmployeeSchema.update({_id: res[0].employee},{
-                        $push: { position: res[0].position}}, function(err, raw){
-                          console.log(raw||err);
-                        });
-                      console.log(err);
                     });
                 }
             });
@@ -231,7 +231,10 @@ router.post('/family', function (req, res) {
                     if(err){
                         callback(err)
                     }else{
-                        res.family.push(fam._id);
+                      EmployeeSchema.update({_id: res._id},{
+                        $push: { family: fam._id}}, function(err, raw){
+                          console.log(raw||err);
+                        });
                         fam.employee = res._id;
                         res.save();
                         callback();
@@ -259,7 +262,7 @@ router.post('/education', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(employeeFile.mimetype != "text/csv"){
+        if(educationFile.mimetype != "text/csv"){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -267,7 +270,6 @@ router.post('/education', function (req, res) {
             data['_id'] = new mongoose.Types.ObjectId();
             data['employee'] = null;
             education.push(data);
-            console.log(education);
         })
         .on('end', function(){
             async.each(education, function(edu, callback){
@@ -275,7 +277,10 @@ router.post('/education', function (req, res) {
                     if(err){
                         callback(err)
                     }else{
-                        res.education.push(edu._id);
+                      EmployeeSchema.update({_id: res._id},{
+                        $push: { education: edu._id}}, function(err, raw){
+                          console.log(raw||err);
+                        });
                         edu.employee = res._id;
                         res.save();
                         callback();
@@ -292,6 +297,53 @@ router.post('/education', function (req, res) {
             return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
         });
     });
+
+});
+
+router.post('/comment', function (req, res) {
+  upload(req, res, function (err) {
+    let comment = [];
+    let commentFile = req.file;
+      if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+      }
+      if(commentFile.mimetype != "text/csv"){
+          return res.status(400).send("Sorry only CSV files can be processed for upload");
+      }
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', function(data){
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          comment.push(data);
+      })
+      .on('end', function(){
+          async.each(comment, function(com, callback){
+            EmployeeSchema.findOne({'employeeId': com.employeeId}, function(err, res){
+                  if(err){
+                      callback(err)
+                  }else{
+                    EmployeeSchema.update({_id: res._id},{
+                      $push: { comments: com._id}}, function(err, raw){
+                        console.log(raw||err);
+                      });
+                      edu.employee = res._id;
+                      res.save();
+                      callback();
+                  }
+              })
+          }, function(err){
+              if(err){
+                  console.log(err);
+              }else{
+                  Comment.create(comment);
+              }
+          });
+          console.log('upload finished');
+          return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
+      });
+  });
 
 });
 

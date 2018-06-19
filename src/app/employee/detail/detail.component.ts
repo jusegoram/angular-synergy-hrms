@@ -162,7 +162,6 @@ export class DetailComponent implements OnInit {
       reapplicant: [this.company.reapplicant],
       reapplicantTimes: [this.company.reapplicantTimes],
     });
-    console.log(this.employee);
   }
   onSubmit() {
     const employee = new Employee(
