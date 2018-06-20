@@ -1,4 +1,7 @@
-import { Employee, EmployeeCompany, EmployeePayroll, EmployeePersonal, EmployeePosition, EmployeeFamily, EmployeeComment } from '../Employee';
+import {
+  Employee, EmployeeCompany, EmployeePayroll,
+  EmployeePersonal, EmployeePosition, EmployeeFamily,
+  EmployeeComment } from '../Employee';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
