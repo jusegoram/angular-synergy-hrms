@@ -1,6 +1,5 @@
 
 //Require all imports
-const fs = require('fs');
 const express = require('express');
 const path = require('path');
 const debug = require('debug')('node-rest:server');
@@ -12,8 +11,10 @@ const http = require('http');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const multer = require('multer');
 const mongoose = require('mongoose');
+const compression = require("compression");
+const cors = require("cors");
+var helmet = require("helmet");
 // Configure de upload with multer
 
 // Get our API routes
@@ -27,6 +28,7 @@ const admEmployeeRoutes= require('./server/routes/administration/employee');
 const uploadRoutes = require('./server/routes/app/employee/upload');
 const templateRoutes = require('./server/routes/app/employee/template');
 const employeeRoutes = require('./server/routes/app/employee/employee');
+const empReportRoutes = require('./server/routes/app/employee/reports');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
@@ -48,7 +50,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
-
+app.use(helmet());
 
 // ...
 // Point static path to dist
@@ -59,21 +61,34 @@ app.use(express.static(path.join(__dirname, 'dist')));
  //  }
 //   next();
 //  });
-app.use(function(req, res, next) { //allow cross origin requests
-          res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-          res.header("Access-Control-Allow-Origin", "*");
-          res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-          res.header("Access-Control-Allow-Credentials", true);
-          next();
+// app.use(function(req, res, next) { //allow cross origin requests
+//           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+//           res.header("Access-Control-Allow-Origin", "*");
+//           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//           res.header("Access-Control-Allow-Credentials", true);
+//           next();
 
-      });
+//       });
+
+app.use(cors({
+  origin: ["*"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
+app.use(compression());
+
+//TODO: future move all api calls to a /api/v1/ url structure.
 // Set our api routes
 app.use('/user', userRoutes);
 app.use('/menu', menuRoutes);
+//
 app.use('/payroll', payrollRoutes);
+//
 app.use('/upload', uploadRoutes);
+app.use('/report', empReportRoutes);
 app.use('/template', templateRoutes);
 app.use('/employee', employeeRoutes);
+//
 app.use('/admEmp', admEmployeeRoutes);
 app.use('/', appRoutes);
 
