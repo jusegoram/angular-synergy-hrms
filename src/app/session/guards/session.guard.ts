@@ -16,7 +16,7 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
   canLoad(): boolean {
     return this.checkLogin();
   }
-  checkLogin(): boolean {
-  return true;
+  checkLogin(): any {
+    return this.sessionService.isLoggedIn();
   }
 }

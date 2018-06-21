@@ -12,7 +12,7 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {BidiModule} from '@angular/cdk/bidi';
+import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
@@ -20,8 +20,9 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
 import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { reducers } from './state/index';
+import { ApplicationEffects } from './state/application/effects';
 
 
 
@@ -49,7 +50,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FlexLayoutModule,
     BidiModule,
     PerfectScrollbarModule,
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([ApplicationEffects])
   ],
   providers: [
     {

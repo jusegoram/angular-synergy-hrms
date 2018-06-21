@@ -30,6 +30,37 @@ export class EmployeeService {
     this.store = [];
   }
 
+  getReport(): Observable<any> {
+    return this.httpClient.get(this.siteURI + '/report/').pipe(
+      map((data: any) => {
+        // const transformed: any = data;
+        // const employee: any = data.employee;
+        // transformed.employee = employee.employeeId;
+        // transformed.firstName = employee.firstName;
+        // transformed.middleName = employee.middleName;
+        // transformed.lastName = employee.lastName;
+        // transformed.gender = employee.gender;
+        // transformed.socialSecurity = employee.socialSecurity;
+        // transformed.status = employee.status;
+        // return transformed;
+      let transformed:any = null;
+      data.forEach(element => {
+        const employee = element.employee;
+        delete element.__v;
+        delete element.employee;
+        element.firstName = employee.firstName;
+        element.middleName = employee.middleName;
+        element.lastName = employee.lastName;
+        element.gender = employee.gender;
+        element.socialSecurity = employee.socialSecurity;
+        element.status = employee.status;
+      });
+      transformed = data;
+      return transformed;
+      })
+    );
+  }
+
   /**
    *
    *

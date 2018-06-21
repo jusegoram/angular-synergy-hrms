@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    employeeid: {type: String, required: true},
+    employeeId: {type: String, required: true},
     comment: {type: String, required: true },
     commentDate: {type: Date, required: true},
     submittedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'Administration-User', required: true},

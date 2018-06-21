@@ -26,9 +26,13 @@ export class CommentComponent implements OnInit {
 
   ngOnInit() {
     this.employeeComment = this.employee.comments;
+    this.populateTable(this.employeeComment);
+    this.buildForms();
   }
   buildForms() {
-
+    this.commentForm = this.fb.group({
+      comment: ['']
+    });
   }
 
   populateTable(event: any) {
@@ -43,19 +47,22 @@ export class CommentComponent implements OnInit {
 
   }
   onSubmit() {
-    let current = this.commentForm.value;
-    let user = localStorage.getItem('userId');
+    const current = this.commentForm.value;
+    const user = localStorage.getItem('userId');
     if (!this.isEdit) {
-      let com = new EmployeeComment(
+      const com = new EmployeeComment(
         '',
         this.employee.employeeId.toString(10),
         current.comment,
         new Date(),
         user,
         this.employee._id );
-      this.employeeService.saveComment(com).subscribe(data => {}, error => {});
+      this.employeeService.saveComment(com).subscribe(data => {
+        console.log('success:' + data);
+        this.populateTable(data);
+      }, error => {});
     }else {
-      let com = new EmployeeComment(
+      const com = new EmployeeComment(
         this.editCommentId,
         this.employee.employeeId.toString(10),
         current.comment,
@@ -63,7 +70,7 @@ export class CommentComponent implements OnInit {
         user,
         this.employee._id
     );
-      this.employeeService.updateComment(com).subscribe(data => {}, error => {});
+     this.employeeService.updateComment(com).subscribe(data => {}, error => {});
     }
 
   }

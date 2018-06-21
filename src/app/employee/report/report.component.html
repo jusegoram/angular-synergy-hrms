@@ -1,6 +1,6 @@
 
 <div class="pa-1 mat-typography">
-   <mat-card>
+   <mat-card class="pa-1">
     <h2> Reports </h2>
      <span>Choose what you would like to export, once finished send the request. We will try to fulfill it as soon as possible</span>
      <mat-divider></mat-divider>
@@ -39,6 +39,8 @@
        </mat-form-field>
      </form>
    </mat-card>
+   <button mat-raised-button (click)="getReport()">test</button>
+   <button mat-raised-button (click)="export()">export</button>
 </div>
 
 

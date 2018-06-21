@@ -63,8 +63,9 @@ router.get('/main', function(req, res){
         options: { sort: { 'startDate': 1 } }
       })
       .populate({
-        path: 'comment',
+        path: 'comments',
         model: 'Employee-Comment',
+        populate: { path:'submittedBy', select:'firstName lastName', model:'Administration-User'},
         options: { sort: { 'commentDate': 1 } }
       })
       .exec((err, result) => {
@@ -542,7 +543,7 @@ router.post('/comment', function(req, res, next){
           error: err
         });
       }
-      Employee.update({_id: newComment.employee}, {$push: { comment: newComment }}, function(err){
+      Employee.update({_id: newComment.employee}, {$push: { comments: newComment }}, function(err){
       });
       return res.status(200).json(result);
     });

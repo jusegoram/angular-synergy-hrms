@@ -16,24 +16,24 @@
           <mat-cell *matCellDef="let row"> {{row.comment}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="by">
-          <mat-header-cell *matHeaderCellDef fxFlex="300px"> By </mat-header-cell>
-          <mat-cell *matCellDef="let row" fxFlex="350px"> {{row.submittedBy.name}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef fxFlex="200px"> By </mat-header-cell>
+          <mat-cell *matCellDef="let row" fxFlex="200px"> {{row.submittedBy.firstName + ' ' + row.submittedBy.lastName}} </mat-cell>
         </ng-container>
         <ng-container matColumnDef="date">
           <mat-header-cell *matHeaderCellDef fxFlex="200px"> Date </mat-header-cell>
-          <mat-cell *matCellDef="let row" fxFlex="150px"> {{row.date}} </mat-cell>
+          <mat-cell *matCellDef="let row" fxFlex="200px"> {{row.commentDate | date: 'MM/dd/yyyy h:mm a' }} </mat-cell>
         </ng-container>
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
     </mat-card>
     <div fxLayout="column" class="comment pa-1">
-    <div fxLayout="row">
+    <div fxLayout="row" [formGroup]="commentForm">
       <mat-form-field>
-        <textarea matInput placeholder="Leave a comment"></textarea>
+        <textarea matInput formControlName="comment" placeholder="Leave a comment"></textarea>
       </mat-form-field>
     </div>
     </div>
-    <button mat-button color="primary"><mat-icon>check</mat-icon>&nbsp;Submit</button>
+    <button mat-button color="primary" (click)="onSubmit()"><mat-icon>check</mat-icon>&nbsp;Submit</button>
   </mat-expansion-panel>
 </mat-accordion>

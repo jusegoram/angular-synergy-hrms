@@ -26,7 +26,9 @@ export class SigninComponent implements OnInit {
           localStorage.setItem('token', data['token']);
           localStorage.setItem('userId', data['userId']);
           // this.sessionService.authBS.next(true);
-          this.router.navigateByUrl('/main');
+          const token = localStorage.getItem('token');
+          const id = localStorage.getItem('id');
+          this.sessionService.checkLogin(token, id).subscribe( res => { if (res) { this.router.navigateByUrl('/main'); }});
       },
       error => {
         this.form.reset();

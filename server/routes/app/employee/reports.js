@@ -2,26 +2,13 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var fastcsv = require('fast-csv');
-
-
-router.get('/position', function(req, res, next){
+var Employee = require('../../../models/employee/employee-main');
+var Company = require('../../../models/employee/employee-company');
+router.get('/', function(req, res, next){
+  Company.find({campaign: 'Icon', supervisor:'Nubia Ramirez'}).populate({path:'employee', model:'employee-main'}).exec(function(err, doc){
+    console.log(err || doc);
+    res.status(200).json(doc)
+  });
 });
-router.get('/personal', function(req, res, next){
 
-});
-router.get('/payroll', function(req, res, next){
-
-});
-router.get('/family', function(req, res, next){
-
-});
-router.get('/education', function(req, res, next){
-
-});
-router.get('/company', function(req, res, next){
-
-});
-router.get('/comment', function(req, res, next){
-
-});
 module.exports = router;

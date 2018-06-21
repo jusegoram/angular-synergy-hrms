@@ -12,7 +12,7 @@ router.get('/role', function(req, res, next) {
             userRole: user.role
     });
 });
-    
+
 
 
 router.post('/', function (req, res, next) {
@@ -64,26 +64,22 @@ router.post('/signin', function(req, res, next) {
             userId: user._id
         });
     });
-    
+
 });
 
 router.get('/verify', function(req, res, next){
     var token = jwt.decode(req.query.token);
 
-
     var isExpiredToken = false;
 
     var dateNow = new Date();
-    
+
     if(token.exp < dateNow.getTime()){
            isExpiredToken = true;
     }
 
-    res.status(400).json({
-        message: "token check successful",
-        expired: isExpiredToken,
-    });
-    
+    res.status(200).json(isExpiredToken);
+
 });
 
 module.exports = router;
