@@ -26,27 +26,45 @@ export class EmployeeService {
   _departments: Observable<any> = null;
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
+  public items = [
+    { value: 'active', viewValue: 'Active' },
+    { value: 'resignation', viewValue: 'Resignation' },
+    { value: 'dissmisal', viewValue: 'Dissmisal' },
+    { value: 'termination', viewValue: 'Termination' },
+    { value: 'undefined', viewValue: 'Undefined' },
+    { value: 'trainee', viewValue: 'Trainee' }
+  ];
+  public reaptimes = [
+    {value: 0, viewValue: '0'},
+    {value: 1, viewValue: '1'},
+    {value: 2, viewValue: '2'},
+    {value: 3, viewValue: '3'},
+    {value: 4, viewValue: '4'},
+    {value: 5, viewValue: '5'},
+    {value: 6, viewValue: '6'},
+    {value: 7, viewValue: '7'},
+    {value: 8, viewValue: '8'},
+    {value: 9, viewValue: '9'},
+    {value: 10, viewValue: '10'}];
+  public genders = [
+    { value: 'male', viewValue: 'Male' },
+    { value: 'female', viewValue: 'Female' }];
+
   constructor(protected httpClient: HttpClient) {
     this.store = [];
   }
 
-  getReport(): Observable<any> {
-    return this.httpClient.get(this.siteURI + '/report/').pipe(
+  getReport(query: any): Observable<any> {
+    const body = query;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.siteURI + '/report', body, { headers: headers }).pipe(
       map((data: any) => {
-        // const transformed: any = data;
-        // const employee: any = data.employee;
-        // transformed.employee = employee.employeeId;
-        // transformed.firstName = employee.firstName;
-        // transformed.middleName = employee.middleName;
-        // transformed.lastName = employee.lastName;
-        // transformed.gender = employee.gender;
-        // transformed.socialSecurity = employee.socialSecurity;
-        // transformed.status = employee.status;
-        // return transformed;
       let transformed:any = null;
       data.forEach(element => {
-        const employee = element.employee;
+        delete element._id;
         delete element.__v;
+          if(element.employee !== null) {
+        const employee = element.employee;
         delete element.employee;
         element.firstName = employee.firstName;
         element.middleName = employee.middleName;
@@ -54,9 +72,12 @@ export class EmployeeService {
         element.gender = employee.gender;
         element.socialSecurity = employee.socialSecurity;
         element.status = employee.status;
+        }else {
+        delete element.employee;
+        }
       });
-      transformed = data;
-      return transformed;
+      console.log(data);
+      return  data;
       })
     );
   }

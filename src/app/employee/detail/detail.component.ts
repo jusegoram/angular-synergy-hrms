@@ -27,6 +27,9 @@ export class DetailComponent implements OnInit {
  companyForm: FormGroup;
  clients: any[];
  campaigns: any[];
+ items: any[];
+ reaptimes: any[];
+ genders: any[];
   constructor(private employeeService: EmployeeService,
     private route: ActivatedRoute, private sessionService: SessionService,
     public snackBar: MatSnackBar, private fb: FormBuilder, private datePipe: DatePipe) {
@@ -38,6 +41,9 @@ export class DetailComponent implements OnInit {
       null, null,
       null, null);
     this.isNewCompany = false;
+    this.items = this.employeeService.items;
+    this.reaptimes = this.employeeService.reaptimes;
+    this.genders = this.employeeService.genders;
   }
 
 
@@ -81,29 +87,6 @@ export class DetailComponent implements OnInit {
   //   {value: 'SFC', viewValue: ''},
   // ];
 
-  items = [
-    { value: 'active', viewValue: 'Active' },
-    { value: 'resignation', viewValue: 'Resignation' },
-    { value: 'dissmisal', viewValue: 'Dissmisal' },
-    { value: 'termination', viewValue: 'Termination' },
-    { value: 'undefined', viewValue: 'Undefined' },
-    { value: 'trainee', viewValue: 'Trainee' }
-  ];
-  reaptimes = [
-    {value: 0, viewValue: '0'},
-    {value: 1, viewValue: '1'},
-    {value: 2, viewValue: '2'},
-    {value: 3, viewValue: '3'},
-    {value: 4, viewValue: '4'},
-    {value: 5, viewValue: '5'},
-    {value: 6, viewValue: '6'},
-    {value: 7, viewValue: '7'},
-    {value: 8, viewValue: '8'},
-    {value: 9, viewValue: '9'},
-    {value: 10, viewValue: '10'}];
-  genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' }];
 
    ngOnInit() {
      this.clients = this.employeeService.clients;

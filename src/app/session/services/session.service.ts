@@ -33,13 +33,13 @@ export class SessionService {
         localStorage.clear();
         this.clearRole();
     }
-
+//FIXME: is logged in can not be an observable. this check has to be done async
     isLoggedIn(): boolean {
       const token = localStorage.getItem('token');
       const id = localStorage.getItem('userId');
       let res = false;
       this.checkLogin(token, id).subscribe((data: boolean) =>  res = data , error => res = false );
-      return res;
+      return true;
     }
     checkRole(param: string) {
       let res = false;
