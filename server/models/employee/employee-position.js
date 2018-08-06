@@ -9,7 +9,7 @@ let positionSchema = new Schema({
     position: {  type: mongoose.Schema.Types.ObjectId, ref: 'Administration-position', required: false},
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false },
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 // add training group (ref:num), and trainer
 

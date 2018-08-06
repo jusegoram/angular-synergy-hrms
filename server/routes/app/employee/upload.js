@@ -351,7 +351,7 @@ router.post('/avatars', function(req, res){
   let avatarStorage = multer.diskStorage({
         destination:'uploads/avatars',
         filename: function (req, file, cb) {
-          cb(null,req.query.employeeId + path.extname(file.originalname));
+          cb(null,req.query.id + path.extname(file.originalname));
         }
       });
   let avatarUpload = multer({storage: avatarStorage}).single('file');
@@ -363,7 +363,18 @@ router.post('/avatars', function(req, res){
         if(req.file.mimetype != "image/jpeg"){
             res.status(400).send("only jpeg is allowed");
         }
-        res.status(200).send("avatar uploaded successfully");
+        fs.readFile('uploads/avatars/' + req.query.id + '.jpg', function(err, content){
+          if (err) {
+            fs.readFile('uploads/avatars/default-avatar.jpg' , function (err, content){
+              res.writeHead(200,{'Content-type':'image/jpg'});
+              res.end(content);
+            });
+          } else {
+            //specify the content type in the response will be an image
+            res.writeHead(200,{'Content-type':'image/jpg'});
+            res.end(content);
+          }
+        });
       });
 });
 

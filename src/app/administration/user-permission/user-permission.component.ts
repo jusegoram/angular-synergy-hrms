@@ -32,8 +32,10 @@ export class UserPermissionComponent implements OnInit {
           );
           this.sessionService.signup(user)
               .subscribe(
-                  data => console.log(data),
-                  error => console.error(error)
+                  data => {
+                  },
+                  error => {
+                  }
               );
           this.myForm.reset();
           this.router.navigateByUrl('/employee');

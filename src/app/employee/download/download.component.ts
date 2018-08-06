@@ -7,13 +7,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DownloadComponent implements OnInit {
 templates = [
-  {text: 'Main Information', value: '/template'},
-  {text: 'Personal Information', value: '/template/personal'},
-  {text: 'Company Information', value: '/template/company'},
-  {text: 'Position Information', value: '/template/position'},
-  {text: 'Payroll Information', value: '/template/payroll'},
-  {text: 'Family Information', value: '/template/family'},
-  {text: 'Education Information', value: '/template/education'},
+  {text: 'Main Information', value: '/api/v1/employee/template'},
+  {text: 'Personal Information', value: '/api/v1/employee/template/personal'},
+  {text: 'Company Information', value: '/api/v1/employee/template/company'},
+  {text: 'Position Information', value: '/api/v1/employee/template/position'},
+  {text: 'Payroll Information', value: '/api/v1/employee/template/payroll'},
+  {text: 'Family Information', value: '/api/v1/employee/template/family'},
+  {text: 'Education Information', value: '/api/v1/employee/template/education'},
 ];
 
 selected = '/template';

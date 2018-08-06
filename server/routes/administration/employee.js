@@ -4,16 +4,19 @@ var jwt = require('jsonwebtoken');
 var Client = require('../../models/administration/administration-company');
 var Department = require('../../models/administration/administration-department');
 var mongoose = require('mongoose');
+var Shift = require('../../models/employee/employee-shift');
+let async = require('async');
 
 router.post('/client', function (req, res, next) {
-    var token = jwt.decode(req.query.token);
-
+  let campaigns = req.body.campaigns;
+  for (let i = 0; i < campaigns.length; i++) {
+    campaigns[i]._id = new mongoose.Types.ObjectId();
+  }
     var client = new Client({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         campaigns: req.body.campaigns
     });
-    if(parseInt(token.user.role) === 4) {
     client.save(function (err, result) {
         if (err) {
             return res.status(500).json({
@@ -23,9 +26,6 @@ router.post('/client', function (req, res, next) {
         }
         res.status(200).json(result);
         });
-    }else {
-        res.status(400)
-    }
 });
 
 router.get('/client', function (req, res, next) {
@@ -52,6 +52,12 @@ router.get('/client', function (req, res, next) {
 });
 
 router.put('/client', function ( req, res, next) {
+  let campaigns = req.body.campaigns
+    for (let i = 0; i < campaigns.length; i++) {
+      if (!campaigns[i]._id){
+        campaigns[i]._id = new mongoose.Types.ObjectId();
+      }
+    }
     Client.findById(req.query.id, function(err, doc) {
         doc.name = req.body.name;
         doc.campaigns = req.body.campaigns;
@@ -66,4 +72,97 @@ router.put('/client', function ( req, res, next) {
     });
 });
 
+// router.post('/shift', function(req, res){
+//   var token = jwt.decode(req.query.token);
+
+//   var shift = new Shift.shift({
+//       _id: new mongoose.Types.ObjectId(),
+//       name: req.body.name,
+//       shift: req.body.shift
+//   });
+//   if(parseInt(token.user.role) === 4) {
+//   shift.save(function (err, result) {
+//       if (err) {
+//           return res.status(500).json({
+//               title: 'An error occurred',
+//               error: err
+//           });
+//       }
+//       res.status(200).json(result);
+//       });
+//   }else {
+//       res.status(400)
+//   }
+// });
+router.post('/shift', function(req, res, next){
+  let shifts = req.body;
+    async.each(shifts, function(shift, callback){
+      if (shift.state === 'new') {
+        delete shift['state'];
+        shift._id = new mongoose.Types.ObjectId();
+        let newShift = new Shift.shift(shift);
+        newShift.save(function(error, result){
+          console.log(result);
+          callback(error);
+        });
+       }else if (typeof shift.state === 'undefined') {
+         Shift.shift.update({_id: shift._id}, {
+           $set: {
+             name: shift.name,
+            shift: shift.shift}},
+            function(err, doc) {
+              console.log(doc);
+              callback(err)
+            });
+       }
+    }, function(err){
+      if(err){
+        console.log(err)
+      }else{
+        console.log('all done');
+        res.status(200).json({message: 'done'});
+      }
+    });
+//  shifts.forEach(element => {
+
+//   });
+});
+
+router.get('/shift', function (req, res, next) {
+  Shift.shift.find(
+      function (err, result) {
+      if (err) {
+          return res.status(500).json({
+              title: 'An error occurred',
+              error: err
+          });
+      }if (req.query.token === '') {
+          return res.status(500).json({
+              title: 'Not Found',
+              message: 'authentication not found'
+          });
+      }if (result === null) {
+          return res.status(500).json({
+              title: 'Not found',
+              message: 'shifts are empty or not found'
+          });
+      }
+      res.status(200).json(result);
+  });
+});
+
+// router.put('/shift', function ( req, res, next) {
+//   Shift.shift.findById(req.query.id, function(err, doc) {
+//       doc.name = req.body.name;
+//       doc.shift = req.body.shift;
+//       doc.save();
+//       if (err) {
+//           return res.status(500).json({
+//               title: 'An error occurred',
+//               error: err
+//           });
+//       }
+//       res.status(200).json(doc);
+//   });
+// });
 module.exports = router;

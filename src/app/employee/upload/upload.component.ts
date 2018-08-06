@@ -18,12 +18,12 @@ export class UploadComponent {
    URL = environment.siteUri + this.selected;
    // http://localhost:3000/upload
   items = [
-    {value: '/upload', viewValue: 'Employee Main'},
-    {value: '/upload/position', viewValue: 'Employee Position'},
-    {value: '/upload/personal', viewValue: 'Employee Personal'},
-    {value: '/upload/payroll', viewValue: 'Employee Payroll'},
-    {value: '/upload/family', viewValue: 'Employee Family'},
-    {value: '/upload/education', viewValue: 'Employee Education'}
+    {value: '/api/v1/employee/upload', viewValue: 'Employee Main'},
+    {value: '/api/v1/employee/upload/position', viewValue: 'Employee Position'},
+    {value: '/api/v1/employee/upload/personal', viewValue: 'Employee Personal'},
+    {value: '/api/v1/employee/upload/payroll', viewValue: 'Employee Payroll'},
+    {value: '/api/v1/employee/upload/family', viewValue: 'Employee Family'},
+    {value: '/api/v1/employee/upload/education', viewValue: 'Employee Education'}
   ];
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['text/csv'],
@@ -38,6 +38,8 @@ export class UploadComponent {
       url: this.URL,
       isHTML5: true
     });
-    console.log(this.URL);
+    this.uploader.onCompleteItem = () => {
+
+    };
   }
 }

@@ -3,6 +3,7 @@ import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { environment } from '../../../../environments/environment';
 import { EmployeeService } from '../../services/employee.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { SessionService } from '../../../session/services/session.service';
 
 @Component({
   selector: 'avatar-detail',
@@ -11,9 +12,9 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class AvatarComponent implements OnInit {
   @Input() id: string;
-  @Input() authorization: boolean;
+  auth: any;
   imageData: any;
-  selected = '/upload/avatars';
+  selected = '/api/v1/employee/upload/avatars';
   URL = environment.siteUri + this.selected;
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['image/jpeg'],
@@ -24,10 +25,12 @@ export class AvatarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAvatar(this.id);
+    this.getPermission();
   }
   constructor(private employeeService: EmployeeService,
-    private sanitizer: DomSanitizer) { }
+    private sanitizer: DomSanitizer, private sessionService: SessionService) {
 
+    }
 
 
   public onclick() {
@@ -37,6 +40,9 @@ export class AvatarComponent implements OnInit {
       isHTML5: true
     });
     this.employeeService.clearAvatar(this.id);
+    this.uploader.onCompleteItem = () => {
+      this.loadAvatar(this.id);
+  };
   }
   loadAvatar(id: string) {
     let blob;
@@ -48,5 +54,7 @@ export class AvatarComponent implements OnInit {
           urlCreator.createObjectURL(blob));
       });
   }
-
+  getPermission() {
+    this.auth = this.sessionService.permission();
+  }
 }

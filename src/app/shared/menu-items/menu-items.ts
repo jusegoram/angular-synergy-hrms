@@ -69,12 +69,7 @@ export class MenuItems {
 
   }
   getActiveMenus() {
-    if (this.sessionService.isLoggedIn()) {
-      const token = localStorage.getItem('token')
-        ? '?token=' + localStorage.getItem('token')
-        : '';
-      return this.http.get<Array<Menu>>(this.Uri + '/menu' + token);
-    }
+      return this.http.get<Array<Menu>>('/api/v1/admin/menu');
   }
 
   add() {
@@ -83,6 +78,6 @@ export class MenuItems {
   addMenu(param: any) {
     const body = param ;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.post(this.Uri + '/menu', body, { headers: headers });
+    return this.http.post('/api/v1/admin/menu', body, { headers: headers });
   }
 }

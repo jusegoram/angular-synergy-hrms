@@ -7,7 +7,7 @@ import { UploadComponent } from './upload/upload.component';
 import { ManageComponent } from './manage/manage.component';
 import { ReportComponent } from './report/report.component';
 import {NewComponent} from './new/new.component';
-
+import { CommonModule } from '@angular/common';
 export const routes: Routes = [
   {
     path: '',

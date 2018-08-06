@@ -12,9 +12,10 @@ export class AdminService {
     siteURI = environment.siteUri;
     _departments: Observable<any> = null;
     _clients: Observable<any> = null;
+    _shifts: Observable<any> = null;
   getDepartment(): Observable<any> {
     if (!this._departments) {
-      this._departments = this.httpClient.get<any>(this.siteURI + '/payroll/department').pipe(
+      this._departments = this.httpClient.get<any>('/api/v1/admin/payroll/department').pipe(
         map((data) => {
           data.forEach(element => {
              element.state = 'saved';
@@ -29,34 +30,28 @@ export class AdminService {
     return this._departments;
   }
 
-  // saveDepartment(department: Department) {
-  //     const token = localStorage.getItem('token')
-  //         ? '?token=' + localStorage.getItem('token') : '';
-  //     const body = JSON.stringify(department);
-  //     const headers = new Headers({ 'Content-Type': 'application/json' });
-  //     return this.http.post(this.siteURI + '/payroll/department' + token, body, { headers: headers })
-  //         .map((response: Response) => response.json())
-  //         .catch((error: Response) => Observable.throw(error.json()));
-  // }
-
   saveDepartment(department: Department) {
     const body = JSON.stringify(department);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const params = new HttpParams().set('token', localStorage.getItem('token'));
-    return this.httpClient.post(this.siteURI + '/payroll/department', body, { headers: headers, params: params });
+    return this.httpClient.post('/api/v1/admin/payroll/department', body, { headers: headers});
   }
 
+  savePosition(department: Department) {
+    const body = JSON.stringify(department);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/admin/payroll/position', body, { headers: headers});
+  }
   updateDepartment(department: Department) {
     const body = JSON.stringify(department);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', department._id);
-    return this.httpClient.put(this.siteURI + '/payroll/department', body, { headers: headers, params: params });
+    return this.httpClient.put('/api/v1/admin/payroll/department', body, { headers: headers, params: params });
   }
 
   // getting and setting clients and campaigns
   getClient(): Observable<any> {
     if (!this._clients) {
-      this._clients = this.httpClient.get<any>(this.siteURI + '/admEmp/client').pipe(
+      this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client').pipe(
         map((data) => {
           data.state = 'saved';
           return data;
@@ -67,36 +62,45 @@ export class AdminService {
     }
     return this._clients;
   }
-  // saveClient(client: Client) {
-  //     const token = localStorage.getItem('token')
-  //         ? '?token=' + localStorage.getItem('token') : '';
-  //     const body = JSON.stringify(client);
-  //     const headers = new Headers({ 'Content-Type': 'application/json' });
-  //     return this.http.post(this.siteURI + '/admEmp/client' + token, body, { headers: headers })
-  //         .map((response: Response) => response.json())
-  //         .catch((error: Response) => Observable.throw(error.json()));
-  // }
 
   saveClient(client: Client) {
     const body = JSON.stringify(client);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('token', localStorage.getItem('token'));
-    return this.httpClient.post(this.siteURI + '/admEmp/client', body, { headers: headers, params: params });
+    return this.httpClient.post('/api/v1/admin/employee/client', body, { headers: headers, params: params });
   }
-
-  // updateClient(client: Client) {
-  //     const body = JSON.stringify(client);
-  //         const headers = new Headers({ 'Content-Type': 'application/json' });
-  //         const params = new HttpParams().set('id', department._id);
-  //         return this.http.put(this.siteURI + '/admEmp/client'  + , body, { headers: headers })
-  //             .map((response: Response) => response.json())
-  //             .catch((error: Response) => Observable.throw(error.json()));
-  // }
 
   updateClient(client: Client) {
     const body = JSON.stringify(client);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', client._id);
-    return this.httpClient.put(this.siteURI + '/admEmp/client', body, { headers: headers, params: params });
+    return this.httpClient.put('/api/v1/admin/employee/client', body, { headers: headers, params: params });
+  }
+
+  getShift(): Observable<any> {
+    if (!this._shifts) {
+      this._shifts = this.httpClient.get<any>('/api/v1/admin/employee/shift').pipe(
+        map((data) => {
+          data.state = 'saved';
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this._shifts;
+  }
+
+  saveShift(shift: any) {
+    const body = JSON.stringify(shift);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/admin/employee/shift', body, { headers: headers});
+  }
+
+  updateShift(shift: any) {
+    const body = JSON.stringify(shift);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', shift._id);
+    return this.httpClient.put('/api/v1/admin/employee/shift', body, { headers: headers, params: params });
   }
 }

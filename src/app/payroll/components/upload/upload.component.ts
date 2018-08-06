@@ -10,7 +10,7 @@ import {environment} from '../../../../environments/environment';
 export class UploadComponent {
 
   selected = '/upload';
-  URL = environment.siteUri + '/payroll/upload';
+  URL = environment.siteUri + '/api/v1/employee/payroll/upload';
 
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['text/csv'],

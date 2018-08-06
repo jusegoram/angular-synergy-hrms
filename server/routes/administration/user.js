@@ -2,14 +2,17 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+var fs = require('fs');
+var path = require('path');
+const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, './RS256.key'));
 
 var User = require('../../models/administration/administration-user');
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    var user = token.user;
+    var user = token.role;
         res.status(200).json({
             message: 'role succesfull',
-            userRole: user.role
+            userRole: user
     });
 });
 
@@ -37,8 +40,8 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.post('/signin', function(req, res, next) {
-    User.findOne({username: req.body.username}, function(err, user) {
+router.post('/login', function(req, res, next) {
+    User.findOne({username: req.body.user}, function(err, user) {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
@@ -57,11 +60,16 @@ router.post('/signin', function(req, res, next) {
                 error: {message: 'Invalid login credentials'}
             });
         }
-        var token = jwt.sign({user: user}, 'R34dy1c0n2016**', {expiresIn: 3600});
+        var token = jwt.sign({
+          userId: user._id.toString(),
+          name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
+          role: user.role
+        }, RSA_PUBLIC_KEY, {
+          algorithm: 'RS256',
+          expiresIn: 600
+        });
         res.status(200).json({
-            message: 'Successfully logged in',
-            token: token,
-            userId: user._id
+            idToken: token,
         });
     });
 

@@ -23,8 +23,12 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './state/index';
 import { ApplicationEffects } from './state/application/effects';
+import { JwtModule } from '@auth0/angular-jwt';
 
 
+export function tokenGetter() {
+  return localStorage.getItem('id_token');
+}
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -51,7 +55,14 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BidiModule,
     PerfectScrollbarModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([ApplicationEffects])
+    EffectsModule.forRoot([ApplicationEffects]),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:3000'],
+        authScheme: 'JWT '
+      }
+    })
   ],
   providers: [
     {

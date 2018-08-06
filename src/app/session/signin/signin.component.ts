@@ -21,19 +21,32 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit() {
-    const user = new User(this.form.value.uname, this.form.value.password);
-    this.sessionService.signin(user).subscribe((data) => {
-          localStorage.setItem('token', data['token']);
-          localStorage.setItem('userId', data['userId']);
-          // this.sessionService.authBS.next(true);
-          const token = localStorage.getItem('token');
-          const id = localStorage.getItem('id');
-          this.sessionService.checkLogin(token, id).subscribe( res => { if (res) { this.router.navigateByUrl('/main'); }});
-      },
-      error => {
-        this.form.reset();
-      }
-    );
+    const val = this.form.value;
+    if (val.uname && val.password) {
+      this.sessionService.login(val.uname, val.password).subscribe(
+        () => {
+          this.router.navigateByUrl('/main');
+        });
+    }
   }
+    // this.sessionService.signin(user).subscribe((data) => {
+    //       const date = new Date();
+    //       localStorage.setItem('token', data['token']);
+    //       localStorage.setItem('userId', data['userId']);
+    //       localStorage.setItem('stamp', date.getTime().toString());
+    //       this.sessionService.setAuth(true);
+    //       const token = localStorage.getItem('token');
+    //       const id = localStorage.getItem('id');
+    //       this.sessionService.checkLogin(token, id)
+    //       .subscribe( res => {
+    //         if (res) { this.router.navigateByUrl('/main');
+    //         this.sessionService.setAuth(res);
+    //       }
+    //     });
+    //   },
+    //   error => {
+    //     this.form.reset();
+    //   }
+    // );
 
 }

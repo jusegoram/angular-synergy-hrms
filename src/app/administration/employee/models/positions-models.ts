@@ -18,7 +18,6 @@ export class Department {
                     public name: string,
                     public positions: Position[] ) { }
 }
-
 export class Position {
     constructor(
         public _id: string,
@@ -27,4 +26,21 @@ export class Position {
         public baseWage: number ) { }
 }
 
+export class Workpattern {
+    constructor(
+      public state: string,
+      public _id: string,
+      public name: string,
+      public shift: Day[],
+    ) {}
+}
 
+export class Day {
+  constructor(
+    public day: number,
+    public onShift: boolean,
+    public startTime: string,
+    public endTime: string
+  ) {
+  }
+}

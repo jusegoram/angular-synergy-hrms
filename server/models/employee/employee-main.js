@@ -12,6 +12,7 @@ let EmployeeSchema = new Schema({
     socialSecurity: { type: String, required: true },
     status: { type: String, required: true },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Company' , required: false },
+    shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift'},
     position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false },
     payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false },
     personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false },

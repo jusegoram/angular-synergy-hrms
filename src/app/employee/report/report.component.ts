@@ -68,8 +68,18 @@ export class ReportComponent implements OnInit {
     }
     this.employeeService.getReport(obj).subscribe(
         data => {
-          this.buildTable(data);   // console.log(Object.getOwnPropertyNames(data[data.length - 1]));
-        }, error => { });
+          let filtered: any;
+          filtered = data;
+          if (this.reportForm.value.statusCheck) {
+            console.log(this.queryForm.value.status);
+            filtered = data.filter(res => res.status === this.queryForm.value.status);
+            if (typeof filtered !== 'undefined') {
+              this.buildTable(filtered);
+            }
+          }else {
+            this.buildTable(data);
+          } // console.log(Object.getOwnPropertyNames(data[data.length - 1]));
+        }, error => { console.log(error); });
   }
   export() {
     /* generate worksheet */
@@ -84,10 +94,12 @@ export class ReportComponent implements OnInit {
     this.campaigns = event.campaigns;
   }
 
-  buildTable(event: any){
+  buildTable(event: any) {
+    if ( event.length !== 0) {
     this.displayedColumns = Object.getOwnPropertyNames(event[event.length - 1]);
     this.dataSource = new MatTableDataSource(event);
     this.data = event;
+  }
   }
 
   clear(){

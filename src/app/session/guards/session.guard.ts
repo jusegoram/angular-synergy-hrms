@@ -8,16 +8,33 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
   constructor(private sessionService: SessionService, private router: Router) { }
   // TODO: Re-evaluate current guards and checks to be able to reanbled routeguards.
   canActivate(): boolean {
-      return this.checkLogin();
+      if (this.checkLogin()) {
+        return true;
+      } else {
+        window.alert('You are not logged in, please log in and try again');
+        this.router.navigateByUrl('/signin');
+        return false;
+      }
   }
   canActivateChild(): boolean {
-    return this.checkLogin();
+    if (this.checkLogin()) {
+      return true;
+    } else {
+      window.alert('You are not logged in, please log in and try again');
+      this.router.navigateByUrl('/signin');
+      return false;
+    }
   }
   canLoad(): boolean {
-    return this.checkLogin();
+    if (this.checkLogin()) {
+      return true;
+    } else {
+      window.alert('You are not logged in, please log in and try again');
+      this.router.navigateByUrl('/signin');
+      return false;
+    }
   }
   checkLogin(): any {
-    return true;
-    // return this.sessionService.isLoggedIn();
+    return this.sessionService.isLoggedIn();
   }
 }

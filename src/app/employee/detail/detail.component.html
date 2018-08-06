@@ -114,6 +114,7 @@
             <button mat-button color="primary" (click)="onCompanySubmit()"><mat-icon>save</mat-icon> &nbsp;Save</button>
         </mat-card>
     </div>
+    <shift [employee]="this.employee"></shift>
     <position-info [employee]="this.employee"></position-info>
     <payroll-info [payroll]="this.employee.payroll" [employee]="this.employee" ></payroll-info>
     <personal-info [employee]="this.employee"></personal-info>

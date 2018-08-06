@@ -3,6 +3,7 @@ import {Employee, EmployeeComment} from '../../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { EmployeeService } from '../../services/employee.service';
+import { SessionService } from '../../../session/services/session.service';
 
 @Component({
   selector: 'comment-info',
@@ -22,7 +23,8 @@ export class CommentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
-    private employeeService: EmployeeService) { }
+    private employeeService: EmployeeService,
+    private sessionService: SessionService) { }
 
   ngOnInit() {
     this.employeeComment = this.employee.comments;
@@ -48,7 +50,7 @@ export class CommentComponent implements OnInit {
   }
   onSubmit() {
     const current = this.commentForm.value;
-    const user = localStorage.getItem('userId');
+    const user = this.sessionService.getId();
     if (!this.isEdit) {
       const com = new EmployeeComment(
         '',

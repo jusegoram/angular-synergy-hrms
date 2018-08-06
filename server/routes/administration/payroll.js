@@ -6,7 +6,6 @@ let mongoose = require('mongoose');
 
 
 router.post('/department', function (req, res, next) {
-  let token = jwt.decode(req.query.token);
   let _positions = [];
   if (req.body.positions){
     let reqArray = req.body.positions;
@@ -25,7 +24,6 @@ router.post('/department', function (req, res, next) {
         name: req.body.name,
         positions: _positions
     });
-    if(parseInt(token.user.role) === 4) {
         department.save(function (err, result) {
         if (err) {
             return res.status(500).json({
@@ -35,31 +33,30 @@ router.post('/department', function (req, res, next) {
         }
         res.status(200).json(result);
         });
-    }else {
-        res.status(400)
-    }
-
 });
 
 router.post('/position', function (req, res, next) {
-  let id = new mongoose.Types.ObjectId();
-  let position = new Department.position({
-    _id: id,
-    positionId: req.body.name,
-    name: req.body.name,
-    baseWage: req.body.baseWage
-  });
-  position.save(function (err, result) {
-    if (err) {
-      return res.status(500).json(err);
+  let positions = req.body.positions;
+  for (let i = 0; i < positions.length; i++) {
+    if (!positions[i]._id) {
+      let id = new mongoose.Types.ObjectId();
+      let position = new Department.position({
+        _id: id,
+        positionId: positions[i].positionId,
+        name: positions[i].name,
+        baseWage: positions[i].baseWage
+      });
+      position.save(function (err, result) {
+        if (err) {
+          return res.status(500).json(err);
+        }
+        Department.department.update({_id: req.body._id}, {$push: { positions: id }}, function(err) {
+          if (err) console.log(err);
+        });
+        res.status(200).json(result);
+      });
     }
-    Department.department.update({_id: req.body.department}, {$push: { positions: id }}, function(err) {
-      if (err) console.log(err);
-    });
-    res.status(200).json(result);
-  });
-
-
+  }
 });
 
 router.get('/department', function (req, res, next) {

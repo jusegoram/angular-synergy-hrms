@@ -9,12 +9,14 @@ import {SessionService} from '../../session/services/session.service';
     styleUrls: ['manage.component.scss']
 })
 export class ManageComponent implements OnInit,  AfterViewInit {
+  //FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   employees: Employee [];
   selectedEmployees: string[] = [];
   // dataSource = any;
   dataSource = null;
+  auth: any;
   displayedColumns = ['employeeID', 'name', 'position', 'status', 'details'];
   constructor(private employeeService: EmployeeService, private sessionService: SessionService) {
   }
@@ -22,7 +24,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
     this.populateTable();
     this.employeeService.getClient().subscribe((result: any) => { });
     this.employeeService.getDepartment().subscribe((result: any) => { });
-    this.sessionService.getRole().subscribe((result) => { });
+
   }
 
   populateTable() {
@@ -37,6 +39,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
 
       ngOnInit() {
         this.populateTable();
+        this.getAuth();
       }
       applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -52,5 +55,16 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.selectedEmployees.splice(index, 1);
         }
         console.log(this.selectedEmployees);
+      }
+      getAuth() {
+        this.auth = this.sessionService.permission();
+      }
+      reload() {
+        this.employeeService.clearEmployees();
+        this.employeeService.getEmployees()
+      .subscribe(res => {
+          this.dataSource.data = res;
+        },
+      error => console.log(error));
       }
 }

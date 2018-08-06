@@ -117,7 +117,7 @@ export class DetailComponent implements OnInit {
    }
 
    transformDate(date: Date) {
-     const dp = new DatePipe(navigator.language);
+     const dp = new DatePipe('en-US');
      const p = 'M/dd/yyyy';
      const dtr = dp.transform(date, p);
      return dtr;

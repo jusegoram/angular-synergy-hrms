@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeService} from '../services/employee.service';
 import {Employee} from '../Employee';
+import { Router } from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'new',
@@ -38,16 +39,18 @@ export class NewComponent implements OnInit {
     {value: 'male', viewValue: 'Male'},
     {value: 'female', viewValue: 'Female'}];
 
-  constructor(private employeeService: EmployeeService) { }
+  constructor(private employeeService: EmployeeService, private router: Router) { }
 
   ngOnInit() {
     this.mainForm = new FormGroup({
-      firstName: new FormControl(),
-      middleName: new FormControl(),
-      lastName: new FormControl(),
-      gender: new FormControl(),
-      status: new FormControl(),
-      socialSecurity: new FormControl(),
+      idToggle: new FormControl(),
+      employeeId: new FormControl(),
+      firstName: new FormControl('' , [Validators.required]),
+      middleName: new FormControl('' , [Validators.required]),
+      lastName: new FormControl('' , [Validators.required]),
+      gender: new FormControl('' , [Validators.required]),
+      status: new FormControl('' , [Validators.required]),
+      socialSecurity: new FormControl('' , [Validators.required]),
     });
 
 
@@ -67,7 +70,7 @@ export class NewComponent implements OnInit {
 
   onSubmit() {
     const employee = new Employee('',
-      null,
+      parseInt(this.mainForm.value.employeeId, 10),
       this.mainForm.value.firstName,
       this.mainForm.value.lastName,
       this.mainForm.value.socialSecurity,
@@ -75,7 +78,12 @@ export class NewComponent implements OnInit {
       this.mainForm.value.gender,
       this.mainForm.value.middleName
       )
-    this.employeeService.saveEmployee(employee).subscribe((result) => console.log(result));
+    this.employeeService.saveEmployee(employee).subscribe(
+      (result) => {
+        this.router.navigateByUrl('/employee/detail?id=' + result['_id']);
+      }, (error) => {
+        console.log(error);
+      });
   }
 
 }

@@ -8,3 +8,15 @@
    flex-flow: column wrap;
    align-content: stretch;
 }
+
+mat-card {
+  margin: 15px;
+  margin-bottom: 20px;
+}
+
+mat-form-field {
+  margin: 10px;
+}
+mat-card-footer {
+  padding: 10px;
+}

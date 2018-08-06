@@ -5,10 +5,8 @@ var jwt = require('jsonwebtoken');
 var Menus = require('../../models/administration/administration-menu');
 var Users = require('../../models/administration/administration-user');
 router.get('/', function(req, res, next) {
-    var token = jwt.decode(req.query.token);
-    var userID = token.user._id;
-
-    Menus.find( { roles: { $all:[parseInt(token.user.role, 10)] } },
+    var token = jwt.decode(req.headers.authorization.split(' ')[1]);
+    Menus.find( { roles: { $all:[parseInt(token.role, 10)] } },
         function (err, result) {
         if (err) {
             return res.status(500).json({

@@ -15,6 +15,7 @@ export class Employee {
     public family?: Object,
     public education?: Object,
     public comments?: Object,
+    public shift?: Object
             ) { }
   }
 

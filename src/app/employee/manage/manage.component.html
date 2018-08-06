@@ -6,9 +6,12 @@
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
       <div fxFlex="auto"></div>
+      <button mat-icon-button (click)="reload()"><mat-icon>refresh</mat-icon></button>
+      <div *ngIf="auth.edit">
       <a [routerLink]="['/', 'employee', 'new' ]">
       <button mat-icon-button><mat-icon>add_circle</mat-icon></button>
       </a>
+    </div>
   </div>
   <mat-table #table [dataSource]="dataSource" matSort>
     <!--

@@ -20,14 +20,14 @@ var helmet = require("helmet");
 // Get our API routes
 const appRoutes = require('./server/routes/app');
 // administration routes
-const userRoutes = require('./server/routes/administration/user');
-const menuRoutes = require('./server/routes/administration/menu');
-const payrollRoutes = require('./server/routes/administration/payroll');
+const admUserRoutes = require('./server/routes/administration/user');
+const admMenuRoutes = require('./server/routes/administration/menu');
+const admPayrollRoutes = require('./server/routes/administration/payroll');
 const admEmployeeRoutes= require('./server/routes/administration/employee');
 //employee routes
-const uploadRoutes = require('./server/routes/app/employee/upload');
-const templateRoutes = require('./server/routes/app/employee/template');
-const employeeRoutes = require('./server/routes/app/employee/employee');
+const empUploadRoutes = require('./server/routes/app/employee/upload');
+const empTemplateRoutes = require('./server/routes/app/employee/template');
+const empRoutes = require('./server/routes/app/employee/employee');
 const empReportRoutes = require('./server/routes/app/employee/reports');
 // DB connection through Mongoose
 const app = express();
@@ -35,26 +35,25 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-const PROD_URI = process.env.MONGODB_URI;
-
 const TEST_URL = "http://localhost:3000";
-const PROD_URL = process.env.HEROKU_URL;
+// const PROD_URI = process.env.MONGODB_URI;
+// const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(TEST_URI, {
   useMongoClient: true,
  });
  app.set('dist', path.join(__dirname, 'dist'));
  app.engine('html', require('ejs').renderFile);
-// Parsers for POST data
-app.use(logger('dev'));
+
+ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 app.use(helmet());
-
-// ...
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
+// ...
+
 //  app.use(function(req, res, next) {
  //   if(!req.secure) {
  //     return res.redirect(PROD_URL);
@@ -71,25 +70,32 @@ app.use(express.static(path.join(__dirname, 'dist')));
 //       });
 
 app.use(cors({
-  origin: ["*"],
+  origin: [TEST_URL],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 app.use(compression());
 
-//TODO: future move all api calls to a /api/v1/ url structure.
-// Set our api routes
-app.use('/user', userRoutes);
-app.use('/menu', menuRoutes);
-//
-app.use('/payroll', payrollRoutes);
-//
-app.use('/upload', uploadRoutes);
-app.use('/report', empReportRoutes);
-app.use('/template', templateRoutes);
-app.use('/employee', employeeRoutes);
-//
-app.use('/admEmp', admEmployeeRoutes);
+/**
+ * @description: Administration Module Express routes.
+ * @author: Juan Sebastian Gomez
+ */
+app.use('/api/v1', admUserRoutes);
+app.use('/api/v1/admin/menu', admMenuRoutes);
+app.use('/api/v1/admin/employee', admEmployeeRoutes);
+app.use('/api/v1/admin/payroll', admPayrollRoutes);
+/**
+ * @description: Employee Module Express routes.
+ * @author: Juan Sebastian Gomez
+ */
+app.use('/api/v1/employee', empRoutes);
+app.use('/api/v1/employee/upload', empUploadRoutes);
+app.use('/api/v1/employee/report', empReportRoutes);
+app.use('/api/v1/employee/template', empTemplateRoutes);
+/**
+ * @description: App Module Express routes.
+ * @author: Juan Sebastian Gomez
+ */
 app.use('/', appRoutes);
 
 // Catch all other routes and return the index file
@@ -100,7 +106,7 @@ app.get('*', (req, res) => {
 /**
  * Get port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort('3000');
 app.set('port', port);
 
 /**

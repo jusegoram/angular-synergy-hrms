@@ -18,6 +18,6 @@ import { AdminService } from './services/admin.services';
     HttpModule,
   ],
   declarations: [UserPermissionComponent, EmployeeComponent, ContentComponent],
-  providers:[AdminService]
+  providers: [AdminService]
 })
 export class AdminModule { }

@@ -13,13 +13,13 @@ let EmployeeFamily = require("../../../models/employee/employee-family");
 let EmployeeCompany = require("../../../models/employee/employee-company");
 let EmployeeEducation = require("../../../models/employee/employee-education");
 let EmployeeComment = require("../../../models/employee/employee-comment");
-
+let EmployeeShift = require("../../../models/employee/employee-shift")
 
 
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    Employee.find(
+    Employee.find().sort({status: 1, employeeId: 1}).exec(
         function (err, result) {
         if (err) {
             return res.status(500).json({
@@ -51,6 +51,12 @@ router.get('/main', function(req, res){
         path: 'position',
         model: 'Employee-Position',
         populate: {path: 'position', model: 'Administration-Position'},
+        options: { sort: { 'startDate': 1 } }
+      })
+      .populate({
+        path:'shift',
+        model: 'Employee-Shift',
+        populate: { path: 'shift', model: 'Administration-Shift'},
         options: { sort: { 'startDate': 1 } }
       })
       .populate({
@@ -164,6 +170,15 @@ router.put('/main', function (req, res, next) {
       }
     }
     res.status(200).json(result);
+  });
+});
+router.put('/shift', function(req,res, next){
+  EmployeeShift.findById(req.query.id, function (err, result){
+    if (!result) {
+      return next(new Error('could not load doc'));
+    } else {
+    //TODO: finish update for shifts
+    }
   });
 });
 router.put('/company', function (req, res, next) {
@@ -345,6 +360,31 @@ employee.save(function(err, result) {
         });
     }
     return res.status(201).json(result) });
+});
+router.post('/shift', function (req, res) {
+  Employee.findById(req.body.employee, (err, employee) => {
+    let id = new mongoose.Types.ObjectId();
+    let current = new EmployeeShift.employeeShift({
+      _id: id,
+      employeeId: req.body.employeeId,
+      employee: req.body.employee,
+      createdDate: req.body.createdDate,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      shift: req.body.shift
+    });
+    current.save(function (err, result) {
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
+        });
+      }
+      Employee.update({ _id: current.employee }, { $push: { shift: id } }, function (err, raw) {
+        res.status(200).json(raw);
+      });
+    });
+  });
 });
 router.post('/company', function(req, res){
   Employee.findById(req.body.employee, (err, employee) => {
@@ -580,18 +620,37 @@ router.get('/avatar', function(req, res, next){
 
 });
 
-
-function generateId(){
-    Employee.findMax(function(err, doc){
-        if(err){
-            return null;
+router.post('/new', function(req, res, next){
+  let newEmployeeId = null;
+  Employee.findMax(function(err, doc){
+    if(err){
+      res.status(400);
+    }else {
+      newEmployeeId = req.body.employeeId? req.body.employeeId : doc[0].employeeId + 1;
+      let newEmployee = new Employee({
+        _id: new mongoose.Types.ObjectId(),
+        employeeId: newEmployeeId,
+        firstName: req.body.firstName,
+        middleName: req.body.middleName,
+        lastName: req.body.lastName,
+        socialSecurity: req.body.socialSecurity,
+        gender: req.body.gender,
+        status: req.body.status
+      });
+      newEmployee.save(function (err, result){
+        if (err) {
+          return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+          });
         } else {
-            let newId;
-            newId = doc[0].employeeId + 1;
-            return newId;
+          res.status(200).json(result);
         }
-    });
-}
+      });
+    }
+   });
+});
+
 
 
 module.exports = router;
