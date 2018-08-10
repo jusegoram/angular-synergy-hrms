@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-
+let mongooseAutopopulate = require("mongoose-autopopulate")
 
 let daySchema = new Schema({
   day: { type: Number },
@@ -23,8 +23,10 @@ let EmployeeShiftSchema = new Schema({
     createdDate: { type: Date, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false },
-    shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Administration-Shift', required: true }
+    shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Administration-Shift', required: true , autopopulate: true}
 });
+
+EmployeeShiftSchema.plugin(mongooseAutopopulate);
 const employeeShift = mongoose.model('Employee-Shift', EmployeeShiftSchema);
 
 // add training group (ref:num), and trainer
@@ -36,7 +38,6 @@ const employeeShift = mongoose.model('Employee-Shift', EmployeeShiftSchema);
 //     .limit(1)
 //     .exec(callback)
 // }
-
 module.exports = {
   shift, employeeShift
 }

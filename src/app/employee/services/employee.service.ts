@@ -72,11 +72,16 @@ export class EmployeeService {
         element.gender = employee.gender;
         element.socialSecurity = employee.socialSecurity;
         element.status = employee.status;
+        element.position = employee.position[employee.position.length - 1];
+        element.shift = employee.shift[employee.shift.length - 1];
+        element.personal = employee.personal;
+        element.education = employee.education;
+        element.comments = employee.comments;
+        element.family = employee.family;
         }else {
         delete element.employee;
         }
       });
-      console.log(data);
       return  data;
       })
     );

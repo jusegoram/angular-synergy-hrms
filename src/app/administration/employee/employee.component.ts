@@ -129,7 +129,6 @@ export class EmployeeComponent implements OnInit {
     found = this.clients.find(result => {
       return result.name === name;
     });
-    console.log(found);
     this.currentCli = found;
     this.newCli = this.currentCli.name;
     return found;
@@ -163,7 +162,6 @@ export class EmployeeComponent implements OnInit {
 
       this.departments[i].positions = this.currentDep.positions;
 
-    console.log(this.departments);
     this.newPos = new Position('', '', '', null);
     }else {
       const submitted = new Department('new', '', this.newDep, []);
@@ -191,7 +189,6 @@ export class EmployeeComponent implements OnInit {
       const submitted = new Client('new', '', this.newCli, []);
       submitted.campaigns.push(this.newCam);
       this.clients.push(submitted);
-      console.log(this.departments);
       this.newCam = new Campaign('', '');
     }
   }
@@ -268,17 +265,13 @@ export class EmployeeComponent implements OnInit {
         .subscribe(result => {
           this.clients[i].state = 'saved';
         });
-        console.log('new identified');
       }else if (this.clients[i].state === 'newPosition') {
         this._admService.updateClient(this.clients[i]).subscribe(result => {
           this.departments[i].state = 'saved';
         });
-        console.log('new position identified');
       }else if (this.clients[i].state === 'modified') {
-        console.log(this.clients[i]);
         this._admService.updateClient(this.clients[i]).subscribe(result => {
           this.departments[i].state = 'saved';
-        console.log('modified identified');
         });
       }
     }
@@ -321,10 +314,10 @@ export class EmployeeComponent implements OnInit {
           startTime = hoursStr + minutesStr;
           }
           if (day.endTime !== null) {
-            let end: any = day.endTime;
-            end = end.split(':');
-            const hoursEnd = parseInt(end[0], 10) * 60;
-            const minutesEnd = parseInt(end[1], 10);
+            const end: string = day.endTime;
+            const endArray = end.split(':');
+            const hoursEnd = parseInt(endArray[0], 10) * 60;
+            const minutesEnd = parseInt(endArray[1], 10);
             endTime = hoursEnd + minutesEnd;
           }
           day.endTime = (endTime === null) ? '' : endTime.toString();
@@ -333,7 +326,6 @@ export class EmployeeComponent implements OnInit {
         if (i === finishedWp.length) {
            this._admService.saveShift(finishedWp)
            .subscribe(res => {
-             console.log(res);
              this.refreshShiftBut = true;
           }, error => { console.log(error); });
         }

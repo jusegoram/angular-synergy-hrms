@@ -62,44 +62,28 @@
       </div>
       <mat-table #table [dataSource]="currentShift" matSort>
 
-          <ng-container matColumnDef="Monday">
-              <mat-header-cell *matHeaderCellDef>Monday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+          <ng-container matColumnDef="day">
+              <mat-header-cell *matHeaderCellDef>Day</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.dayName}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Tuesday">
-              <mat-header-cell *matHeaderCellDef>Tuesday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[1].onShift) ? element.shift[1].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
+            <ng-container matColumnDef="onShift">
+              <mat-header-cell *matHeaderCellDef>On shift</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{(element.onShift)? "ON SHIFT" : "DAY OFF"}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Wednesday">
-              <mat-header-cell *matHeaderCellDef>Wednesday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[2].onShift) ? element.shift[2].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
+            <ng-container matColumnDef="shift">
+              <mat-header-cell *matHeaderCellDef>Shift</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.startTimeString + " - " + element.endTimeString}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Thursday">
-              <mat-header-cell *matHeaderCellDef>Thursday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[3].onShift) ? element.shift[3].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
+            <ng-container matColumnDef="nextDate">
+              <mat-header-cell *matHeaderCellDef>Next date</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.nextDate | date: 'MM/dd/yyyy'}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Friday">
-              <mat-header-cell *matHeaderCellDef>Friday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[4].onShift) ? element.shift[4].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="Saturday">
-              <mat-header-cell *matHeaderCellDef>Saturday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[5].onShift) ? element.shift[5].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="Sunday">
-              <mat-header-cell *matHeaderCellDef>Sunday</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.shift[6].onShift) ? element.shift[6].startDate + ' - ' + element.shift[0].endDate : 'DAY OFF'}} </mat-cell>
-            </ng-container>
-
-
-        <mat-header-row *matHeaderRowDef="['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-header-row *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['day', 'onShift', 'shift', 'nextDate'];"></mat-row>
       </mat-table>
     </div>
 

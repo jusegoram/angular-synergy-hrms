@@ -15,7 +15,7 @@ export class DialogComponent  {
   onNoClick(): void {
     this.dialogRef.close();
   }
-  emitResult():boolean {
+  emitResult(param): boolean {
     this.result = true;
     return this.result;
   }

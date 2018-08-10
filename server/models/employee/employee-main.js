@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 let mongooseUniqueValidator = require('mongoose-unique-validator');
+let mongooseAutopopulate = require("mongoose-autopopulate")
 
 let EmployeeSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -12,13 +13,13 @@ let EmployeeSchema = new Schema({
     socialSecurity: { type: String, required: true },
     status: { type: String, required: true },
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Company' , required: false },
-    shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift'},
-    position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false },
-    payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false },
-    personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false },
-    family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false },
-    education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false },
-    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false },
+    shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift', autopopulate: true},
+    position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false, autopopulate: true},
+    payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false, autopopulate: false},
+    personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false, autopopulate: { maxDepth: 2 }},
+    family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false, autopopulate: { maxDepth: 2 }},
+    education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false, autopopulate: { maxDepth: 2 }},
+    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false, autopopulate: { maxDepth: 2 }},
 });
 
 EmployeeSchema.statics.findMax = function (callback) {
@@ -40,6 +41,6 @@ EmployeeSchema.statics.getId = function (employeeid) {
 
 }
 
+EmployeeSchema.plugin(mongooseAutopopulate);
 EmployeeSchema.plugin(mongooseUniqueValidator);
-
 module.exports = mongoose.model('employee-main', EmployeeSchema);

@@ -51,13 +51,11 @@ router.get('/main', function(req, res){
         path: 'position',
         model: 'Employee-Position',
         populate: {path: 'position', model: 'Administration-Position'},
-        options: { sort: { 'startDate': 1 } }
       })
       .populate({
         path:'shift',
         model: 'Employee-Shift',
-        populate: { path: 'shift', model: 'Administration-Shift'},
-        options: { sort: { 'startDate': 1 } }
+        populate: { path: 'shift', model: 'Administration-Shift' },
       })
       .populate({
         path: 'family',
@@ -66,13 +64,11 @@ router.get('/main', function(req, res){
       .populate({
         path: 'education',
         model: 'Employee-Education',
-        options: { sort: { 'startDate': 1 } }
       })
       .populate({
         path: 'comments',
         model: 'Employee-Comment',
         populate: { path:'submittedBy', select:'firstName lastName', model:'Administration-User'},
-        options: { sort: { 'commentDate': 1 } }
       })
       .exec((err, result) => {
         if (err) res.status(500);

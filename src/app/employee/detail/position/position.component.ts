@@ -43,6 +43,7 @@ export class PositionComponent implements OnInit {
   public dataSource: any;
   public employeePositions: EmployeePosition[];
   public positions: any;
+  public position: any;
   public employeePosition: any;
   public departments: Department[];
   public clients: Client[];

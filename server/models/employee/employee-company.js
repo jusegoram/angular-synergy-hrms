@@ -14,7 +14,7 @@ var schema = new Schema({
     terminationDate:{ type: Date, required: false },
     reapplicant: { type: Boolean, required: false},
     reapplicantTimes: {type: Number, required: false},
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 
 });
 // add training group (ref:num), and trainer

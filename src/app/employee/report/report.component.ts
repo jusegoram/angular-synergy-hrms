@@ -4,6 +4,7 @@ import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
+import { noop } from '../../../../node_modules/rxjs';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -68,10 +69,11 @@ export class ReportComponent implements OnInit {
     }
     this.employeeService.getReport(obj).subscribe(
         data => {
+          console.log('test');
+          console.log(data);
           let filtered: any;
           filtered = data;
           if (this.reportForm.value.statusCheck) {
-            console.log(this.queryForm.value.status);
             filtered = data.filter(res => res.status === this.queryForm.value.status);
             if (typeof filtered !== 'undefined') {
               this.buildTable(filtered);
@@ -83,26 +85,87 @@ export class ReportComponent implements OnInit {
   }
   export() {
     /* generate worksheet */
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.data);
+    const shiftInfo: any[] = [];
+    const positionInfo: any[] = [];
+    const personalInfo: any[] = [];
+    const familyInfo: any[] = [];
+    const commentsInfo: any[] = [];
+
+    const data: any = this.dataSource.data;
+    data.forEach(element => {
+      if (typeof element.shift !== 'undefined') {
+        const helperObj = element.shift.shift.shift;
+        element.shift.name = element.shift.shift.name;
+        element.shift.monday = (typeof helperObj[0].onShift) ?
+        this.transformTime(helperObj[0].startTime) + ' - ' + this.transformTime(helperObj[0].endTime) : 'DAY OFF';
+        element.shift.tuesday = (typeof helperObj[1].onShift) ?
+        this.transformTime(helperObj[1].startTime) + ' - ' + this.transformTime(helperObj[1].endTime) : 'DAY OFF';
+        element.shift.wednesday = (typeof helperObj[2].onShift) ?
+        this.transformTime(helperObj[2].startTime) + ' - ' + this.transformTime(helperObj[2].endTime) : 'DAY OFF';
+        element.shift.thursday = (typeof helperObj[3].onShift) ?
+        this.transformTime(helperObj[3].startTime) + ' - ' + this.transformTime(helperObj[3].endTime) : 'DAY OFF';
+        element.shift.friday = (typeof helperObj[4].onShift) ?
+        this.transformTime(helperObj[4].startTime) + ' - ' + this.transformTime(helperObj[4].endTime) : 'DAY OFF';
+        element.shift.saturday = (typeof helperObj[5].onShift) ?
+        this.transformTime(helperObj[5].startTime) + ' - ' + this.transformTime(helperObj[5].endTime) : 'DAY OFF';
+        element.shift.sunday = (typeof helperObj[6].onShift) ?
+        this.transformTime(helperObj[6].startTime) + ' - ' + this.transformTime(helperObj[6].endTime) : 'DAY OFF';
+      }
+      (typeof element.shift !== 'undefined') ? shiftInfo.push(element.shift) : noop();
+      (typeof element.position !== 'undefined') ? positionInfo.push(element.position) : noop();
+      (typeof element.personal !== 'undefined') ? personalInfo.push(element.personal) : noop();
+      (typeof element.family !== 'undefined') ? familyInfo.push(element.family) : noop();
+      (typeof element.comments !== 'undefined') ? commentsInfo.push(element.comments) : noop();
+    });
+
+    console.log(shiftInfo);
+    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+    const shift: XLSX.WorkSheet = XLSX.utils.json_to_sheet(shiftInfo);
+    const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);
+    const personal: XLSX.WorkSheet = XLSX.utils.json_to_sheet(personalInfo);
+    const family: XLSX.WorkSheet = XLSX.utils.json_to_sheet(familyInfo);
+    const comments: XLSX.WorkSheet = XLSX.utils.json_to_sheet(commentsInfo);
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.utils.book_append_sheet(wb, main, 'main-info');
+    XLSX.utils.book_append_sheet(wb, shift, 'shift-info');
+    XLSX.utils.book_append_sheet(wb, position, 'position-info');
+    XLSX.utils.book_append_sheet(wb, personal, 'personal-info');
+    XLSX.utils.book_append_sheet(wb, family, 'family-info');
+    XLSX.utils.book_append_sheet(wb, comments, 'comments-info');
     /* save to file */
-    XLSX.writeFile(wb, 'export-save.xlsx');
+    XLSX.writeFile(wb, 'export-info.xlsx');
   }
   setCampaigns(event: any) {
     this.campaigns = event.campaigns;
   }
+  transformTime(param): string {
+    let result = 'N/A';
+        if (param !== null) {
+        const stored = parseInt(param, 10);
+        const hours = Math.floor(stored / 60);
+        const minutes = stored - ( hours * 60 );
+        const fixedMin = (minutes === 0) ? '00' : minutes;
+        result = hours + ':' + fixedMin;
+        }
+        return result;
+  }
 
   buildTable(event: any) {
     if ( event.length !== 0) {
-    this.displayedColumns = Object.getOwnPropertyNames(event[event.length - 1]);
+    this.displayedColumns = [
+      'employeeId', 'firstName', 'middleName',
+      'lastName', 'gender', 'socialSecurity',
+      'status', 'client', 'campaign',
+      'manager', 'supervisor', 'trainer',
+      'trainingGroupRef', 'hireDate', 'terminationDate',
+      'reapplicant', 'reapplicantTimes'];
     this.dataSource = new MatTableDataSource(event);
     this.data = event;
   }
   }
 
-  clear(){
+  clear() {
     this.dataSource = null;
     this.data = null;
     this.buildForm();
