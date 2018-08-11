@@ -22,7 +22,6 @@ router.post('/', function(req, res, next){
   query['terminationDate'].$gte === '') {
     delete query['terminationDate']
   }
-  console.log(query);
   // Company.find(query).populate({
   //     path:'employee',
   //     model:'employee-main',
@@ -45,7 +44,7 @@ router.post('/', function(req, res, next){
 
   Company.find(query).populate('employee').exec(function (err, doc){
     res.status(200).json(doc);
-    console.log(err||doc);
+    console.log(err);
   })
 });
 

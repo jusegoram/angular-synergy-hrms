@@ -90,25 +90,25 @@ export class ReportComponent implements OnInit {
     const personalInfo: any[] = [];
     const familyInfo: any[] = [];
     const commentsInfo: any[] = [];
-
+    const orgData: any[] = [];
     const data: any = this.dataSource.data;
     data.forEach(element => {
       if (typeof element.shift !== 'undefined') {
         const helperObj = element.shift.shift.shift;
         element.shift.name = element.shift.shift.name;
-        element.shift.monday = (typeof helperObj[0].onShift) ?
+        element.shift.monday = ( helperObj[0].onShift) ?
         this.transformTime(helperObj[0].startTime) + ' - ' + this.transformTime(helperObj[0].endTime) : 'DAY OFF';
-        element.shift.tuesday = (typeof helperObj[1].onShift) ?
+        element.shift.tuesday = ( helperObj[1].onShift) ?
         this.transformTime(helperObj[1].startTime) + ' - ' + this.transformTime(helperObj[1].endTime) : 'DAY OFF';
-        element.shift.wednesday = (typeof helperObj[2].onShift) ?
+        element.shift.wednesday = ( helperObj[2].onShift) ?
         this.transformTime(helperObj[2].startTime) + ' - ' + this.transformTime(helperObj[2].endTime) : 'DAY OFF';
-        element.shift.thursday = (typeof helperObj[3].onShift) ?
+        element.shift.thursday = ( helperObj[3].onShift) ?
         this.transformTime(helperObj[3].startTime) + ' - ' + this.transformTime(helperObj[3].endTime) : 'DAY OFF';
-        element.shift.friday = (typeof helperObj[4].onShift) ?
+        element.shift.friday = ( helperObj[4].onShift) ?
         this.transformTime(helperObj[4].startTime) + ' - ' + this.transformTime(helperObj[4].endTime) : 'DAY OFF';
-        element.shift.saturday = (typeof helperObj[5].onShift) ?
+        element.shift.saturday = ( helperObj[5].onShift) ?
         this.transformTime(helperObj[5].startTime) + ' - ' + this.transformTime(helperObj[5].endTime) : 'DAY OFF';
-        element.shift.sunday = (typeof helperObj[6].onShift) ?
+        element.shift.sunday = ( helperObj[6].onShift) ?
         this.transformTime(helperObj[6].startTime) + ' - ' + this.transformTime(helperObj[6].endTime) : 'DAY OFF';
       }
       (typeof element.shift !== 'undefined') ? shiftInfo.push(element.shift) : noop();
@@ -116,10 +116,18 @@ export class ReportComponent implements OnInit {
       (typeof element.personal !== 'undefined') ? personalInfo.push(element.personal) : noop();
       (typeof element.family !== 'undefined') ? familyInfo.push(element.family) : noop();
       (typeof element.comments !== 'undefined') ? commentsInfo.push(element.comments) : noop();
+
+       orgData.push({
+        employeeId: element.employeeId, firstName: element.firstName, middleName: element.middleName,
+        lastName: element.lastName, gender: element.gender, client: element.client,
+        campaign: element.campaign, status: element.status, hireDate: element.hireDate,
+        manager: element.manager, supervisor: element.supervisor, trainer: element.trainer,
+        trainingGroupRef: element.trainingGroupRef, trainingGroupNum: element.trainingGroupNum,
+        reapplicant: element.reapplicant, reapplicantTimes: element.reapplicantTimes, socialSecurity: element.socialSecurity,
+      });
     });
 
-    console.log(shiftInfo);
-    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(orgData);
     const shift: XLSX.WorkSheet = XLSX.utils.json_to_sheet(shiftInfo);
     const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);
     const personal: XLSX.WorkSheet = XLSX.utils.json_to_sheet(personalInfo);
