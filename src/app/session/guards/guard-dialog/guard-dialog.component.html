@@ -1,0 +1,27 @@
+
+<mat-dialog-content [formGroup]="form">
+  <form [formGroup]="form">
+    <div class="text-xs-center pb-1">
+      <img src="assets/images/logo-dark.png" alt=""/>
+      <p class="mat-text-muted">Sign in with your Synergy ID to go back.</p>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="space-around">
+      <div class="pb-1">
+        <mat-form-field style="width: 100%">
+          <input matInput placeholder="Username" [formControl]="form.controls['uname']">
+        </mat-form-field>
+        <small *ngIf="form.controls['uname'].hasError('required') && form.controls['uname'].touched" class="mat-text-warn">Username is required.</small>
+      </div>
+      <div class="pb-1">
+        <mat-form-field style="width: 100%">
+          <input matInput type="password" placeholder="Password" [formControl]="form.controls['password']">
+        </mat-form-field>
+        <small *ngIf="form.controls['password'].hasError('required') && form.controls['password'].touched" class="mat-text-warn">Password is required.</small>
+      </div>
+    </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+      <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!form.valid">Login</button>
+</mat-dialog-actions>

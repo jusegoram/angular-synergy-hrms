@@ -24,6 +24,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './state/index';
 import { ApplicationEffects } from './state/application/effects';
 import { JwtModule } from '@auth0/angular-jwt';
+import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
 
 
 export function tokenGetter() {
@@ -42,6 +43,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
+    GuardDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -72,6 +74,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SessionService,
     SessionGuard
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [GuardDialogComponent]
 })
 export class AppModule { }
