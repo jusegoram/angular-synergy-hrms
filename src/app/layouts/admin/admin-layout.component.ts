@@ -66,11 +66,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   isOver(): boolean {
-    if (this.url === '/apps/messages' ||
-      this.url === '/apps/calendar' ||
-      this.url === '/apps/media' ||
-      this.url === '/maps/leaflet' ||
-      this.url === '/taskboard') {
+    if (true === true) {
       return true;
     } else {
       return this.mediaMatcher.matches;

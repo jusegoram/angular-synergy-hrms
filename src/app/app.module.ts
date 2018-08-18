@@ -19,10 +19,6 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
-import { StoreModule } from '@ngrx/store';
-import { EffectsModule } from '@ngrx/effects';
-import { reducers } from './state/index';
-import { ApplicationEffects } from './state/application/effects';
 import { JwtModule } from '@auth0/angular-jwt';
 import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
 
@@ -56,8 +52,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FlexLayoutModule,
     BidiModule,
     PerfectScrollbarModule,
-    StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([ApplicationEffects]),
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

@@ -19,8 +19,6 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "../node_modules/@swimlane/ngx-datatable/release/index.css",
-        "../node_modules/@swimlane/ngx-datatable/release/themes/material.css",
         "assets/fonts/pe/css/pe-icon-set-weather.css",
         "assets/fonts/data-table/icons.css",
         "assets/styles/app.scss"
@@ -28,7 +26,7 @@
       "scripts": [
         "../node_modules/hammerjs/hammer.min.js",
         "../node_modules/chart.js/dist/Chart.bundle.min.js"
-        
+
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

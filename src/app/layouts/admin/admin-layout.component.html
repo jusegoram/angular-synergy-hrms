@@ -7,17 +7,17 @@
       <div class="logo"></div>
     </div>
     <div class="search-bar" fxFlex>
-      <form class="search-form" fxShow="false" fxShow.gt-xs>
+      <!-- <form class="search-form" fxShow="false" fxShow.gt-xs>
         <mat-icon>search</mat-icon>
         <input type="text" placeholder="Search" autofocus="true" />
-      </form>
+      </form> -->
     </div>
     <button appToggleFullscreen mat-icon-button>
       <mat-icon>fullscreen</mat-icon>
     </button>
     <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible">
       <mat-icon>notifications</mat-icon>
-     <!-- <span class="notification-label"></span> -->
+      <!-- <span class="notification-label"></span> -->
     </button>
     <button [matMenuTriggerFor]="user" mat-icon-button class="ml-xs">
       <mat-icon>person</mat-icon>
@@ -39,8 +39,9 @@
   </mat-toolbar>
 
   <mat-sidenav-container class="app-inner">
-    <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()" (open)="sidePanelOpened = true"  
-    (close)="sidePanelOpened = false" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()" [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
+    <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()"
+      (open)="sidePanelOpened = true" (close)="sidePanelOpened = false" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()"
+      [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
       <mat-nav-list appAccordion class="navigation" (click)="updatePS()">
         <mat-list-item appAccordionLink *ngFor="let menuitem of menus" group="{{menuitem.state}}">
           <a appAccordionToggle class="relative" [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
@@ -73,7 +74,7 @@
               <a [routerLink]="['/', menuitem.state, childitem.state ]" class="relative">{{ childitem.name }}</a>
             </mat-list-item>
           </mat-nav-list>
-          
+
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
@@ -86,7 +87,10 @@
               <mat-list-item>
                 <div fxLayout="column">
                   <h1 class="ma-0">{{ today | date:'EEEE' }}</h1>
-                  <h3 class="mat-text-muted ma-0"><span>{{ today | date:'dd' }}</span>&nbsp;<span>{{ today | date:'MMMM' }}</span></h3>
+                  <h3 class="mat-text-muted ma-0">
+                    <span>{{ today | date:'dd' }}</span>&nbsp;
+                    <span>{{ today | date:'MMMM' }}</span>
+                  </h3>
                 </div>
               </mat-list-item>
             </mat-list>
@@ -94,18 +98,18 @@
               <mat-divider></mat-divider>
               <h3 mat-subheader class="text-uppercase font-weight-bold">Weather</h3>
               <mat-list-item>
-                 <a matLine href="javascript:;">{{ today | date:'shortTime' }}</a>
-                 <p matLine class="mat-text-muted">London</p>
-                 <span class="mat-h1 mr-1">
-                   <span class="pe-is-w-blizzard"></span>
-                 </span>
-                 <span class="mat-h1">26°</span>
+                <a matLine href="javascript:;">{{ today | date:'shortTime' }}</a>
+                <p matLine class="mat-text-muted">London</p>
+                <span class="mat-h1 mr-1">
+                  <span class="pe-is-w-blizzard"></span>
+                </span>
+                <span class="mat-h1">26°</span>
               </mat-list-item>
               <mat-divider></mat-divider>
-              </mat-nav-list>
+            </mat-nav-list>
           </div>
         </mat-tab>
-        
+
       </mat-tab-group>
     </mat-sidenav>
     <div [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
