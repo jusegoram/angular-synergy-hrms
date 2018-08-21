@@ -75,7 +75,6 @@
             "tsConfig": "src/tsconfig.spec.json",
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
-              "node_modules/chart.js/dist/Chart.bundle.min.js"
             ],
             "styles": [
               "src/assets/fonts/pe/css/pe-icon-set-weather.css",
