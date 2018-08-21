@@ -127,7 +127,7 @@ router.post('/personal', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(employeeFile.mimetype != "text/csv"){
+        if(personalFile.mimetype != "text/csv"){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -160,6 +160,50 @@ router.post('/personal', function (req, res) {
             return res.status(200).send( personal.lenght + ' Registries of personal information of employees was uploaded');
         });
     });
+});
+
+router.post('/company', function (req, res) {
+  upload(req, res, function (err) {
+    let company = [];
+    let companyFile = req.file;
+      if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+      }
+      if(companyFile.mimetype != "text/csv"){
+          return res.status(400).send("Sorry only CSV files can be processed for upload");
+      }
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', function(data){
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          company.push(data);
+
+      })
+      .on('end', function(){
+          async.each(company, function(comp, callback){
+            EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
+                  if(err){
+                      callback(err)
+                  }else{
+                      res.company = comp._id;
+                      comp.employee = res._id;
+                      res.save();
+                      callback();
+                  }
+              })
+          }, function(err){
+              if(err){
+                  console.log(err);
+              }else{
+                  Company.create(company);
+              }
+          });
+          console.log('upload finished');
+          return res.status(200).send( company.lenght + ' Registries of personal information of employees was uploaded');
+      });
+  });
 });
 
 router.post('/payroll', function (req, res) {

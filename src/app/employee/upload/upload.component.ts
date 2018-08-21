@@ -19,7 +19,9 @@ export class UploadComponent {
    // http://localhost:3000/upload
   items = [
     {value: '/api/v1/employee/upload', viewValue: 'Employee Main'},
+    {value: '/api/v1/employee/upload/company', viewValue: 'Employee Company'},
     {value: '/api/v1/employee/upload/position', viewValue: 'Employee Position'},
+    {value: '/api/v1/employee/upload/position', viewValue: 'Employee Shift(not working)'},
     {value: '/api/v1/employee/upload/personal', viewValue: 'Employee Personal'},
     {value: '/api/v1/employee/upload/payroll', viewValue: 'Employee Payroll'},
     {value: '/api/v1/employee/upload/family', viewValue: 'Employee Family'},
