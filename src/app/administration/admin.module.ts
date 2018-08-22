@@ -8,6 +8,9 @@ import { ContentComponent } from './content/content.component';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AdminService } from './services/admin.services';
+import { ClientComponent } from './employee/client/client.component';
+import { WorkpatternComponent } from './employee/workpattern/workpattern.component';
+import { PositionComponent } from './employee/position/position.component';
 
 @NgModule({
   imports: [
@@ -17,7 +20,7 @@ import { AdminService } from './services/admin.services';
     FormsModule,
     HttpModule,
   ],
-  declarations: [UserPermissionComponent, EmployeeComponent, ContentComponent],
+  declarations: [UserPermissionComponent, EmployeeComponent, ContentComponent, ClientComponent, WorkpatternComponent, PositionComponent],
   providers: [AdminService]
 })
 export class AdminModule { }

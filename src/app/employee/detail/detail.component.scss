@@ -1,3 +1,24 @@
+@import "../../../assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 150px !default;
+$mat-toolbar-height-mobile-portrait: 142px !default;
+$mat-toolbar-height-mobile-landscape: 136px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
 button {
     margin-left: 20px;
     margin-bottom: 10px;
@@ -7,6 +28,7 @@ mat-form-field {
   margin: 6px;
 
 }
+
 .header {
     width: 100% !important;
 }
@@ -15,7 +37,7 @@ mat-form-field {
   }
 
 .main-info{
-    padding: 5px;
+    margin-bottom: 10px;
     flex: 1 1 auto;
 }
 

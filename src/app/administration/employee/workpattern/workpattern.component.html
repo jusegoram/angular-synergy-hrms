@@ -1,0 +1,105 @@
+<mat-card class="pa-2">
+  <h2>Work Patterns</h2>
+  <mat-form-field>
+    <mat-select placeholder="Select Shift" [ngModel]="'New'" (selectionChange)="setSelection($event.value)">
+      <mat-option [value]="defaultWp">New</mat-option>
+      <mat-option *ngFor="let element of wp" [value]="element" (click)="panel3.close()" >
+        {{element.name}}
+      </mat-option>
+    </mat-select>
+    <mat-hint>Select New for a new Work Pattern</mat-hint>
+  </mat-form-field>
+  <button mat-icon-button *ngIf="refreshShiftBut" (click)="refreshWp()"><mat-icon>refresh</mat-icon></button>
+  <mat-expansion-panel class="ma-1" #panel3>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{this.currentWp.name}}
+      </mat-panel-title>
+      <mat-panel-description>
+        Add or Modify Work patterns
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div fxLayout="column">
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[0].onShift">&nbsp;Monday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[0].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[0].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[1].onShift">&nbsp;Tuesday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[1].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[1].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[2].onShift">&nbsp;Wednesday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[2].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[2].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[3].onShift">&nbsp;Thursday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[3].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[3].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[4].onShift">&nbsp;Friday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[4].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[4].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[5].onShift">&nbsp;Saturday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[5].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[5].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[6].onShift">&nbsp;Sunday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[6].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[6].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <input matInput [(ngModel)]="this.currentWp.name" placeholder="Shift Name">
+      </mat-form-field>
+    </div>
+  </mat-expansion-panel>
+
+  <button mat-icon-button (click)="onAddWp(); panel3.close()"><mat-icon>add</mat-icon></button>
+  <button mat-button color="primary" (click)="onSaveWp(); panel3.close()">
+    <mat-icon>save</mat-icon>
+    Save changes</button>
+</mat-card>

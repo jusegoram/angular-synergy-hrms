@@ -1,10 +1,16 @@
-<div class="pa-1">
-    <mat-toolbar class="header mat-elevation-z8 mat-indigo-500">
-        <span>Details</span>
-        <span class="fill-remaining-space"></span>
-        <span> Employee ID:{{this.employee.employeeId}} </span>
-    </mat-toolbar>
-    <div fxLayout="row">
+<mat-toolbar class="header"  color="primary">
+  <mat-toolbar-row>
+      <span>Details</span>
+      <span class="fill-remaining-space"></span>
+      <span> Employee ID:{{this.employee.employeeId}} </span>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top pa-1">
+    <div fxLayout="row" fxLayout.xs="column">
         <avatar-detail [id]="this.employee._id"></avatar-detail>
         <mat-card class="main-info pa-2">
             <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->

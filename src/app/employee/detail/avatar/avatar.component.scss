@@ -1,13 +1,11 @@
 .user-image{
-    max-width: 200px;
-    margin: 5px;
-    height: auto;
+  overflow: hidden;
+    height: 350px;
+    width: 350px;
 }
 .user-image-container {
-    max-width: 210px;
+    max-width: 450px;
 }
 .image-card{
-    max-width: 214px;
-    margin:5px;
-    padding:5px;
-}
+    max-width: 450px;
+  }

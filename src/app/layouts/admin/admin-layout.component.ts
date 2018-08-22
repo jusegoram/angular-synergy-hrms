@@ -12,7 +12,8 @@ const SMALL_WIDTH_BREAKPOINT = 960;
 
 @Component({
   selector: 'app-layout',
-  templateUrl: './admin-layout.component.html'
+  templateUrl: './admin-layout.component.html',
+  styleUrls: ['./admin-layout.component.scss']
 })
 export class AdminLayoutComponent implements OnInit, OnDestroy {
 
@@ -66,7 +67,11 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   isOver(): boolean {
-    if (true === true) {
+    if (this.url === '/apps/messages' ||
+      this.url === '/apps/calendar' ||
+      this.url === '/apps/media' ||
+      this.url === '/maps/leaflet' ||
+      this.url === '/taskboard') {
       return true;
     } else {
       return this.mediaMatcher.matches;

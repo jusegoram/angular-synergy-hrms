@@ -4,7 +4,7 @@ $mat-card-header-size: 40px !default;
 body {
   .mat-card {
     padding: 0;
-    margin: ($gutter/3);
+    margin: ($gutter / 3);
     border-radius: $border-radius-base;
     @include mat-elevation(1);
     color: rgba(mat-color($foreground, base), 0.87);

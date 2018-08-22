@@ -1,15 +1,20 @@
-<mat-card class="image-card pa-1">
-  <div fxLayout="column" fxLayoutGap="10px">
+<div class="image-card pa-1">
+  <div fxLayout="column" fxFlexAlign="center" fxLayoutGap="10px">
 <div class="user-image-container">
-<img class="user-image" [src]="imageData" *ngIf="imageData"/>
+<img class="user-image radius-circle" [src]="imageData" *ngIf="imageData"/>
 </div>
-<button mat-button [disabled]="!this.auth.edit" (click)="fileInput.click(); this.onclick()"><mat-icon>add_circle</mat-icon> Add Image
-</button>
-<span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-  <input type="file" #fileInput ng2FileSelect [uploader]="uploader" />
-</span>
-<button mat-button mat-button-sm color="primary" type="button"
+
+<div fxLayout="row" fxFlexAlign="center">
+    <button mat-button [disabled]="!this.auth.edit" (click)="fileInput.click(); this.onclick()"><mat-icon>add_a_photo
+    </mat-icon> &nbsp;Photo
+    </button>
+    <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+      <input type="file" #fileInput ng2FileSelect [uploader]="uploader" />
+    </span>
+  <button mat-button mat-button-sm color="primary" type="button"
           (click)="uploader.uploadAll()" [disabled]="!this.auth.edit"> <mat-icon>file_upload</mat-icon>
           Upload</button>
 </div>
-</mat-card>
+  <button mat-button color="warn" disabled="true"><mat-icon>delete</mat-icon> Remove</button>
+</div>
+</div>

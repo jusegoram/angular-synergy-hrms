@@ -26,7 +26,6 @@ import { NewComponent } from './new/new.component';
 import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
 import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
 import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/family-edit-dialog.component';
-import { DetailEditDialogComponent } from './detail/detail-edit-dialog/detail-edit-dialog.component';
 import {EmployeeResolver} from './services/employee.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 
@@ -60,7 +59,6 @@ import { ShiftComponent } from './detail/shift/shift.component';
     PayrollEditDialogComponent,
     PayrollEditDialogComponent,
     FamilyEditDialogComponent,
-    DetailEditDialogComponent,
     PersonalEditDialogComponent,
     ShiftComponent
     ],
@@ -69,7 +67,6 @@ import { ShiftComponent } from './detail/shift/shift.component';
       PayrollEditDialogComponent,
       PayrollEditDialogComponent,
       FamilyEditDialogComponent,
-      DetailEditDialogComponent,
       PersonalEditDialogComponent
     ],
   providers: [

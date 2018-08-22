@@ -12,21 +12,21 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     if (this.checkLogin()) {
       return true;
     } else {
-      this.openDialog();
+      return this.openDialog();
     }
   }
   canActivateChild(): boolean {
     if (this.checkLogin()) {
       return true;
     } else {
-     this.openDialog();
+     return this.openDialog();
     }
   }
   canLoad(): boolean {
     if (this.checkLogin()) {
       return true;
     } else {
-      this.openDialog();
+      return this.openDialog();
     }
   }
   checkLogin(): any {

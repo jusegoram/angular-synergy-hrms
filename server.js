@@ -35,7 +35,7 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-const TEST_URL = "http://200.32.222.3:8080";
+const TEST_URL = "http://200.32.222.3:3000";
 // const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(TEST_URI, {

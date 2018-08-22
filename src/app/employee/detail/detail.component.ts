@@ -1,5 +1,4 @@
 import { SessionService } from './../../session/services/session.service';
-// import {select, Store} from '@ngrx/store';
 import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { ActivatedRoute } from '@angular/router';
@@ -45,48 +44,6 @@ export class DetailComponent implements OnInit {
     this.reaptimes = this.employeeService.reaptimes;
     this.genders = this.employeeService.genders;
   }
-
-
-  // clients = [
-  //   {value: 'American IP', viewValue: ''},
-  //   {value: 'CCS', viewValue: ''},
-  //   {value: 'KGISL', viewValue: ''},
-  //   {value: 'FALCON', viewValue: ''},
-  //   {value: 'ATLAS', viewValue: ''},
-  //   {value: 'MONOPRICE', viewValue: ''},
-  //   {value: 'DENTAL', viewValue: ''},
-  //   {value: 'PPP', viewValue: ''},
-  //   {value: 'REDIAL', viewValue: ''},
-  //   {value: 'AUXIS', viewValue: ''}
-  // ];
-  // campaigns = [
-  //   //american ip
-  //   {value: 'locksmith-usa', viewValue: ''},
-  //   {value: 'locksmith-canada', viewValue: ''},
-  //   {value: 'garage', viewValue: ''},
-  //   {value: 'color', viewValue: ''},
-  //   //ccs
-  //   {value: 'directsat', viewValue: ''},
-  //   {value: 'eagan', viewValue: ''},
-  //   {value: 'goodman', viewValue: ''},
-  //   {value: '1099', viewValue: ''},
-  //   //KGISL
-  //   {value: 'TIB', viewValue: ''},
-  //   {value: 'CIB', viewValue: ''},
-  //   //atlas & falcon
-  //   {value: 'FNL', viewValue: ''},
-  //   //monoprice
-  //   {value: 'tracking', viewValue: ''},
-  //   // promotion
-  //   {value: 'promotion', viewValue: ''},
-  //   // ppp
-  //   {value: 'MED', viewValue: ''},
-  //   // redial
-  //   {value: 'ruelala', viewValue: ''},
-  //   // auxis
-  //   {value: 'SFC', viewValue: ''},
-  // ];
-
 
    ngOnInit() {
      this.clients = this.employeeService.clients;
@@ -167,7 +124,6 @@ export class DetailComponent implements OnInit {
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
-          console.log(error);
         });
   }
 
@@ -195,7 +151,6 @@ export class DetailComponent implements OnInit {
           });
         },
         error => {
-          console.log(error);
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
