@@ -27,41 +27,9 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
   flex: 1 1 auto;
 }
 
-button {
-    margin-left: 20px;
-    margin-bottom: 10px;
+.main-info {
+  width: 90%;
 }
-
-mat-form-field {
-  margin: 6px;
-
-}
-
-
-
-.main-info{
-    margin-bottom: 10px;
-    flex: 1 1 auto;
-}
-
-.form{
-    margin: 10px;
-    max-height: 190px;
-    display: flex;
-    flex: 2 2 50em;
-   align-items: center;
-   justify-content: center;
-   flex-flow: column wrap;
-   align-content: stretch;
-}
-
-.main-form{
-    margin: 10px;
-    max-height: 190px;
-    display: flex;
-    flex: 0 0 50%;
-   align-items: center;
-   justify-content: center;
-   flex-flow: column wrap;
-   align-content: stretch;
+mat-form-field, mat-slide-toggle {
+  margin: 5px;
 }

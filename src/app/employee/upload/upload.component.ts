@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 // const URL = '/api/';
 import { environment } from '../../../environments/environment';
+import { MatTableDataSource } from '@angular/material';
 
 
 
@@ -12,14 +13,15 @@ import { environment } from '../../../environments/environment';
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.scss']
 })
-export class UploadComponent {
+export class UploadComponent{
   uploader: FileUploader;
+  dataSource: any;
   hasBaseDropZoneOver: boolean;
   hasAnotherDropZoneOver: boolean;
   response: string;
-
-   selected = '/upload';
-   URL = environment.siteUri + this.selected;
+  displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
+  public selected = {value: '/api/v1/employee/upload', viewValue: 'Employee Main'};
+  URL = environment.siteUri;
    // http://localhost:3000/upload
   items = [
     {value: '/api/v1/employee/upload', viewValue: 'Employee Main'},
@@ -39,47 +41,32 @@ export class UploadComponent {
   //   isHTML5: true
   // });
   constructor () {
-    this.uploader = new FileUploader({
-      url: this.URL,
-      allowedMimeType: ['text/csv'],
-      disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
-      formatDataFunctionIsAsync: true,
-      formatDataFunction: async (item) => {
-        return new Promise( (resolve, reject) => {
-          resolve({
-            name: item._file.name,
-            length: item._file.size,
-            contentType: item._file.type,
-            date: new Date()
-          });
-        });
-      }
-    });
-
-    this.response = '';
-
-    this.uploader.response.subscribe( res => this.response = res );
+    this.setUploader();
   }
-   onSelectChange() {
-    this.URL = environment.siteUri + this.selected;
-    this.uploader = new FileUploader({
-      url: this.URL,
-      allowedMimeType: ['text/csv'],
-      disableMultipart: true, // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
-      formatDataFunctionIsAsync: true,
-      formatDataFunction: async (item) => {
-        return new Promise( (resolve, reject) => {
-          resolve({
-            name: item._file.name,
-            length: item._file.size,
-            contentType: item._file.type,
-            date: new Date()
-          });
-        });
-      }
-    });
-    this.uploader.onCompleteItem = () => {
 
-    };
+  ngOnChanges(...args: any[]) {
+    console.log('onChange fired');
+    console.log('changing', args);
+    }
+   setUploader() {
+     const setURL = this.URL + this.selected.value;
+    this.uploader = new FileUploader({
+      url: setURL,
+      allowedMimeType: ['text/csv'],
+      isHTML5: true,
+    });
+    this.refresh();
+    this.uploader.onAfterAddingFile = (file) => this.refresh();
+    this.uploader.onSuccessItem = (res) => {if (res) { this.refresh(); }};
+  }
+
+  onSelectChange(){
+    console.log(this.selected.value);
+    this.uploader = null;
+    this.setUploader();
+  }
+  refresh() {
+    console.log(this.selected.value);
+    this.dataSource = new MatTableDataSource(this.uploader.queue);
   }
 }

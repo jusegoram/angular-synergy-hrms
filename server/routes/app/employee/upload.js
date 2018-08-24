@@ -15,6 +15,7 @@ let Family = require ('../../../models/employee/employee-family');
 let Education = require ('../../../models/employee/employee-education');
 let Department = require('../../../models/administration/administration-department');
 let Comment = require('../../../models/employee/employee-comment');
+let Company = require('../../../models/employee/employee-company');
 // set the directory for the uploads to the uploaded to
 let DIR = 'uploads/';
 

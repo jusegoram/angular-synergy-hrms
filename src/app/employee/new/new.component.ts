@@ -7,13 +7,13 @@ import { Router } from '../../../../node_modules/@angular/router';
 @Component({
   selector: 'new',
   templateUrl: './new.component.html',
-  styleUrls: ['./new.component.css']
+  styleUrls: ['./new.component.scss']
 })
 export class NewComponent implements OnInit {
   created = false;
   mainForm: FormGroup;
   companyForm: FormGroup;
-
+  auth = false;
   items = [
     {value: 'active', viewValue: 'Active'},
     {value: 'resignation', viewValue: 'Resignation'},

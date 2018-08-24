@@ -1,7 +1,14 @@
-<mat-card>
-  <mat-card-title>File upload</mat-card-title>
-  <mat-card-subtitle>Upload CSV (MAX 100 rows)</mat-card-subtitle>
-
+<mat-toolbar class="header"  color="primary">
+    <mat-toolbar-row>
+        <span>Uploads</span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
+  </mat-toolbar>
+<mat-card class="mat-card-top">
   <mat-card-content>
     <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
       <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
@@ -9,10 +16,10 @@
 
         <mat-form-field>
           <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
-            <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue}}</mat-option>
+            <mat-option *ngFor="let item of items" [value]="item"> {{item.viewValue}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <h4 class="mt-0">Selected {{selected}}</h4>
+        <h4 class="mt-0">Upload {{selected.viewValue}}</h4>
         <h4 class="mt-0">Select files</h4>
 
         <p>Multiple</p>
@@ -29,7 +36,7 @@
           <span>Queue length: {{ uploader?.queue?.length }}</span>
         </h4>
 
-        <ngx-datatable
+        <!-- <ngx-datatable
           class="material ml-0 mr-0"
           [rows]="uploader.queue"
           [columnMode]="'flex'"
@@ -69,18 +76,56 @@
               </button>
             </ng-template>
           </ngx-datatable-column>
-        </ngx-datatable>
+        </ngx-datatable> -->
+
+        <mat-table #table [dataSource]="dataSource">
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.file?.name}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="size">
+            <mat-header-cell *matHeaderCellDef > Size </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element?.file?.size/1024/1024 | number:'.2' }} MB </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="progress">
+            <mat-header-cell *matHeaderCellDef > Progress </mat-header-cell>
+            <mat-cell *matCellDef="let element"> <mat-progress-bar mode="determinate" value="{{element.progress}}"></mat-progress-bar> </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef > Status </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <span *ngIf="element.isSuccess"><mat-icon>check</mat-icon></span>
+              <span *ngIf="element.isCancel"><mat-icon>cancel</mat-icon></span>
+              <span *ngIf="element.isError"><mat-icon>error</mat-icon></span>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef > Action </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button mat-raised-button mat-button-sm color="primary" type="button" (click)="element.upload(); refresh()" [disabled]="element.isReady || element.isUploading || element.isSuccess">Upload</button>
+              <button mat-raised-button mat-button-sm color="warn" type="button" (click)="element.cancel(); refresh()" [disabled]="!element.isUploading">Cancel</button>
+              <button mat-raised-button mat-button-sm color="accent" type="button" (click)="element.remove(); refresh()">Remove
+              </button>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
 
         <div class="mb-1">
           <p>Queue progress:</p>
           <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
         </div>
         <button mat-raised-button mat-button-sm color="primary" type="button"
-                (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
+                (click)="uploader.uploadAll(); refresh()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
         <button mat-raised-button mat-button-sm color="warn" type="button"
-                (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">Cancel all</button>
+                (click)="uploader.cancelAll(); refresh()" [disabled]="!uploader.isUploading">Cancel all</button>
         <button mat-raised-button mat-button-sm color="accent" type="button"
-                (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">Remove all</button>
+                (click)="uploader.clearQueue(); refresh()" [disabled]="!uploader.queue.length">Remove all</button>
       </div>
     </div>
   </mat-card-content>

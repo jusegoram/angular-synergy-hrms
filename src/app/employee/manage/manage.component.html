@@ -1,8 +1,17 @@
-<div class="pa-1">
-  <h1> Employee Management</h1>
-  <div class="mat-elevation-z8 example-container">
+<mat-toolbar class="header">
+    <mat-toolbar-row>
+        <span>Management table</span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
+  </mat-toolbar>
+<div class="mat-card-top">
+  <div class="example-container">
   <div class="example-header">
-      <mat-form-field>
+      <mat-form-field  appearance="outline">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
       <div fxFlex="auto"></div>

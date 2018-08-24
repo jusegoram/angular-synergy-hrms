@@ -3,8 +3,16 @@
 const express = require('express');
 const path = require('path');
 const debug = require('debug')('node-rest:server');
-const http = require('http');
-// var https = require('https');
+// const http = require('http');
+const https = require("https");
+const fs = require("fs");
+
+const options = {
+  passphrase: "1vg246vg4g",
+  key: fs.readFileSync("./ssl/key.pem"),
+  cert: fs.readFileSync("./ssl/cert.pem"),
+  dhparam: fs.readFileSync("./ssl/dh-strong.pem")
+};
 // var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
 // var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
 // var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
@@ -35,7 +43,8 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-const TEST_URL = "http://200.32.222.3:3000";
+// const TEST_URL = "http://200.32.222.3:3000";
+const TEST_URL = "https://localhost:3000";
 // const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(TEST_URI, {
@@ -112,20 +121,20 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-// var httpsServer = https.createServer(credentials, app);
-var server = http.createServer(app);
+var httpsServer = https.createServer(options, app);
+// var server = http.createServer(app);
 
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port, () => console.log(`API running on ${TEST_URL}`));
-server.on('error', onError);
-server.on('listening', onListening);
+// server.listen(port, () => console.log(`API running on ${TEST_URL}`));
+// server.on('error', onError);
+// server.on('listening', onListening);
 
-// httpsServer.listen(port, () => console.log(`API running on localhost:${port}`));
-// httpsServer.on('error', onError);
-// httpsServer.on('listening', onListening);
+httpsServer.listen(port, () => console.log(`API running on localhost:${port}`));
+httpsServer.on('error', onError);
+httpsServer.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -181,9 +190,9 @@ function onError(error) {
    */
 
   function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-      ? 'pipe ' + addr
-      : 'port ' + addr.port;
-    debug('Listening on' + bind);
+    // var addr = server.address();
+    // var bind = typeof addr === 'string'
+    //   ? 'pipe ' + addr
+    //   : 'port ' + addr.port;
+    debug('Listening on');
   }
