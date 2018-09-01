@@ -55,7 +55,11 @@ export class AvatarComponent implements OnInit {
       });
   }
   getPermission() {
+<<<<<<< HEAD
     // this.auth = this.sessionService.permission();
     return this.auth;
+=======
+   return this.auth;
+>>>>>>> unstable
   }
 }
