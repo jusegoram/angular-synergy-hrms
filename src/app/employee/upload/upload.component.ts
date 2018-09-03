@@ -13,7 +13,7 @@ import { MatTableDataSource } from '@angular/material';
   templateUrl: './upload.component.html',
   styleUrls: ['./upload.component.scss']
 })
-export class UploadComponent{
+export class UploadComponent {
   uploader: FileUploader;
   dataSource: any;
   hasBaseDropZoneOver: boolean;
@@ -44,10 +44,6 @@ export class UploadComponent{
     this.setUploader();
   }
 
-  ngOnChanges(...args: any[]) {
-    console.log('onChange fired');
-    console.log('changing', args);
-    }
    setUploader() {
      const setURL = this.URL + this.selected.value;
     this.uploader = new FileUploader({
