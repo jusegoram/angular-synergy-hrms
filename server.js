@@ -47,6 +47,15 @@ const TEST_URL = "https://synergy.rccbpo.com:3000";
 //const TEST_URL = "https://localhost:3000";
 const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
+
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+});
+
+app.configure('production', function(){
+  app.use(express.errorHandler());
+});
+
 mongoose.connect(TEST_URI, {
   useMongoClient: true,
  });
