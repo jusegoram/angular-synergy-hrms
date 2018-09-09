@@ -52,7 +52,7 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'Crooked Tree', name: 'Crooked Tree'},
       { value: 'Dangriga', name: 'Dangriga' },
       { value: 'Double Head Cabbage', name: 'Double Head Cabbage'},
-      { value: 'Gardenia Village', name: 'Gardenia Village'}
+      { value: 'Gardenia Village', name: 'Gardenia Village'},
       { value: 'Guinea Grass Village', name: 'Guinea Grass Village' },
       { value: 'Hattieville', name: 'Hattieville' },
       { value: 'independence', name: 'Independence' },

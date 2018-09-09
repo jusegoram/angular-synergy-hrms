@@ -21,6 +21,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
+import { UserModule } from './user/user.module';
 
 
 export function tokenGetter() {
@@ -58,7 +59,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         whitelistedDomains: ['localhost:3000'],
         authScheme: 'JWT '
       }
-    })
+    }),
+    UserModule
   ],
   providers: [
     {
