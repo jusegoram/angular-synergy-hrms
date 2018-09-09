@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import {CdkTableModule} from '@angular/cdk/table';
 import {OverlayModule} from '@angular/cdk/overlay';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import {
   MatAutocompleteModule,
@@ -41,6 +42,7 @@ import {
 
 @NgModule({
   exports: [
+    FlexLayoutModule,
     CdkTableModule,
     OverlayModule,
     ReactiveFormsModule,

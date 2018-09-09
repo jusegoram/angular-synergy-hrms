@@ -10,8 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppRoutes } from './app.routing';
@@ -50,7 +48,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     HttpClientModule,
     MaterialSharedModule,
-    FlexLayoutModule,
     BidiModule,
     PerfectScrollbarModule,
     JwtModule.forRoot({

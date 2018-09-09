@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
 import { UploadComponent } from './upload/upload.component';
@@ -34,7 +33,6 @@ import { ShiftComponent } from './detail/shift/shift.component';
   imports: [
     CommonModule,
     EmployeeRoutingModule,
-    FlexLayoutModule,
     MaterialSharedModule,
     HttpModule,
     HttpClientModule,

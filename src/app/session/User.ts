@@ -6,6 +6,6 @@ export class User {
                 public middleName?: string,
                 public lastName?: string,
                 public creationDate?: Date,
-                public employeeId?: string,
-                public log?: string) {}
+                public employee?: any,
+                public log?: any) {}
 }

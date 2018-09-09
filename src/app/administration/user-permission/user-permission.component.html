@@ -1,12 +1,15 @@
-<div class="pa-1">
-<mat-card>
-    <mat-toolbar>
-        <span>User Creation</span>
-    </mat-toolbar>
-  <div>
-      <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-          <mat-list >
-          <mat-list-item class="form-group">
+<mat-toolbar class="header"  color="primary">
+  <mat-toolbar-row>
+      <span>User Management</span>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+  </mat-toolbar-row>
+  <mat-toolbar-row>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top pa-1">
+<mat-card class="pa-1"  fxLayout="row" fxLayout.xs="column">
+      <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="myForm">
               <mat-form-field>
                   <input matInput
                       placeholder="First Name"
@@ -15,9 +18,14 @@
                       class="form-control"
                       formControlName="firstName">
               </mat-form-field>
-          </mat-list-item>
-  
-          <mat-list-item class="form-group">
+            <mat-form-field>
+                <input matInput
+                    placeholder="Middle Name"
+                    type="text"
+                    id="middleName"
+                    class="form-control"
+                    formControlName="firstName">
+            </mat-form-field>
                   <mat-form-field>
                       <input matInput
                           placeholder="Last Name"
@@ -26,9 +34,6 @@
                           class="form-control"
                           formControlName="lastName">
                   </mat-form-field>
-              </mat-list-item>
-  
-          <mat-list-item class="form-group">
               <mat-form-field>
               <mat-select placeholder="Role" name="item" id="role" class="form-control" formControlName="role">
                   <mat-option *ngFor="let item of items" [value]="item.value">
@@ -36,20 +41,14 @@
                   </mat-option>
               </mat-select>
           </mat-form-field>
-          </mat-list-item>
-  
-          <mat-list-item class="form-group">
                   <mat-form-field>
                       <input matInput
-                          placeholder="Username"
+                          placeholder="Company Email"
                           type="text"
                           id="username"
                           class="form-control"
                           formControlName="username">
                   </mat-form-field>
-              </mat-list-item>
-  
-              <mat-list-item class="form-group">
                       <mat-form-field>
                           <input matInput
                               placeholder="Password"
@@ -58,14 +57,20 @@
                               class="form-control"
                               formControlName="password">
                       </mat-form-field>
-                  </mat-list-item>
-  
-          <mat-list-item>
            <button mat-button type="submit"
-           [disabled]="!myForm.valid">Submit</button>
-          </mat-list-item>
-          </mat-list>
-      </form>    
-  </div>
+           [disabled]="false">Submit</button>
+
+      </form>
+      <mat-card class='employeeCard'>
+        <mat-card-header>
+          <mat-card-title>Select Employee Registry</mat-card-title>
+          <mat-card-subtitle>the user must have an active employee registry</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>Ok</button>
+        </mat-card-actions>
+      </mat-card>
   </mat-card>
 </div>

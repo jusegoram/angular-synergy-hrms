@@ -3,6 +3,7 @@ import { User } from '../../session/User';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-user-permission',
@@ -19,7 +20,7 @@ export class UserPermissionComponent implements OnInit {
     {value: 3, viewValue: 'Administrator'},
     {value: 4, viewValue: 'Super Administrator'}
   ];
-      constructor(private sessionService: SessionService, private router: Router) {
+      constructor(private sessionService: SessionService, private router: Router, private snackBar: MatSnackBar) {
 
       }
     onSubmit() {
@@ -28,13 +29,23 @@ export class UserPermissionComponent implements OnInit {
               this.myForm.value.password,
               this.myForm.value.role,
               this.myForm.value.firstName,
-              this.myForm.value.lastName
+              this.myForm.value.middleName,
+              this.myForm.value.lastName,
+              new Date(),
+              '', // Employee _id
+              null
           );
           this.sessionService.signup(user)
               .subscribe(
                   data => {
+                    this.snackBar.open('User was created succesfully', 'thank you', {
+                      duration: 2000,
+                    });
                   },
                   error => {
+                    this.snackBar.open('There was an error creating the user, please contact the IT department', 'OK', {
+                      duration: 2000,
+                    });
                   }
               );
           this.myForm.reset();
@@ -44,6 +55,7 @@ export class UserPermissionComponent implements OnInit {
       ngOnInit() {
           this.myForm = new FormGroup({
               firstName: new FormControl(null, Validators.required),
+              middleName: new FormControl(null, Validators.required),
               lastName: new FormControl(null, Validators.required),
               role: new FormControl(null, Validators.required),
               username: new FormControl(null, Validators.required),
