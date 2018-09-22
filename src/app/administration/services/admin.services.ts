@@ -13,6 +13,7 @@ export class AdminService {
     _departments: Observable<any> = null;
     _clients: Observable<any> = null;
     _shifts: Observable<any> = null;
+    _employees: Observable<any> = null;
   getDepartment(): Observable<any> {
     if (!this._departments) {
       this._departments = this.httpClient.get<any>('/api/v1/admin/payroll/department').pipe(
@@ -102,5 +103,20 @@ export class AdminService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', shift._id);
     return this.httpClient.put('/api/v1/admin/employee/shift', body, { headers: headers, params: params });
+  }
+  getEmployees() {
+    if (!this._employees) {
+      this._employees = this.httpClient.get<any>('/api/v1/admin/employee/employee').pipe(
+        map((data) => {
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this._employees;
+  }
+  refreshEmployees() {
+    this._employees = null;
   }
 }

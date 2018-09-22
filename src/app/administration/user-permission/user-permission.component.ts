@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { AdminService } from '../services/admin.services';
 
 @Component({
   selector: 'app-user-permission',
@@ -12,6 +13,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class UserPermissionComponent implements OnInit {
   myForm: FormGroup;
+  employees: any;
   selectedValue = 0;
   items = [
     {value: 0, viewValue: 'Accountant'},
@@ -20,7 +22,11 @@ export class UserPermissionComponent implements OnInit {
     {value: 3, viewValue: 'Administrator'},
     {value: 4, viewValue: 'Super Administrator'}
   ];
-      constructor(private sessionService: SessionService, private router: Router, private snackBar: MatSnackBar) {
+      constructor(
+        private sessionService: SessionService,
+        private adminService: AdminService,
+        private router: Router,
+        private snackBar: MatSnackBar) {
 
       }
     onSubmit() {
@@ -32,7 +38,7 @@ export class UserPermissionComponent implements OnInit {
               this.myForm.value.middleName,
               this.myForm.value.lastName,
               new Date(),
-              '', // Employee _id
+              this.myForm.value.employee, // Employee _id
               null
           );
           this.sessionService.signup(user)
@@ -59,7 +65,12 @@ export class UserPermissionComponent implements OnInit {
               lastName: new FormControl(null, Validators.required),
               role: new FormControl(null, Validators.required),
               username: new FormControl(null, Validators.required),
-              password: new FormControl(null, Validators.required)
+              password: new FormControl(null, Validators.required),
+              employee: new FormControl(null, Validators.required)
+          });
+          this.adminService.getEmployees().subscribe((data) =>{
+            this.employees = data;
+            console.log(this.employees);
           });
       }
 }
