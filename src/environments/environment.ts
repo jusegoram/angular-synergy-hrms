@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  siteUri: 'https://localhost:3000'
+  siteUri: 'http://localhost:3000'
 };
