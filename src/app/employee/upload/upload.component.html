@@ -12,27 +12,23 @@
   <mat-card-content>
     <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
       <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-        <h4 class="mt-0">Select Upload Type</h4>
+        <h4 class="mt-0">Select Information</h4>
 
         <mat-form-field>
           <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
             <mat-option *ngFor="let item of items" [value]="item"> {{item.viewValue}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <h4 class="mt-0">Upload {{selected.viewValue}}</h4>
-        <h4 class="mt-0">Select files</h4>
+        <h6 class="mt-0">Upload {{selected.viewValue.toLowerCase()}} information</h6>
 
-        <p>Multiple</p>
-        <input type="file" class="upload-button" ng2FileSelect [uploader]="uploader" multiple  /><br/>
-
-        <div class="clearfix mb-1"></div>
-
-        <p>Single</p>
-        <input type="file" class="upload-button" ng2FileSelect [uploader]="uploader" />
+        <button mat-button color="primary" (click)="fileInput.click()" class="btn btn-default"><mat-icon>attach_file</mat-icon> Select File..</button>
+          <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+                  <input type="file" #fileInput class="upload-button" ng2FileSelect [uploader]="uploader" multiple  /><br/>
+          </span>
       </div>
       <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
         <h4 class="mt-0"  fxLayout="row">
-          <span fxFlex>Upload queue</span>
+          <span fxFlex>Upload Files</span>
           <span>Queue length: {{ uploader?.queue?.length }}</span>
         </h4>
 
@@ -106,9 +102,9 @@
           <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef > Action </mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <button mat-raised-button mat-button-sm color="primary" type="button" (click)="element.upload(); refresh()" [disabled]="element.isReady || element.isUploading || element.isSuccess">Upload</button>
-              <button mat-raised-button mat-button-sm color="warn" type="button" (click)="element.cancel(); refresh()" [disabled]="!element.isUploading">Cancel</button>
-              <button mat-raised-button mat-button-sm color="accent" type="button" (click)="element.remove(); refresh()">Remove
+              <button mat-icon-button mat-button-sm color="primary" type="button" (click)="element.upload(); refresh()" [disabled]="element.isReady || element.isUploading || element.isSuccess"><mat-icon>backup</mat-icon></button>
+              <button mat-icon-button mat-button-sm color="warn" type="button" (click)="element.cancel(); refresh()" [disabled]="!element.isUploading"><mat-icon>delete_outline</mat-icon></button>
+              <button mat-icon-button mat-button-sm color="accent" type="button" (click)="element.remove(); refresh()"><mat-icon>remove_circle_outline</mat-icon>
               </button>
             </mat-cell>
           </ng-container>
@@ -117,14 +113,14 @@
         </mat-table>
 
         <div class="mb-1">
-          <p>Queue progress:</p>
+          <p>Progress:</p>
           <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
         </div>
-        <button mat-raised-button mat-button-sm color="primary" type="button"
+        <button mat-button mat-button-sm color="primary" type="button"
                 (click)="uploader.uploadAll(); refresh()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
-        <button mat-raised-button mat-button-sm color="warn" type="button"
+        <button mat-button mat-button-sm color="warn" type="button"
                 (click)="uploader.cancelAll(); refresh()" [disabled]="!uploader.isUploading">Cancel all</button>
-        <button mat-raised-button mat-button-sm color="accent" type="button"
+        <button mat-button mat-button-sm color="accent" type="button"
                 (click)="uploader.clearQueue(); refresh()" [disabled]="!uploader.queue.length">Remove all</button>
       </div>
     </div>

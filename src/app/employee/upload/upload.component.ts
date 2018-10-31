@@ -48,7 +48,7 @@ export class UploadComponent {
      const setURL = this.URL + this.selected.value;
     this.uploader = new FileUploader({
       url: setURL,
-      allowedMimeType: ['text/csv'],
+      allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
       isHTML5: true,
     });
     this.refresh();
@@ -56,13 +56,12 @@ export class UploadComponent {
     this.uploader.onSuccessItem = (res) => {if (res) { this.refresh(); }};
   }
 
-  onSelectChange(){
+  onSelectChange() {
     console.log(this.selected.value);
     this.uploader = null;
     this.setUploader();
   }
   refresh() {
-    console.log(this.selected.value);
     this.dataSource = new MatTableDataSource(this.uploader.queue);
   }
 }

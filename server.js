@@ -41,8 +41,8 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-//const TEST_URL = "https://synergy.rccbpo.com:3000";
-const TEST_URL = "http://localhost:3000";
+const TEST_URL = "http://192.168.100.4:3000";
+//const TEST_URL = "http://localhost:3000";
 // const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
 mongoose.connect(TEST_URI, {

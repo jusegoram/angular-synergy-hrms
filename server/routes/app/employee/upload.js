@@ -39,8 +39,10 @@ router.post('/', function (req, res) {
             if (err) {
             // An error occurred when uploading
                 return res.status(422).send("an Error occured");
-            } if( employeeFile.mimetype != "text/csv" ){
-                return res.status(400).send("Sorry only CSV files can be processed for upload");
+            }
+             if( employeeFile.mimetype !== 'application/vnd.ms-excel' || employeeFile.mimetype !== 'text/csv'){
+               console.log(employeeFile.mimetype !== 'application/vnd.ms-excel' || employeeFile.mimetype !== 'text/csv');
+                 return res.status(400).send("Sorry only CSV files can be processed for upload");
             }
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
