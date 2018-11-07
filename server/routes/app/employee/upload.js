@@ -49,6 +49,9 @@ router.post('/', function (req, res) {
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
+                data['company'] = null;
+                data['payroll'] = null;
+                data['personal'] = null;
                 employees.push(data);
             })
             .on('end', function(result){
@@ -192,11 +195,14 @@ router.post('/company', function (req, res) {
 
       })
       .on('end', function(){
+        let counter = 0;
+        let duplicate = 0;
           async.each(company, function(comp, callback){
             EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
                   if(err){
-                      callback(err)
+                      duplicate++
                   }else{
+                    counter++;
                       res.company = comp._id;
                       comp.employee = res._id;
                       res.save();
@@ -205,7 +211,7 @@ router.post('/company', function (req, res) {
               })
           }, function(err){
               if(err){
-                  console.log(err);
+                  next(err);
               }else{
                   Company.create(company);
               }
