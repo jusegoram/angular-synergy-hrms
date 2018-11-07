@@ -105,10 +105,11 @@
      </form>
      </div>
    </mat-card>
+   <div class="center-block">
    <button mat-raised-button color="accent" (click)="getReport()"> <mat-icon>autorenew</mat-icon>&nbsp; &nbsp; Load</button>
    <button mat-raised-button color="primary" (click)="export()"><mat-icon>cloud_download</mat-icon>&nbsp; &nbsp; Export</button>
    <button mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>&nbsp; &nbsp; Clear</button>
-
+  </div>
    <mat-card class="pa-1" fxLayout="column" *ngIf="this.dataSource">
       <div class="filter">
         <mat-form-field>

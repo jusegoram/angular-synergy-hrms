@@ -4,7 +4,7 @@ import { FileUploader } from 'ng2-file-upload';
 // const URL = '/api/';
 import { environment } from '../../../environments/environment';
 import { MatTableDataSource } from '@angular/material';
-
+import {MatSnackBar} from '@angular/material';
 
 
 
@@ -40,8 +40,13 @@ export class UploadComponent {
   //   url: this.URL,
   //   isHTML5: true
   // });
-  constructor () {
+  constructor (public snackBar: MatSnackBar) {
     this.setUploader();
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
   }
 
    setUploader() {
@@ -53,6 +58,8 @@ export class UploadComponent {
     });
     this.refresh();
     this.uploader.onAfterAddingFile = (file) => this.refresh();
+    this.uploader.onWhenAddingFileFailed = (item) => this.openSnackBar(`Sorry, we are unable to process any other file formats.
+     Please upload only CSV files`, 'Ok');
     this.uploader.onSuccessItem = (res) => {if (res) { this.refresh(); }};
   }
 

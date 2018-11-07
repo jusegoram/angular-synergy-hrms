@@ -1,6 +1,6 @@
 import { SessionService } from '../services/session.service';
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { User } from '../User';
 
@@ -12,12 +12,15 @@ import { User } from '../User';
 export class SigninComponent implements OnInit {
 
   public form: FormGroup;
-  constructor(private fb: FormBuilder, private router: Router, private sessionService: SessionService) {}
+  return = '';
+  constructor(private fb: FormBuilder, private router: Router, private sessionService: SessionService, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.form = this.fb.group ( {
       uname: [null , Validators.compose ( [ Validators.required ] )] , password: [null , Validators.compose ( [ Validators.required ] )]
     } );
+    this.route.queryParams
+    .subscribe(params => this.return = params['return'] || '/main');
   }
 
   onSubmit() {
@@ -25,7 +28,7 @@ export class SigninComponent implements OnInit {
     if (val.uname && val.password) {
       this.sessionService.login(val.uname, val.password).subscribe(
         () => {
-          this.router.navigateByUrl('/main');
+          this.router.navigate([this.return]);
         });
     }
   }

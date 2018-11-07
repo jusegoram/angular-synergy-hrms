@@ -68,7 +68,7 @@ export class UserPermissionComponent implements OnInit {
               password: new FormControl(null, Validators.required),
               employee: new FormControl(null, Validators.required)
           });
-          this.adminService.getEmployees().subscribe((data) =>{
+          this.adminService.getEmployees().subscribe((data) => {
             this.employees = data;
             console.log(this.employees);
           });
