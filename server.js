@@ -3,19 +3,17 @@
 const express = require('express');
 const path = require('path');
 const debug = require('debug')('node-rest:server');
-// const http = require('http');
-const https = require("https");
+const http = require('http');
+//const https = require("https");
 const fs = require("fs");
 
-const options = {
-  passphrase: "1vg246vg4g",
-  key: fs.readFileSync("./ssl/key.pem"),
-  cert: fs.readFileSync("./ssl/cert.pem"),
-  dhparam: fs.readFileSync("./ssl/dh-strong.pem")
-};
-// var privateKey  = fs.readFileSync('./certs/key.pem', 'utf8');
-// var certificate = fs.readFileSync('./certs/cert.pem', 'utf8');
-// var credentials = {passphrase: "1vg246vg4g", key: privateKey, cert: certificate};
+//const options = {
+//  passphrase: "1vg246vg4g",
+//  key: fs.readFileSync("./ssl/key.pem"),
+//  cert: fs.readFileSync("./ssl/cert.pem"),
+//  dhparam: fs.readFileSync("./ssl/dh-strong.pem")
+//};
+
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -43,9 +41,9 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-const TEST_URL = "https://synergy.rccbpo.com:3000";
-//const TEST_URL = "https://localhost:3000";
-const PROD_URI = process.env.MONGODB_URI;
+const TEST_URL = "http://192.168.100.4:3000";
+//const TEST_URL = "http://localhost:3000";
+// const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
 
 // app.configure('development', function(){
@@ -68,24 +66,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(cookieParser());
 app.use(helmet());
+
 // Point static path to dist
 app.use(express.static(path.join(__dirname, 'dist')));
-// ...
-
-//  app.use(function(req, res, next) {
- //   if(!req.secure) {
- //     return res.redirect(PROD_URL);
- //  }
-//   next();
-//  });
-// app.use(function(req, res, next) { //allow cross origin requests
-//           res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-//           res.header("Access-Control-Allow-Origin", "*");
-//           res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//           res.header("Access-Control-Allow-Credentials", true);
-//           next();
-
-//       });
 
 app.use(cors({
   origin: [TEST_URL],
@@ -110,6 +93,13 @@ app.use('/api/v1/employee', empRoutes);
 app.use('/api/v1/employee/upload', empUploadRoutes);
 app.use('/api/v1/employee/report', empReportRoutes);
 app.use('/api/v1/employee/template', empTemplateRoutes);
+
+//TODO: Add mobile route managament for future android and ios app.
+/**
+ * @description: Mobile app Express api routes.
+ * @author: Juan Sebastian Gomez
+ */
+
 /**
  * @description: App Module Express routes.
  * @author: Juan Sebastian Gomez
@@ -130,20 +120,20 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-var httpsServer = https.createServer(options, app);
-// var server = http.createServer(app);
+// var httpsServer = https.createServer(options, app);
+var server = http.createServer(app);
 
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-// server.listen(port, () => console.log(`API running on ${TEST_URL}`));
-// server.on('error', onError);
-// server.on('listening', onListening);
+ server.listen(port, () => console.log(`API running on ${TEST_URL}`));
+ server.on('error', onError);
+ server.on('listening', onListening);
 
-httpsServer.listen(port, () => console.log(`API running on localhost:${port}`));
-httpsServer.on('error', onError);
-httpsServer.on('listening', onListening);
+// httpsServer.listen(port, () => console.log(`API running on localhost:${port}`));
+// httpsServer.on('error', onError);
+// httpsServer.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -199,9 +189,9 @@ function onError(error) {
    */
 
   function onListening() {
-    // var addr = server.address();
-    // var bind = typeof addr === 'string'
-    //   ? 'pipe ' + addr
-    //   : 'port ' + addr.port;
+     var addr = server.address();
+     var bind = typeof addr === 'string'
+      ? 'pipe ' + addr
+      : 'port ' + addr.port;
     debug('Listening on');
   }

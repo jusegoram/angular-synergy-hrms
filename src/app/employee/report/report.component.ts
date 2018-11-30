@@ -66,11 +66,10 @@ export class ReportComponent implements OnInit {
       terminationDate: {$gte: queryParam.terminationDateFrom, $lt: queryParam.terminationDateTo},
       trainingGroupRef: queryParam.trainingGroup,
       trainingGroupNum: queryParam.trainingNo
-    }
+    };
+
     this.employeeService.getReport(obj).subscribe(
         data => {
-          console.log('test');
-          console.log(data);
           let filtered: any;
           filtered = data;
           if (this.reportForm.value.statusCheck) {

@@ -8,7 +8,6 @@ import { ExportComponent } from './components/export/export.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
 import { BonusComponent } from './components/bonus/bonus.component';
 import { DeductionComponent } from './components/deduction/deduction.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
 import {MaterialSharedModule} from '../shared/material.shared.module';
 import {FileUploadModule} from 'ng2-file-upload';
 import {FormsModule} from '@angular/forms';
@@ -21,7 +20,6 @@ import {HttpClientModule} from '@angular/common/http';
   imports: [
     CommonModule,
     PayrollRoutingModule,
-    FlexLayoutModule,
     MaterialSharedModule,
     HttpClientModule,
     FileUploadModule,

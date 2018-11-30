@@ -39,24 +39,36 @@ router.post('/', function (req, res) {
             if (err) {
             // An error occurred when uploading
                 return res.status(422).send("an Error occured");
-            } if( employeeFile.mimetype != "text/csv" ){
-                return res.status(400).send("Sorry only CSV files can be processed for upload");
+            }
+             if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
+               console.log(employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv');
+               console.log((employeeFile.mimetype.valueOf() !== 'text/csv'.valueOf()) + 'csv');
+               console.log((employeeFile.mimetype.valueOf() !== 'application/vnd.ms-excel'.valueOf())+ 'win csv');
+               return res.status(400).send("Sorry only CSV files can be processed for upload");
             }
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
+                data['company'] = null;
+                data['payroll'] = null;
+                data['personal'] = null;
                 employees.push(data);
             })
             .on('end', function(result){
                 let counter = 0;
+                let duplicate = 0;
                 for ( i = 0; i < employees.length; i++){
                     EmployeeSchema.create(employees[i], (err, created) =>{
-                      if(err) return console.log(err);
-                      counter++;
-                      console.log('created' + counter);
+                      if(err) {
+                        duplicate++
+                        console.log('err: '+ duplicate);
+                      }else{
+                        counter++;
+                      console.log('created: ' + counter);
+                      }
                     });
                 }
-                console.log(result);
+                console.log('--EMPLOYEE CREATION-- Employees created: '+counter+' Duplicates found: '+duplicate);
                 return res.sendStatus(200);
             });
         });
@@ -183,11 +195,15 @@ router.post('/company', function (req, res) {
 
       })
       .on('end', function(){
+        let counter = 0;
+        let duplicate = 0;
           async.each(company, function(comp, callback){
             EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
                   if(err){
-                      callback(err)
+                    console.log(err);
+                      duplicate++
                   }else{
+                    counter++;
                       res.company = comp._id;
                       comp.employee = res._id;
                       res.save();
@@ -202,7 +218,7 @@ router.post('/company', function (req, res) {
               }
           });
           console.log('upload finished');
-          return res.status(200).send( company.lenght + ' Registries of personal information of employees was uploaded');
+          return res.status(200).send( counter + ' Registries of company information of employees was uploaded');
       });
   });
 });

@@ -3,15 +3,13 @@ import { SessionService } from './session/services/session.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialSharedModule } from './shared/material.shared.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, PreloadAllModules } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppRoutes } from './app.routing';
@@ -21,6 +19,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
 import { JwtModule } from '@auth0/angular-jwt';
 import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
+import { RootGuard } from './session/guards/root.guard';
 
 
 export function tokenGetter() {
@@ -45,20 +44,20 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
-    RouterModule.forRoot(AppRoutes),
+    RouterModule.forRoot(AppRoutes,
+      {preloadingStrategy: PreloadAllModules}),
     FormsModule,
     HttpClientModule,
     MaterialSharedModule,
-    FlexLayoutModule,
     BidiModule,
     PerfectScrollbarModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ['localhost:3000'],
+        whitelistedDomains: ['192.168.100.4:3000'],
         authScheme: 'JWT '
       }
-    })
+    }),
   ],
   providers: [
     {
@@ -66,7 +65,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
     SessionService,
-    SessionGuard
+    SessionGuard,
+    RootGuard
   ],
   bootstrap: [AppComponent],
   entryComponents: [GuardDialogComponent]

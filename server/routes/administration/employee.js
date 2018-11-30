@@ -6,7 +6,7 @@ var Department = require('../../models/administration/administration-department'
 var mongoose = require('mongoose');
 var Shift = require('../../models/employee/employee-shift');
 let async = require('async');
-
+var Employee = require('../../models/employee/employee-main');
 router.post('/client', function (req, res, next) {
   let campaigns = req.body.campaigns;
   for (let i = 0; i < campaigns.length; i++) {
@@ -165,4 +165,28 @@ router.get('/shift', function (req, res, next) {
 //       res.status(200).json(doc);
 //   });
 // });
+
+router.get('/employee', function (req, res, next) {
+  Employee.find({status: 'Active'},
+      function (err, result) {
+      if (err) {
+          return res.status(500).json({
+              title: 'An error occurred',
+              error: err
+          });
+      }if (req.query.token === '') {
+          return res.status(500).json({
+              title: 'Not Found',
+              message: 'authentication not found'
+          });
+      }if (result === null) {
+          return res.status(500).json({
+              title: 'Not found',
+              message: 'Employees are not active or not found'
+          });
+      }
+      res.status(200).json(result);
+  });
+});
+
 module.exports = router;

@@ -7,7 +7,11 @@ import { Router } from '@angular/router';
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
-  constructor() {
+  constructor(sessionService: SessionService, router: Router) {
+    // if (!sessionService.isLoggedIn()) {
+    //   router.navigate(['signin']);
+    // }
+    // console.log(router.url);
   }
 
 }
