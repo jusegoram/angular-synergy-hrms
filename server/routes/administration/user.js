@@ -18,13 +18,16 @@ router.get('/role', function(req, res, next) {
 
 
 
-router.post('/', function (req, res, next) {
+router.post('/signup', function (req, res, next) {
     var user = new User({
         firstName: req.body.firstName,
+        middleName: req.body.middleName,
         lastName: req.body.lastName,
         password: bcrypt.hashSync(req.body.password, 10),
         username: req.body.username,
         role: +req.body.role,
+        creationDate: req.body.creationDate,
+        employee: req.body.employee
     });
     user.save(function(err, result) {
         if (err) {

@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    employeeId: { type: String, required: true, unique: true},
+    employeeId: { type: String, required: true},
     maritalStatus:{ type: String, required: false },
     address: { type: String, required: false },
     town: { type: String, required: false },

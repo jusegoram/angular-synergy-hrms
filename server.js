@@ -41,7 +41,7 @@ const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
 const TEST_URI = HOST + DB_PORT + COLLECTION;
-const TEST_URL = "http://192.168.100.12:3000";
+const TEST_URL = "http://192.168.100.4:3000";
 //const TEST_URL = "http://localhost:3000";
 // const PROD_URI = process.env.MONGODB_URI;
 // const PROD_URL = process.env.HEROKU_URL;
@@ -84,6 +84,13 @@ app.use('/api/v1/employee', empRoutes);
 app.use('/api/v1/employee/upload', empUploadRoutes);
 app.use('/api/v1/employee/report', empReportRoutes);
 app.use('/api/v1/employee/template', empTemplateRoutes);
+
+//TODO: Add mobile route managament for future android and ios app.
+/**
+ * @description: Mobile app Express api routes.
+ * @author: Juan Sebastian Gomez
+ */
+
 /**
  * @description: App Module Express routes.
  * @author: Juan Sebastian Gomez

@@ -70,8 +70,6 @@ export class ReportComponent implements OnInit {
 
     this.employeeService.getReport(obj).subscribe(
         data => {
-          console.log('test');
-          console.log(data);
           let filtered: any;
           filtered = data;
           if (this.reportForm.value.statusCheck) {

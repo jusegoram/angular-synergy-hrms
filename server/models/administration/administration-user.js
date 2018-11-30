@@ -11,7 +11,7 @@ var schema = new Schema({
     role: {type: Number, required: true},
     creationDate : {type: Date, required: true },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false, unique: true},
-    log: { type: [Object] , required: true }
+    log: { type: [Object] , required: false }
 });
 
 schema.plugin(mongooseUniqueValidator);

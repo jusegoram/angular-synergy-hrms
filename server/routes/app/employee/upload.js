@@ -61,7 +61,7 @@ router.post('/', function (req, res) {
                     EmployeeSchema.create(employees[i], (err, created) =>{
                       if(err) {
                         duplicate++
-                        console.log('duplicate: '+ duplicate);
+                        console.log('err: '+ duplicate);
                       }else{
                         counter++;
                       console.log('created: ' + counter);
@@ -200,6 +200,7 @@ router.post('/company', function (req, res) {
           async.each(company, function(comp, callback){
             EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
                   if(err){
+                    console.log(err);
                       duplicate++
                   }else{
                     counter++;
@@ -211,13 +212,13 @@ router.post('/company', function (req, res) {
               })
           }, function(err){
               if(err){
-                  next(err);
+                  console.log(err);
               }else{
                   Company.create(company);
               }
           });
           console.log('upload finished');
-          return res.status(200).send( company.lenght + ' Registries of personal information of employees was uploaded');
+          return res.status(200).send( counter + ' Registries of company information of employees was uploaded');
       });
   });
 });
