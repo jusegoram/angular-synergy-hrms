@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { User } from '../User';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-signin',
@@ -13,7 +14,12 @@ export class SigninComponent implements OnInit {
 
   public form: FormGroup;
   return = '';
-  constructor(private fb: FormBuilder, private router: Router, private sessionService: SessionService, private route: ActivatedRoute) {}
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private sessionService: SessionService,
+    private route: ActivatedRoute,
+    public snackBar: MatSnackBar) {}
 
   ngOnInit() {
     this.form = this.fb.group ( {
@@ -29,27 +35,21 @@ export class SigninComponent implements OnInit {
       this.sessionService.login(val.uname, val.password).subscribe(
         () => {
           this.router.navigate([this.return]);
+        }, (err) => {
+          this.openSnackBar('test', 'try again!');
         });
     }
   }
-    // this.sessionService.signin(user).subscribe((data) => {
-    //       const date = new Date();
-    //       localStorage.setItem('token', data['token']);
-    //       localStorage.setItem('userId', data['userId']);
-    //       localStorage.setItem('stamp', date.getTime().toString());
-    //       this.sessionService.setAuth(true);
-    //       const token = localStorage.getItem('token');
-    //       const id = localStorage.getItem('id');
-    //       this.sessionService.checkLogin(token, id)
-    //       .subscribe( res => {
-    //         if (res) { this.router.navigateByUrl('/main');
-    //         this.sessionService.setAuth(res);
-    //       }
-    //     });
-    //   },
-    //   error => {
-    //     this.form.reset();
-    //   }
-    // );
-
+  testButton() {
+    this.openSnackBar('test', 'test');
+    console.log('test');
+    this.snackBar.open('test', 'test', {
+      duration: 2000,
+    });
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
 }

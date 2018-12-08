@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange, SimpleChanges, OnChanges } from '@angular/core';
 import { Employee } from '../../Employee';
 import { EmployeeService } from '../../services/employee.service';
 import { FormGroup, FormBuilder } from '../../../../../node_modules/@angular/forms';
@@ -9,8 +9,8 @@ import { MatTableDataSource } from '../../../../../node_modules/@angular/materia
   templateUrl: './shift.component.html',
   styleUrls: ['./shift.component.css']
 })
-export class ShiftComponent implements OnInit {
-  @Input() employee: Employee;
+export class ShiftComponent implements OnInit, OnChanges {
+  @Input() employee: any;
   @Input() authorization: boolean;
 
   dataSource: any = [];
@@ -21,13 +21,18 @@ export class ShiftComponent implements OnInit {
   displayedColumns = ['shiftName', 'startDate', 'endDate', 'createdDate'];
   constructor(private _employeeService: EmployeeService, private fb: FormBuilder) { }
 
-  ngOnInit() {
-    this._employeeService.getShift().subscribe(result => { this.shifts = result; });
-    this.populateTable(this.employee.shift);
-    const employeeShifts: any = this.employee.shift;
+  ngOnChanges(changes: SimpleChanges): void {
+    const employee: SimpleChange = changes.employee;
+    if (employee.currentValue.shift.length !== 0) {
+    this.populateTable(employee.currentValue.shift);
+    const employeeShifts: any = employee.currentValue.shift;
     const employeeShift: any[] = employeeShifts[employeeShifts.length - 1].shift;
     const shift = employeeShift.shift;
     this.populateTable1(shift);
+    }
+  }
+  ngOnInit() {
+    this._employeeService.getShift().subscribe(result => { this.shifts = result; });
     this.buildForm();
   }
   buildForm() {
