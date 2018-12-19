@@ -78,6 +78,7 @@ export class ReportComponent implements OnInit {
               this.buildTable(filtered);
             }
           }else {
+            console.log(data);
             this.buildTable(data);
           } // console.log(Object.getOwnPropertyNames(data[data.length - 1]));
         }, error => { console.log(error); });
@@ -91,6 +92,7 @@ export class ReportComponent implements OnInit {
     const commentsInfo: any[] = [];
     const orgData: any[] = [];
     const data: any = this.dataSource.data;
+    console.log(data);
     data.forEach(element => {
       if (typeof element.shift !== 'undefined') {
         const helperObj = element.shift.shift.shift;
