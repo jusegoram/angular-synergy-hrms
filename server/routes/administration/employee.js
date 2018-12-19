@@ -168,7 +168,7 @@ router.get('/shift', function (req, res, next) {
 
 router.get('/employee', function (req, res, next) {
   console.log(req);
-  Employee.find({status: 'Active'},
+  Employee.find({status: 'active'},
       function (err, result) {
       if (err) {
           console.log(err);
