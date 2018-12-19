@@ -134,10 +134,15 @@ export class ReportComponent implements OnInit {
 
     const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(orgData);
     const shift: XLSX.WorkSheet = XLSX.utils.json_to_sheet(shiftInfo);
+    console.log(shiftInfo);
     const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);
+    console.log(positionInfo);
     const personal: XLSX.WorkSheet = XLSX.utils.json_to_sheet(personalInfo);
+    console.log(personalInfo);
     const family: XLSX.WorkSheet = XLSX.utils.json_to_sheet(familyInfo);
+    console.log(familyInfo);
     const comments: XLSX.WorkSheet = XLSX.utils.json_to_sheet(commentsInfo);
+    console.log(commentsInfo);
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'main-info');
