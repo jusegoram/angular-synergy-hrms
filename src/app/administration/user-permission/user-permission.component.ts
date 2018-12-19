@@ -7,6 +7,7 @@ import { MatSnackBar, TooltipComponent } from '@angular/material';
 import { AdminService } from '../services/admin.services';
 import {Observable} from 'rxjs/Observable';
 import { startWith, map } from 'rxjs/operators';
+import { Employee } from '../../employee/Employee';
 
 @Component({
   selector: 'app-user-permission',
@@ -16,10 +17,10 @@ import { startWith, map } from 'rxjs/operators';
 export class UserPermissionComponent implements OnInit {
   myForm: FormGroup;
   employeeCtrl= new FormControl();
-  employees: object[];
-  selectedEmployee: object;
+  employees: Employee[];
+  selectedEmployee: Employee;
   selectedValue = 0;
-  filteredEmployees: Observable<object[]>;
+  filteredEmployees: Observable<Employee[]>;
   items = [
     {value: 0, viewValue: 'Accountant'},
     {value: 1, viewValue: 'Manager'},
@@ -34,7 +35,7 @@ export class UserPermissionComponent implements OnInit {
         private snackBar: MatSnackBar) {
 
       }
-     _filterEmployees(value: string): object[] {
+     _filterEmployees(value: string): Employee[] {
         const filterValue = value.toString().toLowerCase();
         return this.employees.filter(employee => employee['firstName'].toLowerCase().includes(filterValue));
       }
@@ -69,7 +70,7 @@ export class UserPermissionComponent implements OnInit {
           this.myForm.reset();
           this.router.navigateByUrl('/admin/permissions');
       }
-      setEmployee(employee: object) {
+      setEmployee(employee: Employee) {
         this.selectedEmployee = employee;
       }
       getEmployee(): object {
