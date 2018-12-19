@@ -32,9 +32,7 @@ export class UserPermissionComponent implements OnInit {
         private adminService: AdminService,
         private router: Router,
         private snackBar: MatSnackBar) {
-          this.adminService.getEmployees().subscribe((data) => {
-            this.employees = data;
-          });
+
       }
      _filterEmployees(value: string): object[] {
         const filterValue = value.toString().toLowerCase();
@@ -79,6 +77,9 @@ export class UserPermissionComponent implements OnInit {
         return this.selectedEmployee;
       }
       ngOnInit() {
+        this.adminService.getEmployees().subscribe((data) => {
+          this.employees = data;
+        });
           this.myForm = new FormGroup({
               firstName: new FormControl(null, Validators.required),
               middleName: new FormControl(null, Validators.required),
