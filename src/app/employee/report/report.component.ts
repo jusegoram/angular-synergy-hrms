@@ -112,14 +112,14 @@ export class ReportComponent implements OnInit {
         element.shift.sunday = ( helperObj[6].onShift) ?
         this.transformTime(helperObj[6].startTime) + ' - ' + this.transformTime(helperObj[6].endTime) : 'DAY OFF';
       }
-      (typeof element.shift !== 'undefined' || element.shift !== 'null') ? shiftInfo.push(element.shift) : shiftInfo.push({});
-      (typeof element.position !== 'undefined' || element.position !== 'null')
+      (typeof element.shift !== 'undefined' && element.shift !== 'null') ? shiftInfo.push(element.shift) : shiftInfo.push({});
+      (typeof element.position !== 'undefined' && element.position !== 'null')
       ? positionInfo.push(element.position) : positionInfo.push({});
-      (typeof element.personal !== 'undefined' || element.personal !== 'null')
+      (typeof element.personal !== 'undefined' && element.personal !== 'null')
       ? personalInfo.push(element.personal) : personalInfo.push({});
-      (typeof element.family !== 'undefined' || element.family !== 'null')
+      (typeof element.family !== 'undefined' && element.family !== 'null')
       ? familyInfo.push(element.family) : familyInfo.push({});
-      (typeof element.comments !== 'undefined' || element.comments !== 'null')
+      (typeof element.comments !== 'undefined' && element.comments !== 'null')
       ? commentsInfo.push(element.comments) : comments.push({});
 
        orgData.push({
