@@ -174,11 +174,6 @@ router.get('/employee', function (req, res, next) {
               title: 'An error occurred',
               error: err
           });
-      }if (req.query.token === '') {
-          return res.status(500).json({
-              title: 'Not Found',
-              message: 'authentication not found'
-          });
       }if (result === null) {
           return res.status(500).json({
               title: 'Not found',
