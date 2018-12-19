@@ -412,7 +412,7 @@ router.post('/avatars', function(req, res){
   let avatarStorage = multer.diskStorage({
         destination:'uploads/avatars',
         filename: function (req, file, cb) {
-          cb(null,req.query.id + path.extname(file.originalname));
+          cb(null,req.query.id + '.jpg');
         }
       });
   let avatarUpload = multer({storage: avatarStorage}).single('file');

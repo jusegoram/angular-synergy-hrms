@@ -600,7 +600,7 @@ router.get('/latestPosition', function(req, response ){
 
 });
 router.get('/avatar', function(req, res, next){
-  var avatar = req.query.id + ".jpg";
+  var avatar = req.query.id + ".JPG";
   fs.readFile('uploads/avatars/'+ avatar , function (err, content) {
     if (err) {
       fs.readFile('uploads/avatars/default-avatar.png' , function (err, content){
