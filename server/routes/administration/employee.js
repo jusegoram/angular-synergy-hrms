@@ -167,9 +167,11 @@ router.get('/shift', function (req, res, next) {
 // });
 
 router.get('/employee', function (req, res, next) {
+  console.log(req);
   Employee.find({status: 'Active'},
       function (err, result) {
       if (err) {
+          console.log(err);
           return res.status(500).json({
               title: 'An error occurred',
               error: err
@@ -180,6 +182,7 @@ router.get('/employee', function (req, res, next) {
               message: 'Employees are not active or not found'
           });
       }
+      console.log(result);
       res.status(200).json(result);
   });
 });
