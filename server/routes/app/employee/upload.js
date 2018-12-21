@@ -204,10 +204,14 @@ router.post('/company', function (req, res) {
                       duplicate++
                   }else{
                     counter++;
+                    if(res !== null){
                       res.company = comp._id;
                       comp.employee = res._id;
                       res.save();
                       callback();
+                    }else{
+                      console.log('not found id: '+ comp.employeeId);
+                    }
                   }
               })
           }, function(err){
