@@ -211,6 +211,7 @@ router.post('/company', function (req, res) {
                       callback();
                     }else{
                       console.log('not found id: '+ comp.employeeId);
+                      callback();
                     }
                   }
               })
