@@ -3,7 +3,7 @@ let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');
 
-let PayrollHour = require("../../../models/payroll/payroll-hour");
+let PayrollHour = require("../../../models/employee/employee-hour");
 
 router.get('/process', function (req, res) {
   let fromDate = req.body.fromDate;
@@ -27,3 +27,34 @@ router.get('/process', function (req, res) {
     });
   }
 });
+
+function calculateBaseWage(employeeWage){
+
+}
+
+function calculateTotalBonus(employeeBonus){
+
+}
+
+function calculateTotalDeduction(employeeDeductions) {
+
+}
+
+function calculateTotalOvertime(employeeOvertime) {
+
+}
+
+function getSocialSecurityCharge() {
+
+}
+
+function getVacationSalary(employeeVacation) {
+
+}
+/**
+ *
+ *Gross salary:
+ */
+function calculateGrossSalary() {
+
+}

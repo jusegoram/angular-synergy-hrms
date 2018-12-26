@@ -20,6 +20,7 @@ var BadgeItem = new Schema ({
     badge: { type: BadgeItem, required: false },
     children: { type: [ChildrenItems], required: false },
     roles: { type: [Number] , required: false },
+    position: {type: Number, required: false},
   });
 
 module.exports = mongoose.model('Administration-Menu', AdministrationMenu);

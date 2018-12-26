@@ -15,7 +15,9 @@ import {MatSnackBar} from '@angular/material';
 })
 export class UploadComponent {
   uploader: FileUploader;
+  hoursUploader: FileUploader;
   dataSource: any;
+  hoursDataSource: any;
   hasBaseDropZoneOver: boolean;
   hasAnotherDropZoneOver: boolean;
   response: string;
@@ -34,7 +36,17 @@ export class UploadComponent {
     {value: '/api/v1/employee/upload/education', viewValue: 'Employee Education'}
   ];
 
-
+  templates = [
+    {text: 'Main Information', value: '/api/v1/employee/template'},
+    {text: 'Personal Information', value: '/api/v1/employee/template/personal'},
+    {text: 'Company Information', value: '/api/v1/employee/template/company'},
+    {text: 'Position Information', value: '/api/v1/employee/template/position'},
+    {text: 'Shift Information(not working)', value: '/api/v1/employee/template/shift'},
+    {text: 'Payroll Information', value: '/api/v1/employee/template/payroll'},
+    {text: 'Family Information', value: '/api/v1/employee/template/family'},
+    {text: 'Education Information', value: '/api/v1/employee/template/education'},
+  ];
+  templateSelected = '/template';
   // public uploader: FileUploader = new FileUploader({
   //   allowedMimeType: ['text/csv'],
   //   url: this.URL,
@@ -61,6 +73,11 @@ export class UploadComponent {
     this.uploader.onWhenAddingFileFailed = (item) => this.openSnackBar(`Sorry, we are unable to process any other file formats.
      Please upload only CSV files`, 'Ok');
     this.uploader.onSuccessItem = (res) => {if (res) { this.refresh(); }};
+
+    this.hoursUploader = new FileUploader({
+      url: '/',
+      isHTML5: true
+    });
   }
 
   onSelectChange() {

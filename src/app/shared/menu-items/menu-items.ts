@@ -1,7 +1,7 @@
 import { SessionService } from './../../session/services/session.service';
 import { Injectable } from '@angular/core';
 import {environment } from '../../../environments/environment';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 
 export class BadgeItem {
   constructor(
@@ -24,7 +24,9 @@ export class Menu {
   public icon: string,
   public badge?: BadgeItem[],
   public children?: ChildrenItems[],
-  public roles?: Number[]) {}
+  public roles?: Number[],
+  public _id?: string,
+  public position?: number) {}
 }
 
 const MENUITEMS = [
@@ -71,13 +73,38 @@ export class MenuItems {
   getActiveMenus() {
       return this.http.get<Array<Menu>>('/api/v1/admin/menu');
   }
-
-  add() {
-    this.addMenu('').subscribe((response) => console.log(response));
+// TODO: fix Add method to add new menu items
+  add(param: Menu) {
+    let res;
+    this.addMenu(param).subscribe((response) => console.log( res = response));
+    return res;
   }
-  addMenu(param: any) {
+  delete(param: Menu) {
+    let res;
+    this.deleteMenu(param).subscribe((response) => res = response);
+    return res;
+  }
+
+// TODO: Add save method to update menu items
+  save(param: Menu) {
+    let res;
+    this.saveMenu(param).subscribe((response) => res = response );
+    return res;
+  }
+  addMenu(param: Menu) {
     const body = param ;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post('/api/v1/admin/menu', body, { headers: headers });
+  }
+  saveMenu(param: Menu) {
+    const body = JSON.stringify(param);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('name', param.name);
+    return this.http.put('/api/v1/admin/menu', body, { headers: headers, params: params });
+  }
+  deleteMenu(param: Menu) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('name', param.name);
+    return this.http.delete('/api/v1/admin/menu', { headers: headers, params: params });
   }
 }

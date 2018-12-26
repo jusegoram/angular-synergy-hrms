@@ -1,9 +1,98 @@
-<div class="pa-1">
-    <mat-card>
-        <mat-toolbar>
-            <span>Manage Menus</span>
-        </mat-toolbar>
-        <button mat-button (click)="onAddMenu()">Add Menu</button>
-        
-    </mat-card>
-</div>
+<mat-toolbar class="header"  color="primary">
+    <mat-toolbar-row>
+        <span>Content Management</span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
+  </mat-toolbar>
+    <div class="mat-card-top">
+      <mat-card class="container pa-1">
+        <h2> Menus </h2>
+
+        <mat-select color="primary" placeholder="Menu Items" [(ngModel)]="selectedMenu" name="item">
+          <mat-option *ngFor="let menu of menus" [value]="menu">
+            {{menu.name}}
+          </mat-option>
+        </mat-select>
+        <mat-card class="menuCard pa-1">
+            <mat-form-field style="width:31%; margin: 2px">
+                <input matInput placeholder="Link State" [(ngModel)]="selectedMenu.state">
+              </mat-form-field>
+
+              <mat-form-field style="width:31%; margin: 2px">
+                  <input matInput placeholder="Name" [(ngModel)]="selectedMenu.name">
+                </mat-form-field>
+
+                <mat-form-field style="width:31%;  margin: 2px">
+                    <input matInput placeholder="Icon" [(ngModel)]="selectedMenu.icon">
+                  </mat-form-field>
+                  <mat-form-field style="width:100%">
+                      <mat-select placeholder="Type" [(ngModel)]="selectedMenu.type">
+                          <mat-option value="link">
+                            Link (without submenu)
+                          </mat-option>
+                          <mat-option value="sub">
+                            Menu (with submenu)
+                          </mat-option>
+                        </mat-select>
+                  </mat-form-field>
+
+            <div *ngIf="selectedMenu.type === 'sub'; else addChildren">
+              <mat-accordion *ngFor="let child of selectedMenu.children">
+                <mat-expansion-panel>
+                  <mat-expansion-panel-header>
+                    {{child.name}}
+                  </mat-expansion-panel-header>
+                    <mat-form-field>
+                      <input matInput placeholder="name" [(ngModel)]="child.name">
+                    </mat-form-field>
+                    <mat-form-field>
+                      <input matInput placeholder="Link State" [(ngModel)]="child.state">
+                    </mat-form-field>
+                </mat-expansion-panel>
+              </mat-accordion>
+              <mat-form-field>
+                <input matInput #childName placeholder="name">
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput #childState placeholder="state">
+              </mat-form-field>
+              <button mat-button (click)="onAddSubmenu(childName.value, childState.value)"><mat-icon>add</mat-icon> Add Submenu</button>
+            </div>
+
+          <ng-template #addChildren>
+
+          </ng-template>
+          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <label>Current Role ID's:</label>
+            <label *ngFor="let item of selectedMenu.roles">&nbsp;{{item }},&nbsp;</label>
+          </div>
+          <mat-form-field>
+            <input matInput placeholder="Enter role ID" #role name="roleId">
+          </mat-form-field>
+          <button mat-icon-button (click)="onAddRole(role.value); role.value = ''"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button  (click)="onRemoveRole(role.value); role.value = ''"><mat-icon>delete</mat-icon></button>
+          <div class="fill-remaining-space"></div>
+          <mat-form-field>
+            <input matInput placeholder="Enter Position value" type="number" [(ngModel)]="this.selectedMenu.position">
+          </mat-form-field>
+        </mat-card>
+        <ng-container *ngIf="selectedMenu._id === 'new'; else elseTemplate">
+            <button color="primary" mat-button (click)="onAdd()"><mat-icon>add</mat-icon> &nbsp; Add</button>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+
+              <button color="primary" mat-button (click)="onSave()"><mat-icon>save</mat-icon> &nbsp; Save</button>
+              <div class="fill-remaining-space"></div>
+              <button mat-icon-button color='warn' (click)="onDelete()"><mat-icon>delete</mat-icon></button>
+
+            </div>
+        </ng-template>
+
+      </mat-card>
+
+    </div>
