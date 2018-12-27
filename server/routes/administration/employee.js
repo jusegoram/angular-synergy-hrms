@@ -7,6 +7,13 @@ var mongoose = require('mongoose');
 var Shift = require('../../models/employee/employee-shift');
 let async = require('async');
 var Employee = require('../../models/employee/employee-main');
+let EmployeeCompany = require('../../models/employee/employee-company');
+let EmployeePosition = require('../../models/employee/employee-position');
+let EmployeePayroll = require('../../models/employee/employee-payroll');
+let EmployeePersonal = require('../../models/employee/employee-personal');
+let EmployeeFamily = require('../../models/employee/employee-family');
+let EmployeeComments = require('../../models/employee/employee-comment');
+
 router.post('/client', function (req, res, next) {
   let campaigns = req.body.campaigns;
   for (let i = 0; i < campaigns.length; i++) {
@@ -187,4 +194,71 @@ router.get('/employee', function (req, res, next) {
   });
 });
 
+router.put('/update', (req, res) => {
+  Employee.findById(req.body._id, function(err, doc) {
+    doc.employeeId = req.body.employeeId;
+    doc.firstName = req.body.firstName;
+    doc.middleName = req.body.middleName;
+    doc.lastName = req.body.lastName;
+    doc.gender = req.body.gender;
+    doc.socialSecurity = req.body.socialSecurity;
+    doc.save();
+    if (err) {
+        return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+        });
+    }
+    res.status(200).json(doc);
+});
+});
+
+router.delete('/delete', (req, res) => {
+  let employeeId = req.query.employeeId + '';
+    EmployeeCompany.deleteMany({employeeId: employeeId}, function(err, resp){
+    if(err){ res.status(500);
+    }else{
+      Shift.employeeShift.deleteMany({employeeId: employeeId}, function(err, resp){
+        if(err){ res.status(500);
+        }else{
+          EmployeePosition.deleteMany({employeeId: employeeId}, function(err, resp){
+            if(err){ res.status(500);
+            }else{
+              EmployeePayroll.EmployeePayroll.deleteMany({employeeId: employeeId}, function(err, resp){
+                if(err){ res.status(500);
+                }else{
+                  EmployeePersonal.deleteMany({employeeId: employeeId}, function(err, resp){
+                    if(err){ res.status(500);
+                    }else{
+                      EmployeeFamily.deleteMany({employeeId: employeeId}, function(err, resp){
+                        if(err){ res.status(500);
+                        }else{
+                          EmployeeComments.deleteMany({employeeId: employeeId}, function(err, resp){
+                            if(err){ res.status(500);
+                            }else{
+                              Employee.deleteOne({_id: req.query._id}, function(err, resp){
+                                if(err){ res.status(500);
+                                }else{
+                                  res.status(200).json({res: resp});
+                                }});
+                            }});
+                        }});
+                    }});
+                }});
+            }});
+        }});
+    }});
+});
+
+function deleteEmployee(employee) {
+
+
+
+
+
+
+
+
+
+}
 module.exports = router;

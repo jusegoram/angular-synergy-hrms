@@ -33,11 +33,15 @@ export class UserPermissionComponent implements OnInit {
         private adminService: AdminService,
         private router: Router,
         private snackBar: MatSnackBar) {
-
       }
      _filterEmployees(value: string): Employee[] {
         const filterValue = value.toString().toLowerCase();
-        return this.employees.filter(employee => employee['firstName'].toLowerCase().includes(filterValue));
+        return this.employees.filter(
+          employee => {
+            return employee['firstName']
+                    .toLowerCase()
+                    .includes(filterValue);
+          });
       }
     onSubmit() {
           const log: object = {date: new Date(), log: 'User Creation'};

@@ -20,16 +20,16 @@
                     <h2>Main Information</h2>
                 </section>
                 <mat-form-field>
-                    <input matInput formControlName="firstName" placeholder="First Name">
+                    <input matInput formControlName="firstName" placeholder="First Name" readonly="true">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="middleName" placeholder="Middle Name">
+                    <input matInput formControlName="middleName" placeholder="Middle Name" readonly="true">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput formControlName="lastName" placeholder="Last Name">
+                    <input matInput formControlName="lastName" placeholder="Last Name" readonly="true">
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-select formControlName="gender" placeholder="Gender">
+                    <mat-select formControlName="gender" placeholder="Gender" disabled="true">
                         <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>

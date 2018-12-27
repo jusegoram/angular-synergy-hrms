@@ -5,6 +5,7 @@ import { Department, Position, Client, Campaign } from '../employee/models/posit
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map} from 'rxjs/operators';
+import { Employee } from '../../employee/Employee';
 
 @Injectable()
 export class AdminService {
@@ -118,5 +119,18 @@ export class AdminService {
   }
   refreshEmployees() {
     this._employees = null;
+  }
+  updateEmployee(employee: Employee) {
+    const body = JSON.stringify(employee);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('_id', employee._id);
+    return this.httpClient.put('/api/v1/admin/employee/update', body, { headers: headers, params: params });
+  }
+  deleteEmployee(employee: Employee) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams()
+    .set('_id', employee._id)
+    .set('employeeId', employee.employeeId + '');
+    return this.httpClient.delete('/api/v1/admin/employee/delete', { headers: headers, params: params });
   }
 }
