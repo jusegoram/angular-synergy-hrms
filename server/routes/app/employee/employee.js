@@ -155,7 +155,7 @@ router.put('/main', function (req, res, next) {
       result.middleName = req.body.middleName;
       result.lastName = req.body.lastName;
       result.socialSecurity = req.body.socialSecurity;
-      result.status = req.body.status;
+      result.status = req.body.status.toLowerCase();
       result.gender = req.body.gender;
       result.save();
       if (err) {
@@ -183,7 +183,7 @@ router.put('/company', function (req, res, next) {
       return next(new Error('Could not load Document'));
     else {
     result.employeeId = req.body.employeeId;
-    result.client = req.body.client
+    result.client = req.body.client;
     result.campaign = req.body.campaign;
     result.supervisor = req.body.supervisor;
     result.trainer = req.body.trainer;
@@ -346,7 +346,7 @@ var employee = new Employee({
         lastName: req.body.lastName,
         gender: req.body.gender,
         socialSecurity: req.body.socialSecurity,
-        status: req.body.status,
+        status: req.body.status.toLowerCase(),
 });
 employee.save(function(err, result) {
     if (err) {
@@ -631,7 +631,7 @@ router.post('/new', function(req, res, next){
         lastName: req.body.lastName,
         socialSecurity: req.body.socialSecurity,
         gender: req.body.gender,
-        status: req.body.status
+        status: req.body.status.toLowerCase()
       });
       newEmployee.save(function (err, result){
         if (err) {

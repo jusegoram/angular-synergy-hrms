@@ -195,14 +195,17 @@ router.get('/employee', function (req, res, next) {
 });
 
 router.put('/update', (req, res) => {
-  Employee.findById(req.body._id, function(err, doc) {
-    doc.employeeId = req.body.employeeId;
+  Employee.findOne({_id: req.query._id,}, function(err, doc) {
+    console.log(doc);
+    if(doc){
+      doc.employeeId = req.body.employeeId;
     doc.firstName = req.body.firstName;
     doc.middleName = req.body.middleName;
     doc.lastName = req.body.lastName;
     doc.gender = req.body.gender;
     doc.socialSecurity = req.body.socialSecurity;
     doc.save();
+    }
     if (err) {
         return res.status(500).json({
             title: 'An error occurred',
