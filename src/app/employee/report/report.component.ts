@@ -57,7 +57,7 @@ export class ReportComponent implements OnInit {
   getReport() {
     const queryParam = this.queryForm.value;
     const obj = {
-   //   status: queryParam.status,
+       status: queryParam.status,
       client: queryParam.client.name,
       campaign: queryParam.campaign.name,
       supervisor: queryParam.supervisor,
@@ -75,6 +75,7 @@ export class ReportComponent implements OnInit {
           if (this.reportForm.value.statusCheck) {
             filtered = data.filter(res => res.status === this.queryForm.value.status);
             if (typeof filtered !== 'undefined') {
+              console.log(filtered);
               this.buildTable(filtered);
             }
           }else {
