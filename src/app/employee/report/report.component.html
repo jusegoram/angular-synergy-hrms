@@ -19,7 +19,7 @@
        <div fxLayout="row" [formGroup]="queryForm" *ngIf="this.reportForm.value.statusCheck">
          <mat-form-field>
          <mat-select placeholder="Choose Status" formControlName="status">
-           <mat-option *ngFor="let item of status" [value]="item.viewValue">
+           <mat-option *ngFor="let item of status" [value]="item.value">
              {{item.viewValue}}
            </mat-option>
          </mat-select>

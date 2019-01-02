@@ -4,15 +4,15 @@ var jwt = require('jsonwebtoken');
 var Client = require('../../models/administration/administration-company');
 var Department = require('../../models/administration/administration-department');
 var mongoose = require('mongoose');
-var Shift = require('../../models/employee/employee-shift');
+var Shift = require('../../models/app/employee/employee-shift');
 let async = require('async');
-var Employee = require('../../models/employee/employee-main');
-let EmployeeCompany = require('../../models/employee/employee-company');
-let EmployeePosition = require('../../models/employee/employee-position');
-let EmployeePayroll = require('../../models/employee/employee-payroll');
-let EmployeePersonal = require('../../models/employee/employee-personal');
-let EmployeeFamily = require('../../models/employee/employee-family');
-let EmployeeComments = require('../../models/employee/employee-comment');
+var Employee = require('../../models/app/employee/employee-main');
+let EmployeeCompany = require('../../models/app/employee/employee-company');
+let EmployeePosition = require('../../models/app/employee/employee-position');
+let EmployeePayroll = require('../../models/app/employee/employee-payroll');
+let EmployeePersonal = require('../../models/app/employee/employee-personal');
+let EmployeeFamily = require('../../models/app/employee/employee-family');
+let EmployeeComments = require('../../models/app/employee/employee-comment');
 
 router.post('/client', function (req, res, next) {
   let campaigns = req.body.campaigns;

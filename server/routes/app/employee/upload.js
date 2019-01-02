@@ -7,15 +7,15 @@ let router = express.Router();
 let multer = require('multer');
 let mongoose = require('mongoose');
 let csv = require('fast-csv');
-let EmployeeSchema = require ('../../../models/employee/employee-main');
-let Position = require ('../../../models/employee/employee-position');
-let Personal = require ('../../../models/employee/employee-personal');
-let Payroll = require ('../../../models/employee/employee-payroll');
-let Family = require ('../../../models/employee/employee-family');
-let Education = require ('../../../models/employee/employee-education');
-let Department = require('../../../models/administration/administration-department');
-let Comment = require('../../../models/employee/employee-comment');
-let Company = require('../../../models/employee/employee-company');
+let EmployeeSchema = require ('../../../models/app/employee/employee-main');
+let Position = require ('../../../models/app/employee/employee-position');
+let Personal = require ('../../../models/app/employee/employee-personal');
+let Payroll = require ('../../../models/app/employee/employee-payroll');
+let Family = require ('../../../models/app/employee/employee-family');
+let Education = require ('../../../models/app/employee/employee-education');
+let Department = require('../../../models/app/administration/administration-department');
+let Comment = require('../../../models/app/employee/employee-comment');
+let Company = require('../../../models/app/employee/employee-company');
 // set the directory for the uploads to the uploaded to
 let DIR = 'uploads/';
 

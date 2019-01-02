@@ -3,7 +3,7 @@ let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');
 
-let PayrollHour = require("../../../models/employee/employee-hour");
+let PayrollHour = require("../../../models/app/employee/employee-hour");
 
 router.get('/process', function (req, res) {
   let fromDate = req.body.fromDate;

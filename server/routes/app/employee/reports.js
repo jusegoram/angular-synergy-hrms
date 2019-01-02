@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 var jwt = require('jsonwebtoken');
 var fastcsv = require('fast-csv');
-var Employee = require('../../../models/employee/employee-main');
-var Company = require('../../../models/employee/employee-company');
+var Employee = require('../../../models/app/employee/employee-main');
+var Company = require('../../../models/app/employee/employee-company');
 
 router.post('/', function(req, res, next){
   let query = req.body;
+  delete query['status'];
   for (let propName in query) {
     if (query[propName] === null || query[propName] === undefined || query[propName] === '') {
       delete query[propName];

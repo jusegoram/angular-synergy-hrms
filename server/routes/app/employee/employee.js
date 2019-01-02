@@ -5,15 +5,15 @@ let jwt = require('jsonwebtoken');
 let fs = require('fs');
 let mongoose = require('mongoose');
 
-let Employee = require('../../../models/employee/employee-main');
-let EmployeePosition = require("../../../models/employee/employee-position");
-let EmployeePersonal = require("../../../models/employee/employee-personal");
-let EmployeePayroll = require("../../../models/employee/employee-payroll");
-let EmployeeFamily = require("../../../models/employee/employee-family");
-let EmployeeCompany = require("../../../models/employee/employee-company");
-let EmployeeEducation = require("../../../models/employee/employee-education");
-let EmployeeComment = require("../../../models/employee/employee-comment");
-let EmployeeShift = require("../../../models/employee/employee-shift")
+let Employee = require('../../../models/app/employee/employee-main');
+let EmployeePosition = require("../../../models/app/employee/employee-position");
+let EmployeePersonal = require("../../../models/app/employee/employee-personal");
+let EmployeePayroll = require("../../../models/app/employee/employee-payroll");
+let EmployeeFamily = require("../../../models/app/employee/employee-family");
+let EmployeeCompany = require("../../../models/app/employee/employee-company");
+let EmployeeEducation = require("../../../models/app/employee/employee-education");
+let EmployeeComment = require("../../../models/app/employee/employee-comment");
+let EmployeeShift = require("../../../models/app/employee/employee-shift")
 
 
 
