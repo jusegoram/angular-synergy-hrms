@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var path = require('path');
-const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, './RS256.key'));
+const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, './_RS256.key'));
 
 var User = require('../../models/administration/administration-user');
 router.get('/role', function(req, res, next) {
