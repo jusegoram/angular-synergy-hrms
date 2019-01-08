@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-
+  dataSource: any;
+  displayedColumns = [];
+  data: any;
   constructor() { }
 
   ngOnInit() {
