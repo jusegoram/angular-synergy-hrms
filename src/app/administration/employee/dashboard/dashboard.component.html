@@ -1,0 +1,63 @@
+<mat-card class="main pa-2">
+  <h2>
+    Employee Dashboard
+  </h2>
+  <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="gappx">
+    <mat-card class="dashcards pa-1">
+      <h3>Employee Status</h3>
+      <h4>Active: 700</h4>
+      <h4>Resignation: 700</h4>
+      <h4>Termination: 700</h4>
+    </mat-card>
+    <mat-card class="dashcards pa-1">
+      <h3>Employee Information Status</h3>
+      <h4>Without Avatar: 700</h4>
+      <h4>Without Company Information: 700</h4>
+    </mat-card>
+    <mat-card class="dashcards pa-1">
+      <h3>Employee Clean-up Status</h3>
+    </mat-card>
+  </div>
+  <mat-card class="pa-1" fxLayout="column" *ngIf="this.dataSource">
+      <mat-table #table [dataSource]="dataSource" matSort >
+
+          <ng-container matColumnDef="employeeId">
+              <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
+            </ng-container>
+
+          <ng-container matColumnDef="firstName">
+              <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="middleName">
+            <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.middleName}} </mat-cell>
+          </ng-container>
+
+        <ng-container matColumnDef="lastName">
+          <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="gender">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Gender </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="socialSecurity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.status}}</mat-cell>
+          </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      </mat-card>
+</mat-card>

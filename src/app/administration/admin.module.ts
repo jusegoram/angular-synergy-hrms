@@ -11,6 +11,7 @@ import { AdminService } from './services/admin.services';
 import { ClientComponent } from './employee/client/client.component';
 import { WorkpatternComponent } from './employee/workpattern/workpattern.component';
 import { PositionComponent } from './employee/position/position.component';
+import { DashboardComponent } from './employee/dashboard/dashboard.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,15 @@ import { PositionComponent } from './employee/position/position.component';
     FormsModule,
     HttpModule,
   ],
-  declarations: [UserPermissionComponent, EmployeeComponent, ContentComponent, ClientComponent, WorkpatternComponent, PositionComponent],
+  declarations: [
+    UserPermissionComponent,
+    EmployeeComponent,
+    ContentComponent,
+    ClientComponent,
+    WorkpatternComponent,
+    PositionComponent,
+    DashboardComponent
+  ],
   providers: [AdminService]
 })
 export class AdminModule { }
