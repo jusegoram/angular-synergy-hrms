@@ -46,7 +46,7 @@ export class UploadComponent {
     {text: 'Family Information', value: URL + '/api/v1/employee/template/family'},
     {text: 'Education Information', value: URL + '/api/v1/employee/template/education'},
   ];
-  templateSelected = '/template';
+  templateSelected = '';
   // public uploader: FileUploader = new FileUploader({
   //   allowedMimeType: ['text/csv'],
   //   url: this.URL,
