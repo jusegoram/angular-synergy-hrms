@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
 import { EmployeeService } from '../services/employee.service';
 import {SessionService} from '../../session/services/session.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component ({
     templateUrl: 'manage.component.html',
@@ -17,8 +18,14 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   // dataSource = any;
   dataSource = null;
   auth: any;
+  pag: any;
+  pagSize: any;
   displayedColumns = ['employeeID', 'name', 'position', 'status', 'details'];
-  constructor(private employeeService: EmployeeService, private sessionService: SessionService) {
+  constructor(
+    private employeeService: EmployeeService,
+    private sessionService: SessionService,
+    private router: Router,
+    private route: ActivatedRoute) {
   }
   ngAfterViewInit() {
     this.populateTable();
@@ -40,6 +47,11 @@ export class ManageComponent implements OnInit,  AfterViewInit {
       ngOnInit() {
         this.populateTable();
         this.getAuth();
+        this.route.queryParams.subscribe(params => {
+          this.pag = params['page'];
+          this.pagSize = params['size'];
+          this.setPage(this.pag, this.pagSize);
+      });
       }
       applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
@@ -66,5 +78,20 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.dataSource.data = res;
         },
       error => console.log(error));
+      }
+      setPage(i, size) {
+          let pag = parseInt(i, 10);
+          let pagSize = parseInt(size, 10);
+          pag = pag ? pag : 0;
+          pagSize = pagSize ? pagSize : 10;
+
+          this.paginator._changePageSize(pagSize);
+          this.paginator._pageIndex = pag + 1;
+          this.paginator.previousPage();
+      }
+      onPageChange(event) {
+        const page = event.pageIndex;
+        const size = event.pageSize;
+        window.history.pushState({}, '', `/employee/manage?page=${page}&size=${size}`);
       }
 }
