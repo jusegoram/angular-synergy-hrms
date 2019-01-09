@@ -37,14 +37,14 @@ export class UploadComponent {
   ];
 
   templates = [
-    {text: 'Main Information', value: '/api/v1/employee/template'},
-    {text: 'Personal Information', value: '/api/v1/employee/template/personal'},
-    {text: 'Company Information', value: '/api/v1/employee/template/company'},
-    {text: 'Position Information', value: '/api/v1/employee/template/position'},
-    {text: 'Shift Information(not working)', value: '/api/v1/employee/template/shift'},
-    {text: 'Payroll Information', value: '/api/v1/employee/template/payroll'},
-    {text: 'Family Information', value: '/api/v1/employee/template/family'},
-    {text: 'Education Information', value: '/api/v1/employee/template/education'},
+    {text: 'Main Information', value: URL + '/api/v1/employee/template'},
+    {text: 'Personal Information', value: URL + '/api/v1/employee/template/personal'},
+    {text: 'Company Information', value: URL + '/api/v1/employee/template/company'},
+    {text: 'Position Information', value: URL + '/api/v1/employee/template/position'},
+    {text: 'Shift Information(not working)', value: URL + '/api/v1/employee/template/shift'},
+    {text: 'Payroll Information', value: URL + '/api/v1/employee/template/payroll'},
+    {text: 'Family Information', value: URL + '/api/v1/employee/template/family'},
+    {text: 'Education Information', value: URL + '/api/v1/employee/template/education'},
   ];
   templateSelected = '/template';
   // public uploader: FileUploader = new FileUploader({
