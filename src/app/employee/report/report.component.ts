@@ -125,7 +125,7 @@ export class ReportComponent implements OnInit {
       ? commentsInfo.push(element.comments) : noop();
 
        orgData.push({
-        employeeId: element.employeeId, firstName: element.firstName, middleName: element.middleName,
+        _id: element._id, employeeId: element.employeeId, firstName: element.firstName, middleName: element.middleName,
         lastName: element.lastName, gender: element.gender, client: element.client,
         campaign: element.campaign, status: element.status, hireDate: element.hireDate,
         manager: element.manager, supervisor: element.supervisor, trainer: element.trainer,

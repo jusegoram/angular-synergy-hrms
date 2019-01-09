@@ -61,11 +61,11 @@ export class EmployeeService {
     return this.httpClient.post('/api/v1/employee/report', body, { headers: headers }).pipe(
       map((data: any) => {
       data.forEach(element => {
-        delete element._id;
         delete element.__v;
           if (element.employee !== null) {
         const employee = element.employee;
         delete element.employee;
+        element._id = employee._id;
         element.firstName = employee.firstName;
         element.middleName = employee.middleName;
         element.lastName = employee.lastName;
