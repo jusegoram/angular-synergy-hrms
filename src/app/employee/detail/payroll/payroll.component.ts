@@ -20,8 +20,8 @@ export class PayrollComponent implements OnInit {
   newPayroll: EmployeePayroll;
   payrollForm: FormGroup;
   payrollTypes = [
-    { value: 'semimonthly', name: 'Semimonthly' },
-    { value: 'biweekly', name: 'Biweekly' },
+    { value: 'SEMIMONTHLY', name: 'SEMIMONTHLY' },
+    { value: 'BI-WEEKLY', name: 'BI-WEEKLY' },
   ];
 
 
