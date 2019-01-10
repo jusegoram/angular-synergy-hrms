@@ -44,7 +44,7 @@ export const AppRoutes: Routes = [
         path: 'operations',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './training/training.module#TrainingModule',
+        loadChildren: './operations/operations.module#OperationsModule',
         canLoad: [SessionGuard]
       },
       {

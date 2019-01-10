@@ -36,19 +36,16 @@
       <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
     </ng-container>
 
-    <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.firstName +' '+ element.middleName + ' ' + element.lastName}} </mat-cell>
     </ng-container>
 
-    <!-- Weight Column -->
     <ng-container matColumnDef="position">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
     </ng-container>
 
-    <!-- Color Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
@@ -57,7 +54,7 @@
 
     <ng-container matColumnDef="details">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
-      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}"><button mat-raised-button color="accent"> details</button></a></mat-cell>
+      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}"><button mat-button><mat-icon>person_pin</mat-icon> Go</button></a></mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

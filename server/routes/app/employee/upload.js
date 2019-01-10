@@ -41,9 +41,6 @@ router.post('/', function (req, res) {
                 return res.status(422).send("an Error occured");
             }
              if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
-               console.log(employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv');
-               console.log((employeeFile.mimetype.valueOf() !== 'text/csv'.valueOf()) + 'csv');
-               console.log((employeeFile.mimetype.valueOf() !== 'application/vnd.ms-excel'.valueOf())+ 'win csv');
                return res.status(400).send("Sorry only CSV files can be processed for upload");
             }
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -84,7 +81,7 @@ router.post('/position', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(positionFile.mimetype != "text/csv"){
+        if(positionFile.mimetype !== 'application/vnd.ms-excel' && positionFile.mimetype !== 'text/csv'){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -140,7 +137,7 @@ router.post('/personal', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(personalFile.mimetype != "text/csv"){
+        if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv'){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -184,7 +181,7 @@ router.post('/company', function (req, res) {
       console.log(err);
       return res.status(422).send("an Error occured");
       }
-      if(companyFile.mimetype != "text/csv"){
+      if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
           return res.status(400).send("Sorry only CSV files can be processed for upload");
       }
       csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -237,7 +234,7 @@ router.post('/payroll', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(payrollFile.mimetype != "text/csv"){
+        if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -281,7 +278,7 @@ router.post('/family', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(familyFile.mimetype != "text/csv"){
+        if(familyFile.mimetype !== 'application/vnd.ms-excel' && familyFile.mimetype !== 'text/csv'){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -328,7 +325,7 @@ router.post('/education', function (req, res) {
         console.log(err);
         return res.status(422).send("an Error occured");
         }
-        if(educationFile.mimetype != "text/csv"){
+        if(educationFile.mimetype !== 'application/vnd.ms-excel' && educationFile.mimetype !== 'text/csv'){
             return res.status(400).send("Sorry only CSV files can be processed for upload");
         }
         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
@@ -375,7 +372,7 @@ router.post('/comment', function (req, res) {
       console.log(err);
       return res.status(422).send("an Error occured");
       }
-      if(commentFile.mimetype != "text/csv"){
+      if(commentFile.mimetype !== 'application/vnd.ms-excel' && commentFile.mimetype !== 'text/csv'){
           return res.status(400).send("Sorry only CSV files can be processed for upload");
       }
       csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})

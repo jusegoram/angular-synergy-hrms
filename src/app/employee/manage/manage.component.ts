@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ManageComponent implements OnInit,  AfterViewInit {
   //FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) _sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   employees: Employee [];
   selectedEmployees: string[] = [];
@@ -37,8 +37,9 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   populateTable() {
     this.employeeService.getEmployees()
       .subscribe(res => {
-        this.dataSource = new MatTableDataSource(res);
-          this.dataSource.sort = this.sort;
+        this.employees = res;
+        this.dataSource = new MatTableDataSource(this.employees);
+          this.dataSource.sort = this._sort;
           this.dataSource.paginator = this.paginator;
         },
       error => console.log(error));
