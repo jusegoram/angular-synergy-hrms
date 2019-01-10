@@ -260,7 +260,7 @@ router.post('/payroll', function (req, res) {
                 if(err){
                     console.log(err);
                 }else{
-                    Payroll.create(payroll);
+                    Payroll.EmployeePayroll.create(payroll);
                 }
             });
             console.log('upload finished');
