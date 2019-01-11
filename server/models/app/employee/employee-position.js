@@ -7,7 +7,7 @@ let positionSchema = new Schema({
     employeeId: { type: String, required: true },
     client: { type: String, required: true },
     department: { type: String, required: false },
-    position: {  type: Object, required: false, autopopulate: true},
+    position: {  type: mongoose.Schema.Types.ObjectId, ref: 'Administration-Position', autopopulate: true},
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false},
