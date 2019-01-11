@@ -133,7 +133,7 @@ router.get('/education', function(req, res, next){
   });
 });
 router.get('/payroll', function(req, res, next){
-  EmployeePayroll.findById(req.query.id, function(err, result){
+  EmployeePayroll.findOne({_id: req.query.id}, function(err, result){
     if (err) {
       return res.status(500).json({
         title: 'An error occurred',
