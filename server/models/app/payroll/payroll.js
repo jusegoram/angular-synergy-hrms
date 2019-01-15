@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let mongooseAutopopulate = require("mongoose-autopopulate")
 
 // let PayrollCurrent = new Schema({
 //   _id: mongoose.Schema.Types.ObjectId,
@@ -29,11 +28,10 @@ let PayrollDetail = new Schema({
   employeePosition: {type: Object},
   employeePayroll:{type: Object},
   employeeVacation:{type: Object},
-  Overtime:{type: [mongoose.Schema.Types,ObjectId], ref: 'Employee-Overtime', autopopulate: true},
-  otherPayment:{type: [mongoose.Schema.Types,ObjectId], ref: 'payroll-OtherPayTable', autopopulate: true},
-  Deduction:{type: [mongoose.Schema.Types,ObjectId], ref: 'payroll-DeductionsTable', autopopulate: true},
+  Overtime:{type: [Object]},
+  otherPayment:{type: [Object]},
+  Deduction:{type: [Object]},
 });
-PayrollDetail.plugin(mongooseAutoPopulate);
 
 let PayrollStorage = new Schema({
   _id: mongoose.Schema.Types.ObjectId,

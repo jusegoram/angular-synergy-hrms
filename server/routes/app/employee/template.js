@@ -141,5 +141,22 @@ router.get('/company', function (req, res, next) {
     res.send(csv);
 });
 
+router.get('/hours', function (req, res, next) {
+  var fields = [
+      'employeeId',
+      'dialerId',
+      'date',
+      'systemHours',
+      'tosHours',
+      'timeIn'
+  ];
+
+  var csv = json2csv({ data: '', fields: fields });
+
+  res.set("Content-Disposition", "attachment;filename=employee-hours-upload.csv");
+  res.set("Content-Type", "application/octet-stream");
+
+  res.send(csv);
+});
 
 module.exports = router;

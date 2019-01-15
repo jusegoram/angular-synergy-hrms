@@ -410,6 +410,59 @@ router.post('/comment', function (req, res) {
 
 });
 
+router.post('/hours', function (req, res) {
+  upload(req, res, function (err) {
+    let hours = [];
+    let hoursFile = req.file;
+      if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+      }
+      if(hoursFile.mimetype !== 'application/vnd.ms-excel' && hoursFile.mimetype !== 'text/csv'){
+          return res.status(400).send("Sorry only CSV files can be processed for upload");
+      }
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', function(data){
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          hours.push(data);
+
+      })
+      .on('end', function(){
+        let counter = 0;
+        let duplicate = 0;
+          async.each(hours, function(hour, callback){
+            EmployeeSchema.findOne({'employeeId': hour.employeeId}, function(err, res){
+                  if(err){
+                    console.log(err);
+                      duplicate++
+                  }else{
+                    counter++;
+                    if(res !== null){
+                      res.hours = hour._id;
+                      hour.employee = res._id;
+                      res.save();
+                      callback();
+                    }else{
+                      console.log('not found id: '+ hour.employeeId);
+                      callback();
+                    }
+                  }
+              })
+          }, function(err){
+              if(err){
+                  console.log(err);
+              }else{
+                  EmployeeHours.create(hours);
+              }
+          });
+          console.log('upload finished');
+          return res.status(200).send( counter + ' Registries of hours information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
+      });
+  });
+});
+
 router.post('/avatars', function(req, res){
   let avatarStorage = multer.diskStorage({
         destination:'uploads/avatars',

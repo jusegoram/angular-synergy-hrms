@@ -78,6 +78,7 @@ export class EmployeeService {
         element.education = employee.education;
         element.comments = employee.comments;
         element.family = employee.family;
+        element.payroll = employee.payroll;
         }else {
         delete element.employee;
         }
