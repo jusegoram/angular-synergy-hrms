@@ -83,7 +83,9 @@ export class AdminService {
     if (!this._shifts) {
       this._shifts = this.httpClient.get<any>('/api/v1/admin/employee/shift').pipe(
         map((data) => {
-          data.state = 'saved';
+            data.map((element) => {
+              element.shift = this.minutesToTime(element.shift);
+            });
           return data;
         }),
         publishReplay(1),
@@ -92,7 +94,9 @@ export class AdminService {
     }
     return this._shifts;
   }
-
+  clearShift() {
+    this._shifts = null;
+  }
   saveShift(shift: any) {
     const body = JSON.stringify(shift);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -132,5 +136,39 @@ export class AdminService {
     .set('_id', employee._id)
     .set('employeeId', employee.employeeId + '');
     return this.httpClient.delete('/api/v1/admin/employee/delete', { headers: headers, params: params });
+  }
+
+  minutesToTime(shift): object[] {
+    const fixedShift = [];
+    for (const day of shift) {
+      if (day.endTime !== null && day.startTime !== null) {
+        const storedEnd = parseInt(day.endTime, 10);
+        const storedStart = parseInt(day.startTime, 10);
+
+        const hoursEnd = Math.floor(storedEnd / 60);
+        const minutesEnd = storedEnd - (hoursEnd * 60);
+
+        const hoursStart = Math.floor(storedStart / 60);
+        const minutesStart = storedStart - (hoursStart * 60);
+        let minutesEndStr = '';
+        if (minutesEnd < 10) {
+          minutesEndStr = '0' + minutesEnd;
+        }else {
+          minutesEndStr = minutesEnd + '';
+        }
+        let minutesStartStr = '';
+        if (minutesStart < 10) {
+          minutesStartStr = '0' + minutesStart;
+        }else {
+          minutesStartStr = minutesStart + '';
+        }
+        day.endTime = hoursEnd + ':' + minutesEndStr;
+        day.startTime = hoursStart + ':' + minutesStartStr;
+      }
+      fixedShift.push(day);
+    }
+    return fixedShift;
+  }
+  TimeToMinutes(shift) {
   }
 }

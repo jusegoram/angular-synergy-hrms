@@ -102,34 +102,24 @@ router.put('/client', function ( req, res, next) {
 //   }
 // });
 router.post('/shift', function(req, res, next){
-  let shifts = req.body;
-    async.each(shifts, function(shift, callback){
-      if (shift.state === 'new') {
-        delete shift['state'];
-        shift._id = new mongoose.Types.ObjectId();
-        let newShift = new Shift.shift(shift);
-        newShift.save(function(error, result){
-          console.log(result);
-          callback(error);
-        });
-       }else if (typeof shift.state === 'undefined') {
-         Shift.shift.update({_id: shift._id}, {
-           $set: {
-             name: shift.name,
-            shift: shift.shift}},
-            function(err, doc) {
-              console.log(doc);
-              callback(err)
-            });
-       }
-    }, function(err){
-      if(err){
-        console.log(err)
-      }else{
-        console.log('all done');
-        res.status(200).json({message: 'done'});
-      }
-    });
+    const start = async () => {
+      await async.forEach(req.body, async (shift) => {
+        if (shift._id === '') {
+          delete shift['state'];
+          shift._id = new mongoose.Types.ObjectId();
+          let newShift = new Shift.shift(shift);
+          newShift.save();
+         } else {
+           Shift.shift.update({_id: shift._id}, {
+             $set: {
+               name: shift.name,
+              shift: shift.shift}}).exec(function(result2) {});
+         }
+      });
+      res.status(200).json({result: 'all done'});
+    }
+
+    start();
 //  shifts.forEach(element => {
 
 //   });

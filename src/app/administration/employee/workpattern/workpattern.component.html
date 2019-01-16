@@ -9,7 +9,6 @@
     </mat-select>
     <mat-hint>Select New for a new Work Pattern</mat-hint>
   </mat-form-field>
-  <button mat-icon-button *ngIf="refreshShiftBut" (click)="refreshWp()"><mat-icon>refresh</mat-icon></button>
   <mat-expansion-panel class="ma-1" #panel3>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -98,8 +97,8 @@
     </div>
   </mat-expansion-panel>
 
-  <button mat-icon-button (click)="onAddWp(); panel3.close()"><mat-icon>add</mat-icon></button>
-  <button mat-button color="primary" (click)="onSaveWp(); panel3.close()">
+  <button mat-icon-button (click)="onAddWp()"><mat-icon>add</mat-icon></button>
+  <button mat-button color="primary" (click)="onSaveWp(this.wp)">
     <mat-icon>save</mat-icon>
     Save changes</button>
 </mat-card>

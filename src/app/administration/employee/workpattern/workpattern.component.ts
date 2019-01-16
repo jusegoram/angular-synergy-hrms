@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Workpattern, Day } from '../models/positions-models';
 import { AdminService } from '../../services/admin.services';
 import { MatSnackBar } from '@angular/material';
+import { shiftInitState } from '@angular/core/src/view';
 
 @Component({
   selector: 'app-workpattern',
@@ -38,31 +39,16 @@ export class WorkpatternComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.wp = [
-    ];
     this.getSelectedWp();
-    this._admService.getShift().subscribe((results: Workpattern[]) => {
-      results.forEach(result => {
-        result.shift.forEach(day => {
-          if (day.endTime !== null && day.startTime !== null) {
-            const storedEnd = parseInt(day.endTime, 10);
-            const storedStart = parseInt(day.startTime, 10);
-
-            const hoursEnd = Math.floor(storedEnd / 60);
-            const minutesEnd = storedEnd - (hoursEnd * 60);
-
-            const hoursStart = Math.floor(storedStart / 60);
-            const minutesStart = storedStart - (hoursStart * 60);
-
-            day.endTime = hoursEnd + ':' + minutesEnd;
-            day.startTime = hoursStart + ':' + minutesStart;
-          }
-        });
-        this.wp.push(result);
-      });
-    });
+    this.loadWorkPatterns();
   }
-
+  loadWorkPatterns() {
+    this.wp = [];
+    this._admService.getShift().subscribe((results: Workpattern[]) => {
+      results.forEach((e) => this.wp.push(e));
+    });
+    this.currentWp = this.defaultWp;
+  }
   getSelectedWp(): Workpattern {
     let found: Workpattern;
     const name = this.selectedWp;
@@ -80,10 +66,13 @@ export class WorkpatternComponent implements OnInit {
     if (this.currentWp.state === 'default') {
       const element = new Workpattern('new', '', this.currentWp.name, this.currentWp.shift);
       this.wp.push(element);
+      this.snackBar.open('Work pattern added, dont forget to click on save', 'thank you', {
+        duration: 2000,
+      });
     }
   }
 
-  onSaveWp() {
+  onSaveWp(workpaterns) {
     // for (let i = 0; i < this.wp.length; i++ ) {
     //   if (this.wp[i].state === 'new') {
     //     // save admService
@@ -97,15 +86,51 @@ export class WorkpatternComponent implements OnInit {
     //     });
     //   }
     // }
-    const finishedWp = this.wp;
-    let i = 0;
-    finishedWp.forEach(result => {
-      i++;
-      let startTime;
-      let endTime;
-      result.shift.forEach(day => {
-        startTime = null;
-        endTime = null;
+    const workpaternsCopy = JSON.parse(JSON.stringify(workpaterns));
+   workpaternsCopy.map(wp => {
+      this.timeToMinutes(wp.shift);
+    });
+    this.save(workpaternsCopy);
+      // workpaterns.forEach((wp, i) => {
+      //   if (i === workpaterns.length) {
+      //     this._admService.saveShift(wp)
+      //       .subscribe(data => {
+      //         this.snackBar.open('Information saved successfully', 'thank you', {
+      //           duration: 2000,
+      //         });
+      //         this.refreshShiftBut = true;
+      //       },
+      //       error => {
+      //         this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
+      //           duration: 2000,
+      //         });
+      //       });
+      //   }
+      // })
+    // );
+
+  }
+   save(item) {
+    this._admService.saveShift(item)
+        .subscribe(data => {
+          this.snackBar.open('Information saved successfully', 'thank you', {
+            duration: 2000,
+          });
+          this._admService.clearShift();
+          this.loadWorkPatterns();
+        },
+        error => {
+          this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
+          this._admService.clearShift();
+          this.loadWorkPatterns();
+        });
+   }
+  timeToMinutes(shift) {
+      shift = shift.map((day) => {
+        let startTime = null;
+        let endTime = null;
         if (day.startTime !== null) {
           const str: string = day.startTime;
           const strArray = str.split(':');
@@ -120,24 +145,9 @@ export class WorkpatternComponent implements OnInit {
           const minutesEnd = parseInt(endArray[1], 10);
           endTime = hoursEnd + minutesEnd;
         }
-        day.endTime = (endTime === null) ? '' : endTime.toString();
-        day.startTime = (startTime === null) ? '' : startTime.toString();
+        day.endTime = (endTime === null) ? null : endTime;
+        day.startTime = (startTime === null) ? null : startTime;
       });
-      if (i === finishedWp.length) {
-        this._admService.saveShift(finishedWp)
-          .subscribe(data => {
-            this.snackBar.open('Information saved successfully', 'thank you', {
-              duration: 2000,
-            });
-            this.refreshShiftBut = true;
-          },
-          error => {
-            this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
-              duration: 2000,
-            });
-          });
-      }
-    });
   }
   refreshWp() {
     this.wp.forEach(result => {

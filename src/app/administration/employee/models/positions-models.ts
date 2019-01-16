@@ -39,8 +39,8 @@ export class Day {
   constructor(
     public day: number,
     public onShift: boolean,
-    public startTime: string,
-    public endTime: string
+    public startTime: any,
+    public endTime: any
   ) {
   }
 }
