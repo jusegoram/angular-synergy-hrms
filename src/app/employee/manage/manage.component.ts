@@ -28,7 +28,6 @@ export class ManageComponent implements OnInit,  AfterViewInit {
     private route: ActivatedRoute) {
   }
   ngAfterViewInit() {
-    this.populateTable();
     this.employeeService.getClient().subscribe((result: any) => { });
     this.employeeService.getDepartment().subscribe((result: any) => { });
 
@@ -39,10 +38,12 @@ export class ManageComponent implements OnInit,  AfterViewInit {
       .subscribe(res => {
         this.employees = res;
         this.dataSource = new MatTableDataSource(this.employees);
-          this.dataSource.sort = this._sort;
           this.dataSource.paginator = this.paginator;
         },
-      error => console.log(error));
+      error => console.log(error), () => {
+        console.log('all done');
+        this.dataSource.sort = this._sort;
+      });
   }
 
       ngOnInit() {

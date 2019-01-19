@@ -13,8 +13,8 @@ let EmployeeFamily = require("../../../models/app/employee/employee-family");
 let EmployeeCompany = require("../../../models/app/employee/employee-company");
 let EmployeeEducation = require("../../../models/app/employee/employee-education");
 let EmployeeComment = require("../../../models/app/employee/employee-comment");
-let EmployeeShift = require("../../../models/app/employee/employee-shift")
-
+let EmployeeShift = require("../../../models/app/employee/employee-shift");
+let EmployeeHours = require("../../../models/app/employee/employee-hour");
 
 
 router.get('/populateTable', function(req, res, next) {
@@ -75,7 +75,29 @@ router.get('/main', function(req, res){
          res.status(200).json(result);
       });
 });
-
+router.put('/main', function (req, res, next) {
+  Employee.findById(req.query.id, function (err, result) {
+    if (!result)
+      return next(new Error('Could not load Document'));
+    else {
+      result.employeeId = req.body.employeeId;
+      result.firstName = req.body.firstName;
+      result.middleName = req.body.middleName;
+      result.lastName = req.body.lastName;
+      result.socialSecurity = req.body.socialSecurity;
+      result.status = req.body.status.toLowerCase();
+      result.gender = req.body.gender;
+      result.save();
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
+        });
+      }
+    }
+    res.status(200).json(result);
+  });
+});
 //Deprecated: this will be removed if not used in the next month June 13/2018
 router.get('/company', function(req, res, next){
   EmployeeCompany.findOne({ employeeId: req.query.employeeId}, function(err, result){
@@ -145,29 +167,7 @@ router.get('/payroll', function(req, res, next){
 });
 
 
-router.put('/main', function (req, res, next) {
-  Employee.findById(req.query.id, function (err, result) {
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-      result.employeeId = req.body.employeeId;
-      result.firstName = req.body.firstName;
-      result.middleName = req.body.middleName;
-      result.lastName = req.body.lastName;
-      result.socialSecurity = req.body.socialSecurity;
-      result.status = req.body.status.toLowerCase();
-      result.gender = req.body.gender;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
-});
+
 router.put('/shift', function(req,res, next){
   EmployeeShift.findById(req.query.id, function (err, result){
     if (!result) {
@@ -647,6 +647,17 @@ router.post('/new', function(req, res, next){
    });
 });
 
+router.get('/allHours', (req, res, next) => {
+  EmployeeHours.find({}, (error, result) => {
+    if(!result) {
+      res.status(404);
+    }else if(error) {
+      res.status(500);
+    }else {
+      res.status(200).json(result);
+    }
+  });
+});
 
 
 module.exports = router;

@@ -131,5 +131,20 @@ export class EmployeeEducation {
               public endDate: string
   ) { }
 
+}
+
+export class EmployeeHours {
+  constructor(
+    public _id: string,
+    public employeeId: string,
+    public dialerId: string,
+    public date: Date,
+    public systemHours: number,
+    public tosHours: number,
+    public timeIn: Date,
+    public employee: string
+  ) {
+
+  }
 
 }

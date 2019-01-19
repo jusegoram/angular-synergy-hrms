@@ -46,6 +46,17 @@ router.post('/', function (req, res) {
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
+                if(data['employeeId'] = ''){
+                  let newEmployeeId;
+                  EmployeeSchema.finMax((err, doc) => {
+                    if(err){
+                      res.status(400);
+                    }else {
+                      newEmployeeId = doc[0].employeeId + 1;
+                  }
+                });
+                  data['employeeId'] = newEmployeeId;
+                }
                 data['company'] = null;
                 data['payroll'] = null;
                 data['personal'] = null;

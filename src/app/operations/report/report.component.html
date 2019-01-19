@@ -3,83 +3,95 @@
     <span>Reports Table</span>
     <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
+
 </mat-toolbar>
-<div class="mat-card-top">
-  <div class="example-container">
-      <div class="pa-2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="gappx">
-        <mat-form-field appearance="outline">
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-        </mat-form-field>
-        <div class="fill-remaining-space"></div>
-        <mat-form-field appearance="outline">
-          <input matInput [matDatepicker]="pickerFrom" placeholder="From (dd/mm/yyyy)">
-          <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFrom></mat-datepicker>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <input matInput [matDatepicker]="pickerTo" placeholder="To (dd/mm/yyyy)">
-          <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-          <mat-datepicker #pickerTo></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div>
-        <a [routerLink]="['/', 'employee', 'new' ]">
-          <button mat-icon-button>
-            <mat-icon>cloud_download</mat-icon>
-          </button>
-        </a>
-        <button mat-icon-button (click)="reload()">
-            <mat-icon>refresh</mat-icon>
-          </button>
-      </div>
-      <mat-table #table [dataSource]="dataSource" matSort>
-        <!--
-            <ng-container matColumnDef="selected">
-              <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
-              <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
-            </ng-container>
+<mat-tab-group>
+  <mat-tab label="Hours">
+      <div class="">
+          <div class="example-container">
+              <div class="pa-2" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="gappx">
+                <mat-form-field appearance="outline">
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field>
+                <div class="fill-remaining-space"></div>
+                <mat-form-field appearance="outline">
+                  <input matInput  [matDatepicker]="pickerFrom" placeholder="From (dd/mm/yyyy)" (dateChange)= dateFilter($event.value)>
+                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <input matInput  [matDatepicker]="pickerTo" placeholder="To (dd/mm/yyyy)" (dateChange)= dateFilter($event.value)>
+                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTo ></mat-datepicker>
+                </mat-form-field>
+                <!-- <div style="padding-bottom: 20px; padding-left: 10px">
+                    <button mat-stroked-button (click) ="dateFilter(this.dataSource)"><mat-icon>search</mat-icon> Search</button>
 
-             Position Column -->
+                </div> -->
+              </div>
+              <div style="margin-left: 20px">
+                <a [routerLink]="['/', 'employee', 'new' ]">
+                  <button mat-icon-button>
+                    <mat-icon>cloud_download</mat-icon>
+                  </button>
+                </a>
+                <button mat-icon-button (click)="reload()">
+                    <mat-icon>refresh</mat-icon>
+                  </button>
+              </div>
+              <mat-table #table [dataSource]="dataSource" matSort>
+                <!--
+                    <ng-container matColumnDef="selected">
+                      <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
+                    </ng-container>
 
-        <ng-container matColumnDef="employeeID">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
-        </ng-container>
+                     Position Column -->
 
-        <!-- Name Column -->
-        <ng-container matColumnDef="name">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.firstName +' '+ element.middleName + ' ' + element.lastName}} </mat-cell>
-        </ng-container>
+                <ng-container matColumnDef="employeeID">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
+                </ng-container>
 
-        <!-- Weight Column -->
-        <ng-container matColumnDef="position">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
-        </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.firstName +' '+ element.middleName + ' ' + element.lastName}} </mat-cell>
+                </ng-container>
 
-        <!-- Color Column -->
-        <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
-        </ng-container>
+                <!-- Weight Column -->
+                <ng-container matColumnDef="dialerID">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
+                </ng-container>
+
+                <!-- Color Column -->
+                <ng-container matColumnDef="hours">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="tosHours">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="timeIn">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
+                </ng-container>
 
 
-        <ng-container matColumnDef="details">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}"><button mat-raised-button color="accent"> details</button></a></mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-      </mat-table>
-      <mat-paginator #paginator
-      [pageSize]="10"
-      [pageSizeOptions]="[10, 20, 30]">
-      </mat-paginator>
-  </div>
-</div>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+              </mat-table>
+              <mat-paginator #paginator
+              [pageSize]="10"
+              [pageSizeOptions]="[10, 20, 30]">
+              </mat-paginator>
+          </div>
+        </div>
+  </mat-tab>
+  <mat-tab label="KPI 2"> Content 2 </mat-tab>
+  <mat-tab label="KPI 3"> Content 3 </mat-tab>
+</mat-tab-group>
