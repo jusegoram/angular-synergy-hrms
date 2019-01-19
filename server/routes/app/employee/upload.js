@@ -48,7 +48,7 @@ router.post('/', function (req, res) {
                 data['_id'] = new mongoose.Types.ObjectId();
                 if(data['employeeId'] = ''){
                   let newEmployeeId;
-                  EmployeeSchema.finMax((err, doc) => {
+                  EmployeeSchema.findMax((err, doc) => {
                     if(err){
                       res.status(400);
                     }else {
