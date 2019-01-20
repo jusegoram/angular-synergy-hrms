@@ -52,41 +52,30 @@ router.post('/', function (req, res) {
                 employees.push(data);
             })
             .on('end', function(result){
-                let counter = 0;
-                let duplicate = 0;
+                // let counter = 0;
+                // let duplicate = 0;
                 // for ( i = 0; i < employees.length; i++){
-                //   if(employees[i].employeeId = ''){
-                //     let newEmployeeId;
-                //     EmployeeSchema.findMax((err, doc) => {
-                //       if(err){
-                //         res.status(400);
-                //       }else {
-                //         newEmployeeId = doc[0].employeeId + 1;
-                //         console.log('newEmployeeId= ' + newEmployeeId);
-                //     }
-                //   });
-                //     employee[i].employeeId = newEmployeeId;
-                //   }
                 //     EmployeeSchema.create(employees[i], (err, created) =>{
                 //       if(err) {
                 //         duplicate++
-                //         console.log(err);
+                //         console.log('err: '+ duplicate);
                 //       }else{
                 //         counter++;
                 //       console.log('created: ' + counter);
                 //       }
                 //     });
-        //         }
-        //         // console.log('--EMPLOYEE CREATION-- Employees created: '+counter+' Duplicates found: '+duplicate);
-        //         return res.sendStatus(200);
-        //     });
-        // });
-        employees.map((employee) => {
-          if(employee.employeeId = ''){
-            console.log(employee.employeeId);
-          }
-        })
-      });
+                // }
+                // console.log('--EMPLOYEE CREATION-- Employees created: '+counter+' Duplicates found: '+duplicate);
+                // return res.sendStatus(200);
+
+                employees.map((employee) => {
+                  if(employee.employeeId === ''){
+                    console.log(employee);
+                  }
+                })
+            });
+        });
+
 });
 
 router.post('/position', function (req, res) {
