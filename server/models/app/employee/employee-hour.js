@@ -6,9 +6,9 @@ let schema = new Schema({
   employeeId: { type: String, required: true },
   dialerId: { type: String, required: true },
   date: { type: Date, required: true },
-  systemHours: { type: Number, required: true },
-  tosHours: { type: Number, required: true },
-  timeIn:  { type: Date, required: true },
+  systemHours: { type: String, required: true },
+  tosHours: { type: String, required: true },
+  timeIn:  { type: String, required: true },
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
 });
 

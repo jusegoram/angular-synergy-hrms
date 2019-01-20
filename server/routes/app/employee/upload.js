@@ -9,6 +9,7 @@ let mongoose = require('mongoose');
 let csv = require('fast-csv');
 let Department = require('../../../models/administration/administration-department');
 let EmployeeSchema = require ('../../../models/app/employee/employee-main');
+let EmployeeHours = require ('../../../models/app/employee/employee-hour');
 let Position = require ('../../../models/app/employee/employee-position');
 let Personal = require ('../../../models/app/employee/employee-personal');
 let Payroll = require ('../../../models/app/employee/employee-payroll');
@@ -294,13 +295,15 @@ router.post('/family', function (req, res) {
                     if(err){
                         callback(err)
                     }else{
-                      EmployeeSchema.update({_id: res._id},{
-                        $push: { family: fam._id}}, function(err, raw){
-                          console.log(raw||err);
-                        });
-                        fam.employee = res._id;
-                        res.save();
-                        callback();
+                      if(res !== null){
+                        EmployeeSchema.update({_id: res._id},{
+                          $push: { family: fam._id}}, function(err, raw){
+                            console.log(raw||err);
+                          });
+                          fam.employee = res._id;
+                          res.save();
+                          callback();
+                      }
                     }
                 })
             }, function(err){
@@ -454,7 +457,7 @@ router.post('/hours', function (req, res) {
               if(err){
                   console.log(err);
               }else{
-                  EmployeeHours.create(hours);
+                  EmployeeHours.create(hours).then(res => console.log(res)).catch(err => console.log(err));
               }
           });
           console.log('upload finished');

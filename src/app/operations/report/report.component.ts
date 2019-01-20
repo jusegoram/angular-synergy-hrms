@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { OperationsService } from '../operations.service';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { EmployeeHours } from '../../employee/Employee';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-report',
@@ -15,7 +16,10 @@ export class ReportComponent implements OnInit {
   dataSource = null;
   auth: any;
   hours: EmployeeHours[];
-  displayedColumns = ['employeeID', 'dialerID', 'hours', 'tosHours', 'timeIn'];
+  displayedColumns = ['employeeID', 'dialerID', 'hours', 'tosHours', 'timeIn', 'date'];
+  dateFrom = new FormControl();
+  dateTo = new FormControl();
+
   constructor(private _opsService: OperationsService) { }
   ngOnInit() {
     this.populateTable();
@@ -24,6 +28,9 @@ export class ReportComponent implements OnInit {
   populateTable() {
     this._opsService.getHours()
       .subscribe(res => {
+        res.map((item) => {
+          item.date = new Date(item.date);
+        });
         this.hours = res;
         this.dataSource = new MatTableDataSource(this.hours);
           this.dataSource.paginator = this.paginator;
@@ -39,8 +46,20 @@ export class ReportComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
   dateFilter(event) {
-    console.log(event);
+    if (this.dateFrom.value === null) {
+      this.dataSource.data = this.dataSource.data
+      .filter((item) => item.date <= this.dateTo.value);
+    }else if (this.dateTo.value === null) {
+      this.dataSource.data = this.dataSource.data
+      .filter((item) => item.date >= this.dateFrom.value);
+    }else {
+      this.dataSource.data = this.dataSource.data
+      .filter((item) => item.date >= this.dateFrom.value && item.date <= this.dateTo.value);
+    }
   }
   reload() {
+    this.dateFrom.reset();
+    this.dateTo.reset();
+    this.dataSource.data = this.hours;
   }
 }
