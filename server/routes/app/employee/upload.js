@@ -72,7 +72,8 @@ router.post('/', function (req, res) {
                   let newEmployeeId
                   if(employee.employeeId === ''){
                     EmployeeSchema.findMax((err, res) => {
-                      newEmployeeId = res[0] +1;
+                      console.log()
+                      newEmployeeId = res[0].employeeId + 1;
                       employee.employeeId = newEmployeeId;
                     })
                     createEmployee(employee);
