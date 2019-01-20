@@ -69,10 +69,34 @@ router.post('/', function (req, res) {
                 // return res.sendStatus(200);
 
                 employees.map((employee) => {
+                  let newEmployeeId
                   if(employee.employeeId === ''){
-                    console.log(employee);
+                    EmployeeSchema.findMax((err, res) => {
+                      newEmployeeId = res[0] +1;
+                      employee.employeeId = newEmployeeId;
+                    })
+                    createEmployee(employee);
                   }
-                })
+                });
+                let counter = 0;
+                let duplicate = 0;
+                function createEmployee(employee) {
+                       EmployeeSchema.create(employee, (err, created) =>{
+                      if(err) {
+                        duplicate++
+                        console.log('err: '+ duplicate);
+                      }else{
+                        counter++;
+                      console.log('created: ' + counter);
+                      }
+                    });
+                }
+
+              respond(employees);
+
+              function respond(employee) {
+                res.status(200).json(employee);
+              }
             });
         });
 
