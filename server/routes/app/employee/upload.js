@@ -46,17 +46,6 @@ router.post('/', function (req, res) {
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', function(data){
                 data['_id'] = new mongoose.Types.ObjectId();
-                if(data['employeeId'] = ''){
-                  let newEmployeeId;
-                  EmployeeSchema.findMax((err, doc) => {
-                    if(err){
-                      res.status(400);
-                    }else {
-                      newEmployeeId = doc[0].employeeId + 1;
-                  }
-                });
-                  data['employeeId'] = newEmployeeId;
-                }
                 data['company'] = null;
                 data['payroll'] = null;
                 data['personal'] = null;
@@ -66,6 +55,17 @@ router.post('/', function (req, res) {
                 let counter = 0;
                 let duplicate = 0;
                 for ( i = 0; i < employees.length; i++){
+                  if(employees[i].employeeId = ''){
+                    let newEmployeeId;
+                    EmployeeSchema.findMax((err, doc) => {
+                      if(err){
+                        res.status(400);
+                      }else {
+                        newEmployeeId = doc[0].employeeId + 1;
+                    }
+                  });
+                    employee[i].employeeId = newEmployeeId;
+                  }
                     EmployeeSchema.create(employees[i], (err, created) =>{
                       if(err) {
                         duplicate++
