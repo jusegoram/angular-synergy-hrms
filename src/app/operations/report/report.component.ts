@@ -3,6 +3,7 @@ import { OperationsService } from '../operations.service';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { EmployeeHours } from '../../employee/Employee';
 import { FormControl } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-report',
@@ -61,5 +62,11 @@ export class ReportComponent implements OnInit {
     this.dateFrom.reset();
     this.dateTo.reset();
     this.dataSource.data = this.hours;
+  }
+  export() {
+    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, main, 'hours-info');
+    XLSX.writeFile(wb, 'export-hours.xlsx');
   }
 }

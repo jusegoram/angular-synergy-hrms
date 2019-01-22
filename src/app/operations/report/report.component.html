@@ -30,11 +30,9 @@
                 </div> -->
               </div>
               <div style="margin-left: 20px">
-                <a [routerLink]="['/', 'employee', 'new' ]">
-                  <button mat-icon-button>
+                  <button mat-icon-button (click)="export()">
                     <mat-icon>cloud_download</mat-icon>
                   </button>
-                </a>
                 <button mat-icon-button (click)="reload()">
                     <mat-icon>refresh</mat-icon>
                   </button>

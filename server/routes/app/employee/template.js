@@ -90,7 +90,7 @@ router.get('/family', function (req, res, next) {
         'celNumber',
         'telNumber',
         'emailAddress',
-        'adress',
+        'address',
     ];
 
     var csv = json2csv({ data: '', fields: fields });
