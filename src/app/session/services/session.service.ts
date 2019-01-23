@@ -206,4 +206,11 @@ export class SessionService {
         this.role = null;
         this.auth = false;
     }
+    getWeather() {
+      const weather = '3582677';
+      const appid = '8034784ce4c51bf0ab36b2cde7dda225';
+      let params = new HttpParams().set('id', weather);
+      params = params.set('appid', appid);
+      return this.http.get('http://api.openweathermap.org/data/2.5/weather', {params: params});
+    }
 }

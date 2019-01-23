@@ -99,11 +99,11 @@
               <h3 mat-subheader class="text-uppercase font-weight-bold">Weather</h3>
               <mat-list-item>
                 <a matLine href="javascript:;">{{ today | date:'shortTime' }}</a>
-                <p matLine class="mat-text-muted">London</p>
+                <p matLine class="mat-text-muted">{{weather?.name}}</p>
                 <span class="mat-h1 mr-1">
-                  <span class="pe-is-w-blizzard"></span>
+                  <span [ngClass]="weatherIcon"></span>
                 </span>
-                <span class="mat-h1">26°</span>
+                <span class="mat-h1">{{tempFahrenheit}}°F</span>
               </mat-list-item>
               <mat-divider></mat-divider>
             </mat-nav-list>

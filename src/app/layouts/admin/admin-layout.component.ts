@@ -23,6 +23,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   today: number = Date.now();
   url: string;
   showSettings = false;
+  weather: any;
+  tempFahrenheit: number;
+  weatherIcon: string;
   dark: boolean;
   boxed: boolean;
   collapseSidebar: boolean;
@@ -52,6 +55,11 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       this.url = event.url;
       this.runOnRouteChange();
     });
+    this.sessionService.getWeather().subscribe(data => {
+      this.weather = data;
+      this.switchWeatherIcon(this.weather.weather[0].icon);
+      this.tempFahrenheit = (this.weather.main.temp - 273.15) * 1.8 + 32;
+    });
   }
 
   ngOnDestroy(): void  {
@@ -77,7 +85,67 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       return this.mediaMatcher.matches;
     }
   }
+  switchWeatherIcon(icon) {
+    switch (icon) {
+      case '01d':
+      this.weatherIcon = 'pe-is-w-sun-1';
+        break;
+      case '02d':
+      this.weatherIcon = 'pe-is-w-partly-cloudy-1';
+        break;
+      case '03d':
+      this.weatherIcon = 'pe-is-w-mostly-cloudy-1';
+        break;
+      case '04d':
+      this.weatherIcon = 'pe-is-w-mostly-cloudy-2';
+        break;
+      case '09d':
+      this.weatherIcon = 'pe-is-w-drizzle';
+        break;
+      case '10d':
+      this.weatherIcon = 'pe-is-w-rain-day';
+        break;
+      case '11d':
+      this.weatherIcon = 'pe-is-w-thunderstorm-day-2';
+        break;
+      case '13d':
 
+        break;
+      case '50d':
+      this.weatherIcon = 'pe-is-w-fog-3';
+        break;
+
+      case '01n':
+      this.weatherIcon = 'pe-is-w-full-moon-3';
+        break;
+      case '02n':
+      this.weatherIcon = 'pe-is-w-partly-cloudy-2';
+        break;
+      case '03n':
+      this.weatherIcon = 'pe-is-w-mostly-cloudy-1';
+        break;
+      case '04n':
+      this.weatherIcon = 'pe-is-w-mostly-cloudy-2';
+        break;
+      case '09n':
+      this.weatherIcon = 'pe-is-w-drizzle';
+        break;
+      case '10n':
+      this.weatherIcon = 'pe-is-w-rain-night';
+        break;
+      case '11n':
+      this.weatherIcon = 'pe-is-w-thunderstorm-night-2';
+        break;
+      case '13n':
+
+        break;
+      case '50n':
+      this.weatherIcon = 'pe-is-w-fog-4';
+        break;
+      default: this.weatherIcon = 'pe-is-w-sun-1';
+        break;
+    }
+  }
   menuMouseOver(): void {
     if (this.mediaMatcher.matches && this.collapseSidebar) {
       this.sidemenu.mode = 'over';
