@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SessionService } from '../../session/services/session.service';
+import { UserService } from '../user.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-profile',
@@ -11,7 +13,7 @@ export class ProfileComponent implements OnInit {
   hide = true;
   name = '';
   changePwdForm: FormGroup;
-   constructor(private _session: SessionService) {
+   constructor(private _session: SessionService, private _userService: UserService, private snackBar: MatSnackBar) {
      this.name = this._session.getName();
    }
 
@@ -42,7 +44,18 @@ export class ProfileComponent implements OnInit {
       newPassword: this.changePwdForm.value.confirmPassword
     };
     if (query.password && query.newPassword) {
-      console.log(query);
+      this._userService.updateUser(query).subscribe(data => {
+        console.log(data);
+        this.openSnackBar('Password changed successfully', 'thanks!');
+      }, error => {
+        this.openSnackBar('Your password is wrong', 'Try again');
+      });
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 }

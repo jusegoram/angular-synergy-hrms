@@ -16,19 +16,20 @@ router.get('/', (req, res, next)=>{
   });
 });
 
-router.put('/', (req, res, next)=>{
-  let query = req.body.query;
-  if('password' in query) {
-    let newPassword;
-    newPasswordHash = bcrypt.hashSync(query.newPassword, 10);
-    query.newPassword = newPasswordHash;
-  }
-  let id = mongoose.mongo.ObjectId(req.query._id);
-  console.log(id);
-  User.findById(id).select('+password').exec((err, doc) =>{
+router.put('/password', (req, res, next)=>{
+  let query = req.body;
+  let id = mongoose.mongo.ObjectId(req.body._id);
+  User.findById(req.body._id).select('+password').exec((err, doc) =>{
     if (err) res.status(500).json(err);
     else if (bcrypt.compareSync(query.password, doc.password)) {
-        doc.password = query.newPassword;
+        doc.set({password: bcrypt.hashSync(query.newPassword, 10)});
+        console.log(doc.password);
+        doc.save((error, updated) =>{
+          if (error) res.status(500).json(error);
+          else (res.status(200).json('updated'))
+        })
+    }else{
+      res.status(500).json({message: 'password incorrect'})
     }
   });
 });

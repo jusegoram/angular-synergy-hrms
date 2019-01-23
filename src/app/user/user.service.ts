@@ -11,10 +11,10 @@ export class UserService {
 
   //TODO:
 
-  updateUser(id, query) {
-    const body = JSON.stringify({_id: id, query: { query }});
+  updateUser(query) {
+    const body = JSON.stringify(query);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.put('/api/v1/employee/main', body, { headers: headers});
+    return this.http.put('/api/v1/user/password', body, { headers: headers});
   }
 
   submitClaim() {

@@ -36,20 +36,14 @@ export class SigninComponent implements OnInit {
         () => {
           this.router.navigate([this.return]);
         }, (err) => {
-          this.openSnackBar('test', 'try again!');
+          this.openSnackBar('Sorry your username or password is wrong', 'try again');
         });
     }
   }
-  testButton() {
-    this.openSnackBar('test', 'test');
-    console.log('test');
-    this.snackBar.open('test', 'test', {
-      duration: 2000,
-    });
-  }
+
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 2000,
+      duration: 5000,
     });
   }
 }

@@ -2,7 +2,6 @@
  ------------------------------------------*/
 .session {
   position: relative;
-  z-index: 4000;
   min-height: 100vh;
   @include flexbox;
   @include flex-direction(column);
