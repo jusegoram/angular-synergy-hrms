@@ -6,7 +6,7 @@ var schema = new Schema({
     firstName: {type: String, required: true},
     middleName:{type: String, required: false },
     lastName: {type: String, required: true},
-    password: {type: String, required: true},
+    password: {type: String, required: true, select: false },
     username: {type: String, required: true, unique: true},
     role: {type: Number, required: true},
     creationDate : {type: Date, required: true },

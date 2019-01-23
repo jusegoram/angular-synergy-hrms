@@ -15,11 +15,11 @@ let EmployeeSchema = new Schema({
     company: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Company' , required: false },
     shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift', autopopulate: true},
     position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false, autopopulate: true},
-    payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false, autopopulate: true},
+    payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false},
     personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false, autopopulate: { maxDepth: 2 }},
     family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false, autopopulate: { maxDepth: 2 }},
-    education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false, autopopulate: { maxDepth: 2 }},
-    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false, autopopulate: { maxDepth: 2 }},
+    education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false},
+    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false}
 });
 
 EmployeeSchema.statics.findMax = function (callback) {

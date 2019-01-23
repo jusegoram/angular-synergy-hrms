@@ -27,13 +27,15 @@ export class EmployeeService {
   _departments: Observable<any> = null;
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
-  public items = [
+  public status = [
     { value: 'active', viewValue: 'Active' },
     { value: 'resignation', viewValue: 'Resignation' },
     { value: 'dissmisal', viewValue: 'Dissmisal' },
     { value: 'termination', viewValue: 'Termination' },
+    { value: 'on-hold', viewValue: 'On-Hold' },
+    { value: 'transfer', viewValue: 'Transfer' },
     { value: 'undefined', viewValue: 'Undefined' },
-    { value: 'trainee', viewValue: 'Trainee' }
+ //   { value: 'trainee', viewValue: 'Trainee' }
   ];
   public reaptimes = [
     {value: 0, viewValue: '0'},

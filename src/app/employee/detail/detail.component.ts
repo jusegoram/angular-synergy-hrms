@@ -40,7 +40,7 @@ export class DetailComponent implements OnInit {
       null, null,
       null, null);
     this.isNewCompany = false;
-    this.items = this.employeeService.items;
+    this.items = this.employeeService.status;
     this.reaptimes = this.employeeService.reaptimes;
     this.genders = this.employeeService.genders;
   }

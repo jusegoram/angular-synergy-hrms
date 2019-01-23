@@ -37,6 +37,7 @@ router.post('/', function (req, res) {
         upload(req, res, function (err) {
           let employees = [];
           let employeeFile = req.file;
+          let maxEmployeeId = null;
             if (err) {
             // An error occurred when uploading
                 return res.status(422).send("an Error occured");
@@ -44,28 +45,47 @@ router.post('/', function (req, res) {
              if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
                return res.status(400).send("Sorry only CSV files can be processed for upload");
             }
+            EmployeeSchema.findMax((maxErr, max) => {
+              if(maxErr){
+                console.log(maxErr);
+              }else {
+                maxEmployeeId = parseInt(max[0].employeeId, 10)
+                console.log(max);
+              }
+            });
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-            .on('data', function(data){
+            .on('data', (data) => {
+              console.log('onDataHook')
                 data['_id'] = new mongoose.Types.ObjectId();
                 data['company'] = null;
                 data['payroll'] = null;
                 data['personal'] = null;
                 employees.push(data);
             })
-            .on('end', function(result){
+            .on('end', (result) => {
+              console.log('onEndHook');
                 let counter = 0;
                 let duplicate = 0;
-                for ( i = 0; i < employees.length; i++){
-                    EmployeeSchema.create(employees[i], (err, created) =>{
-                      if(err) {
-                        duplicate++
-                        console.log('err: '+ duplicate);
-                      }else{
-                        counter++;
-                      console.log('created: ' + counter);
-                      }
-                    });
-                }
+                // for ( i = 0; i < employees.length; i++){
+
+                // }
+                async.each(employees, function(employee, callback) {
+                  maxEmployeeId++;
+                  if(employee.employeeId === ''){
+                    employee.employeeId = maxEmployeeId;
+                  }
+                   EmployeeSchema.create(employee, (err, created) =>{
+                    if(err) {
+                      duplicate++
+                      console.log('err: '+ duplicate);
+                      callback();
+                    }else{
+                      counter++;
+                    console.log('created: ' + counter);
+                      callback();
+                    }
+                  });
+                });
                 console.log('--EMPLOYEE CREATION-- Employees created: '+counter+' Duplicates found: '+duplicate);
                 return res.sendStatus(200);
             });

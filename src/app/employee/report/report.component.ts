@@ -22,7 +22,7 @@ export class ReportComponent implements OnInit {
   constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
     this.campaigns = [];
-    this.status = this.employeeService.items;
+    this.status = this.employeeService.status;
   }
   ngOnInit() {
     this.employeeService.getClient().subscribe(data => this.clients = data);
@@ -88,10 +88,8 @@ export class ReportComponent implements OnInit {
     /* generate worksheet */
     const shiftInfo: any[] = [];
     const positionInfo: any[] = [];
-    const payrollInfo: any[] = [];
     const personalInfo: any[] = [];
     const familyInfo: any[] = [];
-    const commentsInfo: any[] = [];
     const orgData: any[] = [];
     const data: any = this.dataSource.data;
     data.forEach(element => {
@@ -118,16 +116,10 @@ export class ReportComponent implements OnInit {
           familyInfo.push(familyItem);
         });
       }
-      if (typeof element.comments !== 'undefined' && element.comments !== null) {
-        element.comments.forEach(commentItem => {
-          commentsInfo.push(commentItem);
-        });
-      }
+
       console.log(element.payroll);
       (typeof element.shift !== 'undefined' && element.shift !== null)
       ? shiftInfo.push(element.shift) : noop();
-      (typeof element.payroll !== 'undefined' && element.payroll !== null)
-      ? payrollInfo.push(element.payroll) : noop();
       (typeof element.position !== 'undefined' && element.position !== null)
       ? positionInfo.push(element.position) : noop();
       (typeof element.personal !== 'undefined' && element.personal !== null)
@@ -145,26 +137,16 @@ export class ReportComponent implements OnInit {
 
     const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(orgData);
     const shift: XLSX.WorkSheet = XLSX.utils.json_to_sheet(shiftInfo);
-
-    const payroll: XLSX.WorkSheet = XLSX.utils.json_to_sheet(payrollInfo);
-    console.log(payrollInfo);
     const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);
-   // console.log(positionInfo);
     const personal: XLSX.WorkSheet = XLSX.utils.json_to_sheet(personalInfo);
-   // console.log(personalInfo);
     const family: XLSX.WorkSheet = XLSX.utils.json_to_sheet(familyInfo);
-   // console.log(familyInfo);
-    const comments: XLSX.WorkSheet = XLSX.utils.json_to_sheet(commentsInfo);
-   // console.log(commentsInfo);
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'main-info');
-    XLSX.utils.book_append_sheet(wb, payroll, 'payroll-info');
     XLSX.utils.book_append_sheet(wb, shift, 'shift-info');
     XLSX.utils.book_append_sheet(wb, position, 'position-info');
     XLSX.utils.book_append_sheet(wb, personal, 'personal-info');
     XLSX.utils.book_append_sheet(wb, family, 'family-info');
-    XLSX.utils.book_append_sheet(wb, comments, 'comments-info');
     /* save to file */
     XLSX.writeFile(wb, 'export-info.xlsx');
   }
