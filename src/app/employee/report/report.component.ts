@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
-import { noop } from '../../../../node_modules/rxjs';
+import { noop } from 'rxjs';
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',

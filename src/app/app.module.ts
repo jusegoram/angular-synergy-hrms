@@ -22,6 +22,7 @@ import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog
 import { RootGuard } from './session/guards/root.guard';
 
 
+
 export function tokenGetter() {
   return localStorage.getItem('id_token');
 }
@@ -38,7 +39,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
-    GuardDialogComponent
+    GuardDialogComponent,
   ],
   imports: [
     BrowserModule,
