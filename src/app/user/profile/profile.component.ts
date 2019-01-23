@@ -9,8 +9,11 @@ import { SessionService } from '../../session/services/session.service';
 })
 export class ProfileComponent implements OnInit {
   hide = true;
+  name = '';
   changePwdForm: FormGroup;
-   constructor(private _session: SessionService) { }
+   constructor(private _session: SessionService) {
+     this.name = this._session.getName();
+   }
 
   ngOnInit() {
     this.changePwdForm = new FormGroup({
