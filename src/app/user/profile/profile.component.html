@@ -40,7 +40,7 @@
             <mat-error *ngIf="changePwdForm.controls['confirmPassword'].errors?.mismatch">Password does not match the confirm password</mat-error>
           </mat-card-content>
       <mat-card-actions>
-        <button mat-button (click)="onSubmitPwdChange()"><mat-icon>save</mat-icon>
+        <button mat-button (click)="onSubmitPwdChange()" disabled="true"><mat-icon>save</mat-icon>
            Save Profile</button>
       </mat-card-actions>
     </mat-card>
