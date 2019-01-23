@@ -17,6 +17,6 @@ var schema = new Schema({
     birthPlaceTow: { type: String, required: false },
     emailAddress: { type: String, required: false },
     emailDate: {type: Date, required: false },
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: false },
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 module.exports = mongoose.model('Employee-Personal', schema);

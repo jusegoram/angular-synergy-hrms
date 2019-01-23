@@ -2,6 +2,15 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongooseUniqueValidator = require('mongoose-unique-validator');
 
+var roleSchema = new Schema({
+  role: { type: Number },
+  edit: { type: Boolean},
+  add: { type: Boolean},
+  delete: { type: Boolean},
+  view: { type: Boolean},
+  upload: { type: Boolean},
+});
+
 var schema = new Schema({
     firstName: {type: String, required: true},
     middleName:{type: String, required: false },

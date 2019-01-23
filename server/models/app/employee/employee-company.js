@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var schema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    employeeId: { type: String, required: true },
+    employeeId: { type: String, required: true, unique: true},
     client: { type: String, required: false}, //reports index
     campaign: { type: String, required: false }, //reports index
     supervisor: { type: String , required: false}, //reports index
