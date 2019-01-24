@@ -30,9 +30,11 @@ export class SigninComponent implements OnInit {
   }
 
   onSubmit() {
+    let username: string;
     const val = this.form.value;
     if (val.uname && val.password) {
-      this.sessionService.login(val.uname, val.password).subscribe(
+       username = val.uname;
+      this.sessionService.login(username.toLowerCase(), val.password).subscribe(
         () => {
           this.router.navigate([this.return]);
         }, (err) => {
