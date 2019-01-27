@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var mongooseUniqueValidator = require('mongoose-unique-validator');
+let mongooseAutopopulate = require("mongoose-autopopulate")
 
 var roleSchema = new Schema({
   role: { type: Number },
@@ -26,6 +27,7 @@ var schema = new Schema({
 
 });
 
+schema.plugin(mongooseAutopopulate);
 schema.plugin(mongooseUniqueValidator);
 
 module.exports = mongoose.model('Administration-User', schema);

@@ -35,7 +35,6 @@ export class EmployeeService {
     { value: 'termination', viewValue: 'Termination' },
     { value: 'on-hold', viewValue: 'On-Hold' },
     { value: 'transfer', viewValue: 'Transfer' },
-    { value: 'undefined', viewValue: 'Undefined' },
  //   { value: 'trainee', viewValue: 'Trainee' }
   ];
   public reaptimes = [
