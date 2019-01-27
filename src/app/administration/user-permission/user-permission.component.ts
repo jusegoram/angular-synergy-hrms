@@ -3,7 +3,7 @@ import { User } from '../../session/User';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatSnackBar, TooltipComponent } from '@angular/material';
+import { MatSnackBar, TooltipComponent, MatTableDataSource } from '@angular/material';
 import { AdminService } from '../services/admin.services';
 import {Observable} from 'rxjs/Observable';
 import { startWith, map } from 'rxjs/operators';
@@ -17,10 +17,12 @@ import { Employee } from '../../employee/Employee';
 export class UserPermissionComponent implements OnInit {
   myForm: FormGroup;
   employeeCtrl= new FormControl();
-  employees: Employee[];
+  employees: any[];
+  employeesMap: any[];
   selectedEmployee: Employee;
   selectedValue = 0;
   filteredEmployees: Observable<Employee[]>;
+  dataSource = new MatTableDataSource();
   items = [
     {value: 0, viewValue: 'Accountant'},
     {value: 1, viewValue: 'Manager'},
@@ -28,6 +30,7 @@ export class UserPermissionComponent implements OnInit {
     {value: 3, viewValue: 'Administrator'},
     {value: 4, viewValue: 'Super Administrator'}
   ];
+  displayedColumns = ['employeeID', 'name', 'status', 'details'];
       constructor(
         private sessionService: SessionService,
         private adminService: AdminService,
@@ -38,11 +41,19 @@ export class UserPermissionComponent implements OnInit {
         const filterValue = value.toString().toLowerCase();
         return this.employees.filter(
           employee => {
-            return employee['firstName']
+            return employee['fullSearchName']
                     .toLowerCase()
                     .includes(filterValue);
           });
       }
+    reload() {
+      this.adminService.clearUsers();
+      this.adminService.getUsers().subscribe(data => {
+        this.dataSource.data = data;
+      });
+    }
+    applyFilter() {
+    }
     onSubmit() {
           const log: object = {date: new Date(), log: 'User Creation'};
           console.log(log);
@@ -76,13 +87,20 @@ export class UserPermissionComponent implements OnInit {
       }
       setEmployee(employee: Employee) {
         this.selectedEmployee = employee;
+        this.verifyEmployee(employee);
       }
       getEmployee(): object {
         console.log(this.selectedEmployee);
         return this.selectedEmployee;
       }
       ngOnInit() {
+        this.adminService.getUsers().subscribe(data => {
+          this.dataSource.data = data;
+        });
         this.adminService.getEmployees().subscribe((data) => {
+          data.map((item) => {
+            item.fullSearchName = '(' + item.employeeId + ') ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
+          });
           this.employees = data;
         });
           this.myForm = new FormGroup({
@@ -90,8 +108,9 @@ export class UserPermissionComponent implements OnInit {
               middleName: new FormControl(null, Validators.required),
               lastName: new FormControl(null, Validators.required),
               role: new FormControl(null, Validators.required),
-              username: new FormControl(null, Validators.required),
-              password: new FormControl(null, Validators.required),
+              username: new FormControl(null, [Validators.required, Validators.email]),
+              password: new FormControl(null, [Validators.required, Validators.minLength(10)]),
+              confirmPassword: new FormControl(null, Validators.required),
           });
           this.employeeCtrl.setValidators(Validators.required);
           this.filteredEmployees = this.employeeCtrl.valueChanges
@@ -101,5 +120,30 @@ export class UserPermissionComponent implements OnInit {
               return this.employees ? this._filterEmployees(value) : this.employees;
              })
           );
+      }
+      verifyPassword() {
+        this.myForm.valueChanges.subscribe(field => {
+          if (this.myForm.value.password !== this.myForm.value.confirmPassword) {
+            this.myForm.controls.confirmPassword.setErrors({mismatch: true});
+          } else {
+            this.myForm.controls.confirmPassword.setErrors(null);
+          }
+        });
+      }
+      verifyEmployee(employee) {
+          if (employee.firstName !== this.myForm.value.firstName) {
+            this.employeeCtrl.setErrors({mismatch: true});
+          } else {
+            this.employeeCtrl.setErrors(null);
+          }
+      }
+      deleteUser(event) {
+        console.log(event);
+        this.adminService.deleteUser(event._id).subscribe(data => {
+          console.log(data);
+          this.reload();
+        }, error => {
+          console.log(error);
+        });
       }
 }

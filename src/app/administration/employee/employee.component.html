@@ -14,14 +14,14 @@
         <h4>(Search - Edit - Delete)  Employee's critical information</h4>
 
 
-            <mat-form-field>
+            <mat-form-field style="width:33.33%">
               <input matInput [formControl]="employeeCtrl" #employee [matAutocomplete]="auto" placeholder="Employee">
             </mat-form-field>
 
-            <mat-autocomplete #auto="matAutocomplete">
+            <mat-autocomplete #auto="matAutocomplete" >
               <mat-option *ngFor="let employee of filteredEmployees | async"
-              [value]="employee.firstName + ' ' + employee.lastName" (click)="setEmployee(employee)">
-                {{employee.firstName+ ' ' + employee.middleName + ' ' + employee.lastName}}
+               (click)="setEmployee(employee)">
+                {{employee.fullSearchName}}
               </mat-option>
             </mat-autocomplete>
         <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">

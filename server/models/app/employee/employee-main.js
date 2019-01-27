@@ -19,7 +19,8 @@ let EmployeeSchema = new Schema({
     personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false, autopopulate: { maxDepth: 2 }},
     family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false, autopopulate: { maxDepth: 2 }},
     education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false},
-    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false}
+    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false, autopopulate: true},
+    attrition: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Attrition' , required: false, autopopulate: true}
 });
 
 EmployeeSchema.statics.findMax = function (callback) {

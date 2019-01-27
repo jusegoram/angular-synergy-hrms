@@ -92,7 +92,9 @@ router.get('/usersInfoById', (req, res, next) => {
 });
 
 router.get('/allUsers', (req, res, next) => {
-  User.find({}, (err, doc)=> {
+  User.find()
+  .populate({path: 'employee', select: '-personal -company -payroll -comments -education -family -position -shift', model: 'employee-main'})
+  .exec((err, doc)=> {
     if(err){
       res.status(500).json(err);
     }else {
@@ -114,11 +116,13 @@ router.put('/user', (req, res, next) => {
 });
 
 router.delete('/user', (req, res, next) => {
-  let id = req.body._id;
+  let id = req.query._id;
+  console.log(id);
   User.remove({_id: id}, (err, doc) => {
     if(err){
       res.status(500).json(err);
     }else{
+      console.log(doc);
       res.status(200).json(doc);
     }
   });

@@ -42,7 +42,6 @@ export class CommentComponent implements OnInit {
       const data = this.dataSource.data;
       data.push(event);
       this.dataSource.data = data;
-      console.log(this.dataSource.data);
     } else { this.dataSource = new MatTableDataSource(event); }
   }
   editComment() {

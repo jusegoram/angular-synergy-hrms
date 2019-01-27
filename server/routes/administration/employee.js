@@ -165,23 +165,22 @@ router.get('/shift', function (req, res, next) {
 
 router.get('/employee', function (req, res, next) {
   console.log(req);
-  Employee.find({status: 'active'},
-      function (err, result) {
-      if (err) {
-          console.log(err);
-          return res.status(500).json({
-              title: 'An error occurred',
-              error: err
-          });
-      }if (result === null) {
-          return res.status(500).json({
-              title: 'Not found',
-              message: 'Employees are not active or not found'
-          });
-      }
-      console.log(result);
-      res.status(200).json(result);
-  });
+  Employee.find({status: 'active'})
+  .select('-personal -company -payroll -comments -education -family -position -shift')
+  .exec((err, result) => {
+    if (err) {
+        return res.status(500).json({
+            title: 'An error occurred',
+            error: err
+        });
+    }if (result === null) {
+        return res.status(500).json({
+            title: 'Not found',
+            message: 'Employees are not active or not found'
+        });
+    }
+    res.status(200).json(result);
+});
 });
 
 router.put('/update', (req, res) => {

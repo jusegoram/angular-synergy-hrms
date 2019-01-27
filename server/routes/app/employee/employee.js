@@ -15,7 +15,7 @@ let EmployeeEducation = require("../../../models/app/employee/employee-education
 let EmployeeComment = require("../../../models/app/employee/employee-comment");
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
 let EmployeeHours = require("../../../models/app/employee/employee-hour");
-
+let EmployeeAttrition = require("../../../models/app/employee/employee-attrition");
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
@@ -68,7 +68,10 @@ router.get('/main', function(req, res){
       .populate({
         path: 'comments',
         model: 'Employee-Comment',
-        populate: { path:'submittedBy', select:'firstName lastName', model:'Administration-User'},
+      })
+      .populate({
+        path: 'attrition',
+        model: 'Employee-Attrition',
       })
       .exec((err, result) => {
         if (err) res.status(500);
@@ -588,6 +591,34 @@ router.post('/comment', function(req, res, next){
   }
 });
 
+router.post('/attrition', function(req, res, next){
+  if (req.body.employeeId){
+    let id = new mongoose.Types.ObjectId();
+    let newAttrition = new EmployeeAttrition({
+      _id: id,
+      employeeId: req.body.employeeId,
+      reason1: req.body.reason1,
+      reason2: req.body.reason2,
+      comment: req.body.comment,
+      commentDate: req.body.commentDate,
+      submittedBy: req.body.submittedBy,
+      employee: req.body.employee
+    });
+    newAttrition.save(function (err, result){
+      if (err) {
+        return res.status(500).json({
+          title: 'An error occurred',
+          error: err
+        });
+      }
+      Employee.update({_id: newAttrition.employee}, {$push: { attrition: newAttrition }}, function(err){
+      });
+      return res.status(200).json(result);
+    });
+  } else {
+    return res.status(400).message('sorry, the request was either empty or invalid');
+  }
+});
 router.get('/latestPosition', function(req, response ){
    let latest = EmployeePosition.latestPosition(req.query.id, function(err, res){
         if(err){

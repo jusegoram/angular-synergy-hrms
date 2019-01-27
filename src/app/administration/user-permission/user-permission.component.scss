@@ -7,6 +7,8 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media ($mat-xsmall) and (orientation: portrait) {
@@ -38,4 +40,10 @@ mat-form-field {
 .container{
   width: 690px;
   margin: 0 auto;
+}
+.container2{
+  width: 690px;
+}
+.full-width {
+  width: 100%;
 }

@@ -9,12 +9,14 @@ import { Employee } from '../../employee/Employee';
 
 @Injectable()
 export class AdminService {
+
     constructor(private http: Http, protected httpClient: HttpClient) { }
     siteURI = environment.siteUri;
     _departments: Observable<any> = null;
     _clients: Observable<any> = null;
     _shifts: Observable<any> = null;
     _employees: Observable<any> = null;
+    _users: Observable<any> = null;
   getDepartment(): Observable<any> {
     if (!this._departments) {
       this._departments = this.httpClient.get<any>('/api/v1/admin/payroll/department').pipe(
@@ -31,7 +33,18 @@ export class AdminService {
     }
     return this._departments;
   }
-
+  getUsers(): Observable<any> {
+    if (!this._users) {
+      this._users = this.httpClient.get<any>('/api/v1/allUsers').pipe(
+        map((data) => {
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this._users;
+  }
   saveDepartment(department: Department) {
     const body = JSON.stringify(department);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -138,6 +151,13 @@ export class AdminService {
     return this.httpClient.delete('/api/v1/admin/employee/delete', { headers: headers, params: params });
   }
 
+  deleteUser(param: any): any {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams()
+    .set('_id', param);
+    return this.httpClient.delete('/api/v1/user', { headers: headers, params: params });
+  }
+
   minutesToTime(shift): object[] {
     const fixedShift = [];
     for (const day of shift) {
@@ -170,5 +190,9 @@ export class AdminService {
     return fixedShift;
   }
   TimeToMinutes(shift) {
+  }
+
+  clearUsers() {
+    this._users = null;
   }
 }

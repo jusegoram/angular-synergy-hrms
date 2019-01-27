@@ -27,6 +27,7 @@ import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog
 import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/family-edit-dialog.component';
 import {EmployeeResolver} from './services/employee.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
+import { AttritionComponent } from './detail/attrition/attrition.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { ShiftComponent } from './detail/shift/shift.component';
     PayrollEditDialogComponent,
     FamilyEditDialogComponent,
     PersonalEditDialogComponent,
-    ShiftComponent
+    ShiftComponent,
+    AttritionComponent
     ],
     entryComponents: [
       DialogComponent,

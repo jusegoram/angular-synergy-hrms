@@ -1,7 +1,8 @@
 import {
   Employee, EmployeeCompany, EmployeePayroll,
   EmployeePersonal, EmployeePosition, EmployeeFamily,
-  EmployeeComment } from '../Employee';
+  EmployeeComment,
+  EmployeeAttrition} from '../Employee';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
@@ -287,6 +288,11 @@ export class EmployeeService {
     const body = JSON.stringify(comment);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post('/api/v1/employee/comment', body, { headers: headers });
+  }
+  saveAttrition(com: EmployeeAttrition) {
+    const body = JSON.stringify(com);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/employee/attrition', body, { headers: headers });
   }
   saveShift(employeeShift: any) {
     const body = JSON.stringify(employeeShift);

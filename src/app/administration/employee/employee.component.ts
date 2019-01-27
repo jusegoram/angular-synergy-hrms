@@ -11,7 +11,7 @@ import { FormControl } from '@angular/forms';
 })
 export class EmployeeComponent implements OnInit {
   employeeCtrl= new FormControl();
-  employees: Employee[];
+  employees: any[];
   selectedEmployee: Employee;
   filteredEmployees: Observable<Employee[]>;
 
@@ -22,6 +22,9 @@ export class EmployeeComponent implements OnInit {
 
   ngOnInit() {
     this.adminService.getEmployees().subscribe((data) => {
+      data.map((item) => {
+        item.fullSearchName = '(' + item.employeeId + ') ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
+      });
       this.employees = data;
     });
     this.filteredEmployees = this.employeeCtrl.valueChanges
@@ -34,7 +37,7 @@ export class EmployeeComponent implements OnInit {
   }
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
-    return this.employees.filter(employee => employee['firstName'].toLowerCase().includes(filterValue));
+    return this.employees.filter(employee => employee['fullSearchName'].toLowerCase().includes(filterValue));
   }
   setEmployee(employee: Employee) {
     this.selectedEmployee = employee;

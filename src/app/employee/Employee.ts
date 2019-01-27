@@ -15,7 +15,9 @@ export class Employee {
     public family?: Object,
     public education?: Object,
     public comments?: Object,
-    public shift?: Object
+    public attrition ?: Object,
+    public shift?: Object,
+    public fullSearchName?: string,
             ) { }
   }
 
@@ -100,6 +102,19 @@ export class EmployeeComment {
   constructor(
 public _id: string,
 public employeeId: string,
+public comment: string,
+public commentDate: Date,
+public submittedBy: string,
+public employee: string
+  ) { }
+}
+
+export class EmployeeAttrition {
+  constructor(
+public _id: string,
+public employeeId: string,
+public reason1: string,
+public reason2: string,
 public comment: string,
 public commentDate: Date,
 public submittedBy: string,
