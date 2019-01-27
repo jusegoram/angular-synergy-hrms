@@ -52,7 +52,7 @@ export class UserPermissionComponent implements OnInit {
         this.dataSource.data = data;
       });
     }
-    applyFilter() {
+    applyFilter(arg) {
     }
     onSubmit() {
           const log: object = {date: new Date(), log: 'User Creation'};
