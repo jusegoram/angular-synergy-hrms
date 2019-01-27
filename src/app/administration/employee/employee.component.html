@@ -20,7 +20,7 @@
 
             <mat-autocomplete #auto="matAutocomplete" >
               <mat-option *ngFor="let employee of filteredEmployees | async"
-               (click)="setEmployee(employee)">
+               [value]="employee.fullSearchName"(click)="setEmployee(employee)">
                 {{employee.fullSearchName}}
               </mat-option>
             </mat-autocomplete>

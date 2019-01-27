@@ -35,7 +35,8 @@ const empUploadRoutes = require('./server/routes/app/employee/upload');
 const empTemplateRoutes = require('./server/routes/app/employee/template');
 const empRoutes = require('./server/routes/app/employee/employee');
 const empReportRoutes = require('./server/routes/app/employee/reports');
-const appUserRoutes = require('./server/routes/app/user/user')
+const appUserRoutes = require('./server/routes/app/user/user');
+const appPayrollRoutes = require('./server/routes/app/payroll/payroll');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
@@ -96,6 +97,7 @@ app.use('/api/v1/employee/report', empReportRoutes);
 app.use('/api/v1/employee/template', empTemplateRoutes);
 
 app.use('/api/v1/user', appUserRoutes);
+app.use('/api/v1/payroll', appPayrollRoutes);
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.
