@@ -4,6 +4,7 @@ import { AdminService } from '../../services/admin.services';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
+import { C } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-workpattern',
@@ -128,9 +129,13 @@ export class WorkpatternComponent implements OnInit {
     });
   }
   openEditDialog(event, day): void {
+    let editDay = null;
+    let dayNum: number;
+    dayNum = day;
+    editDay = this.currentwp.shift[dayNum];
     const dialogRef = this.dialog.open(EditDialogComponent, {
       width: '500px',
-      data: this.currentwp.shift[day],
+      data: editDay,
     });
 
     dialogRef.afterClosed().subscribe(result => {
