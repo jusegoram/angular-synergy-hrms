@@ -129,6 +129,8 @@ export class WorkpatternComponent implements OnInit {
     });
   }
   openEditDialog(event, day): void {
+    console.log(event);
+    console.log(day);
     let editDay = null;
     let dayNum: number;
     dayNum = day;

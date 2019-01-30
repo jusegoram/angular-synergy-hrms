@@ -11,7 +11,6 @@ export class EditDialogComponent {
 
   constructor( public dialogRef: MatDialogRef<EditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Day) {
-      console.log(data);
     }
 
   onShiftChange() {
