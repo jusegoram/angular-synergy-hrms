@@ -1,8 +1,8 @@
 @import "../../../assets/styles/scss/material.variables";
 
-$mat-toolbar-height-desktop: 142px !default;
-$mat-toolbar-height-mobile-portrait: 136px !default;
-$mat-toolbar-height-mobile-landscape: 128px !default;
+$mat-toolbar-height-desktop: 128px !default;
+$mat-toolbar-height-mobile-portrait: 120px !default;
+$mat-toolbar-height-mobile-landscape: 112px !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);

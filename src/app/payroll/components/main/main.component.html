@@ -1,7 +1,43 @@
-<div class="pa-1">
-  <h1> Payroll Management</h1>
-  <mat-card class="pa-1">
+<mat-toolbar class="header"  color="primary">
+    <mat-toolbar-row>
+        <span>Payroll Management</span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <mat-toolbar>
+    <mat-toolbar-row>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
 
-</mat-card>
+  </mat-toolbar>
+  <br/>
+<div class="mat-card-top container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+  <mat-form-field appearance="outline">
+      <mat-select placeholder="Type of Payroll">
+          <mat-option *ngFor="let item of items" [value]="item.value">
+            {{item.viewValue}}
+          </mat-option>
+        </mat-select>
+  </mat-form-field>
 
+  <div class="fill-remaining-space"></div>
+  <mat-form-field appearance="outline">
+    <input matInput [matDatepicker]="pickerFrom" placeholder="Get from (mm/dd/yyyy)">
+    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+    <mat-datepicker #pickerFrom></mat-datepicker>
+  </mat-form-field>
+&nbsp;
+  <mat-form-field appearance="outline">
+    <input matInput [matDatepicker]="pickerTo" placeholder="To (mm/dd/yyyy)">
+    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+    <mat-datepicker #pickerTo></mat-datepicker>
+  </mat-form-field>
+</div>
+
+<div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+  <button mat-button><mat-icon>attach_money</mat-icon> Load Bonuses</button>
+  <button mat-button><mat-icon>money_off</mat-icon> Load Deductions</button>
+  <div class="fill-remaining-space"></div>
+  <button mat-button color="green"><mat-icon>assignment</mat-icon> Run Payroll</button>
 </div>

@@ -12,6 +12,8 @@ import { ClientComponent } from './employee/client/client.component';
 import { WorkpatternComponent } from './employee/workpattern/workpattern.component';
 import { PositionComponent } from './employee/position/position.component';
 import { DashboardComponent } from './employee/dashboard/dashboard.component';
+import { NewDialogComponent } from './employee/workpattern/new-dialog/new-dialog.component';
+import { EditDialogComponent } from './employee/workpattern/edit-dialog/edit-dialog.component';
 
 @NgModule({
   imports: [
@@ -28,8 +30,11 @@ import { DashboardComponent } from './employee/dashboard/dashboard.component';
     ClientComponent,
     WorkpatternComponent,
     PositionComponent,
-    DashboardComponent
+    DashboardComponent,
+    NewDialogComponent,
+    EditDialogComponent,
   ],
-  providers: [AdminService]
+  providers: [AdminService],
+  entryComponents: [NewDialogComponent, EditDialogComponent]
 })
 export class AdminModule { }

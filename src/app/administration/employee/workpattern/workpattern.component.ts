@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Workpattern, Day } from '../models/positions-models';
 import { AdminService } from '../../services/admin.services';
-import { MatSnackBar } from '@angular/material';
-import { shiftInitState } from '@angular/core/src/view';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { NewDialogComponent } from './new-dialog/new-dialog.component';
 
 @Component({
   selector: 'app-workpattern',
@@ -11,125 +12,158 @@ import { shiftInitState } from '@angular/core/src/view';
 })
 export class WorkpatternComponent implements OnInit {
   public wp: Workpattern[];
+  public currentwp: Workpattern;
+  public selectedshift: Workpattern;
+  public editDialog;
+  public newDialog;
+  constructor(private _admService: AdminService, private snackBar: MatSnackBar, public dialog: MatDialog) {
 
-  public currentWp: Workpattern;
-
-  public newWp: string;
-
-  public newShift: Day[];
-  public defaultWp: Workpattern;
-
-  selectedWp = 'New';
-
-  refreshShiftBut = false;
-  panelState = false;
-
-  constructor(private _admService: AdminService, private snackBar: MatSnackBar) {
-    this.defaultWp = {
-      state: 'default',
-      _id: '',
-      name: 'New',
-      shift: [
-        new Day(0, false, null, null), new Day(1, false, null, null),
-        new Day(2, false, null, null), new Day(3, false, null, null),
-        new Day(4, false, null, null), new Day(5, false, null, null),
-        new Day(6, false, null, null)]
-    };
-    this.currentWp = this.defaultWp;
   }
-
   ngOnInit() {
-    this.getSelectedWp();
     this.loadWorkPatterns();
+    console.log(this.wp);
   }
-  loadWorkPatterns() {
+
+   loadWorkPatterns() {
     this.wp = [];
     this._admService.getShift().subscribe((results: Workpattern[]) => {
       results.forEach((e) => this.wp.push(e));
-    });
-    this.currentWp = this.defaultWp;
-  }
-  getSelectedWp(): Workpattern {
-    let found: Workpattern;
-    const name = this.selectedWp;
-    if (this.wp) {
-      found = this.wp.find(result => {
-        return result.name === name;
-      });
-    } else {
-      found = this.defaultWp;
+    }, error => {
+      console.log(error);
     }
-    return found;
+    );
   }
 
-  onAddWp() {
-    if (this.currentWp.state === 'default') {
-      const element = new Workpattern('new', '', this.currentWp.name, this.currentWp.shift);
-      this.wp.push(element);
-      this.snackBar.open('Work pattern added, dont forget to click on save', 'thank you', {
-        duration: 2000,
-      });
+  editShift(id, propName , propValue) {
+    const edit = {};
+    edit['propName'] = propName;
+    edit['propValue'] = propValue;
+    this._admService.editShift(edit, id).subscribe(data => {
+      this.openSuccess();
+    }, error => {
+      this.openError();
+      console.error(error);
+    });
+  }
+  newShift(shift) {
+    this._admService.saveShift(shift).subscribe((data: Workpattern) => {
+      this._admService.minutesToTime(data.shift);
+      this.wp.push(data);
+      this.currentwp = data;
+      this.openSuccess();
+    }, error => {
+      this.openError();
+      console.error(error);
+    });
+  }
+  setSelection(event) {
+    if (event) {
+      this.currentwp = event;
     }
   }
-
-  onSaveWp(workpaterns) {
-    // for (let i = 0; i < this.wp.length; i++ ) {
-    //   if (this.wp[i].state === 'new') {
-    //     // save admService
-    //     this._admService.saveShift(this.wp[i])
-    //     .subscribe(result => {
-    //       this.wp[i].state = 'saved';
-    //     });
-    //   }else if (this.clients[i].state === 'saved') {
-    //     this._admService.updateShift(this.wp[i]).subscribe(result => {
-    //       this.wp[i].state = 'saved';
-    //     });
-    //   }
-    // }
-    const workpaternsCopy = JSON.parse(JSON.stringify(workpaterns));
-   workpaternsCopy.map(wp => {
-      this.timeToMinutes(wp.shift);
-    });
-    this.save(workpaternsCopy);
-      // workpaterns.forEach((wp, i) => {
-      //   if (i === workpaterns.length) {
-      //     this._admService.saveShift(wp)
-      //       .subscribe(data => {
-      //         this.snackBar.open('Information saved successfully', 'thank you', {
-      //           duration: 2000,
-      //         });
-      //         this.refreshShiftBut = true;
-      //       },
-      //       error => {
-      //         this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
-      //           duration: 2000,
-      //         });
-      //       });
-      //   }
-      // })
-    // );
+  openSuccess() {
+    this.openSnackBar('Great! Everything was done correctly', 'Ok');
+  }
+  openError() {
+    this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
 
   }
-   save(item) {
-    this._admService.saveShift(item)
-        .subscribe(data => {
-          this.snackBar.open('Information saved successfully', 'thank you', {
-            duration: 2000,
-          });
-          this._admService.clearShift();
-          this.loadWorkPatterns();
-        },
-        error => {
-          this.snackBar.open('Error saving information, please try again or notify the IT department', 'Try again', {
-            duration: 2000,
-          });
-          this._admService.clearShift();
-          this.loadWorkPatterns();
-        });
-   }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
+  }
+  openNewDialog(): void {
+    const newWorkPattern = new Workpattern('', '', '',
+              [{
+                day: 0,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 1,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 2,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 3,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 4,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 5,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              },
+              {
+                day: 6,
+                onShift: null,
+                startTime: '',
+                endTime: '',
+              }, ]);
+    const dialogRef = this.dialog.open(NewDialogComponent, {
+      width: '500px',
+      data: newWorkPattern
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.timeToMinutes(result.shift);
+      this.newShift(result);
+    });
+  }
+  openEditDialog(event, day): void {
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      width: '500px',
+      data: this.currentwp.shift[day],
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.onSaveWp();
+    });
+  }
+
   timeToMinutes(shift) {
       shift = shift.map((day) => {
-        let startTime = null;
+        this.dayTimeToMinutes(day);
+      });
+  }
+
+  onSaveWp() {
+    const workpatternCopy = JSON.parse(JSON.stringify(this.currentwp));
+      this.timeToMinutes(workpatternCopy.shift);
+      this.save(workpatternCopy, workpatternCopy._id);
+  }
+  save(item, id) {
+      this._admService.editShift(item, id)
+          .subscribe(data => {
+            this.openSuccess();
+            this._admService.clearShift();
+            this.loadWorkPatterns();
+          },
+          error => {
+            this.openError();
+            this._admService.clearShift();
+            this.loadWorkPatterns();
+          });
+     }
+  dayTimeToMinutes(day) {
+    let startTime = null;
         let endTime = null;
         if (day.startTime !== null) {
           const str: string = day.startTime;
@@ -147,38 +181,16 @@ export class WorkpatternComponent implements OnInit {
         }
         day.endTime = (endTime === null) ? null : endTime;
         day.startTime = (startTime === null) ? null : startTime;
-      });
   }
-  refreshWp() {
-    this.wp.forEach(result => {
-      result.shift.forEach(day => {
-        if (day.endTime !== '') {
-          const storedEnd = parseInt(day.endTime, 10);
-          const hoursEnd = Math.floor(storedEnd / 60);
-          const minutesEnd = storedEnd - (hoursEnd * 60);
-          day.endTime = hoursEnd + ':' + minutesEnd;
-        }
-        if (day.startTime !== '') {
-          const storedStart = parseInt(day.startTime, 10);
-          const hoursStart = Math.floor(storedStart / 60);
-          const minutesStart = storedStart - (hoursStart * 60);
-          day.startTime = hoursStart + ':' + minutesStart;
-        }
-      });
-      this.refreshShiftBut = false;
+  deleteWorkPattern() {
+    const i = this.wp.indexOf(this.currentwp);
+    this._admService.deleteShift(this.currentwp).subscribe(data => {
+      this.openSuccess();
+      this.wp.splice(i, 1);
+      this.currentwp = this.wp[i - 1];
+    }, error => {
+      this.openError();
+      console.log(error);
     });
-  }
-  setSelection(param: any) {
-    this.defaultWp = {
-      state: 'default',
-      _id: '',
-      name: 'New',
-      shift: [
-        new Day(0, false, null, null), new Day(1, false, null, null),
-        new Day(2, false, null, null), new Day(3, false, null, null),
-        new Day(4, false, null, null), new Day(5, false, null, null),
-        new Day(6, false, null, null)]
-    };
-    this.currentWp = param;
-  }
+   }
 }

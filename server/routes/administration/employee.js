@@ -79,50 +79,16 @@ router.put('/client', function ( req, res, next) {
     });
 });
 
-// router.post('/shift', function(req, res){
-//   var token = jwt.decode(req.query.token);
 
-//   var shift = new Shift.shift({
-//       _id: new mongoose.Types.ObjectId(),
-//       name: req.body.name,
-//       shift: req.body.shift
-//   });
-//   if(parseInt(token.user.role) === 4) {
-//   shift.save(function (err, result) {
-//       if (err) {
-//           return res.status(500).json({
-//               title: 'An error occurred',
-//               error: err
-//           });
-//       }
-//       res.status(200).json(result);
-//       });
-//   }else {
-//       res.status(400)
-//   }
-// });
 router.post('/shift', function(req, res, next){
-    const start = async () => {
-      await async.forEach(req.body, async (shift) => {
-        if (shift._id === '') {
-          delete shift['state'];
-          shift._id = new mongoose.Types.ObjectId();
-          let newShift = new Shift.shift(shift);
-          newShift.save();
-         } else {
-           Shift.shift.update({_id: shift._id}, {
-             $set: {
-               name: shift.name,
-              shift: shift.shift}}).exec(function(result2) {});
-         }
-      });
-      res.status(200).json({result: 'all done'});
-    }
 
-    start();
-//  shifts.forEach(element => {
-
-//   });
+  let shift = req.body;
+  shift._id = new mongoose.Types.ObjectId();
+  let newShift = new Shift.shift(shift);
+  newShift.save((err, doc) => {
+    if(err) res.status(500).json(err);
+    else res.status(200).json(doc)
+  });
 });
 
 router.get('/shift', function (req, res, next) {
@@ -148,20 +114,28 @@ router.get('/shift', function (req, res, next) {
   });
 });
 
-// router.put('/shift', function ( req, res, next) {
-//   Shift.shift.findById(req.query.id, function(err, doc) {
-//       doc.name = req.body.name;
-//       doc.shift = req.body.shift;
-//       doc.save();
-//       if (err) {
-//           return res.status(500).json({
-//               title: 'An error occurred',
-//               error: err
-//           });
-//       }
-//       res.status(200).json(doc);
-//   });
-// });
+router.put('/shift', function ( req, res, next) {
+  let edit = req.body;
+  Shift.shift.findById(req.query.id, function(err, doc) {
+      doc.name = edit.name;
+      doc.shift = edit.shift;
+      doc.save();
+      if (err) {
+          return res.status(500).json({
+              title: 'An error occurred',
+              error: err
+          });
+      }
+      res.status(200).json(doc);
+  });
+});
+
+router.delete('/shift', (req, res, next) => {
+  Shift.shift.deleteOne({_id: req.query._id}, (err, doc) =>{
+    if(err) res.status(500).json(err);
+    else res.status(200).json(doc);
+  })
+})
 
 router.get('/employee', function (req, res, next) {
   console.log(req);

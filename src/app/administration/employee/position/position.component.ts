@@ -9,13 +9,14 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./position.component.scss']
 })
 export class PositionComponent implements OnInit {
+  displayedColumns: string[] = ['positionId', 'name', 'wage', 'action'];
   public departments: Department[];
   public currentDep: Department;
 
   public newDep: string;
   public newPos: Position;
 
-  selectedDep = 'New';
+  selectedDep: Department;
 
   constructor(private _admService: AdminService, private snackBar: MatSnackBar) {
     this.newPos = new Position('', '', '', null);
@@ -23,13 +24,7 @@ export class PositionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.departments = [
-      { state: 'default',
-        _id: '',
-        name: 'New',
-        positions: []
-      }
-    ];
+    this.departments = [];
     this._admService.getDepartment().subscribe((results: Department[]) => {
       results.forEach(result => {
         this.departments.push(result);

@@ -12,7 +12,7 @@
       <input type="file" #fileInput ng2FileSelect [uploader]="uploader" />
     </span>
   <button mat-button mat-button-sm color="primary" type="button"
-          (click)="uploader.uploadAll()"> <mat-icon>file_upload</mat-icon>
+          (click)="uploader.uploadAll()" [disabled]="!this.auth"> <mat-icon>file_upload</mat-icon>
           Upload</button>
 </div>
   <button mat-button color="warn" disabled="true"><mat-icon>delete</mat-icon> Remove</button>

@@ -10,6 +10,7 @@ let csv = require('fast-csv');
 let Department = require('../../../models/administration/administration-department');
 let EmployeeSchema = require ('../../../models/app/employee/employee-main');
 let EmployeeHours = require ('../../../models/app/employee/employee-hour');
+let EmployeeKPI = require ('../../../models/app/employee/employee-kpi');
 let Position = require ('../../../models/app/employee/employee-position');
 let Personal = require ('../../../models/app/employee/employee-personal');
 let Payroll = require ('../../../models/app/employee/employee-payroll');
@@ -463,7 +464,6 @@ router.post('/hours', function (req, res) {
                   }else{
                     counter++;
                     if(res !== null){
-                      res.hours = hour._id;
                       hour.employee = res._id;
                       res.save();
                       callback();
@@ -482,6 +482,58 @@ router.post('/hours', function (req, res) {
           });
           console.log('upload finished');
           return res.status(200).send( counter + ' Registries of hours information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
+      });
+  });
+});
+
+router.post('/kpi', function (req, res) {
+  upload(req, res, function (err) {
+    let kpis = [];
+    let kpisFile = req.file;
+      if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+      }
+      if(kpisFile.mimetype !== 'application/vnd.ms-excel' && kpisFile.mimetype !== 'text/csv'){
+          return res.status(400).send("Sorry only CSV files can be processed for upload");
+      }
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', function(data){
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          kpis.push(data);
+
+      })
+      .on('end', function(){
+        let counter = 0;
+        let duplicate = 0;
+          async.each(kpis, function(kpi, callback){
+            EmployeeSchema.findOne({'employeeId': kpi.employeeId}, function(err, res){
+                  if(err){
+                    console.log(err);
+                      duplicate++
+                  }else{
+                    counter++;
+                    if(res !== null){
+                      kpi.employee = res._id;
+                      res.save();
+                      callback();
+                    }else{
+                      console.log('not found id: '+ kpi.employeeId);
+                      callback();
+                    }
+                  }
+              })
+          }, function(err){
+              if(err){
+                  console.log(err);
+              }else{
+                  EmployeeKPI.create(kpis).then(res => console.log(res)).catch(err => console.log(err));
+              }
+          });
+          console.log('upload finished');
+          return res.status(200).send( counter + ' Registries of kpi information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
       });
   });
 });

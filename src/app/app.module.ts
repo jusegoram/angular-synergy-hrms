@@ -23,6 +23,7 @@ import { RootGuard } from './session/guards/root.guard';
 
 
 
+
 export function tokenGetter() {
   return localStorage.getItem('id_token');
 }
@@ -55,7 +56,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: ['192.168.100.4:3000'],
+        whitelistedDomains: ['https://synergy.rccbpo.com'],
         authScheme: 'JWT '
       }
     }),

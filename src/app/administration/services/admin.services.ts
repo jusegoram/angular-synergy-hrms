@@ -10,6 +10,7 @@ import { Employee } from '../../employee/Employee';
 @Injectable()
 export class AdminService {
 
+
     constructor(private http: Http, protected httpClient: HttpClient) { }
     siteURI = environment.siteUri;
     _departments: Observable<any> = null;
@@ -116,11 +117,17 @@ export class AdminService {
     return this.httpClient.post('/api/v1/admin/employee/shift', body, { headers: headers});
   }
 
-  updateShift(shift: any) {
+  editShift(shift: any, id) {
     const body = JSON.stringify(shift);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const params = new HttpParams().set('id', shift._id);
+    const params = new HttpParams().set('id', id);
     return this.httpClient.put('/api/v1/admin/employee/shift', body, { headers: headers, params: params });
+  }
+  deleteShift(shift): any {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams()
+    .set('_id', shift._id);
+    return this.httpClient.delete('/api/v1/admin/employee/shift', { headers: headers, params: params });
   }
   getEmployees() {
     if (!this._employees) {

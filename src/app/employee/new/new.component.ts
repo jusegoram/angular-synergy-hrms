@@ -14,14 +14,7 @@ export class NewComponent implements OnInit {
   mainForm: FormGroup;
   companyForm: FormGroup;
   auth = false;
-  items = [
-    {value: 'active', viewValue: 'Active'},
-    {value: 'resignation', viewValue: 'Resignation'},
-    {value: 'dissmisal', viewValue: 'Dissmisal'},
-    {value: 'termination', viewValue: 'Termination'},
-    {value: 'undefined', viewValue: 'Undefined'},
-    {value: 'trainee', viewValue: 'Trainee'}
-  ];
+  items = this.employeeService.status;
   reaptimes = [
     {value: 0, viewValue: '0'},
     {value: 1, viewValue: '1'},

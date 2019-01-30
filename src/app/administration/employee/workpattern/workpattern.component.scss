@@ -1,0 +1,29 @@
+
+.container {
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+ }
+
+ .fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.mat-button-toggle-checked {
+  background-color: lightsalmon;
+}
+
+.fab-button {
+  z-index: 3000;
+  position: absolute;
+  right: 90px;
+  bottom: 20px;
+}
+
+.onshift {
+  background-color: lightgreen;
+}
+
+.dayoff {
+  background-color: lightcoral;
+}
