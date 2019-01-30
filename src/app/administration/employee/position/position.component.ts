@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Department, Position } from '../models/positions-models';
 import { AdminService } from '../../services/admin.services';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog, MatTableDataSource } from '@angular/material';
+import { CreateDepartmentDialogComponent } from './create-department-dialog/create-department-dialog.component';
+import { load } from '@angular/core/src/render3/instructions';
+import { EditPositionDialogComponent } from './edit-position-dialog/edit-position-dialog.component';
 
 @Component({
   selector: 'app-position',
@@ -12,109 +15,241 @@ export class PositionComponent implements OnInit {
   displayedColumns: string[] = ['positionId', 'name', 'wage', 'action'];
   public departments: Department[];
   public currentDep: Department;
-
+  dataSource: any;
   public newDep: string;
   public newPos: Position;
 
-  selectedDep: Department;
+  public editDep: boolean;
+  selectedDep: Department = null;
 
-  constructor(private _admService: AdminService, private snackBar: MatSnackBar) {
-    this.newPos = new Position('', '', '', null);
-
+  constructor(private _admService: AdminService, private snackBar: MatSnackBar, public dialog: MatDialog) {
+    this.clearNewPosition();
   }
-  newPosition() {
 
-  }
   ngOnInit() {
+    this.loadDepartments();
+  }
+  onChange(event) {
+    this.dataSource = new MatTableDataSource(event);
+  }
+  loadDepartments() {
     this.departments = [];
     this._admService.getDepartment().subscribe((results: Department[]) => {
       results.forEach(result => {
         this.departments.push(result);
+      }, error => {
+        console.error(error);
       });
     });
   }
-  getSelectedDep(): Department {
-    let found: Department;
-    const name = this.selectedDep;
-    found = this.departments.find(result => {
-      return result.name === name.name;
-    });
-    this.currentDep = found;
-    this.newDep = this.currentDep.name;
-    return found;
-  }
-  onAddDep() {
 
-    const i = this.departments.findIndex(result => {
-      return result.name === this.newDep;
-    });
-    if (i >= 0) {
-    this.currentDep.positions.push(this.newPos);
-      if (this.departments[i]._id !== '') {
-        this.departments[i].state = 'newPosition';
-      } else {
-        this.departments[i].state = 'new';
+  deleteDepartment(department: Department) {
+    const i = this.departments.indexOf(department);
+    this._admService.deleteDepartment(department._id).subscribe(result => {
+      this.departments.splice(i, 1);
+      this.selectedDep = this.departments[i - 1];
+      if (this.selectedDep) {
+        this.onChange(this.selectedDep.positions);
       }
-
-      this.departments[i].positions = this.currentDep.positions;
-
-    this.newPos = new Position('', '', '', null);
-    }else {
-      const submitted = new Department('new', '', this.newDep, []);
-      submitted.positions.push(this.newPos);
-      this.departments.push(submitted);
-      this.newPos = new Position('', '', '', null);
-    }
-  }
-  onChangesDep() {
-    const i = this.departments.findIndex(result => {
-      return result.name === this.newDep;
+      this.openSuccess();
+    }, error => {
+      console.error(error);
+      this.openError();
     });
-    if (this.departments[i]._id === '') {
-      this.departments[i].state = 'new';
-    } else if ( this.departments[i].state !== 'modified' ) {
-      this.departments[i].state = 'modified';
-    }
-
   }
 
-  onSaveDep() {
-    for (let i = 0; i < this.departments.length; i++ ) {
-      if (this.departments[i].state === 'new') {
-        // save admService
-        this._admService.saveDepartment(this.departments[i])
-        .subscribe(result => {
-          this.departments[i].state = 'saved';
+  editDepartment(department: Department) {
+    this._admService.updateDepartment(department).subscribe(result => {
+      console.log(result);
+      this.editDep = false;
+      this.openSuccess();
+    }, error => {
+      console.error(error);
+      this.openError();
+    });
+  }
+
+  openCreateDepartmentDialog() {
+    const newDepartment = new Department('', '', '', []);
+    const dialogRef = this.dialog.open(CreateDepartmentDialogComponent, {
+      width: '500px',
+      data: newDepartment,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.newDepartment(result);
+    });
+  }
+
+  newDepartment(department: Department) {
+    if (department.name !== '') {
+      this._admService.createDepartment(department).subscribe(
+        (result: Department) => {
+          this.departments.push(result);
+          this.selectedDep = result;
+          this.onChange(this.selectedDep.positions);
+        }, error => {
+          console.error(error);
+          this.openError();
         });
-      }else if (this.departments[i].state === 'newPosition') {
-        this._admService.savePosition(this.departments[i]).subscribe(
-          data => {
-            this.snackBar.open('Position information updated successfully', 'thank you', {
-              duration: 2000,
-            });
-            this.departments[i].state = 'saved';
-          },
-          error => {
-            this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
-              duration: 2000,
-            });
-          }
-        );
-      }else if (this.departments[i].state === 'modified') {
-        this._admService.updateDepartment(this.departments[i]).subscribe(
-          data => {
-            this.snackBar.open('Departments information updated successfully', 'thank you', {
-              duration: 2000,
-            });
-            this.departments[i].state = 'saved';
-          },
-          error => {
-            this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
-              duration: 2000,
-            });
-          }
-        );
-      }
+    }else {
+      this.openError();
     }
   }
+
+  editDepNameToggle() {
+    this.editDep = true;
+  }
+
+  openEditPositionDialog(position) {
+    let editPosition = null;
+    editPosition = position;
+    const dialogRef = this.dialog.open(EditPositionDialogComponent, {
+      width: '500px',
+      data: editPosition,
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      this.editPosition(result);
+    });
+  }
+
+  editPosition(position) {
+    const positions: Position[] = [];
+    positions.push(position);
+   this._admService.updatePosition(positions).subscribe(result => {
+     this.openSuccess();
+   }, error => {
+     console.error(error);
+     this.openError();
+   });
+  }
+
+  deletePosition(position) {
+    const i = this.selectedDep.positions.indexOf(position);
+    this._admService.deletePosition(position._id).subscribe(result => {
+      this.selectedDep.positions.splice(i, 1);
+      this.onChange(this.selectedDep.positions);
+      this.openSuccess();
+    }, error => {
+      this.openError();
+    });
+  }
+  newPosition(position) {
+    const newPosition = new Position('', position.positionId, position.name, position.baseWage);
+    if (newPosition.name !== '' && newPosition.positionId !== '' && newPosition.baseWage !== null) {
+    this._admService.createPosition(newPosition, this.selectedDep._id).subscribe((data: Department) => {
+      this._admService.clearDepartment();
+      this.loadDepartments();
+      this.openSuccess();
+      this.clearNewPosition();
+      this.selectedDep = data;
+      this.onChange(this.selectedDep.positions);
+    }, error => {
+      console.error(error);
+      this.openError();
+    });
+    } else {
+      this.openError();
+    }
+  }
+  clearNewPosition() {
+    this.newPos = null;
+    this.newPos = new Position('', '', '', null);
+  }
+  openSuccess() {
+    this.openSnackBar('Great! Everything was done correctly', 'Ok');
+  }
+  openError() {
+    this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
+
+  }
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
+  }
+  // getSelectedDep(): Department {
+  //   let found: Department;
+  //   const name = this.selectedDep;
+  //   found = this.departments.find(result => {
+  //     return result.name === name.name;
+  //   });
+  //   this.currentDep = found;
+  //   this.newDep = this.currentDep.name;
+  //   return found;
+  // }
+  // onAddDep() {
+
+  //   const i = this.departments.findIndex(result => {
+  //     return result.name === this.newDep;
+  //   });
+  //   if (i >= 0) {
+  //   this.currentDep.positions.push(this.newPos);
+  //     if (this.departments[i]._id !== '') {
+  //       this.departments[i].state = 'newPosition';
+  //     } else {
+  //       this.departments[i].state = 'new';
+  //     }
+
+  //     this.departments[i].positions = this.currentDep.positions;
+
+  //   this.newPos = new Position('', '', '', null);
+  //   }else {
+  //     const submitted = new Department('new', '', this.newDep, []);
+  //     submitted.positions.push(this.newPos);
+  //     this.departments.push(submitted);
+  //     this.newPos = new Position('', '', '', null);
+  //   }
+  // }
+  // onChangesDep() {
+  //   const i = this.departments.findIndex(result => {
+  //     return result.name === this.newDep;
+  //   });
+  //   if (this.departments[i]._id === '') {
+  //     this.departments[i].state = 'new';
+  //   } else if ( this.departments[i].state !== 'modified' ) {
+  //     this.departments[i].state = 'modified';
+  //   }
+
+  // }
+
+  // onSaveDep() {
+  //   for (let i = 0; i < this.departments.length; i++ ) {
+  //     if (this.departments[i].state === 'new') {
+  //       // save admService
+  //       this._admService.saveDepartment(this.departments[i])
+  //       .subscribe(result => {
+  //         this.departments[i].state = 'saved';
+  //       });
+  //     }else if (this.departments[i].state === 'newPosition') {
+  //       this._admService.savePosition(this.departments[i]).subscribe(
+  //         data => {
+  //           this.snackBar.open('Position information updated successfully', 'thank you', {
+  //             duration: 2000,
+  //           });
+  //           this.departments[i].state = 'saved';
+  //         },
+  //         error => {
+  //           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+  //             duration: 2000,
+  //           });
+  //         }
+  //       );
+  //     }else if (this.departments[i].state === 'modified') {
+  //       this._admService.updateDepartment(this.departments[i]).subscribe(
+  //         data => {
+  //           this.snackBar.open('Departments information updated successfully', 'thank you', {
+  //             duration: 2000,
+  //           });
+  //           this.departments[i].state = 'saved';
+  //         },
+  //         error => {
+  //           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+  //             duration: 2000,
+  //           });
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
 }

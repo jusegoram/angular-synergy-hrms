@@ -1,0 +1,18 @@
+<mat-dialog-content>
+
+  <mat-card-header>
+    <mat-card-title>Create new Department</mat-card-title>
+    <mat-card-subtitle>To create new department assign a name and click on save</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field appearance="outline">
+      <input matInput placeholder="Department Name" [(ngModel)]="data.name">
+    </mat-form-field>
+  </mat-card-content>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-icon-button color="primary" [mat-dialog-close]="data" matTooltip="Create new Department on database">
+    <mat-icon>save</mat-icon>
+  </button>
+</mat-dialog-actions>
