@@ -37,7 +37,7 @@ export class PositionComponent implements OnInit {
     let found: Department;
     const name = this.selectedDep;
     found = this.departments.find(result => {
-      return result.name === name;
+      return result.name === name.name;
     });
     this.currentDep = found;
     this.newDep = this.currentDep.name;
