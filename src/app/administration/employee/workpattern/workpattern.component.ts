@@ -166,14 +166,14 @@ export class WorkpatternComponent implements OnInit {
     let startTime = null;
         let endTime = null;
         if (day.startTime !== null) {
-          const str: string = day.startTime;
+          const str: string = day.startTime + '';
           const strArray = str.split(':');
           const hoursStr = parseInt(strArray[0], 10) * 60;
           const minutesStr = parseInt(strArray[1], 10);
           startTime = hoursStr + minutesStr;
         }
         if (day.endTime !== null) {
-          const end: string = day.endTime;
+          const end: string = day.endTime + '';
           const endArray = end.split(':');
           const hoursEnd = parseInt(endArray[0], 10) * 60;
           const minutesEnd = parseInt(endArray[1], 10);
