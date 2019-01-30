@@ -22,7 +22,9 @@ export class PositionComponent implements OnInit {
     this.newPos = new Position('', '', '', null);
 
   }
+  newPosition() {
 
+  }
   ngOnInit() {
     this.departments = [];
     this._admService.getDepartment().subscribe((results: Department[]) => {
