@@ -128,8 +128,7 @@ export class WorkpatternComponent implements OnInit {
       this.newShift(result);
     });
   }
-  openEditDialog(event, day): void {
-    console.log(event);
+  openEditDialog(day): void {
     console.log(day);
     let editDay = null;
     let dayNum: number;
