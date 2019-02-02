@@ -16,12 +16,18 @@ export class Employee {
     public education?: Object,
     public comments?: Object,
     public attrition ?: Object,
-    public shift?: Object,
+    public shift?: any,
     public fullSearchName?: string,
             ) { }
   }
 
 // updated as of april 22 7:08 2018
+
+export class EmployeeShift {
+  constructor(public _id: string,
+              public employeeId: string,
+              public shift: any) {}
+}
 export class EmployeePosition {
   constructor(public _id: string,
               public employeeId: string,

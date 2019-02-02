@@ -4,7 +4,6 @@ import { AdminService } from '../../services/admin.services';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
-import { C } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-workpattern',

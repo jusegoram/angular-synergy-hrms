@@ -15,7 +15,6 @@ import { PositionComponent } from '../employee/detail/position/position.componen
 import { MaterialSharedModule } from '../shared/material.shared.module';
 import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
 import { EmployeeService } from './services/employee.service';
-import { HttpModule } from '@angular/http';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
@@ -35,7 +34,6 @@ import { AttritionComponent } from './detail/attrition/attrition.component';
     CommonModule,
     EmployeeRoutingModule,
     MaterialSharedModule,
-    HttpModule,
     HttpClientModule,
     NgxDatatableModule,
     FileUploadModule,

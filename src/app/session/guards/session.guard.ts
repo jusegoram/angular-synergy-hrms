@@ -1,7 +1,7 @@
 import { SessionService } from '../services/session.service';
 import { Injectable } from '@angular/core';
 import { CanActivateChild, CanLoad, CanActivate, ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import {MatDialog, MatDialogConfig} from '@angular/material';
 import { GuardDialogComponent } from './guard-dialog/guard-dialog.component';
 @Injectable()

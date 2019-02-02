@@ -36,6 +36,16 @@ $mat-toolbar-height-mobile-landscape: 134px !default;
   }
 }
 
+
+.container {
+  width: 97%;
+  height: 400px;
+  overflow: auto;
+}
+
+table {
+  width: 2000px;
+}
 .header {
   width: 100% !important;
 }

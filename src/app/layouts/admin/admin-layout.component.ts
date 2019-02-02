@@ -1,9 +1,11 @@
+
+import {filter} from 'rxjs/operators';
 import { Menu } from './../../shared/menu-items/menu-items';
 import { Component, NgZone, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { MenuItems } from '../../shared/menu-items/menu-items';
-import { Subscription } from 'rxjs/Subscription';
-import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs';
+
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { SessionService } from '../../session/services/session.service';
@@ -43,14 +45,13 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router, public menuItems: MenuItems, zone: NgZone, private sessionService: SessionService) {
     this.mediaMatcher.addListener(mql => zone.run(() => {
-      this.mediaMatcher = mql;
     }));
   }
 
   ngOnInit(): void {
     this.menuItems.getActiveMenus().subscribe((menu) => this.menus = menu);
     this.url = this.router.url;
-    this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
+    this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       document.querySelector('.app-inner > .mat-drawer-content > div').scrollTop = 0;
       this.url = event.url;
       this.runOnRouteChange();

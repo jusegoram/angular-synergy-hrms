@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar, TooltipComponent, MatTableDataSource } from '@angular/material';
 import { AdminService } from '../services/admin.services';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Employee } from '../../employee/Employee';
 

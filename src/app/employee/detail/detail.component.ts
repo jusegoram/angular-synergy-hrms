@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import {Employee, EmployeeCompany, Position} from '../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Client } from '../../administration/employee/models/positions-models';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { async } from '@angular/core/testing';

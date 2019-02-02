@@ -110,10 +110,10 @@
    <button mat-raised-button color="primary" (click)="export()"><mat-icon>cloud_download</mat-icon>&nbsp; &nbsp; Export</button>
    <button mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>&nbsp; &nbsp; Clear</button>
   </div>
-   <mat-card class="pa-1" fxLayout="column" *ngIf="this.dataSource">
-    <mat-table #table [dataSource]="dataSource" matSort >
+   <mat-card class="pa-1 container" fxLayout="column" *ngIf="this.dataSource">
+    <table mat-table #table [dataSource]="dataSource" matSort >
 
-        <ng-container matColumnDef="employeeId">
+        <ng-container matColumnDef="employeeId" sticky>
             <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
           </ng-container>
@@ -128,8 +128,8 @@
           <mat-cell *matCellDef="let element"> {{element.middleName}} </mat-cell>
         </ng-container>
 
-      <ng-container matColumnDef="lastName">
-        <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
+      <ng-container matColumnDef="lastName" sticky>
+        <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell >
         <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
       </ng-container>
 
@@ -205,7 +205,7 @@
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </mat-table>
+    </table>
     </mat-card>
 </div>
 

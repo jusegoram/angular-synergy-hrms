@@ -75,14 +75,12 @@ export class ReportComponent implements OnInit {
           if (this.reportForm.value.statusCheck) {
             filtered = data.filter(res => res.status === this.queryForm.value.status);
             if (typeof filtered !== 'undefined') {
-              console.log(filtered);
               this.buildTable(filtered);
             }
           }else {
-            console.log(data);
             this.buildTable(data);
-          } // console.log(Object.getOwnPropertyNames(data[data.length - 1]));
-        }, error => { console.log(error); });
+          }
+        }, error => { console.error(error); });
   }
   export() {
     /* generate worksheet */
@@ -93,7 +91,7 @@ export class ReportComponent implements OnInit {
     const orgData: any[] = [];
     const data: any = this.dataSource.data;
     data.forEach(element => {
-      if (typeof element.shift !== 'undefined') {
+      if (typeof element.shift !== 'undefined' && element.shift.shift !== null) {
         const helperObj = element.shift.shift.shift;
         element.shift.name = element.shift.shift.name;
         element.shift.monday = ( helperObj[0].onShift) ?
@@ -117,7 +115,6 @@ export class ReportComponent implements OnInit {
         });
       }
 
-      console.log(element.payroll);
       (typeof element.shift !== 'undefined' && element.shift !== null)
       ? shiftInfo.push(element.shift) : noop();
       (typeof element.position !== 'undefined' && element.position !== null)

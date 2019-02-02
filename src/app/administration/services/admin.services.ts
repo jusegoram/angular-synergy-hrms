@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response, ResponseType, ResponseContentType } from '@angular/http';
 import { environment } from '../../../environments/environment';
 import { Department, Position, Client, Campaign } from '../employee/models/positions-models';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -16,7 +15,7 @@ export class AdminService {
   _employees: Observable<any> = null;
   _users: Observable<any> = null;
 
-  constructor(private http: Http, protected httpClient: HttpClient) { }
+  constructor( protected httpClient: HttpClient) { }
 
 
   createDepartment(department: Department) {

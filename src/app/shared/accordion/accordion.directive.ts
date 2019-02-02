@@ -1,6 +1,8 @@
+
+import {filter} from 'rxjs/operators';
 import { Directive, OnInit, AfterViewInit, AfterContentChecked } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import 'rxjs/add/operator/filter';
+
 
 import { AccordionLinkDirective } from './accordionlink.directive';
 
@@ -44,7 +46,7 @@ export class AccordionDirective implements AfterContentChecked {
   }
 
   ngAfterContentChecked(): void {
-    this.router.events.filter(event => event instanceof NavigationEnd).subscribe(e => this.checkOpenLinks());
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(e => this.checkOpenLinks());
   }
 
   constructor( private router: Router) {
