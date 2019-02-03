@@ -1,23 +1,30 @@
 
 <mat-toolbar class="header"  color="primary">
     <mat-toolbar-row>
-        <span>Reports</span>
+        <span>Workforce Reports</span>
         <span class="fill-remaining-space"></span>
     </mat-toolbar-row>
-    <mat-toolbar-row>
+    <mat-toolbar-row *ngIf="!this.dataSource">
     </mat-toolbar-row>
-    <mat-toolbar-row>
+    <mat-toolbar-row *ngIf="!this.dataSource">
       </mat-toolbar-row>
   </mat-toolbar>
-<div class="mat-card-top">
+<div class="mat-card-top" *ngIf="!this.dataSource">
    <mat-card class="pa-1">
-     <h3>Choose filter > Load > Preview > Export to excel</h3>
-     <mat-divider></mat-divider>
+     <mat-card-header>
+        <mat-card-title>
+          Select Filter Options
+        </mat-card-title>
+        <mat-card-subtitle>
+            Choose filter > Load > Preview > Export to excel
+        </mat-card-subtitle>
+     </mat-card-header>
       <div fxLayout="row">
      <form fxLayout="column" class="pa-2" [formGroup]="reportForm">
-       <mat-checkbox formControlName="statusCheck">Status</mat-checkbox>
+
+       <mat-slide-toggle color="primary" color="primary" color="primary" formControlName="statusCheck" >Status</mat-slide-toggle>
        <div fxLayout="row" [formGroup]="queryForm" *ngIf="this.reportForm.value.statusCheck">
-         <mat-form-field>
+         <mat-form-field appearance="outline">
          <mat-select placeholder="Choose Status" formControlName="status">
            <mat-option *ngFor="let item of status" [value]="item.value">
              {{item.viewValue}}
@@ -25,10 +32,10 @@
          </mat-select>
         </mat-form-field>
        </div>
-       <mat-checkbox formControlName="clientCheck">Client</mat-checkbox>
+       <mat-slide-toggle color="primary" color="primary" formControlName="clientCheck">Client</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.clientCheck" [formGroup]="queryForm">
 
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-select placeholder="Client Filter" name="item" formControlName="client" (selectionChange)="setCampaigns($event.value)">
               <mat-option *ngFor="let item of clients" [value]="item">
                 {{item.name}}
@@ -36,9 +43,9 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <mat-checkbox formControlName="campaignCheck" *ngIf="this.reportForm.value.clientCheck">Campaign</mat-checkbox>
+        <mat-slide-toggle color="primary" formControlName="campaignCheck" [disabled]="!this.reportForm.value.clientCheck">Campaign</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.campaignCheck && this.reportForm.value.clientCheck" [formGroup]="queryForm">
-          <mat-form-field>
+          <mat-form-field appearance="outline">
               <mat-select placeholder="Campaign Filter" name="item" formControlName="campaign" *ngIf="this.reportForm.value.campaignCheck">
                 <mat-option *ngFor="let item of campaigns" [value]="item">
                   {{item.name}}
@@ -49,164 +56,201 @@
 
      </form>
      <form fxLayout="column" class="pa-2" [formGroup]="reportForm">
-        <mat-checkbox formControlName="hireDateCheck">&nbsp;Hire Date</mat-checkbox>
+        <mat-slide-toggle color="primary" formControlName="hireDateCheck">&nbsp;Hire Date</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.hireDateCheck" [formGroup]="queryForm">
 
-             <mat-form-field>
+             <mat-form-field appearance="outline">
                <input matInput [matDatepicker]="pickerFrom" placeholder="From" formControlName="hireDateFrom">
                <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
                <mat-datepicker #pickerFrom></mat-datepicker>
              </mat-form-field>
 
-               <mat-form-field>
+               <mat-form-field appearance="outline">
                  <input matInput [matDatepicker]="pickerTo" placeholder="To" formControlName="hireDateTo">
                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
                  <mat-datepicker #pickerTo></mat-datepicker>
                </mat-form-field>
         </div>
-      <mat-checkbox formControlName="terminationDateCheck">&nbsp;Termination Date</mat-checkbox>
+      <mat-slide-toggle color="primary" formControlName="terminationDateCheck">&nbsp;Termination Date</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.terminationDateCheck" [formGroup]="queryForm">
 
-           <mat-form-field>
+           <mat-form-field appearance="outline">
              <input matInput [matDatepicker]="termPickerFrom" placeholder="From" formControlName="terminationDateFrom">
              <mat-datepicker-toggle matSuffix [for]="termPickerFrom"></mat-datepicker-toggle>
              <mat-datepicker #termPickerFrom></mat-datepicker>
            </mat-form-field>
 
-             <mat-form-field>
+             <mat-form-field appearance="outline">
                <input matInput [matDatepicker]="termPickerTo" placeholder="To" formControlName="terminationDateTo">
                <mat-datepicker-toggle matSuffix [for]="termPickerTo"></mat-datepicker-toggle>
                <mat-datepicker #termPickerTo></mat-datepicker>
              </mat-form-field>
       </div>
-        <mat-checkbox formControlName="managerCheck">&nbsp;Manager</mat-checkbox>
+        <mat-slide-toggle color="primary" formControlName="managerCheck">&nbsp;Manager</mat-slide-toggle>
        <div fxLayout="row" [formGroup]="queryForm" *ngIf="this.reportForm.value.managerCheck">
-         <mat-form-field>
+         <mat-form-field appearance="outline">
            <input matInput placeholder="Manager Name" formControlName="manager">
          </mat-form-field>
        </div>
-        <mat-checkbox formControlName="supervisorCheck">&nbsp;Supervisor</mat-checkbox>
+        <mat-slide-toggle color="primary" formControlName="supervisorCheck">&nbsp;Supervisor</mat-slide-toggle>
         <div fxLayout="row" [formGroup]="queryForm" *ngIf="this.reportForm.value.supervisorCheck">
-            <mat-form-field>
+            <mat-form-field appearance="outline">
               <input matInput placeholder="Supervisor Name" formControlName="supervisor">
             </mat-form-field>
           </div>
      </form>
      <form fxLayout="column" class="pa-2" [formGroup]="reportForm">
-        <mat-checkbox formControlName="trainingGroupCheck">&nbsp;Training Group</mat-checkbox>
+        <mat-slide-toggle color="primary" formControlName="trainingGroupCheck">&nbsp;Training Group</mat-slide-toggle>
         <div fxLayout="row" [formGroup]="queryForm" *ngIf="this.reportForm.value.trainingGroupCheck">
-            <mat-form-field>
+            <mat-form-field appearance="outline">
               <input matInput placeholder="Training Group Name" formControlName="trainingGroup">
             </mat-form-field>
-            <mat-form-field>
+            <mat-form-field appearance="outline">
                 <input matInput placeholder=" Training Group No." formControlName="trainingNo">
               </mat-form-field>
           </div>
      </form>
      </div>
+
+     <h4>Choose the information you want to export</h4>
+     <div style="width: 100%; margin: 0 auto">
+            <mat-button-toggle [value]="">
+                Main Information
+            </mat-button-toggle>
+            <mat-button-toggle [value]="">
+                Company Information
+            </mat-button-toggle>
+            <mat-button-toggle [value]="">
+               Shift Information
+           </mat-button-toggle>
+           <mat-button-toggle [value]="">
+               Position Information
+           </mat-button-toggle>
+           <mat-button-toggle [value]="">
+               Attrition Information
+           </mat-button-toggle>
+           <mat-button-toggle [value]="">
+               Personal Information
+           </mat-button-toggle>
+           <mat-button-toggle [value]="">
+               Family Information
+           </mat-button-toggle>
+     </div>
+
+     <button mat-button color="primary" (click)="getReport()" *ngIf="!this.dataSource"> <mat-icon>autorenew</mat-icon>&nbsp; &nbsp; Load Information</button>
    </mat-card>
-   <div class="center-block">
-   <button mat-raised-button color="accent" (click)="getReport()"> <mat-icon>autorenew</mat-icon>&nbsp; &nbsp; Load</button>
-   <button mat-raised-button color="primary" (click)="export()"><mat-icon>cloud_download</mat-icon>&nbsp; &nbsp; Export</button>
-   <button mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>&nbsp; &nbsp; Clear</button>
   </div>
-   <mat-card class="pa-1 container" fxLayout="column" *ngIf="this.dataSource">
-    <table mat-table #table [dataSource]="dataSource" matSort >
 
-        <ng-container matColumnDef="employeeId" sticky>
-            <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
+   <div class="pa-1" *ngIf="this.dataSource">
+       <mat-card-header>
+         <mat-card-title>Data Preview</mat-card-title>
+         <mat-card-subtitle>to export to Excel click on the export button </mat-card-subtitle>
+       </mat-card-header>
+    <div class="container">
+        <table mat-table #table [dataSource]="dataSource" matSort >
+
+            <ng-container matColumnDef="employeeId">
+                <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.employeeId}} </mat-cell>
+              </ng-container>
+
+            <ng-container matColumnDef="firstName" >
+                <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="middleName" >
+              <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.middleName}} </mat-cell>
+            </ng-container>
+
+          <ng-container matColumnDef="lastName">
+            <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell >
+            <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
           </ng-container>
 
-        <ng-container matColumnDef="firstName">
-            <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
+          <ng-container matColumnDef="gender">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Gender </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="middleName">
-          <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.middleName}} </mat-cell>
-        </ng-container>
-
-      <ng-container matColumnDef="lastName" sticky>
-        <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell >
-        <mat-cell *matCellDef="let element"> {{element.lastName}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="gender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Gender </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.gender}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="socialSecurity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.status}}</mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="client">
-            <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
+          <ng-container matColumnDef="socialSecurity">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Social Security </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
           </ng-container>
 
-        <ng-container matColumnDef="campaign">
-            <mat-header-cell *matHeaderCellDef>Campaign</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.campaign}} </mat-cell>
+          <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.status}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="client">
+                <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
+              </ng-container>
+
+            <ng-container matColumnDef="campaign">
+                <mat-header-cell *matHeaderCellDef>Campaign</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.campaign}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="manager">
+              <mat-header-cell *matHeaderCellDef>Manager</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.manager}} </mat-cell>
+            </ng-container>
+
+          <ng-container matColumnDef="supervisor">
+            <mat-header-cell *matHeaderCellDef>Supervisor</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.supervisor}} </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="manager">
-          <mat-header-cell *matHeaderCellDef>Manager</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.manager}} </mat-cell>
-        </ng-container>
-
-      <ng-container matColumnDef="supervisor">
-        <mat-header-cell *matHeaderCellDef>Supervisor</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.supervisor}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="trainer">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Trainer </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.trainer}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="trainingGroupRef">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group Name </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.trainingGroupRef}} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="trainingGroupNum">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group # </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.trainingGroupNum}} </mat-cell>
-        </ng-container>
-
-        <ng-container matColumnDef="hireDate">
-            <mat-header-cell *matHeaderCellDef>Hire Date</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.hireDate | date: 'MM/dd/yyyy'}} </mat-cell>
+          <ng-container matColumnDef="trainer">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Trainer </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.trainer}} </mat-cell>
           </ng-container>
 
-        <ng-container matColumnDef="terminationDate">
-            <mat-header-cell *matHeaderCellDef>Termination Date</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.terminationDate | date: 'MM/dd/yyyy'}} </mat-cell>
+          <ng-container matColumnDef="trainingGroupRef">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group Name </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.trainingGroupRef}} </mat-cell>
           </ng-container>
 
-          <ng-container matColumnDef="reapplicant">
-          <mat-header-cell *matHeaderCellDef>Reapplicant</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{ element.reapplicant?'Yes':'No'}} </mat-cell>
-        </ng-container>
+          <ng-container matColumnDef="trainingGroupNum">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group # </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.trainingGroupNum}} </mat-cell>
+            </ng-container>
 
-      <ng-container matColumnDef="reapplicantTimes">
-        <mat-header-cell *matHeaderCellDef>Reapplicant Times</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.reapplicantTimes}} </mat-cell>
-      </ng-container>
+            <ng-container matColumnDef="hireDate">
+                <mat-header-cell *matHeaderCellDef>Hire Date</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.hireDate | date: 'MM/dd/yyyy'}} </mat-cell>
+              </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-    </table>
-    </mat-card>
-</div>
+            <ng-container matColumnDef="terminationDate">
+                <mat-header-cell *matHeaderCellDef>Termination Date</mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.terminationDate | date: 'MM/dd/yyyy'}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="reapplicant">
+              <mat-header-cell *matHeaderCellDef>Reapplicant</mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.reapplicant?'Yes':'No'}} </mat-cell>
+            </ng-container>
+
+          <ng-container matColumnDef="reapplicantTimes">
+            <mat-header-cell *matHeaderCellDef>Reapplicant Times</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.reapplicantTimes}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </table>
+    </div>
+    <br/>
+    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <button mat-button color="primary" (click)="export()" ><mat-icon>cloud_download</mat-icon>&nbsp; &nbsp; Export</button>
+        <div class="fill-remaining-space"></div>
+        <button mat-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>&nbsp; &nbsp; Clear</button>
+    </div>
+
+    </div>
+
 
 

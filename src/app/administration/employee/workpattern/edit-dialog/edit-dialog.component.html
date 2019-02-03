@@ -1,17 +1,19 @@
 
 <mat-dialog-content>
   <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <input matInput placeholder="From (hh:mm)" [(ngModel)]="data.startTime">
     </mat-form-field>
-
-    <mat-form-field>
+    &nbsp;
+    &nbsp;
+    &nbsp;
+    <mat-form-field appearance="outline">
         <input matInput placeholder="To (hh:mm)" [(ngModel)]="data.endTime">
       </mat-form-field>
       &nbsp;
-      <mat-slide-toggle (change)="onShiftChange()" [(ngModel)]="data.onShift">Day Off</mat-slide-toggle>
+      <mat-slide-toggle color="primary" (change)="onShiftChange()" [(ngModel)]="data.onShift">On Shift</mat-slide-toggle>
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-icon-button [mat-dialog-close]="data" color="primary" matTooltip="Save changes to database"><mat-icon>save</mat-icon></button>
+  <button mat-button [mat-dialog-close]="data" color="primary" matTooltip="Save changes to database"><mat-icon>save</mat-icon> Save Changes</button>
 </mat-dialog-actions>

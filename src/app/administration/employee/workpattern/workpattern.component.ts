@@ -118,7 +118,7 @@ export class WorkpatternComponent implements OnInit {
                 endTime: '',
               }, ]);
     const dialogRef = this.dialog.open(NewDialogComponent, {
-      width: '500px',
+      width: '750px',
       data: newWorkPattern
     });
 
@@ -134,7 +134,7 @@ export class WorkpatternComponent implements OnInit {
     dayNum = day;
     editDay = this.currentwp.shift[dayNum];
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      width: '500px',
+      width: '750px',
       data: editDay,
     });
 

@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ɵConsole } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
 import { noop } from 'rxjs';
 @Component({
@@ -18,6 +18,7 @@ export class ReportComponent implements OnInit {
   dataSource: any;
   reportForm: FormGroup;
   queryForm: FormGroup;
+  sheetControl: FormControl;
   displayedColumns = [];
   constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
@@ -53,33 +54,36 @@ export class ReportComponent implements OnInit {
       trainingGroup: [''],
       trainingNo: ['']
     });
+
+    this.sheetControl = new FormControl();
   }
   getReport() {
     const queryParam = this.queryForm.value;
     const obj = {
-       status: queryParam.status,
-      client: queryParam.client.name,
-      campaign: queryParam.campaign.name,
-      supervisor: queryParam.supervisor,
-      manager: queryParam.manager,
-      hireDate: { $gte: queryParam.hireDateFrom, $lt: queryParam.hireDateTo},
-      terminationDate: {$gte: queryParam.terminationDateFrom, $lt: queryParam.terminationDateTo},
-      trainingGroupRef: queryParam.trainingGroup,
-      trainingGroupNum: queryParam.trainingNo
+      status: queryParam.status,
+      'company.client': queryParam.client.name,
+      'company.campaign': queryParam.campaign.name,
+      'company.supervisor': queryParam.supervisor,
+      'company.manager': queryParam.manager,
+      'company.hireDate': { $gte: queryParam.hireDateFrom, $lt: queryParam.hireDateTo},
+      'company.terminationDate': {$gte: queryParam.terminationDateFrom, $lt: queryParam.terminationDateTo},
+      'company.trainingGroupRef': queryParam.trainingGroup,
+      'company.trainingGroupNum': queryParam.trainingNo
     };
-
     this.employeeService.getReport(obj).subscribe(
         data => {
-          let filtered: any;
-          filtered = data;
-          if (this.reportForm.value.statusCheck) {
-            filtered = data.filter(res => res.status === this.queryForm.value.status);
-            if (typeof filtered !== 'undefined') {
-              this.buildTable(filtered);
-            }
-          }else {
-            this.buildTable(data);
-          }
+          // let filtered: any;
+          // filtered = data;
+          // if (this.reportForm.value.statusCheck) {
+          //   filtered = data.filter(res => res.status === this.queryForm.value.status);
+          //   if (typeof filtered !== 'undefined') {
+          //     this.buildTable(filtered);
+          //   }
+          // }else {
+          //   this.buildTable(data);
+          // }
+
+          this.buildTable(data);
         }, error => { console.error(error); });
   }
   export() {

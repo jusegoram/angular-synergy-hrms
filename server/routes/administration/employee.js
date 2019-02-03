@@ -216,6 +216,81 @@ router.delete('/delete', (req, res) => {
     }});
 });
 
+
+router.get('/companyMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'company': 'companyOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/companyMig2', (req, res) => {
+  Employee.find().populate({path: 'companyOld', model: 'Employee-Company'}).exec((err, doc) => {
+      doc.forEach((item, index) => {
+        const docToObj = JSON.parse(JSON.stringify(item))
+          item.companyNew = docToObj.companyOld;
+          item.companyNew._id = new mongoose.Types.ObjectId();
+          item.companyNew.manager = '';
+          console.log(index);
+          item.save(() => {
+            if(index === doc.length - 1) res.status(200).json(doc);
+          })
+
+      });
+  });
+});
+
+router.get('/companyMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'companyNew': 'company'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/personalMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'personal': 'personalOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/personalMig2', (req, res) => {
+  Employee.find().populate({path: 'personalOld', model: 'Employee-Personal'}).exec((err, doc) => {
+      doc.forEach((item, index) => {
+        const docToObj = JSON.parse(JSON.stringify(item))
+          item.personalNew = docToObj.personalOld;
+          item.personalNew._id = new mongoose.Types.ObjectId();
+          console.log(index);
+          item.save(() => {
+            if(index === doc.length - 1) res.status(200).json(doc);
+          })
+
+      });
+  });
+});
+
+router.get('/personalMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'personalNew': 'personal'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
 function deleteEmployee(employee) {
 
 
