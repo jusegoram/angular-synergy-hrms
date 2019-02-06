@@ -19,7 +19,7 @@ let EmployeeAttrition = require("../../../models/app/employee/employee-attrition
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    Employee.find().sort({status: 1, employeeId: 1}).exec(
+    Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: 1}).exec(
         function (err, result) {
         if (err) {
             return res.status(500).json({
@@ -43,53 +43,18 @@ router.get('/populateTable', function(req, res, next) {
 
 
 router.get('/main', function(req, res){
-    Employee.find({ _id: req.query.id}, )
-      .populate('company')
-      .populate('payroll')
-      .populate('personal')
-      .populate({
-        path: 'position',
-        model: 'Employee-Position',
-        populate: {path: 'position', model: 'Administration-Position'},
-      })
-      .populate({
-        path:'shift',
-        model: 'Employee-Shift',
-        populate: { path: 'shift', model: 'Administration-Shift' },
-      })
-      .populate({
-        path: 'family',
-        model: 'Employee-Family'
-      })
-      .populate({
-        path: 'education',
-        model: 'Employee-Education',
-      })
-      .populate({
-        path: 'comments',
-        model: 'Employee-Comment',
-      })
-      .populate({
-        path: 'attrition',
-        model: 'Employee-Attrition',
-      })
-      .exec((err, result) => {
+    Employee.findById(req.query.id, (err, result) => {
         if (err) res.status(500);
-         res.status(200).json(result);
+        else res.status(200).json(result);
       });
 });
+
 router.put('/main', function (req, res, next) {
   Employee.findById(req.query.id, function (err, result) {
     if (!result)
       return next(new Error('Could not load Document'));
     else {
-      result.employeeId = req.body.employeeId;
-      result.firstName = req.body.firstName;
-      result.middleName = req.body.middleName;
-      result.lastName = req.body.lastName;
-      result.socialSecurity = req.body.socialSecurity;
       result.status = req.body.status.toLowerCase();
-      result.gender = req.body.gender;
       result.save();
       if (err) {
         return res.status(500).json({
@@ -101,78 +66,9 @@ router.put('/main', function (req, res, next) {
     res.status(200).json(result);
   });
 });
-//Deprecated: this will be removed if not used in the next month June 13/2018
-router.get('/company', function(req, res, next){
-  EmployeeCompany.findOne({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-router.get('/position', function(req, res, next){
-  EmployeePosition.find({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-router.get('/personal', function(req, res, next){
-  EmployeePersonal.find({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-router.get('/family', function(req, res, next){
-  EmployeeFamily.find({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-router.get('/education', function(req, res, next){
-  EmployeeEducation.find({ employeeId: req.query.employeeId}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-router.get('/payroll', function(req, res, next){
-  EmployeePayroll.findOne({_id: req.query.id}, function(err, result){
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    res.status(200).json(result);
-  });
-});
-
-
 
 router.put('/shift', function(req,res, next){
-  EmployeeShift.findById(req.query.id, function (err, result){
+  Employee.findById(req.query.id, function (err, result){
     if (!result) {
       return next(new Error('could not load doc'));
     } else {
@@ -180,32 +76,17 @@ router.put('/shift', function(req,res, next){
     }
   });
 });
-router.put('/company', function (req, res, next) {
-  EmployeeCompany.findById(req.query.id, function (err, result) {
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.employeeId = req.body.employeeId;
-    result.client = req.body.client;
-    result.campaign = req.body.campaign;
-    result.supervisor = req.body.supervisor;
-    result.trainer = req.body.trainer;
-    result.trainingGroupRef = req.body.trainingGroupRef;
-    result.trainingGroupNum = req.body.trainingGroupNum;
-    result.hireDate = req.body.hireDate;
-    result.terminationDate = req.body.terminationDate;
-    result.reapplicant = req.body.reapplicant;
-    result.reapplicantTimes = req.body.reapplicantTimes;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
+
+router.put('/company', function (req, res) {
+  let companyInfo = req.body;
+  let employee = req.body.employee;
+  if (employee) {
+    Employee.findByIdAndUpdate(companyInfo.employee, {$set: {company: companyInfo}}, (err, result) => {
+      if(err) res.status(500).json(err);
+      else res.status(200).json(result);
+    });
+  }
+
 });
 router.put('/position', function (req, res) {
   EmployeePosition.findById(req.query.id, function(err, result){
@@ -228,32 +109,14 @@ router.put('/position', function (req, res) {
   });
 });
 router.put('/personal', function (req, res, next) {
-  EmployeePersonal.findById(req.query.id, function(err, result){
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.maritalStatus = req.body.maritalStatus;
-    result.address = req.body.address;
-    result.town = req.body.town;
-    result.district = req.body.district;
-    result.addressDate = req.body.addressDate;
-    result.celNumber = req.body.celNumber;
-    result.telNumber = req.body.telNumber;
-    result.birthDate = req.body.birthDate;
-    result.birthPlaceDis = req.body.birthPlaceDis;
-    result.birthPlaceTow = req.body.birthPlaceTow;
-    result.emailAddress = req.body.emailAddress;
-    result.emailDate = req.body.emailDate;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
+  let personalInfo = req.body;
+  let employee = req.body.employee;
+  if (employee) {
+    Employee.findByIdAndUpdate(personalInfo.employee, {$set: {personal: personalInfo}}, (err, result) => {
+      if(err) res.status(500).json(err);
+      else res.status(200).json(result);
+    });
+  }
 });
 router.put('/family', function (req, res, next) {
   EmployeeFamily.findById(req.query.id, function(err, result){
@@ -297,27 +160,12 @@ router.put('/education', function (req, res, next) {
     res.status(200).json(result);
   });
 });
-router.put('/payroll', function (req, res, next) {
-  EmployeePayroll.findById(req.query.id, function(err, result){
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.TIN = req.body.TIN;
-    result.positionId = req.body.positionId;
-    result.payrollType = req.body.payrollType;
-    result.baseWage = req.body.baseWage;
-    result.bankName = req.body.bankName;
-    result.bankAccount = req.body.bankAccount;
-    result.billable = req.body.billable;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
+router.put('/payroll', (req, res) => {
+  let payrollInfo = req.body;
+  let employee = req.body.employee
+  Employee.findByIdAndUpdate(employee, {$set: {payroll: payrollInfo}}, (err, doc) => {
+    if(err) res.status(500).json(err);
+    else res.status(200).json(doc);
   });
 });
 router.put('/comment', function(req, res, next) {
@@ -339,7 +187,6 @@ router.put('/comment', function(req, res, next) {
     res.status(200).json(result);
   });
 });
-
 router.post('/main', function(req, res){
 var employee = new Employee({
     _id: new mongoose.Types.ObjectId(),
@@ -351,6 +198,7 @@ var employee = new Employee({
         socialSecurity: req.body.socialSecurity,
         status: req.body.status.toLowerCase(),
 });
+
 employee.save(function(err, result) {
     if (err) {
         return res.status(500).json({
@@ -360,6 +208,7 @@ employee.save(function(err, result) {
     }
     return res.status(201).json(result) });
 });
+
 router.post('/shift', function (req, res) {
   Employee.findById(req.body.employee, (err, employee) => {
     let id = new mongoose.Types.ObjectId();
@@ -380,40 +229,31 @@ router.post('/shift', function (req, res) {
         });
       }
       Employee.update({ _id: current.employee }, { $push: { shift: id } }, function (err, raw) {
-        res.status(200).json(raw);
+        res.status(200).json(result);
       });
     });
   });
 });
 router.post('/company', function(req, res){
-  Employee.findById(req.body.employee, (err, employee) => {
-    let id = new mongoose.Types.ObjectId();
-    let current = new EmployeeCompany({
-      _id: id,
-      employeeId: req.body.employeeId,
-      client: req.body.client,
-      campaign: req.body.campaign,
-      supervisor: req.body.supervisor,
-      trainer: req.body.trainer,
-      trainingGroupRef: req.body.trainingGroupRef,
-      trainingGroupNum: req.body.trainingGroupNum,
-      hireDate: req.body.hireDate,
-      terminationDate: req.body.terminationDate,
-      reapplicant: req.body.reapplicant,
-      reapplicantTimes: req.body.reapplicantTimes,
-      employee: req.body.employee
-    });
-    employee.company = id;
-    employee.save();
-    current.save(function(err, result) {
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      return res.status(201).json(result);
-    });
+  let id = new mongoose.Types.ObjectId();
+      let current = {
+        _id: id,
+        employeeId: req.body.employeeId,
+        client: req.body.client,
+        campaign: req.body.campaign,
+        supervisor: req.body.supervisor,
+        trainer: req.body.trainer,
+        trainingGroupRef: req.body.trainingGroupRef,
+        trainingGroupNum: req.body.trainingGroupNum,
+        hireDate: req.body.hireDate,
+        terminationDate: req.body.terminationDate,
+        reapplicant: req.body.reapplicant,
+        reapplicantTimes: req.body.reapplicantTimes,
+        employee: req.body.employee
+      };
+  Employee.findByIdAndUpdate(req.body.employee,{$set: {company: current}},(error, result) => {
+    if(error) res.status(500).json(error);
+    else res.status(200).json({});
   });
 });
 router.post('/position', function(req, res){
@@ -447,43 +287,36 @@ router.post('/position', function(req, res){
       return res.status(400).message('sorry, the request was either empty or invalid');
     }
   });
-router.post('/personal', function(req, res, next){
-  Employee.findById(req.body.employee, (err, employee) => {
-    let id = new mongoose.Types.ObjectId();
-    let personal = new EmployeePersonal({
-    _id: id,
-    employeeId: req.body.employeeId,
-    maritalStatus: req.body.maritalStatus,
-    address: req.body.address,
-    town: req.body.town,
-    district: req.body.district,
-    birthPlaceDis:req.body.birthPlaceDis,
-    birthPlaceTow: req.body.birthPlaceTow,
-    addressDate: req.body.addressDate,
-    celNumber: req.body.celNumber,
-    telNumber: req.body.telNumber,
-    birthDate: req.body.birthDate,
-    emailAddress: req.body.emailAddress,
-    emailDate: req.body.emailDate,
-    employee: req.body.employee
-  });
-    employee.personal = id;
-    employee.save();
-  personal.save(function(err, result) {
-    if (err) {
-      return res.status(500).json({
-        title: 'An error occurred',
-        error: err
-      });
-    }
-    return res.status(201).json(result);
-  });
+
+router.post('/personal', (req, res) => {
+  let id = new mongoose.Types.ObjectId();
+  let personal = {
+  _id: id,
+  employeeId: req.body.employeeId,
+  maritalStatus: req.body.maritalStatus,
+  address: req.body.address,
+  town: req.body.town,
+  district: req.body.district,
+  birthPlaceDis:req.body.birthPlaceDis,
+  birthPlaceTow: req.body.birthPlaceTow,
+  addressDate: req.body.addressDate,
+  celNumber: req.body.celNumber,
+  telNumber: req.body.telNumber,
+  birthDate: req.body.birthDate,
+  emailAddress: req.body.emailAddress,
+  emailDate: req.body.emailDate,
+  employee: req.body.employee
+};
+  Employee.findByIdAndUpdate(req.body.employee, {$set: {personal: personal}}, (err, doc) => {
+    if (err) res.status(500).json(err);
+    else res.status(200).json({});
   });
 });
-router.post('/family', function(req, res, next){
+
+router.post('/family', (req, res) => {
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let newFamily = new EmployeeFamily({
+    let newFamily = {
       _id: id,
       employeeId: req.body.employeeId,
       referenceName: req.body.referenceName,
@@ -493,23 +326,16 @@ router.post('/family', function(req, res, next){
       emailAddress: req.body.emailAddress,
       address: req.body.address,
       employee: req.body.employee
-    });
-    newFamily.save(function (err, result){
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      Employee.update({_id: newFamily.employee}, {$push: { family: newFamily }}, function(err){
-      });
-      return res.status(200).json(result);
-    });
-  } else {
-    return res.status(400).message('sorry, the request was either empty or invalid');
-  }
+    };
+    Employee.findByIdAndUpdate(newFamily.employee, {$push:{family: newFamily }}, (err, doc) => {
+      if(err) res.status(500).json(err)
+      else res.status(200).json(newFamily);
+    })
+  }else res.status(500);
+
 });
-router.post('/education', function(req, res, next){
+
+router.post('/education',  (req, res) => {
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
     let newEducation = new EmployeeEducation({
@@ -521,74 +347,50 @@ router.post('/education', function(req, res, next){
       endDate: req.body.endDate,
       employee: req.body.employee
     });
-    newEducation.save(function (err, result){
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      Employee.update({_id: newEducation.employee}, {$push: { education: newEducation }}, function(err){
-      });
-      return res.status(200).json(result);
-    });
-  } else {
-    return res.status(400).message('sorry, the request was either empty or invalid');
-  }
+    Employee.findOneAndUpdate(newEducation.employee, {$push:{education: newEducation}}, (err, doc) => {
+      if(err) res.status(500).json(err)
+      else res.status(200).json({});
+    })
+  }else res.status(500);
 });
-router.post('/payroll', function(req, res, next){
-  Employee.findById(req.body.employee, (err, employee) => {
-    let id = new mongoose.Types.ObjectId();
-    var payroll = new EmployeePayroll({
-      _id: id,
-      employeeId: req.body.employeeId,
-      TIN: req.body.TIN,
-      positionId: req.body.positionId,
-      payrollType: req.body.payrollType,
-      baseWage: req.body.baseWage,
-      bankName: req.body.bankName,
-      bankAccount: req.body.bankAccount,
-      billable: req.body.billable,
-      employee: req.body.employee
-    });
-    employee.payroll = id;
-    employee.save();
-    payroll.save(function (err, result) {
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      return res.status(201).json(result);
-    });
+
+router.post('/payroll', (req, res) => {
+  let id = new mongoose.Types.ObjectId();
+  var payroll = {
+    _id: id,
+    employeeId: req.body.employeeId,
+    TIN: req.body.TIN,
+    positionId: req.body.positionId,
+    payrollType: req.body.payrollType,
+    baseWage: req.body.baseWage,
+    bankName: req.body.bankName,
+    bankAccount: req.body.bankAccount,
+    billable: req.body.billable,
+    employee: req.body.employee
+  };
+  Employee.findByIdAndUpdate(req.body.employee,{$set: {payroll: payroll}}, (err, employee) => {
+    if(err) res.status(500).json(err);
+    else res.status(200).json({});
   });
 });
-router.post('/comment', function(req, res, next){
+
+router.post('/comment', (req, res) => {
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
     let newComment = new EmployeeComment({
       _id: id,
       employeeId: req.body.employeeId,
+      reason: req.body.reason,
       comment: req.body.comment,
       commentDate: req.body.commentDate,
       submittedBy: req.body.submittedBy,
       employee: req.body.employee
     });
-    newComment.save(function (err, result){
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      Employee.update({_id: newComment.employee}, {$push: { comments: newComment }}, function(err){
-      });
-      return res.status(200).json(result);
-    });
-  } else {
-    return res.status(400).message('sorry, the request was either empty or invalid');
-  }
+    Employee.findByIdAndUpdate(req.body.employee, {$push: {comments: newComment}}, (err, doc) => {
+      if(err) res.status(500).json(err);
+      else res.status(200).json(newComment);
+    })
+  }else res.status(500);
 });
 
 router.post('/attrition', function(req, res, next){
@@ -604,21 +406,13 @@ router.post('/attrition', function(req, res, next){
       submittedBy: req.body.submittedBy,
       employee: req.body.employee
     });
-    newAttrition.save(function (err, result){
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-      Employee.update({_id: newAttrition.employee}, {$push: { attrition: newAttrition }}, function(err){
-      });
-      return res.status(200).json(result);
+    Employee.findByIdAndUpdate(req.body.employee, {$push: {attrition: newAttrition}}, (err, doc) => {
+      if (err) res.status(500).json(err)
+      else res.status(200).json(newAttrition);
     });
-  } else {
-    return res.status(400).message('sorry, the request was either empty or invalid');
-  }
+  } else res.status(500);
 });
+
 router.get('/latestPosition', function(req, response ){
    let latest = EmployeePosition.latestPosition(req.query.id, function(err, res){
         if(err){
@@ -646,7 +440,6 @@ router.get('/avatar', function(req, res, next){
   });
 
 });
-
 router.post('/new', function(req, res, next){
   let newEmployeeId = null;
   Employee.findMax(function(err, doc){
@@ -678,6 +471,8 @@ router.post('/new', function(req, res, next){
    });
 });
 
+
+//TODO: move to correct place
 router.get('/allHours', (req, res, next) => {
   EmployeeHours.find({}, (error, result) => {
     if(!result) {

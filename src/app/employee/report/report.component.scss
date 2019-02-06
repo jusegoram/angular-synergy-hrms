@@ -45,8 +45,15 @@ $mat-toolbar-height-mobile-landscape: 134px !default;
 }
 
 table {
-  width: 2000px;
+  width: 100%;
 }
+
+mat-header-row{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  }
 .header {
   width: 100% !important;
 }

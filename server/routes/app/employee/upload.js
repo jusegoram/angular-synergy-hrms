@@ -18,6 +18,7 @@ let Family = require ('../../../models/app/employee/employee-family');
 let Education = require ('../../../models/app/employee/employee-education');
 let Comment = require('../../../models/app/employee/employee-comment');
 let Company = require('../../../models/app/employee/employee-company');
+let EmployeeShift = require('../../../models/app/employee/employee-shift');
 // set the directory for the uploads to the uploaded to
 let DIR = 'uploads/';
 
@@ -39,24 +40,18 @@ router.post('/', function (req, res) {
           let employees = [];
           let employeeFile = req.file;
           let maxEmployeeId = null;
-            if (err) {
-            // An error occurred when uploading
-                return res.status(422).send("an Error occured");
-            }
-             if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
-               return res.status(400).send("Sorry only CSV files can be processed for upload");
+            if (err)  res.status(422).send("an Error occured");
+            if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
+              res.status(400).send("Sorry only CSV files can be processed for upload");
             }
             EmployeeSchema.findMax((maxErr, max) => {
-              if(maxErr){
-                console.log(maxErr);
-              }else {
-                maxEmployeeId = parseInt(max[0].employeeId, 10)
-                console.log(max);
+              if(maxErr) console.log(maxErr);
+              else {
+                maxEmployeeId = parseInt(max[0].employeeId, 10);
               }
             });
             csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
             .on('data', (data) => {
-              console.log('onDataHook')
                 data['_id'] = new mongoose.Types.ObjectId();
                 data['company'] = null;
                 data['payroll'] = null;
@@ -64,25 +59,17 @@ router.post('/', function (req, res) {
                 employees.push(data);
             })
             .on('end', (result) => {
-              console.log('onEndHook');
                 let counter = 0;
                 let duplicate = 0;
-                // for ( i = 0; i < employees.length; i++){
-
-                // }
-                async.each(employees, function(employee, callback) {
+                async.each(employees, (employee, callback) => {
                   maxEmployeeId++;
-                  if(employee.employeeId === ''){
-                    employee.employeeId = maxEmployeeId;
-                  }
+                  if(employee.employeeId === '') employee.employeeId = maxEmployeeId;
                    EmployeeSchema.create(employee, (err, created) =>{
                     if(err) {
                       duplicate++
-                      console.log('err: '+ duplicate);
                       callback();
                     }else{
                       counter++;
-                    console.log('created: ' + counter);
                       callback();
                     }
                   });
@@ -150,289 +137,289 @@ router.post('/position', function (req, res) {
 
 });
 
-router.post('/personal', function (req, res) {
-    upload(req, res, function (err) {
-      let personal = [];
-      let personalFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            personal.push(data);
+// router.post('/personal', function (req, res) {
+//     upload(req, res, function (err) {
+//       let personal = [];
+//       let personalFile = req.file;
+//         if (err) {
+//         // An error occurred when uploading
+//         console.log(err);
+//         return res.status(422).send("an Error occured");
+//         }
+//         if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv'){
+//             return res.status(400).send("Sorry only CSV files can be processed for upload");
+//         }
+//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//         .on('data', function(data){
+//             data['_id'] = new mongoose.Types.ObjectId();
+//             data['employee'] = null;
+//             personal.push(data);
 
-        })
-        .on('end', function(){
-            async.each(personal, function(per, callback){
-              EmployeeSchema.findOne({'employeeId': per.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-                        res.personal = per._id;
-                        per.employee = res._id;
-                        res.save();
-                        callback();
-                    }
-                })
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    Personal.create(personal);
-                }
-            });
-            console.log('upload finished');
-            return res.status(200).send( personal.lenght + ' Registries of personal information of employees was uploaded');
-        });
-    });
-});
+//         })
+//         .on('end', function(){
+//             async.each(personal, function(per, callback){
+//               EmployeeSchema.findOne({'employeeId': per.employeeId}, function(err, res){
+//                     if(err){
+//                         callback(err)
+//                     }else{
+//                         res.personal = per._id;
+//                         per.employee = res._id;
+//                         res.save();
+//                         callback();
+//                     }
+//                 })
+//             }, function(err){
+//                 if(err){
+//                     console.log(err);
+//                 }else{
+//                     Personal.create(personal);
+//                 }
+//             });
+//             console.log('upload finished');
+//             return res.status(200).send( personal.lenght + ' Registries of personal information of employees was uploaded');
+//         });
+//     });
+// });
 
-router.post('/company', function (req, res) {
-  upload(req, res, function (err) {
-    let company = [];
-    let companyFile = req.file;
-      if (err) {
-      // An error occurred when uploading
-      console.log(err);
-      return res.status(422).send("an Error occured");
-      }
-      if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
-          return res.status(400).send("Sorry only CSV files can be processed for upload");
-      }
-      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-      .on('data', function(data){
-          data['_id'] = new mongoose.Types.ObjectId();
-          data['employee'] = null;
-          company.push(data);
+// router.post('/company', function (req, res) {
+//   upload(req, res, function (err) {
+//     let company = [];
+//     let companyFile = req.file;
+//       if (err) {
+//       // An error occurred when uploading
+//       console.log(err);
+//       return res.status(422).send("an Error occured");
+//       }
+//       if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
+//           return res.status(400).send("Sorry only CSV files can be processed for upload");
+//       }
+//       csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//       .on('data', function(data){
+//           data['_id'] = new mongoose.Types.ObjectId();
+//           data['employee'] = null;
+//           company.push(data);
 
-      })
-      .on('end', function(){
-        let counter = 0;
-        let duplicate = 0;
-          async.each(company, function(comp, callback){
-            EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
-                  if(err){
-                    console.log(err);
-                      duplicate++
-                  }else{
-                    counter++;
-                    if(res !== null){
-                      res.company = comp._id;
-                      comp.employee = res._id;
-                      res.save();
-                      callback();
-                    }else{
-                      console.log('not found id: '+ comp.employeeId);
-                      callback();
-                    }
-                  }
-              })
-          }, function(err){
-              if(err){
-                  console.log(err);
-              }else{
-                  Company.create(company);
-              }
-          });
-          console.log('upload finished');
-          return res.status(200).send( counter + ' Registries of company information of employees was uploaded');
-      });
-  });
-});
+//       })
+//       .on('end', function(){
+//         let counter = 0;
+//         let duplicate = 0;
+//           async.each(company, function(comp, callback){
+//             EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
+//                   if(err){
+//                     console.log(err);
+//                       duplicate++
+//                   }else{
+//                     counter++;
+//                     if(res !== null){
+//                       res.company = comp._id;
+//                       comp.employee = res._id;
+//                       res.save();
+//                       callback();
+//                     }else{
+//                       console.log('not found id: '+ comp.employeeId);
+//                       callback();
+//                     }
+//                   }
+//               })
+//           }, function(err){
+//               if(err){
+//                   console.log(err);
+//               }else{
+//                   Company.create(company);
+//               }
+//           });
+//           console.log('upload finished');
+//           return res.status(200).send( counter + ' Registries of company information of employees was uploaded');
+//       });
+//   });
+// });
 
-router.post('/payroll', function (req, res) {
-    upload(req, res, function (err) {
-      let payroll = [];
-      let payrollFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            payroll.push(data);
+// router.post('/payroll', function (req, res) {
+//     upload(req, res, function (err) {
+//       let payroll = [];
+//       let payrollFile = req.file;
+//         if (err) {
+//         // An error occurred when uploading
+//         console.log(err);
+//         return res.status(422).send("an Error occured");
+//         }
+//         if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
+//             return res.status(400).send("Sorry only CSV files can be processed for upload");
+//         }
+//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//         .on('data', function(data){
+//             data['_id'] = new mongoose.Types.ObjectId();
+//             data['employee'] = null;
+//             payroll.push(data);
 
-        })
-        .on('end', function(){
-            async.each(payroll, function(pay, callback){
-              EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-                        res.payroll = pay._id;
-                        pay.employee = res._id;
-                        res.save();
-                        callback();
-                    }
-                })
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    Payroll.EmployeePayroll.create(payroll);
-                }
-            });
-            console.log('upload finished');
-            return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
-        });
-    });
-});
+//         })
+//         .on('end', function(){
+//             async.each(payroll, function(pay, callback){
+//               EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
+//                     if(err){
+//                         callback(err)
+//                     }else{
+//                         res.payroll = pay._id;
+//                         pay.employee = res._id;
+//                         res.save();
+//                         callback();
+//                     }
+//                 })
+//             }, function(err){
+//                 if(err){
+//                     console.log(err);
+//                 }else{
+//                     Payroll.EmployeePayroll.create(payroll);
+//                 }
+//             });
+//             console.log('upload finished');
+//             return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
+//         });
+//     });
+// });
 
-router.post('/family', function (req, res) {
-    upload(req, res, function (err) {
-      let family = [];
-      let familyFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(familyFile.mimetype !== 'application/vnd.ms-excel' && familyFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            family.push(data);
+// router.post('/family', function (req, res) {
+//     upload(req, res, function (err) {
+//       let family = [];
+//       let familyFile = req.file;
+//         if (err) {
+//         // An error occurred when uploading
+//         console.log(err);
+//         return res.status(422).send("an Error occured");
+//         }
+//         if(familyFile.mimetype !== 'application/vnd.ms-excel' && familyFile.mimetype !== 'text/csv'){
+//             return res.status(400).send("Sorry only CSV files can be processed for upload");
+//         }
+//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//         .on('data', function(data){
+//             data['_id'] = new mongoose.Types.ObjectId();
+//             data['employee'] = null;
+//             family.push(data);
 
-        })
-        .on('end', function(){
-            async.each(family, function(fam, callback){
-              EmployeeSchema.findOne({'employeeId': fam.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-                      if(res !== null){
-                        EmployeeSchema.update({_id: res._id},{
-                          $push: { family: fam._id}}, function(err, raw){
-                            console.log(raw||err);
-                          });
-                          fam.employee = res._id;
-                          res.save();
-                          callback();
-                      }
-                    }
-                })
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    Family.create(family);
-                }
-            });
-            console.log('upload finished');
-            return res.status(200).send( family.lenght + ' Registries of payroll information of employees was uploaded');
-        });
-    });
-});
+//         })
+//         .on('end', function(){
+//             async.each(family, function(fam, callback){
+//               EmployeeSchema.findOne({'employeeId': fam.employeeId}, function(err, res){
+//                     if(err){
+//                         callback(err)
+//                     }else{
+//                       if(res !== null){
+//                         EmployeeSchema.update({_id: res._id},{
+//                           $push: { family: fam._id}}, function(err, raw){
+//                             console.log(raw||err);
+//                           });
+//                           fam.employee = res._id;
+//                           res.save();
+//                           callback();
+//                       }
+//                     }
+//                 })
+//             }, function(err){
+//                 if(err){
+//                     console.log(err);
+//                 }else{
+//                     Family.create(family);
+//                 }
+//             });
+//             console.log('upload finished');
+//             return res.status(200).send( family.lenght + ' Registries of payroll information of employees was uploaded');
+//         });
+//     });
+// });
 
-router.post('/education', function (req, res) {
-    upload(req, res, function (err) {
-      let education = [];
-      let educationFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(educationFile.mimetype !== 'application/vnd.ms-excel' && educationFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            education.push(data);
-        })
-        .on('end', function(){
-            async.each(education, function(edu, callback){
-              EmployeeSchema.findOne({'employeeId': edu.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-                      EmployeeSchema.update({_id: res._id},{
-                        $push: { education: edu._id}}, function(err, raw){
-                          console.log(raw||err);
-                        });
-                        edu.employee = res._id;
-                        res.save();
-                        callback();
-                    }
-                })
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    Education.create(education);
-                }
-            });
-            console.log('upload finished');
-            return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
-        });
-    });
+// router.post('/education', function (req, res) {
+//     upload(req, res, function (err) {
+//       let education = [];
+//       let educationFile = req.file;
+//         if (err) {
+//         // An error occurred when uploading
+//         console.log(err);
+//         return res.status(422).send("an Error occured");
+//         }
+//         if(educationFile.mimetype !== 'application/vnd.ms-excel' && educationFile.mimetype !== 'text/csv'){
+//             return res.status(400).send("Sorry only CSV files can be processed for upload");
+//         }
+//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//         .on('data', function(data){
+//             data['_id'] = new mongoose.Types.ObjectId();
+//             data['employee'] = null;
+//             education.push(data);
+//         })
+//         .on('end', function(){
+//             async.each(education, function(edu, callback){
+//               EmployeeSchema.findOne({'employeeId': edu.employeeId}, function(err, res){
+//                     if(err){
+//                         callback(err)
+//                     }else{
+//                       EmployeeSchema.update({_id: res._id},{
+//                         $push: { education: edu._id}}, function(err, raw){
+//                           console.log(raw||err);
+//                         });
+//                         edu.employee = res._id;
+//                         res.save();
+//                         callback();
+//                     }
+//                 })
+//             }, function(err){
+//                 if(err){
+//                     console.log(err);
+//                 }else{
+//                     Education.create(education);
+//                 }
+//             });
+//             console.log('upload finished');
+//             return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
+//         });
+//     });
 
-});
+// });
 
-router.post('/comment', function (req, res) {
-  upload(req, res, function (err) {
-    let comment = [];
-    let commentFile = req.file;
-      if (err) {
-      // An error occurred when uploading
-      console.log(err);
-      return res.status(422).send("an Error occured");
-      }
-      if(commentFile.mimetype !== 'application/vnd.ms-excel' && commentFile.mimetype !== 'text/csv'){
-          return res.status(400).send("Sorry only CSV files can be processed for upload");
-      }
-      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-      .on('data', function(data){
-          data['_id'] = new mongoose.Types.ObjectId();
-          data['employee'] = null;
-          comment.push(data);
-      })
-      .on('end', function(){
-          async.each(comment, function(com, callback){
-            EmployeeSchema.findOne({'employeeId': com.employeeId}, function(err, res){
-                  if(err){
-                      callback(err)
-                  }else{
-                    EmployeeSchema.update({_id: res._id},{
-                      $push: { comments: com._id}}, function(err, raw){
-                        console.log(raw||err);
-                      });
-                      edu.employee = res._id;
-                      res.save();
-                      callback();
-                  }
-              })
-          }, function(err){
-              if(err){
-                  console.log(err);
-              }else{
-                  Comment.create(comment);
-              }
-          });
-          console.log('upload finished');
-          return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
-      });
-  });
+// router.post('/comment', function (req, res) {
+//   upload(req, res, function (err) {
+//     let comment = [];
+//     let commentFile = req.file;
+//       if (err) {
+//       // An error occurred when uploading
+//       console.log(err);
+//       return res.status(422).send("an Error occured");
+//       }
+//       if(commentFile.mimetype !== 'application/vnd.ms-excel' && commentFile.mimetype !== 'text/csv'){
+//           return res.status(400).send("Sorry only CSV files can be processed for upload");
+//       }
+//       csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//       .on('data', function(data){
+//           data['_id'] = new mongoose.Types.ObjectId();
+//           data['employee'] = null;
+//           comment.push(data);
+//       })
+//       .on('end', function(){
+//           async.each(comment, function(com, callback){
+//             EmployeeSchema.findOne({'employeeId': com.employeeId}, function(err, res){
+//                   if(err){
+//                       callback(err)
+//                   }else{
+//                     EmployeeSchema.update({_id: res._id},{
+//                       $push: { comments: com._id}}, function(err, raw){
+//                         console.log(raw||err);
+//                       });
+//                       edu.employee = res._id;
+//                       res.save();
+//                       callback();
+//                   }
+//               })
+//           }, function(err){
+//               if(err){
+//                   console.log(err);
+//               }else{
+//                   Comment.create(comment);
+//               }
+//           });
+//           console.log('upload finished');
+//           return res.status(200).send( education.lenght + ' Registries of payroll information of employees was uploaded');
+//       });
+//   });
 
-});
+// });
 
 router.post('/hours', function (req, res) {
   upload(req, res, function (err) {
@@ -535,6 +522,50 @@ router.post('/kpi', function (req, res) {
           console.log('upload finished');
           return res.status(200).send( counter + ' Registries of kpi information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
       });
+  });
+});
+
+router.post('/shift', (req, res) => {
+  let shifts = [];
+  upload(req, res, (err) => {
+    if (err) res.status(422).send("an Error occured");
+    if (req.file.mimetype !== 'application/vnd.ms-excel' && req.file.mimetype !== 'text/csv') res.sendStatus(400);
+    csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+    .on('data', (data) => {
+      data['_id'] = new mongoose.Types.ObjectId();
+      data['employee'] = null;
+      data['createdDate'] = new Date();
+      data['shift'] = null;
+      shifts.push(data);
+    })
+    .on('end', () => {
+      async.each(shifts, (item, callback) => {
+        EmployeeSchema.findOneAndUpdate({employeeId: item.employeeId},{$push: {shift: item._id}},{new: true}, (err, employee) => {
+          if(err) callback(err);
+          else {
+            item.employee = employee._id;
+            EmployeeShift.shift.findOne({name: item.shiftName}, (err, shiftName) => {
+              if(err) console.log(err);
+              else {
+
+                item.shift = shiftName._id;
+                delete item.shiftName;
+                callback();
+              }
+            });
+          }
+        });
+      }, (err) => {
+        if(err) console.log(err);
+        else {
+          EmployeeShift.employeeShift.create(shifts, (err, res) => {
+            console.log(shifts);
+            if(err) res.status(500).json(shifts);
+          });
+        }
+      });
+    res.status(200).json({addedShifts: shifts.length})
+    });
   });
 });
 

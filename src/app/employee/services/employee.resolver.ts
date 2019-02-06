@@ -14,12 +14,7 @@ export class EmployeeResolver implements Resolve<Employee> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Employee> {
-    return this.employeeService.findEmployeeById(route.queryParams.id)
-      .pipe( map ((employee) =>  {
-        employee = employee[0];
-        return employee;
-      })
-    );
+    return this.employeeService.findEmployeeById(route.queryParams.id);
   }
 
 }

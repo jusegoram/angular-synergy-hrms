@@ -23,7 +23,7 @@ var schema = new Schema({
     creationDate : {type: Date, required: true },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false, unique: true},
     log: { type: [Object] , required: false },
-    lasLogin:{type: Date, required:false },
+    lastLogin:{type: Date, required:false },
 
 });
 

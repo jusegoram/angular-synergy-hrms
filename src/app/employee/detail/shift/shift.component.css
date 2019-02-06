@@ -1,0 +1,30 @@
+.table1 {
+  width: 100%;
+  overflow: auto;
+}
+
+mat-header-row{
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  }
+
+  .onshift {
+    background-color: lightgreen;
+  }
+
+  .dayoff {
+    background-color: lightcoral;
+  }
+
+  .today {
+    background-color: lightgray;
+  }
+
+  .not-today {
+    background-color: white;
+  }
+  mat-row{
+    min-height: 40px !important;
+  }

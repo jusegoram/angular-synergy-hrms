@@ -17,6 +17,7 @@ var companySchema = new Schema({
   terminationDate:{ type: Date, required: false },
   reapplicant: { type: Boolean, required: false},
   reapplicantTimes: {type: Number, required: false},
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 
 var personalSchema = new Schema({
@@ -38,6 +39,64 @@ var personalSchema = new Schema({
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 
+let payrollSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  employeeId: { type: String, required: true },
+  TIN: {type: String, required: true },
+  positionId: { type: String, required: true },
+  payrollType: {type: String, required: true },
+  baseWage: {type: String, required: false },
+  bankName: {type: String, required: false },
+  bankAccount: {type: String, required: false },
+  billable: {type: Boolean, required: false},
+  lastVacation:{type: Object, required: false},
+  lastPayment: {type: Date, required: false},
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+});
+
+var commentsSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  employeeId: {type: String, required: true},
+  reason: {type: String, required: false},
+  comment: {type: String, required: true },
+  commentDate: {type: Date, required: true},
+  submittedBy: {type: Object, required: true},
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+});
+
+var attritionSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  employeeId: {type: String, required: true},
+  reason1: {type: String, required: true },
+  reason2: {type: String, required: false },
+  comment: {type: String, required: true },
+  commentDate: {type: Date, required: true},
+  submittedBy: {type: Object, required: true},
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+});
+
+var familySchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  employeeId: {type: String, required: true },
+  referenceName: { type: String, required: true },
+  relationship: { type: String, required: true },
+  celNumber: { type: String, required: true },
+  telNumber: { type: String, required: false },
+  emailAddress: { type: String, required: false },
+  address: { type: String, required: false },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+});
+
+var educationSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  employeeId: { type: String, required: true },
+  institution: { type: String, required: true },
+  description: { type: String, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+});
+
 let EmployeeSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     employeeId: { type: Number, required: true, unique: true },
@@ -47,15 +106,37 @@ let EmployeeSchema = new Schema({
     gender: { type: String, required: true },
     socialSecurity: { type: String, required: true },
     status: { type: String, required: true },
+    currentPosition: {type: Object, required: false}, //only position name
+    currentShift: { type: Object, required: false}, //only shift name
+    //company: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Company' , required: false, autopopulate: true},
+    //companyNew: {type: companySchema, required: false},
     company: {type: companySchema, required: false},
-  // personal: {type: personalSchema, required: false},
-  // personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false, autopopulate: { maxDepth: 2 }},
-    comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false, autopopulate: true},
-    attrition: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Attrition' , required: false, autopopulate: true},
-    family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false, autopopulate: { maxDepth: 2 }},
-    education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false},
+
+    //personal: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Personal' , required: false, autopopulate: { maxDepth: 2 }},
+    //personalNew: {type: personalSchema, required: false},
+    personal: {type: personalSchema, required: false},
+
+    //payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false, autopopulate: true},
+    //payrollNew: { type: payrollSchema, required:false},
+    payroll: { type: payrollSchema, required:false},
+
+    //comments: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Comment' , required: false, autopopulate: true},
+    //commentsNew: {type: [commentsSchema], required: false},
+    comments: {type: [commentsSchema], required: false},
+
+    //attrition: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Attrition' , required: false, autopopulate: true},
+    //attritionNew: {type: [attritionSchema], required: false},
+    attrition: {type: [attritionSchema], required: false},
+
+    //family: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Family' , required: false, autopopulate: { maxDepth: 2 }},
+    //familyNew: {type: [familySchema], required: false},
+    family: {type: [familySchema], required: false},
+
+    //education: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Education' , required: false},
+    //educationNew: {type: [educationSchema], required: false},
+    education: {type: [educationSchema], required: false},
+
     // TODO: THESE ARE THE ONLY ONES THAT NEED POPULATION DUE TO NORMALIZATION OF DOCUMENTS
-    payroll: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Payroll' , required: false, autopopulate: true},
     shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift', autopopulate: true},
     position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false, autopopulate: true},
 });

@@ -13,6 +13,9 @@ let EmployeePayroll = require('../../models/app/employee/employee-payroll');
 let EmployeePersonal = require('../../models/app/employee/employee-personal');
 let EmployeeFamily = require('../../models/app/employee/employee-family');
 let EmployeeComments = require('../../models/app/employee/employee-comment');
+let EmployeeAttrition = require('../../models/app/employee/employee-attrition');
+let EmployeeEducation = require('../../models/app/employee/employee-education');
+
 
 router.post('/client', function (req, res, next) {
   let campaigns = req.body.campaigns;
@@ -216,7 +219,7 @@ router.delete('/delete', (req, res) => {
     }});
 });
 
-
+// TODO:
 router.get('/companyMig', (req, res) => {
   Employee.updateMany({}, {$rename : {'company': 'companyOld'}}, (err, raw) => {
 
@@ -255,6 +258,7 @@ router.get('/companyMig3', (req, res) => {
   })
 });
 
+// TODO:
 router.get('/personalMig', (req, res) => {
   Employee.updateMany({}, {$rename : {'personal': 'personalOld'}}, (err, raw) => {
 
@@ -271,7 +275,6 @@ router.get('/personalMig2', (req, res) => {
       doc.forEach((item, index) => {
         const docToObj = JSON.parse(JSON.stringify(item))
           item.personalNew = docToObj.personalOld;
-          item.personalNew._id = new mongoose.Types.ObjectId();
           console.log(index);
           item.save(() => {
             if(index === doc.length - 1) res.status(200).json(doc);
@@ -290,6 +293,249 @@ router.get('/personalMig3', (req, res) => {
 
     finish(raw);
   })
+});
+
+// TODO:
+router.get('/payrollMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'payroll': 'payrollOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/payrollMig2', (req, res) => {
+  Employee.find().populate({path: 'payrollOld', model: 'Employee-Payroll'}).exec((err, doc) => {
+      doc.forEach((item, index) => {
+        const docToObj = JSON.parse(JSON.stringify(item))
+          item.payrollNew = docToObj.payrollOld;
+          console.log(index);
+          item.save(() => {
+            if(index === doc.length - 1) res.status(200).json(doc);
+          })
+
+      });
+  });
+});
+
+router.get('/payrollMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'payrollNew': 'payroll'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+  // TODO:
+router.get('/commentsMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'comments': 'commentsOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/commentsMig2', (req, res) => {
+  EmployeeComments.find().populate({path:'submittedBy', model:'Administration-User'}).exec((err, doc) => {
+      async.each(doc, (item, callback) => {
+        if(item !== undefined && item !== null ) {
+          const docToObj = JSON.parse(JSON.stringify(item))
+        if(docToObj.submittedBy) {
+          delete docToObj.submittedBy.middleName;
+          delete docToObj.submittedBy.username;
+          delete docToObj.submittedBy.email;
+          delete docToObj.submittedBy.role;
+          delete docToObj.submittedBy.creationDate;
+          delete docToObj.submittedBy.employee;
+          delete docToObj.submittedBy.log;
+          delete docToObj.submittedBy.lastLogin;
+        }
+          Employee.findOneAndUpdate({_id: item.employee}, {$push: {commentsNew: docToObj}}, (err, result) => {
+              console.log(result);
+              if(err) callback();
+          });
+        }
+          else{
+            callback()
+        }
+
+      }, err => {
+        if(err) res.status(500);
+        else res.status(200);
+      });
+    });
+});
+
+router.get('/commentsMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'commentsNew': 'comments'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/attritionMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'attrition': 'attritionOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/attritionMig2', (req, res) => {
+  EmployeeAttrition.find().populate({path:'submittedBy', model:'Administration-User'}).exec((err, doc) => {
+      async.each(doc, (item, callback) => {
+        if(item !== undefined && item !== null ) {
+          const docToObj = JSON.parse(JSON.stringify(item))
+        if(docToObj.submittedBy) {
+          delete docToObj.submittedBy.middleName;
+          delete docToObj.submittedBy.username;
+          delete docToObj.submittedBy.email;
+          delete docToObj.submittedBy.role;
+          delete docToObj.submittedBy.creationDate;
+          delete docToObj.submittedBy.employee;
+          delete docToObj.submittedBy.log;
+          delete docToObj.submittedBy.lastLogin;
+        }
+          Employee.findOneAndUpdate({_id: item.employee}, {$push: {attritionNew: docToObj}}, (err, result) => {
+              console.log(result);
+              if(err) callback();
+          });
+        }
+          else{
+            callback()
+        }
+
+      }, err => {
+        if(err) res.status(500);
+        else res.status(200);
+      });
+    });
+});
+
+router.get('/attritionMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'attritionNew': 'attrition'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/familyMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'family': 'familyOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/familyMig2', (req, res) => {
+  EmployeeFamily.find().exec((err, doc) => {
+      async.each(doc, (item, callback) => {
+        if(item !== undefined && item !== null ) {
+          const docToObj = JSON.parse(JSON.stringify(item))
+          Employee.findOneAndUpdate({_id: item.employee}, {$push: {familyNew: docToObj}}, (err, result) => {
+              console.log(result);
+              if(err) callback();
+          });
+        }
+          else{
+            callback()
+        }
+
+      }, err => {
+        if(err) res.status(500);
+        else res.status(200);
+      });
+    });
+});
+
+router.get('/familyMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'familyNew': 'family'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/educationMig', (req, res) => {
+  Employee.updateMany({}, {$rename : {'education': 'educationOld'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/educationMig2', (req, res) => {
+  EmployeeEducation.find().exec((err, doc) => {
+      async.each(doc, (item, callback) => {
+        if(item !== undefined && item !== null ) {
+          const docToObj = JSON.parse(JSON.stringify(item))
+          Employee.findOneAndUpdate({_id: item.employee}, {$push: {educationNew: docToObj}}, (err, result) => {
+              console.log(result);
+              if(err) callback();
+          });
+        }
+          else{
+            callback()
+        }
+
+      }, err => {
+        if(err) res.status(500);
+        else res.status(200);
+      });
+    });
+});
+
+router.get('/educationMig3', (req, res) => {
+  Employee.updateMany({}, {$rename : {'educationNew': 'education'}}, (err, raw) => {
+
+    let finish = (item) => {
+      res.status(200).json(item);
+    }
+
+    finish(raw);
+  })
+});
+
+router.get('/mig4', (req, res) => {
+  Employee.update({}, {$unset: {
+    companyOld: 1,
+    personalOld: 1,
+    payrollOld: 1,
+    commentsOld: 1,
+    attritionOld: 1,
+    familyOld: 1,
+    educationOld: 1}}, {multi: true}, (err, raw) => {
+      if(err) res.status(500);
+      else res.status(200).json(raw);
+    });
 });
 function deleteEmployee(employee) {
 

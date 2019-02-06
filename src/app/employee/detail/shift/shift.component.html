@@ -9,12 +9,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="example-container">
-      <div class="example-header">
-          <mat-form-field>
-              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-          </mat-form-field>
-      </div>
-      <mat-table #table [dataSource]="dataSource" matSort>
+      <mat-table #table [dataSource]="dataSource">
 
           <ng-container matColumnDef="shiftName">
               <mat-header-cell *matHeaderCellDef>Shift Name</mat-header-cell>
@@ -40,8 +35,8 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
       <mat-paginator #paginator
-      [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 15]">
+      [pageSize]="3"
+      [pageSizeOptions]="[3, 6, 9]">
       </mat-paginator>
     </div>
     <div class="example-container">
@@ -60,31 +55,34 @@
           </mat-form-field>
           <button mat-button color="primary" (click)="onSave()"><mat-icon>save</mat-icon> Save </button>
       </div>
-      <mat-table #table [dataSource]="currentShift" matSort>
+      <div class="table1">
+          <mat-table #table [dataSource]="currentShift" matSort>
 
-          <ng-container matColumnDef="day">
-              <mat-header-cell *matHeaderCellDef>Day</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.dayName}} </mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="day">
+                  <mat-header-cell *matHeaderCellDef>Day</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> <button mat-flat-button [className]=" compareDate(element.nextDate)? 'today mat-flat-button': 'not-today mat-flat-button'"  disableRipple="true">{{element.dayName}} </button></mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="onShift">
-              <mat-header-cell *matHeaderCellDef>On shift</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{(element.onShift)? "ON SHIFT" : "DAY OFF"}} </mat-cell>
-            </ng-container>
+                <ng-container matColumnDef="onShift">
+                  <mat-header-cell *matHeaderCellDef>On shift</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> <button mat-flat-button [className]="element.onShift ? 'onshift mat-flat-button': 'dayoff mat-flat-button'"  disableRipple="true">{{(element.onShift)? "ON SHIFT" : "DAY OFF"}}</button></mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="shift">
-              <mat-header-cell *matHeaderCellDef>Shift</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.startTimeString + " - " + element.endTimeString}} </mat-cell>
-            </ng-container>
+                <ng-container matColumnDef="shift">
+                  <mat-header-cell *matHeaderCellDef>Shift</mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.startTimeString + " - " + element.endTimeString}} </mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="nextDate">
-              <mat-header-cell *matHeaderCellDef>Next date</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.nextDate | date: 'MM/dd/yyyy'}} </mat-cell>
-            </ng-container>
+                <ng-container matColumnDef="nextDate">
+                  <mat-header-cell *matHeaderCellDef>Next date</mat-header-cell>
+                  <mat-cell *matCellDef="let element"><button mat-flat-button [className]=" compareDate(element.nextDate)? 'today mat-flat-button': 'not-today mat-flat-button'" disableRipple="true"> {{element.nextDate | date: 'MM/dd/yyyy'}}</button></mat-cell>
+                </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['day', 'onShift', 'shift', 'nextDate'];"></mat-row>
-      </mat-table>
+            <mat-header-row *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: ['day', 'onShift', 'shift', 'nextDate'];"></mat-row>
+          </mat-table>
+        </div>
+
     </div>
 
 </mat-expansion-panel>

@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, SimpleChange, SimpleChanges, OnChanges } from '@angular/core';
-import { Employee } from '../../Employee';
+import { Component, OnInit, Input, SimpleChange, SimpleChanges, OnChanges, ViewChild } from '@angular/core';
 import { EmployeeService } from '../../services/employee.service';
 import { FormGroup, FormBuilder } from '../../../../../node_modules/@angular/forms';
-import { MatTableDataSource } from '../../../../../node_modules/@angular/material';
+import { MatTableDataSource, MatSnackBar, MatPaginator } from '../../../../../node_modules/@angular/material';
 
 @Component({
   selector: 'shift',
@@ -19,7 +18,7 @@ export class ShiftComponent implements OnInit, OnChanges {
   today = Date.now();
   wpForm: FormGroup;
   displayedColumns = ['shiftName', 'startDate', 'endDate', 'createdDate'];
-  constructor(private _employeeService: EmployeeService, private fb: FormBuilder) { }
+  constructor(private _employeeService: EmployeeService, private fb: FormBuilder, private snackbar: MatSnackBar) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     const employee: SimpleChange = changes.employee;
@@ -31,6 +30,8 @@ export class ShiftComponent implements OnInit, OnChanges {
     this.populateTable1(shift);
     }
   }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
   ngOnInit() {
     this._employeeService.getShift().subscribe(result => { this.shifts = result; });
     this.buildForm();
@@ -47,6 +48,12 @@ export class ShiftComponent implements OnInit, OnChanges {
     const d = new Date();
     d.setDate(d.getDate() + (day + 7 - d.getDay()) % 7);
     return d;
+  }
+
+  compareDate(date: Date): boolean{
+    const datenow = new Date();
+    if(datenow.getDay() === date.getDay()) return true;
+    else return false;
   }
   getDayName(param: number): string {
     let name = 'Monday';
@@ -83,15 +90,25 @@ export class ShiftComponent implements OnInit, OnChanges {
       endDate: null,
       shift: this.wpForm.value.shift
     };
-    this._employeeService.saveShift(employeeShift).subscribe(result => {
-    }, error => {});
+    this._employeeService.saveShift(employeeShift).subscribe((result: any) => {
+      let wp = this.shifts.filter(item => item._id === result.shift);
+      result.shift = wp[0];
+      this.populateTable(result);
+      this.populateTable1(result.shift.shift);
+      this.openSuccess();
+    }, error => {
+      this.openError()
+    });
   }
   populateTable(event: any) {
+    console.log(event);
     if (this.dataSource.length !== 0) {
       const data = this.dataSource.data;
       data.push(event);
       this.dataSource.data = data;
-    } else { this.dataSource = new MatTableDataSource(event); }
+    } else {
+      this.dataSource = new MatTableDataSource(event);
+      this.dataSource.paginator = this.paginator;}
   }
   transformTime(param): string {
     let result = 'N/A';
@@ -111,10 +128,18 @@ export class ShiftComponent implements OnInit, OnChanges {
       element.startTimeString = this.transformTime(element.startTime);
       element.endTimeString = this.transformTime(element.endTime);
     });
-    if (typeof this.currentShift !== 'undefined') {
-      const data = this.currentShift.data;
-      data.push(event);
-      this.currentShift.data = data;
-    } else { this.currentShift = new MatTableDataSource(event); }
+     this.currentShift = new MatTableDataSource(event);
   }
+  openSuccess() {
+      this.openSnackBar('Great! Everything was done correctly', 'Ok');
+    }
+    openError() {
+      this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
+
+    }
+    openSnackBar(message: string, action: string) {
+      this.snackbar.open(message, action, {
+      duration: 5000,
+      });
+    }
 }

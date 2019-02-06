@@ -112,29 +112,30 @@
      </form>
      </div>
 
-     <h4>Choose the information you want to export</h4>
-     <div style="width: 100%; margin: 0 auto">
-            <mat-button-toggle [value]="">
-                Main Information
-            </mat-button-toggle>
-            <mat-button-toggle [value]="">
-                Company Information
-            </mat-button-toggle>
-            <mat-button-toggle [value]="">
-               Shift Information
-           </mat-button-toggle>
-           <mat-button-toggle [value]="">
-               Position Information
-           </mat-button-toggle>
-           <mat-button-toggle [value]="">
-               Attrition Information
-           </mat-button-toggle>
-           <mat-button-toggle [value]="">
-               Personal Information
-           </mat-button-toggle>
-           <mat-button-toggle [value]="">
-               Family Information
-           </mat-button-toggle>
+     <mat-card-header>
+
+        <mat-card-subtitle>
+            Choose the information you want to export (default - only main information will be exported)
+        </mat-card-subtitle>
+     </mat-card-header>     <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="10px" fx>
+        <mat-button-toggle (click)="clickMain($event)" [checked]="mainInfoToggle" matTooltip="Information such as: names, social security...etc">
+            Main Information
+        </mat-button-toggle>
+        <mat-button-toggle (click)="clickCompany($event)" matTooltip="Information such as: campaign, hire date...etc">
+            Company Information
+        </mat-button-toggle>
+        <mat-button-toggle (click)="clickPersonal($event)" matTooltip="Information such as: address, email, phone...etc">
+            Personal Information
+        </mat-button-toggle>
+        <mat-button-toggle (click)="clickShift($event)" matTooltip="Information such as: shift...etc">
+            Shift Information
+        </mat-button-toggle>
+        <mat-button-toggle (click)="clickAttrition($event)" matTooltip="Information such as: comments, attrition...etc">
+            Attrition Information
+        </mat-button-toggle>
+        <mat-button-toggle (click)="clickEmergency($event)" matTooltip="Information such as: emergency contact...etc">
+             Emergency Information
+        </mat-button-toggle>
      </div>
 
      <button mat-button color="primary" (click)="getReport()" *ngIf="!this.dataSource"> <mat-icon>autorenew</mat-icon>&nbsp; &nbsp; Load Information</button>
@@ -147,7 +148,7 @@
          <mat-card-subtitle>to export to Excel click on the export button </mat-card-subtitle>
        </mat-card-header>
     <div class="container">
-        <table mat-table #table [dataSource]="dataSource" matSort >
+         <table mat-table #table [dataSource]="dataSource" matSort >
 
             <ng-container matColumnDef="employeeId">
                 <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
@@ -183,61 +184,6 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
               <mat-cell *matCellDef="let element"> {{element.status}}</mat-cell>
             </ng-container>
-
-            <ng-container matColumnDef="client">
-                <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
-              </ng-container>
-
-            <ng-container matColumnDef="campaign">
-                <mat-header-cell *matHeaderCellDef>Campaign</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.campaign}} </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="manager">
-              <mat-header-cell *matHeaderCellDef>Manager</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.manager}} </mat-cell>
-            </ng-container>
-
-          <ng-container matColumnDef="supervisor">
-            <mat-header-cell *matHeaderCellDef>Supervisor</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.supervisor}} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="trainer">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Trainer </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.trainer}} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="trainingGroupRef">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group Name </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.trainingGroupRef}} </mat-cell>
-          </ng-container>
-
-          <ng-container matColumnDef="trainingGroupNum">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Training Group # </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.trainingGroupNum}} </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="hireDate">
-                <mat-header-cell *matHeaderCellDef>Hire Date</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.hireDate | date: 'MM/dd/yyyy'}} </mat-cell>
-              </ng-container>
-
-            <ng-container matColumnDef="terminationDate">
-                <mat-header-cell *matHeaderCellDef>Termination Date</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.terminationDate | date: 'MM/dd/yyyy'}} </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="reapplicant">
-              <mat-header-cell *matHeaderCellDef>Reapplicant</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{ element.reapplicant?'Yes':'No'}} </mat-cell>
-            </ng-container>
-
-          <ng-container matColumnDef="reapplicantTimes">
-            <mat-header-cell *matHeaderCellDef>Reapplicant Times</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.reapplicantTimes}} </mat-cell>
-          </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
