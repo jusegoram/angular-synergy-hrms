@@ -27,7 +27,6 @@ import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/fa
 import {EmployeeResolver} from './services/employee.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -39,7 +38,6 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
-    ScrollingModule
   ],
   declarations: [
     UploadComponent,
