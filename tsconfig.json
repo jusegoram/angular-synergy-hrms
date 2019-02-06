@@ -18,7 +18,7 @@
     ]
   },
   "angularCompilerOptions": {
-    "enableIvy": true
+    "enableIvy": false
   },
   "include": [
     "src/**/*",
