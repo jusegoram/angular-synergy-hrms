@@ -17,7 +17,7 @@ export class ReportComponent implements OnInit {
   dataSource = null;
   auth: any;
   hours: EmployeeHours[];
-  displayedColumns = ['employeeID', 'dialerID', 'hours', 'tosHours', 'timeIn', 'date'];
+  displayedColumns = ['employeeID', 'fullName' ,'dialerID', 'hours', 'tosHours', 'timeIn', 'date', 'action'];
   dateFrom = new FormControl();
   dateTo = new FormControl();
 
@@ -61,10 +61,19 @@ export class ReportComponent implements OnInit {
   reload() {
     this.dateFrom.reset();
     this.dateTo.reset();
-    this.dataSource.data = this.hours;
+    this._opsService.clearHours();
+    this.populateTable();
   }
   export() {
-    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+    let exportData = JSON.parse(JSON.stringify(this.dataSource.data));
+
+    let mappedData = exportData.map(item => {
+      item.systemHours = item.systemHours.value;
+      item.tosHours = item.tosHours.value;
+      item.timeIn = item.timeIn.value;
+      return item;
+    })
+    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'hours-info');
     XLSX.writeFile(wb, 'export-hours.xlsx');

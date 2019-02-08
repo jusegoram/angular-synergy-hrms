@@ -99,7 +99,7 @@ var educationSchema = new Schema({
 
 let EmployeeSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    employeeId: { type: Number, required: true, unique: true },
+    employeeId: { type: Number, required: true, unique: true},
     firstName: {type: String, required: true},
     middleName:{ type: String, required: false },
     lastName: {type: String, required: true},
@@ -164,4 +164,5 @@ EmployeeSchema.statics.getId = function (employeeid) {
 
 EmployeeSchema.plugin(mongooseAutopopulate);
 EmployeeSchema.plugin(mongooseUniqueValidator);
+EmployeeSchema.index({status: 1, employeeId: -1});
 module.exports = mongoose.model('employee-main', EmployeeSchema);

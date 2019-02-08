@@ -21,12 +21,13 @@ export class CloudUploadComponent {
   URL = environment.siteUri;
    // http://localhost:3000/upload
   items = [
-    {value: '/api/v1/employee/upload/hours', viewValue: 'Employee Hours'},
+    {value: '/api/v1/operations/upload/hours', viewValue: 'Hours'},
+    {value: '/api/v1/operations/upload/kpi', viewValue: "KPI's"}
   ];
 
   templates = [
-    {text: 'Hours Information', value: '/api/v1/employee/template/hours'},
-
+    {value: '/api/v1/operations/hourTemplate', viewValue: 'Hours Template'},
+    {value: '/api/v1/operations/kpiTemplate', viewValue: 'KPI Template'}
   ];
   templateSelected = '';
   // public uploader: FileUploader = new FileUploader({

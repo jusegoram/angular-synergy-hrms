@@ -17,8 +17,8 @@
       <div fxFlex="auto"></div>
       <button mat-icon-button (click)="reload()"><mat-icon>refresh</mat-icon></button>
       <div *ngIf="auth.edit">
-      <a [routerLink]="['/', 'employee', 'new' ]">
-      <button mat-icon-button><mat-icon>add_circle</mat-icon></button>
+      <a [routerLink]="['/', 'employee', 'new' ]" mat-icon-button>
+      <mat-icon>person_add</mat-icon>
       </a>
     </div>
   </div>
@@ -53,8 +53,12 @@
 
 
     <ng-container matColumnDef="details">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
-      <mat-cell *matCellDef="let element"> <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}"><button mat-button><mat-icon>person_pin</mat-icon> Go</button></a></mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header> </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+              <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}" mat-menu-item matTooltip="Go to details">
+                <mat-icon>arrow_forward</mat-icon>
+              </a>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

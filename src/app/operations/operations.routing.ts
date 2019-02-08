@@ -4,11 +4,13 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { CloudUploadComponent } from './cloud-upload/cloud-upload.component';
 import { ReportComponent } from './report/report.component';
 import { ManageComponent } from './manage/manage.component';
+import { DetailComponent } from '../employee/detail/detail.component';
 const routes: Routes = [
   {
     path: '',
       children : [
          { path : 'dashboard', component : DashboardComponent },
+         //{ path: 'detail', component: DetailComponent},
          { path : 'reports', component : ReportComponent },
          { path : 'upload', component : CloudUploadComponent},
          { path : 'manage',   component: ManageComponent}

@@ -30,7 +30,7 @@ export class UserPermissionComponent implements OnInit {
     {value: 3, viewValue: 'Administrator'},
     {value: 4, viewValue: 'Super Administrator'}
   ];
-  displayedColumns = ['employeeID', 'name', 'status', 'details'];
+  displayedColumns = ['employeeID', 'name', 'status', 'rights','details'];
       constructor(
         private sessionService: SessionService,
         private adminService: AdminService,

@@ -12,7 +12,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
+// Import angular-fusioncharts
+import { FusionChartsModule } from 'angular-fusioncharts';
 
+// Import FusionCharts library and chart modules
+import * as FusionCharts from 'fusioncharts';
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+import * as Widgets from 'fusioncharts/fusioncharts.widgets';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import { DetailComponent } from './detail/detail.component';
+import { KpiComponent } from './report/kpi/kpi.component';
+
+// Pass the fusioncharts library and chart modules
+FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
 @NgModule({
   imports: [
     CommonModule,
@@ -21,9 +33,10 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     NgxDatatableModule,
     FileUploadModule,
-    FormsModule
+    FormsModule,
+    FusionChartsModule,
   ],
-  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent],
+  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent],
   providers: [
     OperationsService, TitleCasePipe, DatePipe]
 })

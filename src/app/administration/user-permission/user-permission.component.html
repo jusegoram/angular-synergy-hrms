@@ -39,6 +39,10 @@
         <mat-cell *matCellDef="let element"> {{element.employee?.status | titlecase}} </mat-cell>
       </ng-container>
 
+      <ng-container matColumnDef="rights">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> rights </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.role}} </mat-cell>
+        </ng-container>
 
       <ng-container matColumnDef="details">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>

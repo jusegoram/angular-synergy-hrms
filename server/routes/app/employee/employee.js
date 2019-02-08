@@ -14,12 +14,11 @@ let EmployeeCompany = require("../../../models/app/employee/employee-company");
 let EmployeeEducation = require("../../../models/app/employee/employee-education");
 let EmployeeComment = require("../../../models/app/employee/employee-comment");
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
-let EmployeeHours = require("../../../models/app/employee/employee-hour");
 let EmployeeAttrition = require("../../../models/app/employee/employee-attrition");
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: 1}).exec(
+    Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: -1}).exec(
         function (err, result) {
         if (err) {
             return res.status(500).json({
@@ -472,18 +471,6 @@ router.post('/new', function(req, res, next){
 });
 
 
-//TODO: move to correct place
-router.get('/allHours', (req, res, next) => {
-  EmployeeHours.find({}, (error, result) => {
-    if(!result) {
-      res.status(404);
-    }else if(error) {
-      res.status(500);
-    }else {
-      res.status(200).json(result);
-    }
-  });
-});
 
 
 module.exports = router;

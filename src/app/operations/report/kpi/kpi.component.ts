@@ -1,0 +1,165 @@
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { OperationsService } from '../../operations.service';
+import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import * as XLSX from 'xlsx';
+
+@Component({
+  selector: 'ops-kpi',
+  templateUrl: './kpi.component.html',
+  styleUrls: ['./kpi.component.scss']
+})
+export class KpiComponent implements OnInit {
+@ViewChild(MatSort) _sort: MatSort;
+@ViewChild(MatPaginator) paginator: MatPaginator;
+
+items;
+kpiGroups = [
+  {
+    name: 'TIB',
+    kpi: [
+      { name:'Quality' },
+      { name:'PrimaryClosing' },
+      { name:'SPC' },
+      { name:'SPH' },
+      { name:'GrossClosing' },
+      { name:'Adherence' },
+    ]
+  },
+  {
+    name: 'CIT',
+    kpi: [
+      { name:'OCR' },
+      { name:'UCR' },
+      { name:'HomeSecurity' },
+      { name:'Quality' },
+      { name:'NRPC' },
+      { name:'GRPO' },
+      { name:'Satellite' },
+      { name:'DukeRSP' },
+      { name:'AmericanWater' },
+      { name:'GeekSquad' },
+      { name:'Quality'},
+    ]
+  },
+  {
+    name: 'CCS',
+    kpi: [
+      { name:'Efficiency' },
+      { name:'Adherence' },
+
+    ]
+  },
+  {
+    name: 'RAD',
+    kpi: [
+      { name:'AIMS' },
+      { name:'UPH' },
+      { name:'Adherence' },
+      { name:'CSAT' },
+    ]
+  },
+  {
+    name: 'FALC',
+    kpi: [
+      { name:'Avg Claim Time'},
+      { name:'Adherence'},
+    ]
+  },
+  {
+    name: 'ATLAS',
+    kpi: [
+      { name:'Avg Claim Time' },
+      { name:'Adherence' },
+    ]
+  },
+  {
+    name: 'AIP',
+    kpi: [
+      { name:'Conversion' },
+      { name:'Calls Answered' },
+      { name:'LostJobs' },
+      { name:'Escalations' },
+      { name:'Immediate Coaching' },
+    ]
+  },
+];
+kpis: any[];
+clients = [];
+campaigns = [];
+dataSource: any;
+dialData: object
+queryForm: FormGroup;
+displayedColumns = ['employeeId', 'fullName', 'client', 'campaign', 'teamId', 'kpiName','score', 'date', 'action'];
+  constructor(private _opsService: OperationsService, private fb: FormBuilder) {
+
+  }
+
+  ngOnInit() {
+    this._opsService.getClient().subscribe(data => {
+      this.clients = data;
+    })
+    this.buildQueryForm();
+  }
+
+  buildQueryForm(){
+    this.queryForm = this.fb.group({
+      kpiFrom: [''],
+      kpiTo: [new Date()],
+      kpiClient:[''],
+      kpiCampaign:[''],
+      kpiTeamId:[''],
+      kpiName:[''],
+    });
+  }
+
+  populateTable(query) {
+    this._opsService.getKpis(query)
+      .subscribe(res => {
+        res.map((item) => {
+          item.date = new Date(item.date);
+        });
+        this.kpis = res;
+        this.dataSource = new MatTableDataSource(this.kpis);
+          this.dataSource.paginator = this.paginator;
+        },
+      error => console.log(error), () => {
+        console.log('all done');
+        this.dataSource.sort = this._sort;
+      });
+  }
+
+  setCampaigns(event: any) {
+    this.campaigns = event.campaigns;
+  }
+
+  runQuery(){
+    let queryParam = this.queryForm.value;
+    let query = {
+      'client': queryParam.client,
+      'campaign': queryParam.kpiCampaign,
+      'date': {$gte: queryParam.kpiFrom, $lt: queryParam.kpiTo},
+      'kpiName': queryParam.kpiName,
+      'teamId': queryParam.kpiTeamId,
+    }
+    this.populateTable(query);
+  }
+
+  export() {
+    let exportData = JSON.parse(JSON.stringify(this.dataSource.data));
+
+    let mappedData = exportData.map(item => {
+      item.score = item.score? item.score : item.scoreInTime.value;
+      return item;
+    })
+    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, main, 'kpi-info');
+    XLSX.writeFile(wb, 'export-kpi.xlsx');
+  }
+
+  clear(){
+    this.queryForm.reset();
+    this.dataSource = null;
+  }
+}

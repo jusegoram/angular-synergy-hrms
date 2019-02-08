@@ -30,10 +30,10 @@
                 </div> -->
               </div>
               <div style="margin-left: 20px">
-                  <button mat-icon-button (click)="export()">
-                    <mat-icon>cloud_download</mat-icon>
+                  <button mat-icon-button  matTooltip="Export to Excel File" (click)="export()">
+                    <mat-icon >cloud_download</mat-icon>
                   </button>
-                <button mat-icon-button (click)="reload()">
+                <button mat-icon-button  matTooltip="Clear filter" (click)="reload()">
                     <mat-icon>refresh</mat-icon>
                   </button>
               </div>
@@ -52,9 +52,9 @@
                 </ng-container>
 
                 <!-- Name Column -->
-                <ng-container matColumnDef="name">
+                <ng-container matColumnDef="fullName">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.firstName +' '+ element.middleName + ' ' + element.lastName}} </mat-cell>
+                  <mat-cell *matCellDef="let element"> {{element.employeeName}} </mat-cell>
                 </ng-container>
 
                 <!-- Weight Column -->
@@ -66,17 +66,17 @@
                 <!-- Color Column -->
                 <ng-container matColumnDef="hours">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Hours </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.systemHours}} </mat-cell>
+                  <mat-cell *matCellDef="let element"> {{element.systemHours.value}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="tosHours">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> TOS Hours </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.tosHours}} </mat-cell>
+                  <mat-cell *matCellDef="let element"> {{element.tosHours.value}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="timeIn">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Time In </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.timeIn}} </mat-cell>
+                  <mat-cell *matCellDef="let element"> {{element.timeIn.value}} </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="date">
@@ -85,6 +85,22 @@
                   </ng-container>
 
 
+                  <ng-container matColumnDef="action">
+                      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                          <button mat-icon-button [matMenuTriggerFor]="menu">
+                              <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element.employee}">
+                              <button mat-menu-item>
+                                <mat-icon>account_circle</mat-icon>
+                                <span>Go to agent</span>
+                              </button>
+                              </a>
+                            </mat-menu>
+                      </mat-cell>
+                    </ng-container>
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
               </mat-table>
@@ -95,6 +111,8 @@
           </div>
         </div>
   </mat-tab>
-  <mat-tab label="KPI 2"> Content 2 </mat-tab>
-  <mat-tab label="KPI 3"> Content 3 </mat-tab>
+  <mat-tab label="KPI">
+    <ops-kpi></ops-kpi>
+  </mat-tab>
+
 </mat-tab-group>
