@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { OperationsService } from '../../operations.service';
-import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
+import { MatTableDataSource} from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as XLSX from 'xlsx';
 
@@ -10,8 +10,6 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./kpi.component.scss']
 })
 export class KpiComponent implements OnInit {
-@ViewChild(MatSort) _sort: MatSort;
-@ViewChild(MatPaginator) paginator: MatPaginator;
 
 items;
 kpiGroups = [
@@ -91,7 +89,9 @@ dataSource: any;
 dialData: object
 queryForm: FormGroup;
 displayedColumns = ['employeeId', 'fullName', 'client', 'campaign', 'teamId', 'kpiName','score', 'date', 'action'];
-  constructor(private _opsService: OperationsService, private fb: FormBuilder) {
+notfound;
+
+constructor(private _opsService: OperationsService, private fb: FormBuilder) {
 
   }
 
@@ -120,12 +120,11 @@ displayedColumns = ['employeeId', 'fullName', 'client', 'campaign', 'teamId', 'k
           item.date = new Date(item.date);
         });
         this.kpis = res;
+        this.notfound = (this.kpis.length === 0 )? true : false;
         this.dataSource = new MatTableDataSource(this.kpis);
-          this.dataSource.paginator = this.paginator;
         },
       error => console.log(error), () => {
         console.log('all done');
-        this.dataSource.sort = this._sort;
       });
   }
 
@@ -159,6 +158,7 @@ displayedColumns = ['employeeId', 'fullName', 'client', 'campaign', 'teamId', 'k
   }
 
   clear(){
+    this.notfound = false;
     this.queryForm.reset();
     this.dataSource = null;
   }

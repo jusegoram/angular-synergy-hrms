@@ -46,6 +46,7 @@
       <mat-cell *matCellDef="let element"> {{element.socialSecurity}} </mat-cell>
     </ng-container>
 
+
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.status | titlecase}} </mat-cell>
@@ -56,6 +57,7 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header> </mat-header-cell>
       <mat-cell *matCellDef="let element">
               <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}" mat-menu-item matTooltip="Go to details">
+                <span>Details  </span>
                 <mat-icon>arrow_forward</mat-icon>
               </a>
       </mat-cell>

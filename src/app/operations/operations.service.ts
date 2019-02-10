@@ -15,14 +15,10 @@ public clients: any;
     this._employeeHours = null;
    }
 
-  getHours(): Observable<Array<EmployeeHours>> {
-    if (!this._employeeHours) {
-      this._employeeHours = this.httpClient.get<Array<EmployeeHours>>('/api/v1/operations/allHours').pipe(
-        publishReplay(1),
-        refCount()
-      );
-    }
-    return this._employeeHours;
+  getHours(query): Observable<any> {
+    const body = query;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/operations/hour', body, { headers: headers });
   }
   getKpis(query): Observable<any> {
     const body = query;

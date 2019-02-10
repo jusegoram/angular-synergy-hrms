@@ -22,5 +22,5 @@ let schema = new Schema({
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
 });
 
-schema.index({campaign: 1, date: -1});
+schema.index({client: 1 ,campaign: 1, date: -1});
 module.exports = mongoose.model('operations-hour', schema);

@@ -3,11 +3,12 @@ var router = express.Router();
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var mongoose = require('mongoose');
-var fs = require('fs');
-var path = require('path');
-const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, './_RS256.key'));
+
+const https = require('https');
 
 var User = require('../../models/administration/administration-user');
+
+
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
     var user = token.role;
@@ -43,40 +44,7 @@ router.post('/signup', function (req, res, next) {
     });
 });
 
-router.post('/login', function(req, res, next) {
-    User.findOne({username: req.body.user}).select('+password').exec(function(err, user) {
-      if (err) {
-          return res.status(500).json({
-              title: 'An error occurred',
-              error: err
-          });
-      }
-      if (!user) {
-          return res.status(401).json({
-              title: 'Login failed',
-              error: {message: 'Invalid login credentials'}
-          });
-      }
-      if (!bcrypt.compareSync(req.body.password, user.password)) {
-          return res.status(401).json({
-              title: 'Login failed',
-              error: {message: 'Invalid login credentials'}
-          });
-      }
-      var token = jwt.sign({
-        userId: user._id.toString(),
-        name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
-        role: user.role
-      }, RSA_PUBLIC_KEY, {
-        algorithm: 'RS256',
-        expiresIn: 600
-      });
-      res.status(200).json({
-          idToken: token,
-      });
-  });
 
-});
 
 router.get('/usersInfoById', (req, res, next) => {
   let idList = req.body;
@@ -141,4 +109,22 @@ router.get('/verify', function(req, res, next){
 
 });
 
+router.get('/weather', (req, res) => {
+
+  https.get('https://api.openweathermap.org/data/2.5/weather?id=3582677&appid=8034784ce4c51bf0ab36b2cde7dda225', (resp) => {
+  let data;
+  // A chunk of data has been recieved.
+  resp.on('data', (chunk) => {
+    data = JSON.parse(chunk);
+  });
+
+  // The whole response has been received. Print out the result.
+  resp.on('end', () => {
+    res.status(200).json(data)
+  });
+
+}).on("error", (err) => {
+    res.status(500).json(err)
+});
+});
 module.exports = router;

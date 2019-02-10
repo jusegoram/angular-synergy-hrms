@@ -8,7 +8,7 @@ import { ManageComponent } from './manage/manage.component';
 import { ReportComponent } from './report/report.component';
 import { OperationsService } from './operations.service';
 import { MaterialSharedModule } from '../shared/material.shared.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
@@ -22,9 +22,15 @@ import * as Widgets from 'fusioncharts/fusioncharts.widgets';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import { DetailComponent } from './detail/detail.component';
 import { KpiComponent } from './report/kpi/kpi.component';
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkColumnDef } from '@angular/cdk/table';
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
 
 // Pass the fusioncharts library and chart modules
 FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
+
+
 @NgModule({
   imports: [
     CommonModule,
@@ -35,9 +41,21 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
     FileUploadModule,
     FormsModule,
     FusionChartsModule,
+    ScrollingModule,
+
   ],
   declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent],
   providers: [
-    OperationsService, TitleCasePipe, DatePipe]
+    OperationsService, TitleCasePipe, DatePipe, CdkColumnDef,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }]
 })
 export class OperationsModule { }

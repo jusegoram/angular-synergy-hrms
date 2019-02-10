@@ -6,8 +6,17 @@ let OperationHours = require('../../../models/app/operations/operations-hour')
 let OperationsKpi = require('../../../models/app/operations/operations-kpi')
 
 
-router.get('/allHours', (req, res, next) => {
-  OperationHours.find({}, (error, result) => {
+router.post('/hour', (req, res, next) => {
+  let query = req.body;
+  for (let propName in query) {
+    if (query[propName] === null || query[propName] === undefined || query[propName] === '') {
+      delete query[propName];
+    }
+  }
+  if(query.date.$gte === '' || query.date.$gte === undefined || query.date.$gte === null) {
+    delete query.date;
+  }
+  OperationHours.find(query, (error, result) => {
     if(!result) {
       res.status(404);
     }else if(error) {
@@ -28,7 +37,6 @@ router.post('/kpi', (req, res) => {
   if(query.date.$gte === '' || query.date.$gte === undefined || query.date.$gte === null) {
     delete query.date;
   }
-console.log(query);
   OperationsKpi.find(query, (error, result) => {
     if(!result) {
       res.status(404);

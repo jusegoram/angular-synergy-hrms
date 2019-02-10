@@ -13,8 +13,9 @@ import {FileUploadModule} from 'ng2-file-upload';
 import {FormsModule} from '@angular/forms';
 import {PayrollService} from './services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import {HttpClientModule} from '@angular/common/http';
-
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
 
 @NgModule({
   imports: [
@@ -24,10 +25,21 @@ import {HttpClientModule} from '@angular/common/http';
     HttpClientModule,
     FileUploadModule,
     FormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+
   ],
   declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, BonusComponent, DeductionComponent],
-  providers: [ PayrollService, TitleCasePipe ]
+  providers: [ PayrollService, TitleCasePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }]
 
 })
 export class PayrollModule { }

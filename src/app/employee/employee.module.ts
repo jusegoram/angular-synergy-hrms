@@ -19,7 +19,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
 import { CommentComponent } from './detail/comment/comment.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { NewComponent } from './new/new.component';
 import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
 import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
@@ -27,7 +27,8 @@ import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/fa
 import {EmployeeResolver} from './services/employee.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
-
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { AttritionComponent } from './detail/attrition/attrition.component';
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
+
   ],
   declarations: [
     UploadComponent,
@@ -68,7 +70,17 @@ import { AttritionComponent } from './detail/attrition/attrition.component';
       PersonalEditDialogComponent
     ],
   providers: [
-    EmployeeService, EmployeeResolver, TitleCasePipe, DatePipe]
+    EmployeeService, EmployeeResolver, TitleCasePipe, DatePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }]
 })
 
 export class EmployeeModule {}

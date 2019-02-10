@@ -6,7 +6,7 @@ import { MaterialSharedModule } from './shared/material.shared.module';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -17,16 +17,15 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { SharedModule } from './shared/shared.module';
-import { JwtModule } from '@auth0/angular-jwt';
 import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
 import { RootGuard } from './session/guards/root.guard';
+import { TokenInterceptor } from './token-interceptor.service';
+import { AuthenticationService } from './authentication.service';
 
 
 
 
-export function tokenGetter() {
-  return localStorage.getItem('id_token');
-}
+
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -53,13 +52,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MaterialSharedModule,
     BidiModule,
     PerfectScrollbarModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: ['https://synergy.rccbpo.com'],
-        authScheme: 'JWT '
-      }
-    }),
   ],
   providers: [
     {
@@ -68,7 +60,17 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     SessionService,
     SessionGuard,
-    RootGuard
+    RootGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
   entryComponents: [GuardDialogComponent]

@@ -66,7 +66,8 @@ export class ExportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._payrollService.getClient().subscribe(data => this.clients = data);
+    this._payrollService._clients = null;
+    this._payrollService.getClient().subscribe((data: any) => {this.clients = data});
     this.buildForm();
   }
   buildForm() {

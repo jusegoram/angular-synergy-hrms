@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { OperationsService } from '../operations.service';
 import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { EmployeeHours } from '../../employee/Employee';
-import { FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -11,58 +11,55 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit {
-  @ViewChild(MatSort) _sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   dataSource = null;
   auth: any;
   hours: EmployeeHours[];
   displayedColumns = ['employeeID', 'fullName' ,'dialerID', 'hours', 'tosHours', 'timeIn', 'date', 'action'];
-  dateFrom = new FormControl();
-  dateTo = new FormControl();
-
-  constructor(private _opsService: OperationsService) { }
+  clients = [];
+  campaigns = [];
+  queryForm: FormGroup;
+  notfound;
+  constructor(private _opsService: OperationsService, private fb: FormBuilder) { }
   ngOnInit() {
-    this.populateTable();
+    this._opsService.getClient().subscribe(data => {
+      this.clients = data;
+    })
+    this.buildQueryForm();
   }
 
-  populateTable() {
-    this._opsService.getHours()
+  populateTable(query) {
+    this._opsService.getHours(query)
       .subscribe(res => {
         res.map((item) => {
           item.date = new Date(item.date);
         });
         this.hours = res;
+        this.notfound = (this.hours.length === 0 )? true : false;
         this.dataSource = new MatTableDataSource(this.hours);
-          this.dataSource.paginator = this.paginator;
         },
       error => console.log(error), () => {
         console.log('all done');
-        this.dataSource.sort = this._sort;
       });
+  }
+  buildQueryForm(){
+    this.queryForm = this.fb.group({
+      From: [''],
+      To: [new Date()],
+      Client:[''],
+      Campaign:[''],
+      dialerId:[''],
+    });
   }
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
-  dateFilter(event) {
-    if (this.dateFrom.value === null) {
-      this.dataSource.data = this.dataSource.data
-      .filter((item) => item.date <= this.dateTo.value);
-    }else if (this.dateTo.value === null) {
-      this.dataSource.data = this.dataSource.data
-      .filter((item) => item.date >= this.dateFrom.value);
-    }else {
-      this.dataSource.data = this.dataSource.data
-      .filter((item) => item.date >= this.dateFrom.value && item.date <= this.dateTo.value);
-    }
-  }
   reload() {
-    this.dateFrom.reset();
-    this.dateTo.reset();
-    this._opsService.clearHours();
-    this.populateTable();
+    this.queryForm.reset();
+    this.notfound = false;
+    this.dataSource = null;
   }
   export() {
     let exportData = JSON.parse(JSON.stringify(this.dataSource.data));
@@ -77,5 +74,18 @@ export class ReportComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'hours-info');
     XLSX.writeFile(wb, 'export-hours.xlsx');
+  }
+  setCampaigns(event: any) {
+    this.campaigns = event.campaigns;
+  }
+  runQuery(){
+    let queryParam = this.queryForm.value;
+    let query = {
+      'client': queryParam.client,
+      'campaign': queryParam.Campaign,
+      'date': {$gte: queryParam.From, $lt: queryParam.To},
+      'dialerId': queryParam.dialerId,
+      }
+    this.populateTable(query);
   }
 }

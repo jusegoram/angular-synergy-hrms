@@ -15,7 +15,10 @@ import { NewDialogComponent } from './employee/workpattern/new-dialog/new-dialog
 import { EditDialogComponent } from './employee/workpattern/edit-dialog/edit-dialog.component';
 import { EditPositionDialogComponent } from './employee/position/edit-position-dialog/edit-position-dialog.component';
 import { CreateDepartmentDialogComponent } from './employee/position/create-department-dialog/create-department-dialog.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
+
 
 @NgModule({
   imports: [
@@ -23,7 +26,7 @@ import { HttpClientModule } from '@angular/common/http';
     AdminRoutingModule,
     MaterialSharedModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   declarations: [
     UserPermissionComponent,
@@ -38,7 +41,17 @@ import { HttpClientModule } from '@angular/common/http';
     EditPositionDialogComponent,
     CreateDepartmentDialogComponent,
   ],
-  providers: [AdminService],
+  providers: [AdminService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }],
   entryComponents: [
     NewDialogComponent,
     EditDialogComponent,

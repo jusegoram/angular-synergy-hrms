@@ -8,6 +8,9 @@ import { ReportsComponent } from './reports/reports.component';
 import { UploadsComponent } from './uploads/uploads.component';
 import { TrainingService } from './training.service';
 import { TrainingResolver } from './training.resolver';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
 
 @NgModule({
   imports: [
@@ -21,7 +24,17 @@ import { TrainingResolver } from './training.resolver';
     UploadsComponent
   ],
   providers: [
-    TrainingService, TrainingResolver, TitleCasePipe, DatePipe
+    TrainingService, TrainingResolver, TitleCasePipe, DatePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationService,
+      multi: true
+    }
   ]
 })
 export class TrainingModule { }

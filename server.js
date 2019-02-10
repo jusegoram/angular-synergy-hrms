@@ -1,6 +1,7 @@
 
 //Require all imports
 const express = require('express');
+const authentication = require('./server/middleware/authentication');
 const path = require('path');
 const debug = require('debug')('node-rest:server');
 const http = require('http');
@@ -65,7 +66,6 @@ mongoose.connect(TEST_URI, {
  });
  app.set('dist', path.join(__dirname, 'dist'));
  app.engine('html', require('ejs').renderFile);
-
  app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -87,24 +87,24 @@ app.use(compression());
  * @description: Administration Module Express routes.
  * @author: Juan Sebastian Gomez
  */
-app.use('/api/v1', admUserRoutes);
-app.use('/api/v1/admin/menu', admMenuRoutes);
-app.use('/api/v1/admin/employee', admEmployeeRoutes);
-app.use('/api/v1/admin/payroll', admPayrollRoutes);
+app.use('/api/v1', authentication.authentication, admUserRoutes);
+app.use('/api/v1/admin/menu', authentication.authentication, admMenuRoutes);
+app.use('/api/v1/admin/employee', authentication.authentication, admEmployeeRoutes);
+app.use('/api/v1/admin/payroll', authentication.authentication, admPayrollRoutes);
 /**
  * @description: Employee Module Express routes.
  * @author: Juan Sebastian Gomez
  */
-app.use('/api/v1/employee', empRoutes);
-app.use('/api/v1/employee/upload', empUploadRoutes);
-app.use('/api/v1/employee/report', empReportRoutes);
-app.use('/api/v1/employee/template', empTemplateRoutes);
+app.use('/api/v1/employee', authentication.authentication, empRoutes);
+app.use('/api/v1/employee/upload', authentication.authentication, empUploadRoutes);
+app.use('/api/v1/employee/report', authentication.authentication, empReportRoutes);
+app.use('/api/v1/employee/template', authentication.authentication, empTemplateRoutes);
 
-app.use('/api/v1/user', appUserRoutes);
-app.use('/api/v1/payroll', appPayrollRoutes);
+app.use('/api/v1/user', authentication.authentication, appUserRoutes);
+app.use('/api/v1/payroll', authentication.authentication, appPayrollRoutes);
 
-app.use('/api/v1/operations', appOpsRoutes);
-app.use('/api/v1/operations/upload', appOpsUploadRoutes);
+app.use('/api/v1/operations', authentication.authentication, appOpsRoutes);
+app.use('/api/v1/operations/upload', authentication.authentication, appOpsUploadRoutes);
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.
