@@ -48,4 +48,11 @@ public clients: any;
   clearHours() {
     this._employeeHours = null;
   }
+  getTemplate(templateUrl){
+    return this.httpClient.get(templateUrl, {responseType: 'blob'});
+  }
+  tokenGetter() {
+    return localStorage.getItem('id_token');
+  }
+
 }

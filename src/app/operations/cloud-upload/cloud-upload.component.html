@@ -21,12 +21,11 @@
       <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <mat-form-field appearance="outline">
           <mat-select [(ngModel)]="templateSelected">
-            <mat-option *ngFor="let option of templates" [value]="option.value">
+            <mat-option *ngFor="let option of templates" [value]="option.value" (click)="getTemplate(option)">
               {{option.viewValue}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <a [href]="templateSelected" mat-icon-button matTooltip="Download template before uploading" color="primary" style="margin-bottom: 50px"><mat-icon>description</mat-icon></a>
       </mat-card-content>
   </div>
 <mat-card-content>

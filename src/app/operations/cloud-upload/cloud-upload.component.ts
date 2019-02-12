@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '../../../environments/environment';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { OperationsService } from '../operations.service';
 
 @Component({
   selector: 'app-cloud-upload',
@@ -35,7 +36,7 @@ export class CloudUploadComponent {
   //   url: this.URL,
   //   isHTML5: true
   // });
-  constructor (public snackBar: MatSnackBar) {
+  constructor (public snackBar: MatSnackBar, private _operationsService: OperationsService) {
     this.setUploader();
   }
   openSnackBar(message: string, action: string) {
@@ -50,6 +51,8 @@ export class CloudUploadComponent {
       url: setURL,
       allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
       isHTML5: true,
+      authTokenHeader: "Authorization",
+      authToken: this._operationsService.tokenGetter(),
     });
     this.refresh();
     this.uploader.onAfterAddingFile = (file) => this.refresh();
@@ -70,5 +73,23 @@ export class CloudUploadComponent {
   }
   refresh() {
     this.dataSource = new MatTableDataSource(this.uploader.queue);
+  }
+
+  getTemplate(template){
+    this._operationsService.getTemplate(template.value).subscribe((data:BlobPart) => {
+      this.openSnackBar('Download started', 'thanks');
+      var a = document.createElement('a');
+      var blob = new Blob([data], {type: 'text/csv' }),
+      url = window.URL.createObjectURL(blob);
+
+      a.href = url;
+      a.download = template.viewValue +".csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+    }, err => {
+      console.error(err);
+      this.openSnackBar('Woops! Could not start download','Try again');
+    })
   }
 }

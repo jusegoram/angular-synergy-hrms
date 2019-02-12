@@ -61,8 +61,7 @@ router.post('/hours', (req, res) => {
               });
           }, err => {
               if(err) console.log(err);
-              console.log(hours);
-               OperationsHours.create(hours).then(res => console.log(res)).catch(err => console.log(err));
+               OperationsHours.create(hours).then(res => {}).catch(err => console.log(err));
           });
           console.log('upload finished');
           return res.status(200).send( counter + ' Registries of hours information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
@@ -131,8 +130,7 @@ router.post('/kpi',  (req, res) => {
               });
           }, err => {
               if(err) console.log(err);
-              OperationsKpi.create(kpis).then(res => console.log(res)).catch(err => console.log(err));
-            console.log(kpis);
+              OperationsKpi.create(kpis).then(res => {}).catch(err => console.log(err));
           });
           console.log('upload finished');
           return res.status(200).send( counter + ' Registries of kpi information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
