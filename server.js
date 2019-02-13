@@ -42,6 +42,7 @@ const appPayrollRoutes = require('./server/routes/app/payroll/payroll');
 const appOpsRoutes = require('./server/routes/app/operations/operations');
 const appOpsUploadRoutes = require('./server/routes/app/operations/upload');
 
+const appLeadsrainScraper = require('./server/routes/scraper/leadsrain');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
@@ -105,6 +106,8 @@ app.use('/api/v1/payroll', authentication.authentication, appPayrollRoutes);
 
 app.use('/api/v1/operations', authentication.authentication, appOpsRoutes);
 app.use('/api/v1/operations/upload', authentication.authentication, appOpsUploadRoutes);
+
+app.use('/api/v1/leadsrain', appLeadsrainScraper);
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.

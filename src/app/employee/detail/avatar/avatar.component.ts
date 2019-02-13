@@ -29,7 +29,7 @@ export class AvatarComponent implements OnInit {
   }
   constructor(private employeeService: EmployeeService,
     private sanitizer: DomSanitizer, private sessionService: SessionService) {
-
+      this.imageData = '/assets/images/default-avatar.png'
     }
 
 
@@ -37,7 +37,9 @@ export class AvatarComponent implements OnInit {
     this.uploader = new FileUploader({
       allowedMimeType: ['image/jpeg'],
       url: this.URL + '?id=' + this.id,
-      isHTML5: true
+      isHTML5: true,
+      authTokenHeader: 'Authorization',
+      authToken: 'JWT '+this.sessionService.jwtHelper.tokenGetter()
     });
     this.employeeService.clearAvatar(this.id);
     this.uploader.onCompleteItem = () => {
@@ -48,10 +50,14 @@ export class AvatarComponent implements OnInit {
     let blob;
     this.employeeService.cachedAvatar(id).subscribe(
       (response) => {
-        blob = response;
+        if(response.type === 'text/plain') {
+          this.imageData = '/assets/images/default-avatar.png'
+        } else {
+          blob = response;
         const urlCreator = window.URL;
         this.imageData = this.sanitizer.bypassSecurityTrustUrl(
           urlCreator.createObjectURL(blob));
+        }
       });
   }
   getPermission() {

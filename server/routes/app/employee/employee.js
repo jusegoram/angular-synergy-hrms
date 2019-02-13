@@ -18,38 +18,28 @@ let EmployeeAttrition = require("../../../models/app/employee/employee-attrition
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
-    Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: -1}).exec(
-        function (err, result) {
-        if (err) {
-            return res.status(500).json({
-                title: 'An error occurred',
-                error: err
-            });
-        }if (req.query.token === '') {
-            return res.status(500).json({
-                title: 'Employees',
-                message: 'Employees not found'
-            });
-        }if (result === null) {
-            return res.status(500).json({
-              title: 'Employees',
-              message: 'Employees are empty or not found'
-            });
-          }
-        res.status(200).json(result);
-    });
+    let employees = [];
+    let cursor = Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: -1}).cursor()
+    cursor.on('data', item => employees.push(item))
+    cursor.on('end', ()=> {
+      if(!employees){
+        res.status(404).json({message: 'Error in the query'})
+      }else {
+        res.status(200).json(employees);
+      }
+    })
 });
 
 
 router.get('/main', function(req, res){
-    Employee.findById(req.query.id, (err, result) => {
+    Employee.findById(req.query.id).limit(1).exec((err, result) => {
         if (err) res.status(500);
         else res.status(200).json(result);
       });
 });
 
 router.put('/main', function (req, res, next) {
-  Employee.findById(req.query.id, function (err, result) {
+  Employee.findById(req.query.id, (err, result) => {
     if (!result)
       return next(new Error('Could not load Document'));
     else {
@@ -427,10 +417,7 @@ router.get('/avatar', function(req, res, next){
   var avatar = req.query.id + ".jpg";
   fs.readFile('uploads/avatars/'+ avatar , function (err, content) {
     if (err) {
-      fs.readFile('uploads/avatars/default-avatar.png' , function (err, content){
-        res.writeHead(200,{'Content-type':'image/png'});
-        res.end(content);
-      });
+      res.sendStatus(200);
     } else {
       //specify the content type in the response will be an image
       res.writeHead(200,{'Content-type':'image/jpg'});

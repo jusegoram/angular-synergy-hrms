@@ -16,19 +16,21 @@ router.post('/hour', (req, res, next) => {
   if(query.date.$gte === '' || query.date.$gte === undefined || query.date.$gte === null) {
     delete query.date;
   }
-  OperationHours.find(query, (error, result) => {
-    if(!result) {
+  let AllHours = [];
+  const cursor = OperationHours.find(query).lean().cursor();
+  cursor.on('data', item => AllHours.push(item));
+  cursor.on('end', () => {
+    if(!AllHours) {
       res.status(404);
-    }else if(error) {
-      res.status(500);
     }else {
-      res.status(200).json(result);
+      res.status(200).json(AllHours);
     }
   });
 });
 
 router.post('/kpi', (req, res) => {
   let query = req.body;
+  let AllKpis = [];
   for (let propName in query) {
     if (query[propName] === null || query[propName] === undefined || query[propName] === '') {
       delete query[propName];
@@ -37,15 +39,15 @@ router.post('/kpi', (req, res) => {
   if(query.date.$gte === '' || query.date.$gte === undefined || query.date.$gte === null) {
     delete query.date;
   }
-  OperationsKpi.find(query, (error, result) => {
-    if(!result) {
-      res.status(404);
-    }else if(error) {
-      res.status(500);
-    }else {
-      res.status(200).json(result);
-    }
-  });
+  const cursor = OperationsKpi.find(query).lean().cursor();
+  cursor.on('data', kpi => AllKpis.push(kpi));
+  cursor.on('end', () => {
+      if(!AllKpis) {
+        res.status(404);
+      }else {
+        res.status(200).json(AllKpis);
+      }
+  })
 });
 
 router.get('/hourTemplate', function (req, res, next) {

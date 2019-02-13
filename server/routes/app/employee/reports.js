@@ -22,10 +22,10 @@ router.post('/', function(req, res, next){
   query['company.terminationDate'].$gte === '') {
     delete query['company.terminationDate']
   }
-  Employee.find(query, (err, doc) => {
-    if(err) res.status(500).json(err);
-    else res.status(200).json(doc);
-  })
+  let employees = [];
+  let cursor = Employee.find(query).cursor();
+  cursor.on('data', item => employees.push(item));
+  cursor.on('end', ()=> res.status(200).json(employees));
 });
 
 module.exports = router;
