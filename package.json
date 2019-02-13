@@ -1,12 +1,13 @@
 {
   "name": "SynergyLink",
-  "version": "0.0.1",
+  "version": "1.2.5",
   "license": "MIT",
   "main": "server.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false --watch",
+    "prod": "ng build --prod --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "build:prod": "ng build --prod --optimization=false --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "test": "ng test",
     "lint": "ng lint",
