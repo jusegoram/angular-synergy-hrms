@@ -1,10 +1,10 @@
-import { User } from '../User';
+import { User } from './User';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { shareReplay, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 export function tokenGetter() {
@@ -20,6 +20,7 @@ export class SessionService {
   token = '';
   jwtHelper = new JwtHelperService({
     tokenGetter: tokenGetter
+
   });
 
   constructor(protected http: HttpClient) {
@@ -95,6 +96,10 @@ export class SessionService {
   getId() {
     const dec = this.decodeToken();
     return dec.userId;
+  }
+  getRights(){
+    const dec = this.decodeToken();
+    return dec.rights;
   }
   clearRole() {
     this._login = null;

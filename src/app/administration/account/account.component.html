@@ -1,0 +1,72 @@
+<mat-toolbar class="header" color="primary" >
+  <mat-toolbar-row>
+      <span>Account Management</span>
+    </mat-toolbar-row>
+</mat-toolbar>
+<mat-toolbar>
+  <mat-toolbar-row>
+  </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <mat-tab-group backgroundColor="primary">
+    <mat-tab label="Active Users">
+
+      <div class="example-header">
+        <mat-form-field  appearance="outline">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
+        <div fxFlex="auto"></div>
+        <button mat-icon-button (click)="reload()"><mat-icon>refresh</mat-icon></button>
+    </div>
+    <mat-table #table [dataSource]="dataSource" matSort #matSort="matSort" (matSortChange)="sortData($event)">
+
+      <ng-container matColumnDef="employee.employeeId">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.employee?.employeeId}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="firstName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.firstName +' ' + element.lastName}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="employee.status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.employee?.status | titlecase}} </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Account Type </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{getRoleName(element.role)}} </mat-cell>
+        </ng-container>
+
+      <ng-container matColumnDef="details">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Details </mat-header-cell>
+        <mat-cell *matCellDef="let element"> <button mat-icon-button  [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="deleteUser(element)"><mat-icon color="warn">delete</mat-icon> Delete</button>
+              <button mat-menu-item (click)="openEditDialog(element)"><mat-icon>create</mat-icon> Edit</button>
+            </mat-menu>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <mat-paginator #paginator
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 15]">
+    </mat-paginator>
+    </mat-tab>
+    <mat-tab label="Recent Activities"></mat-tab>
+    <mat-tab label="Create Users">
+      <adm-create-user></adm-create-user>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+
+
+

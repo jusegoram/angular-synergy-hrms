@@ -1,6 +1,6 @@
-import { SessionService } from './../../session/services/session.service';
+import { SessionService } from '../../session/session.service';
 import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
-import { EmployeeService } from '../services/employee.service';
+import { EmployeeService } from '../employee.service';
 import { ActivatedRoute } from '@angular/router';
 import {Employee, EmployeeCompany, Position} from '../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -51,7 +51,6 @@ export class DetailComponent implements OnInit {
      this.positions = this.employee.position;
      if (!this.positions[0]) {
        this.latestPos = new Position();
-       console.log(this.positions);
      }else {
       const i = this.positions.length - 1;
       this.latestPos = this.positions[i];

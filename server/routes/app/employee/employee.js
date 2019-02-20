@@ -19,7 +19,7 @@ let EmployeeAttrition = require("../../../models/app/employee/employee-attrition
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
     let employees = [];
-    let cursor = Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status').lean().sort({status: 1, employeeId: -1}).cursor()
+    let cursor = Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status company').lean().sort({status: 1, employeeId: -1}).cursor()
     cursor.on('data', item => employees.push(item))
     cursor.on('end', ()=> {
       if(!employees){
@@ -83,9 +83,8 @@ router.put('/position', function (req, res) {
       return next(new Error('Could not load Document'));
     else {
     result.endDate = req.body.endDate;
-    console.log(result);
+
     result.save(function(err, doc){
-      console.log(err||doc);
     });
       if (err) {
         return res.status(500).json({

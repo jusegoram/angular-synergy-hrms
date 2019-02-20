@@ -10,13 +10,10 @@ import { Department } from '../../models/positions-models';
 })
 export class CreateDepartmentDialogComponent {
 
-  constructor( public dialogRef: MatDialogRef<EditDialogComponent>,
+  constructor( public dialogRef: MatDialogRef<CreateDepartmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Department) {
     }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 
 }
 

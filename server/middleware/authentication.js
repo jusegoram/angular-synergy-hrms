@@ -9,17 +9,28 @@
 //TODO: finish authentication function according to spec
 
 let jwt = require('jsonwebtoken');
+let fs = require('fs');
+let path = require('path');
+const RSA_KEY = fs.readFileSync(path.join(__dirname, '../routes/pub.key'));
 
 
  authentication = ( req, res, next) => {
-   let token = req.headers.authorization;
-  if(!token){
+   const header = req.headers.authorization;
+   let token = header.split(' ');
+   token = token[1];
+  if(!header){
     res.status(401).json({message: 'unauthorized user'});
-  }else if(token === 'JWT null'){
+  }else if(!token){
     res.status(401).json({message: 'unauthorized user'});
-  }else {
-    let token = req.headers.authorization;
-    next();
+  }else if(token === 'null'){
+    res.status(401).json({message: 'unauthorized user'});
+  }else{
+    jwt.verify(token, RSA_KEY, { algorithm: 'RS256', expiresIn: 60*30 }, (err, dec) => {
+      if(err)  res.status(401).json({message: 'unauthorized user'});
+      else {
+        next();
+      }
+     });
   }
 
 }

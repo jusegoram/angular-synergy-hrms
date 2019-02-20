@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { EmployeeService } from '../../services/employee.service';
-import { SessionService } from '../../../session/services/session.service';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
 import { MatSnackBar } from '@angular/material';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import { Params, ActivatedRoute } from '@angular/router';

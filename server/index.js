@@ -1,19 +1,11 @@
 
 //Require all imports
 const express = require('express');
-const authentication = require('./server/middleware/authentication');
+const authentication = require('./middleware/authentication');
 const path = require('path');
 const debug = require('debug')('node-rest:server');
 const http = require('http');
-//const https = require("https");
 const fs = require("fs");
-
-//const options = {
-//  passphrase: "1vg246vg4g",
-//  key: fs.readFileSync("./ssl/key.pem"),
-//  cert: fs.readFileSync("./ssl/cert.pem"),
-//  dhparam: fs.readFileSync("./ssl/dh-strong.pem")
-//};
 
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -21,51 +13,38 @@ const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const compression = require("compression");
 const cors = require("cors");
-var helmet = require("helmet");
-// Configure de upload with multer
+const helmet = require("helmet");
 
 // Get our API routes
-const appRoutes = require('./server/routes/app');
+const appRoutes = require('./routes');
 // administration routes
-const admUserRoutes = require('./server/routes/administration/user');
-const admMenuRoutes = require('./server/routes/administration/menu');
-const admPayrollRoutes = require('./server/routes/administration/payroll');
-const admEmployeeRoutes= require('./server/routes/administration/employee');
+const admUserRoutes = require('./routes/administration/user');
+const admMenuRoutes = require('./routes/administration/menu');
+const admPayrollRoutes = require('./routes/administration/payroll');
+const admEmployeeRoutes= require('./routes/administration/employee');
 //employee routes
-const empUploadRoutes = require('./server/routes/app/employee/upload');
-const empTemplateRoutes = require('./server/routes/app/employee/template');
-const empRoutes = require('./server/routes/app/employee/employee');
-const empReportRoutes = require('./server/routes/app/employee/reports');
+const empUploadRoutes = require('./routes/app/employee/upload');
+const empTemplateRoutes = require('./routes/app/employee/template');
+const empRoutes = require('./routes/app/employee/employee');
+const empReportRoutes = require('./routes/app/employee/reports');
 
-const appUserRoutes = require('./server/routes/app/user/user');
-const appPayrollRoutes = require('./server/routes/app/payroll/payroll');
-const appOpsRoutes = require('./server/routes/app/operations/operations');
-const appOpsUploadRoutes = require('./server/routes/app/operations/upload');
+const appUserRoutes = require('./routes/app/user/user');
+const appPayrollRoutes = require('./routes/app/payroll/payroll');
+const appOpsRoutes = require('./routes/app/operations/operations');
+const appOpsUploadRoutes = require('./routes/app/operations/upload');
 
-const appLeadsrainScraper = require('./server/routes/scraper/leadsrain');
 // DB connection through Mongoose
 const app = express();
 const HOST = 'mongodb://localhost:';
 const DB_PORT= '27017';
 const COLLECTION= '/mongo-blink';
-const TEST_URI = HOST + DB_PORT + COLLECTION;
-//const TEST_URL = "http://192.168.100.4:3000";
-const TEST_URL = "http://localhost:3000";
-// const PROD_URI = process.env.MONGODB_URI;
-// const PROD_URL = process.env.HEROKU_URL;
+const DB = HOST + DB_PORT + COLLECTION;
+const URL = "http://localhost:3000";
 
-// app.configure('development', function(){
-//   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-// });
-
-// app.configure('production', function(){
-//   app.use(express.errorHandler());
-// });
-
-mongoose.connect(TEST_URI, {
+mongoose.connect(DB, {
   useMongoClient: true,
  });
- app.set('dist', path.join(__dirname, 'dist'));
+ app.set('dist', path.join(__dirname, '../dist'));
  app.engine('html', require('ejs').renderFile);
  app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -75,10 +54,10 @@ app.use(cookieParser());
 app.use(helmet());
 
 // Point static path to dist
-app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 app.use(cors({
-  origin: [TEST_URL],
+  origin: [URL],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
@@ -107,7 +86,6 @@ app.use('/api/v1/payroll', authentication.authentication, appPayrollRoutes);
 app.use('/api/v1/operations', authentication.authentication, appOpsRoutes);
 app.use('/api/v1/operations/upload', authentication.authentication, appOpsUploadRoutes);
 
-app.use('/api/v1/leadsrain', appLeadsrainScraper);
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.
@@ -122,7 +100,7 @@ app.use('/', appRoutes);
 
 // Catch all other routes and return the index file
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './dist/index.html'));
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
 });
 
 /**
@@ -141,7 +119,7 @@ var server = http.createServer(app);
 /**
  * Listen on provided port, on all network interfaces.
  */
- server.listen(port, () => console.log(`API running on ${TEST_URL}`));
+ server.listen(port, () => console.log(`API running on ${URL}`));
  server.on('error', onError);
  server.on('listening', onListening);
 

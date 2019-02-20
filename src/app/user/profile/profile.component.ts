@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { SessionService } from '../../session/services/session.service';
+import { SessionService } from '../../session/session.service';
 import { UserService } from '../user.service';
 import { MatSnackBar } from '@angular/material';
 
@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit {
     };
     if (query.password && query.newPassword) {
       this._userService.updateUser(query).subscribe(data => {
-        console.log(data);
         this.openSnackBar('Password changed successfully', 'thanks!');
       }, error => {
         this.openSnackBar('Your password is wrong', 'Try again');

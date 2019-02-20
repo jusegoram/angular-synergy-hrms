@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { Department, Position, Client, Campaign } from '../employee/models/positions-models';
+import { environment } from '../../environments/environment';
+import { Department, Position, Client, Campaign } from './employee/models/positions-models';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
-import { Employee } from '../../employee/Employee';
+import { Employee } from '../employee/Employee';
 
 @Injectable()
 export class AdminService {
+
   siteURI = environment.siteUri;
   _departments: Observable<any> = null;
   _clients: Observable<any> = null;
@@ -17,7 +18,14 @@ export class AdminService {
 
   constructor( protected httpClient: HttpClient) { }
 
-
+  userTypes = [
+    { value: 0, viewValue: "Accounting"},
+    { value: 1, viewValue: "Management"},
+    { value: 2, viewValue: "Training"},
+    { value: 3, viewValue: "Administrator"},
+    { value: 9999, viewValue: "Web Administrator" },
+    { value: 4, viewValue: "Web Administrator" }
+  ];
   createDepartment(department: Department) {
     const body = JSON.stringify(department);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -83,6 +91,11 @@ export class AdminService {
       );
     }
     return this._users;
+  }
+  editUser(param): any {
+    const body = JSON.stringify(param);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put('/api/v1/user', body, { headers: headers });
   }
   deleteUser(param: any): any {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

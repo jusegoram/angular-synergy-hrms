@@ -2,7 +2,7 @@
   <mat-toolbar-row>
       <span>Details</span>
       <span class="fill-remaining-space"></span>
-      <span> Employee ID:{{this.employee.employeeId}} </span>
+      <span> Employee ID - {{this.employee.employeeId}} </span>
   </mat-toolbar-row>
   <mat-toolbar-row>
   </mat-toolbar-row>
@@ -12,56 +12,69 @@
 <div class="mat-card-top pa-1">
     <div fxLayout="row" fxLayout.xs="column">
         <avatar-detail [id]="this.employee._id" auth="true"></avatar-detail>
-        <mat-card class="main-info pa-2">
-            <!-- <label>{{this.currentEmployee?.employeeId}}</label> -->
-
-            <form class="ma-2" [formGroup]="mainForm">
-                <section class="mat-title">
-                    <h2>Main Information</h2>
-                </section>
-                <mat-form-field>
+        <mat-card class="main-info pa-1">
+            <mat-card-header>
+              <mat-card-title>
+                {{this.employee.firstName + ' ' + ((this.employee.middleName !== '')? this.employee.middleName + ' ' + this.employee.lastName: this.employee.lastName) +"'s Information"}}
+              </mat-card-title>
+            </mat-card-header>
+            <br/>
+            <mat-card-subtitle>
+              Main Information
+            </mat-card-subtitle>
+            <form class="ma-1" [formGroup]="mainForm" fxLayoutGap="5px">
+                <mat-form-field appearance="outline">
+                  <mat-label>First Name</mat-label>
                     <input matInput formControlName="firstName" placeholder="First Name" readonly="true">
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Middle Name</mat-label>
                     <input matInput formControlName="middleName" placeholder="Middle Name" readonly="true">
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Last Name</mat-label>
                     <input matInput formControlName="lastName" placeholder="Last Name" readonly="true">
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Gender</mat-label>
                     <mat-select formControlName="gender" placeholder="Gender" disabled="true">
                         <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Company Status</mat-label>
                     <mat-select formControlName="status" placeholder="Status">
                         <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Position</mat-label>
                     <input matInput formControlName="currentPosition" placeholder="Current Position" readonly=true>
                 </mat-form-field>
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Position ID</mat-label>
                     <input matInput formControlName="currentPositionId" placeholder="Positition ID" readonly=true>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Since</mat-label>
                     <input matInput formControlName="currentPositionDate" placeholder="Since" readonly=true>
                 </mat-form-field>
                 <div>
                     <h3>Social security:{{" "+this.employee.socialSecurity}}</h3>
                 </div>
             </form>
-            <button mat-button color="primary" (click)="onSubmit()"><mat-icon>save</mat-icon> &nbsp; Save</button>
+            <button mat-button color="primary" (click)="onSubmit()"><mat-icon>save</mat-icon> &nbsp; SAVE</button>
 
-            <mat-divider></mat-divider>
-            <form class="ma-2" [formGroup]="companyForm" id="companyForm">
-                <section class="mat-title">
-                    <h2>Company Information</h2>
-                </section>
-
-                <mat-form-field>
+            <mat-divider inset="true"></mat-divider>
+            <br/>
+            <mat-card-subtitle>
+                Company Information
+              </mat-card-subtitle>
+            <form class="ma-2" [formGroup]="companyForm" id="companyForm" fxLayoutGap="5px">
+                <mat-form-field appearance="outline">
+                    <mat-label>Client</mat-label>
                     <mat-select placeholder="Client" (selectionChange)="setCampaigns()" formControlName="client" >
                         <mat-option *ngFor="let client of clients" [value]="client?.name">
                             {{client.name}}
@@ -69,7 +82,8 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Campaign</mat-label>
                     <mat-select placeholder="Campaign" formControlName="campaign">
                         <mat-option *ngFor="let campaign of campaigns" [value]="campaign?.name">
                             {{campaign.name | titlecase}}
@@ -77,28 +91,39 @@
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Manager</mat-label>
+                    <input matInput formControlName="manager" placeholder="Manager" >
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Supervisor</mat-label>
                     <input matInput formControlName="supervisor" placeholder="Supervisor Name" >
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Trainer</mat-label>
                     <input matInput formControlName="trainer" placeholder="Trainer" >
                 </mat-form-field>
 
-                <mat-form-field>
-                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Reference">
+                <mat-form-field appearance="outline">
+                    <mat-label>Training Group Name</mat-label>
+                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Name">
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Training Group No.</mat-label>
                     <input matInput formControlName="trainingGroupNum" placeholder="Training Group No.">
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Hire Date (mm/dd/yyyy)</mat-label>
                     <input matInput formControlName="hireDate" placeholder="Hire Date (mm/dd/yyyy)" [matDatepicker]="hirePicker" (focus)="hirePicker.open()">
                     <mat-datepicker #hirePicker></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Termination Date (mm/dd/yyyy)</mat-label>
                     <input matInput formControlName="terminationDate" placeholder="Termination Date (mm/dd/yyyy)" [matDatepicker]="terminationPicker"
                         (focus)="terminationPicker.open()">
                     <mat-datepicker #terminationPicker></mat-datepicker>
@@ -106,10 +131,10 @@
 
                 <!-- reapplicant yes|no && reapplicant times (number)-->
 
-                <mat-checkbox formControlName="reapplicant" >Reapplicant</mat-checkbox>
+                <mat-slide-toggle formControlName="reapplicant" >REAPPLICANT (NO / YES)</mat-slide-toggle>
 
 
-                <mat-form-field *ngIf="this.companyForm.value.reapplicant">
+                <mat-form-field *ngIf="this.companyForm.value.reapplicant" appearance="outline">
                     <mat-select placeholder="How many times?" formControlName="reapplicantTimes">
                         <mat-option *ngFor="let reaptime of reaptimes" [value]="reaptime.value">
                             {{reaptime.viewValue}}
@@ -117,7 +142,7 @@
                     </mat-select>
                 </mat-form-field>
             </form>
-            <button mat-button color="primary" (click)="onCompanySubmit()"><mat-icon>save</mat-icon> &nbsp;Save</button>
+            <button mat-button color="primary" (click)="onCompanySubmit()"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
         </mat-card>
     </div>
     <shift [employee]="this.employee"></shift>

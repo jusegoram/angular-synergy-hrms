@@ -3,11 +3,11 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {EmployeeService} from './employee.service';
+import {EmployeeService} from '../employee.service';
 import {Employee} from '../Employee';
 
 @Injectable()
-export class EmployeeResolver implements Resolve<Employee> {
+export class DetailResolver implements Resolve<Employee> {
 
   constructor(private employeeService: EmployeeService) {
 

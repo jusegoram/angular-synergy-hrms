@@ -1,8 +1,8 @@
 import { Employee } from '../Employee';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import {MatTableDataSource, MatSort, MatPaginator} from '@angular/material';
-import { EmployeeService } from '../services/employee.service';
-import {SessionService} from '../../session/services/session.service';
+import {MatTableDataSource, MatSort, MatPaginator, SortDirection} from '@angular/material';
+import { EmployeeService } from '../employee.service';
+import {SessionService} from '../../session/session.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component ({
@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ManageComponent implements OnInit,  AfterViewInit {
   //FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
-  @ViewChild(MatSort) _sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   employees: Employee [];
   selectedEmployees: string[] = [];
@@ -20,7 +20,9 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   auth: any;
   pag: any;
   pagSize: any;
-  displayedColumns = ['employeeID', 'name', 'position', 'status', 'details'];
+  filterValue;
+  currentSortOrder;
+  displayedColumns = ['employeeId', 'firstName', 'socialSecurity','company.client', 'company.campaign', 'status', 'details'];
   constructor(
     private employeeService: EmployeeService,
     private sessionService: SessionService,
@@ -39,26 +41,38 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         this.employees = res;
         this.dataSource = new MatTableDataSource(this.employees);
           this.dataSource.paginator = this.paginator;
-        },
-      error => console.log(error), () => {
-        console.log('all done');
-        this.dataSource.sort = this._sort;
+          this.dataSource.sortingDataAccessor = (item, property) => {
+            switch(property) {
+              case 'company.client': return item.company.client;
+              case 'company.campaign': return item.company.campaign;
+              default: return item[property];
+            }
+          };
+          this.dataSource.sort = this.sort;
+      },
+      null,
+      () => {
+        this.route.queryParams.subscribe(params => {
+          this.pag = params['page'];
+          this.pagSize = params['size'];
+          this.filterValue = params['filter']
+          this.applyFilter(params['filter']);
+          this.setSort(params['srtAct'], params['srtDir']);
+          this.setPage(this.pag, this.pagSize);
+        });
       });
   }
 
       ngOnInit() {
         this.populateTable();
         this.getAuth();
-        this.route.queryParams.subscribe(params => {
-          this.pag = params['page'];
-          this.pagSize = params['size'];
-          this.setPage(this.pag, this.pagSize);
-      });
       }
-      applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filterValue;
+      applyFilter(filter: string) {
+
+        filter = filter.trim(); // Remove whitespace
+        filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+        this.dataSource.filter = filter;
+        this.sortData();
       }
       onSelected(event: string) {
         const eventid: string = event;
@@ -91,9 +105,32 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.paginator._pageIndex = pag + 1;
           this.paginator.previousPage();
       }
+
+      setSort(active, dir){
+        if(active !== '' && active !== 'undefined' && dir !== '' && dir !== 'undefined' ){
+          this.dataSource.sort.active = active; this.dataSource.sort.direction = dir as SortDirection;
+          this.dataSource.sort.sortChange.emit();
+        }
+      }
+
+      sortData(){
+        this.paginator.nextPage();
+        this.paginator.previousPage();
+      }
       onPageChange(event) {
         const page = event.pageIndex;
         const size = event.pageSize;
-        window.history.pushState({}, '', `/employee/manage?page=${page}&size=${size}`);
+        const flt = this.filterValue? this.filterValue: '';
+        const srtAct = this.dataSource.sort.active?  this.dataSource.sort.active: 'employeeId';
+        const srtDir = this.dataSource.sort.direction? this.dataSource.sort.direction: '';
+        window.history.pushState({}, '', `/employee/manage?page=${page}&size=${size}&filter=${flt}&srtAct=${srtAct}&srtDir=${srtDir}`);
+      }
+
+      nextPage(){
+        this.paginator.nextPage();
+      }
+
+      previousPage(){
+        this.paginator.previousPage();
       }
 }

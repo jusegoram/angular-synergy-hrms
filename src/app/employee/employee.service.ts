@@ -2,11 +2,11 @@ import {
   Employee, EmployeeCompany, EmployeePayroll,
   EmployeePersonal, EmployeePosition, EmployeeFamily,
   EmployeeComment,
-  EmployeeAttrition} from '../Employee';
+  EmployeeAttrition} from './Employee';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 export class Store {

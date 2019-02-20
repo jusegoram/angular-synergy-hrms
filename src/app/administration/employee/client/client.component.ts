@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Client, Campaign } from '../models/positions-models';
-import { AdminService } from '../../services/admin.services';
+import { AdminService } from '../../admin.service';
 import { MatSnackBar } from '@angular/material';
 
 @Component({

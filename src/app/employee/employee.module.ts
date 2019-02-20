@@ -14,7 +14,7 @@ import { PayrollComponent } from '../employee/detail/payroll/payroll.component';
 import { PositionComponent } from '../employee/detail/position/position.component';
 import { MaterialSharedModule } from '../shared/material.shared.module';
 import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
-import { EmployeeService } from './services/employee.service';
+import { EmployeeService } from './employee.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
@@ -24,7 +24,7 @@ import { NewComponent } from './new/new.component';
 import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
 import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
 import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/family-edit-dialog.component';
-import {EmployeeResolver} from './services/employee.resolver';
+import {DetailResolver} from './detail/detail.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
 import { TokenInterceptor } from '../token-interceptor.service';
@@ -70,7 +70,7 @@ import { AuthenticationService } from '../authentication.service';
       PersonalEditDialogComponent
     ],
   providers: [
-    EmployeeService, EmployeeResolver, TitleCasePipe, DatePipe,
+    EmployeeService, DetailResolver, TitleCasePipe, DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

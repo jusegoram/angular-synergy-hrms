@@ -1,4 +1,4 @@
-import { SessionService } from '../app/session/services/session.service';
+import { SessionService } from './session/session.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -7,11 +7,6 @@ import { Router } from '@angular/router';
   template: '<router-outlet></router-outlet>'
 })
 export class AppComponent {
-  constructor(sessionService: SessionService, router: Router) {
-    // if (!sessionService.isLoggedIn()) {
-    //   router.navigate(['signin']);
-    // }
-    // console.log(router.url);
-  }
+  constructor(router: Router) {}
 
 }

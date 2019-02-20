@@ -1,4 +1,4 @@
-import { SessionService } from '../services/session.service';
+import { SessionService } from '../session.service';
 import {  Router, CanLoad, CanActivate } from '@angular/router';
 import { Injectable } from '@angular/core';
 

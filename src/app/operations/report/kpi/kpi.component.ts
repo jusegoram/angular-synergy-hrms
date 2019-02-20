@@ -124,7 +124,6 @@ constructor(private _opsService: OperationsService, private fb: FormBuilder) {
         this.dataSource = new MatTableDataSource(this.kpis);
         },
       error => console.log(error), () => {
-        console.log('all done');
       });
   }
 

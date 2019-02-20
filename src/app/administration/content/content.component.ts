@@ -42,7 +42,6 @@ export class ContentComponent implements OnInit {
       let roles = this.selectedMenu.roles;
       this.selectedMenu.roles = roles;
     }
-    console.log(this.selectedMenu.roles);
   }
   onRemoveRole(event) {
     const role = parseInt(event, 10);

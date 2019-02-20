@@ -109,7 +109,6 @@ router.delete('/shift', (req, res, next) => {
 })
 
 router.get('/employee', function (req, res, next) {
-  console.log(req);
   Employee.find({status: 'active'})
   .select('-personal -company -payroll -comments -education -family -position -shift')
   .exec((err, result) => {

@@ -55,7 +55,6 @@ router.post('/', function (req, res, next){
 
   router.put('/', function ( req, res, next) {
       Menus.findOne({name: req.query.name}, function(err, doc) {
-          console.log(doc);
           doc.state= req.body.state;
           doc.name= req.body.name;
           doc.type= req.body.type;

@@ -1,4 +1,4 @@
-import { SessionService } from './../../session/services/session.service';
+import { SessionService } from '../../session/session.service';
 import { Injectable } from '@angular/core';
 import {environment } from '../../../environments/environment';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
@@ -76,7 +76,7 @@ export class MenuItems {
 // TODO: fix Add method to add new menu items
   add(param: Menu) {
     let res;
-    this.addMenu(param).subscribe((response) => console.log( res = response));
+    this.addMenu(param).subscribe((response) => {});
     return res;
   }
   delete(param: Menu) {

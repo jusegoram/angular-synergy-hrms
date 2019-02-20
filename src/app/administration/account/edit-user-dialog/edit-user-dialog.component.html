@@ -1,0 +1,72 @@
+
+    <mat-card-title>Edit User Account</mat-card-title>
+    <mat-card-subtitle>Click on the button Done when finished</mat-card-subtitle>
+  <mat-card-content [formGroup]="form">
+    <table>
+      <tr>
+        <td><mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+          <input matInput placeholder="First Name" formControlName="fn">
+        </mat-form-field></td>
+        <td><mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+          <input matInput placeholder="Last Name" formControlName="ln">
+        </mat-form-field></td>
+      </tr>
+
+      <tr>
+        <td>
+            <mat-form-field appearance="outline">
+                <mat-label>Synergy ID</mat-label>
+              <input matInput placeholder="Synergy ID" formControlName="username">
+            </mat-form-field>
+        </td>
+        <td>
+            <mat-form-field appearance="outline">
+          <mat-select placeholder="Role" formControlName="role">
+            <mat-option *ngFor="let item of items" [value]="item.value">
+              {{item.viewValue}}
+            </mat-option>
+          </mat-select>
+          </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <mat-form-field appearance="outline">
+                <input matInput placeholder="Enter New password" [type]="hide ? 'password' : 'text'" formControlName="password">
+                <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                <mat-error *ngIf="form.controls['password'].errors?.minlength">Password must be at least 10 characters</mat-error>
+              </mat-form-field>
+        </td>
+        <td> <mat-form-field appearance="outline" (click)='verifyPassword()'>
+            <input matInput placeholder="Confirm New password" [type]="hide ? 'password' : 'text'" formControlName="confirmPw">
+            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="form.controls['confirmPw'].errors?.mismatch">Password does not match the confirm password</mat-error>
+          </mat-form-field></td>
+      </tr>
+    </table>
+
+    <mat-card-subtitle>Allowed Rights</mat-card-subtitle>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <mat-button-toggle [checked]="edit" (click)="edit=!edit">Edit</mat-button-toggle>
+    <mat-button-toggle [checked]="create" (click)="create=!create">Create</mat-button-toggle>
+    <mat-button-toggle [checked]="delete" (click)="delete=!delete">Delete</mat-button-toggle>
+    <mat-button-toggle [checked]="export" (click)="export=!export">Export</mat-button-toggle>
+    <mat-button-toggle [checked]="upload" (click)="upload=!upload">Upload</mat-button-toggle>
+    </div>
+    <br/>
+    <mat-card-subtitle>Change Employee Registry</mat-card-subtitle>
+
+    <mat-form-field style="width:100%" appearance="outline">
+        <input matInput [formControl]="employeeCtrl" [matAutocomplete]="auto" placeholder="Employee">
+      </mat-form-field>
+
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let item of filteredEmployees | async"
+         [value]="item.fullSearchName" (click)="employee=item._id">
+          {{item.fullSearchName}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-card-content>
+    <button mat-button (click)="onSave()" [disabled]="!this.form.valid"> <mat-icon>save</mat-icon> &nbsp; SAVE</button>

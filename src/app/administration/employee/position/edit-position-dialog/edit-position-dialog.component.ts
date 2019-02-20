@@ -11,8 +11,4 @@ export class EditPositionDialogComponent {
   constructor( public dialogRef: MatDialogRef<EditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Position) {
     }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }

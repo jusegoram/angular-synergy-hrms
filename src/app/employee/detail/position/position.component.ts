@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EmployeePosition } from '../../Employee';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService } from '../../employee.service';
 import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { Department, Client } from '../../../administration/employee/models/positions-models';
@@ -93,7 +93,6 @@ export class PositionComponent implements OnInit {
         });
         return error;
       });
-    console.log(newPosition);
     this.clearForm();
   }
 

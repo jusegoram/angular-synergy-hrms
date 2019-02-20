@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { EmployeeService } from '../../services/employee.service';
-import { SessionService } from '../../../session/services/session.service';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
 import {Employee, EmployeePersonal} from '../../Employee';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
@@ -186,7 +186,6 @@ export class PersonalComponent implements OnInit, OnChanges {
           this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
             duration: 2000,
           });
-          console.log(error);
         }
       );
     }

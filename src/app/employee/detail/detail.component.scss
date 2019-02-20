@@ -20,24 +20,15 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
   }
 }
 
+mat-form-field {
+  width: 32%;
+}
 .header {
   width: 100% !important;
 }
 .fill-remaining-space {
   flex: 1 1 auto;
 }
-
-button {
-    margin-left: 20px;
-    margin-bottom: 10px;
-}
-
-mat-form-field {
-  margin: 6px;
-
-}
-
-
 
 .main-info{
     margin-bottom: 10px;

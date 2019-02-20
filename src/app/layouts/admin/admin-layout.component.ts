@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '../../session/services/session.service';
+import { SessionService } from '../../session/session.service';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 

@@ -23,7 +23,7 @@ router.put('/password', (req, res, next)=>{
     if (err) res.status(500).json(err);
     else if (bcrypt.compareSync(query.password, doc.password)) {
         doc.set({password: bcrypt.hashSync(query.newPassword, 10)});
-        console.log(doc.password);
+
         doc.save((error, updated) =>{
           if (error) res.status(500).json(error);
           else (res.status(200).json('updated'))

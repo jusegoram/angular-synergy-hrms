@@ -39,7 +39,6 @@ export class ReportComponent implements OnInit {
         this.dataSource = new MatTableDataSource(this.hours);
         },
       error => console.log(error), () => {
-        console.log('all done');
       });
   }
   buildQueryForm(){

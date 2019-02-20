@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Workpattern, Day } from '../models/positions-models';
-import { AdminService } from '../../services/admin.services';
+import { AdminService } from '../../admin.service';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
@@ -21,7 +21,6 @@ export class WorkpatternComponent implements OnInit {
   }
   ngOnInit() {
     this.loadWorkPatterns();
-    console.log(this.wp);
   }
 
    loadWorkPatterns() {
@@ -128,7 +127,6 @@ export class WorkpatternComponent implements OnInit {
     });
   }
   openEditDialog(day): void {
-    console.log(day);
     let editDay = null;
     let dayNum: number;
     dayNum = day;

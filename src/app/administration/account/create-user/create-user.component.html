@@ -1,0 +1,131 @@
+<div class="pa-1">
+    <mat-card class="container">
+      <mat-card-header>
+        <mat-card-title>
+          <h3 class="mat-h3">Create</h3>
+        </mat-card-title>
+      </mat-card-header>
+    <mat-horizontal-stepper #stepper>
+      <mat-step>
+        <form >
+          <ng-template matStepLabel>Fill out this form</ng-template>
+            <form [formGroup]="myForm" (ngSubmit)="onSubmit()" class="myForm">
+              <table class=full-width cellspacing="0"><tr>
+                    <td>
+                        <mat-form-field class="full-width">
+                            <input matInput
+                                placeholder="First Name"
+                                type="text"
+                                id="firstName"
+                                formControlName="firstName">
+                        </mat-form-field>
+                      </td>
+                      <td>
+                          <mat-form-field class="full-width">
+                              <input matInput
+                                  placeholder="Middle Name"
+                                  type="text"
+                                  id="middleName"
+                                  formControlName="middleName">
+                          </mat-form-field>
+                      </td>
+                      <td>
+                          <mat-form-field class="full-width">
+                              <input matInput
+                                  placeholder="Last Name"
+                                  type="text"
+                                  id="lastName"
+                                  formControlName="lastName">
+                          </mat-form-field>
+                      </td></tr>
+              </table>
+
+
+              <table class="full-width" cellspacing="0"><tr>
+                  <td>
+                      <mat-form-field  class="full-width">
+                          <mat-select placeholder="Role" name="item" id="role" formControlName="role">
+                              <mat-option *ngFor="let item of items" [value]="item.value">
+                                  {{item.viewValue}}
+                              </mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                  </td>
+                  <td>
+                      <mat-form-field class="full-width">
+                          <input matInput
+                              placeholder="Company Email"
+                              type="text"
+                              id="username"
+                              formControlName="username">
+                              <mat-error *ngIf="myForm.controls['username'].errors?.email">Please enter a valid email address</mat-error>
+                      </mat-form-field>
+                  </td></tr>
+              </table>
+
+              <table>
+                <tr>
+                  <td><mat-form-field class="full-width">
+                      <input matInput
+                          placeholder="Password"
+                          type="password"
+                          formControlName="password">
+                          <mat-error *ngIf="myForm.controls['password'].errors?.minlength">Password must be at least 10 characters</mat-error>
+                  </mat-form-field></td>
+                  <td><mat-form-field class="full-width" (click)="verifyPassword()">
+                      <input matInput
+                          placeholder="Confirm password"
+                          type="password"
+                          formControlName="confirmPassword">
+                          <mat-error *ngIf="myForm.controls['confirmPassword'].errors?.mismatch">Passwords dont match</mat-error>
+                  </mat-form-field></td>
+                </tr>
+              </table>
+
+            </form>
+          <div>
+            <button mat-button matStepperNext [disabled]="myForm.invalid">Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <form >
+          <ng-template matStepLabel>Find the employee's registry</ng-template>
+          <div class='employeeCard'>
+            <mat-card-header>
+              <mat-card-title>Select Employee Registry</mat-card-title>
+              <mat-card-subtitle>the user must have an active employee registry</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <form [formGroup]="myForm" >
+                <mat-form-field style="width:100%">
+                  <input matInput [formControl]="employeeCtrl" [matAutocomplete]="auto" placeholder="Employee">
+                  <mat-error *ngIf="employeeCtrl.invalid">Employee Registry doesnt match the user you are trying to add. Make sure names are the same</mat-error>
+                </mat-form-field>
+
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let employee of filteredEmployees | async"
+                   [value]="employee.fullSearchName" (click)="setEmployee(employee)">
+                    {{employee.fullSearchName}}
+                  </mat-option>
+                </mat-autocomplete>
+              </form>
+            </mat-card-content>
+          </div>
+          <div>
+            <button mat-button matStepperPrevious>Back</button>
+            <button mat-button matStepperNext [disabled]="employeeCtrl.invalid">Next</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step>
+        <ng-template matStepLabel>Done</ng-template>
+        You are now done. just click Create User.
+        <mat-card-actions>
+          <button mat-button (click)="onSubmit()">Create User</button>
+        </mat-card-actions>
+      </mat-step>
+    </mat-horizontal-stepper>
+  </mat-card>
+
+  </div>

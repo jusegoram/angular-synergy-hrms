@@ -5,21 +5,21 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "nodemon",
       "runtimeExecutable": "nodemon",
-      "program": "${workspaceFolder}/server.js",
+      "program": "${workspaceFolder}/server/index.js",
       "restart": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
-    {
-      "type": "firefox",
-      "request": "launch",
-      "name": "Launch firefox against localhost",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/dist"
-    }
   ]
 }

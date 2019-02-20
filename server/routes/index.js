@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 var path = require('path');
-const RSA_PUBLIC_KEY = fs.readFileSync(path.join(__dirname, './_RS256.key'));
+const RSA_KEY = fs.readFileSync(path.join(__dirname, './priv.key'));
 
 var User = require('../models/administration/administration-user');
 
@@ -36,10 +36,18 @@ router.post('/login', function(req, res, next) {
     var token = jwt.sign({
       userId: user._id.toString(),
       name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
-      role: user.role
-    }, RSA_PUBLIC_KEY, {
+      role: user.role,
+      rights: {
+        role: user.role,
+        edit: true,
+        add: true,
+        delete: true,
+        view: true,
+        upload: true,
+      },
+    }, RSA_KEY, {
       algorithm: 'RS256',
-      expiresIn: 1000
+      expiresIn: 60*20
     });
     res.status(200).json({
         idToken: token,

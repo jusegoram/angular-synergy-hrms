@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {Employee, EmployeeFamily} from '../../Employee';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService } from '../../employee.service';
 
 @Component({
   selector: 'family-info',
@@ -50,7 +50,6 @@ export class FamilyComponent implements OnInit {
       const data = this.dataSource.data;
       data.push(event);
       this.dataSource.data = data;
-      console.log(this.dataSource.data);
     } else { this.dataSource = new MatTableDataSource(event); }
   }
   clearForm() {
@@ -59,10 +58,8 @@ export class FamilyComponent implements OnInit {
 
   editReference(param: string) {
     const data: any = this.dataSource.data;
-    console.log(data);
     const i = data.findIndex((res) => res._id === param);
     const ref = this.dataSource.data[i];
-    console.log(ref);
     this.editReferenceId = param;
     this.familyForm.controls['name'].setValue(ref.referenceName);
     this.familyForm.controls['relationship'].setValue(ref.relationship);

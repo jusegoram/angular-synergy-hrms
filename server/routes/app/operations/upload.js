@@ -63,7 +63,6 @@ router.post('/hours', (req, res) => {
               if(err) console.log(err);
                OperationsHours.create(hours).then(res => {}).catch(err => console.log(err));
           });
-          console.log('upload finished');
           return res.status(200).send( counter + ' Registries of hours information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
       });
   });
@@ -132,7 +131,7 @@ router.post('/kpi',  (req, res) => {
               if(err) console.log(err);
               OperationsKpi.create(kpis).then(res => {}).catch(err => console.log(err));
           });
-          console.log('upload finished');
+
           return res.status(200).send( counter + ' Registries of kpi information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
       });
   });
@@ -140,7 +139,6 @@ router.post('/kpi',  (req, res) => {
 
 
 function splitTimetoHours (item) {
-  console.log(item);
   let split = item.split(':');
   let hhmmss = {
       value: item,

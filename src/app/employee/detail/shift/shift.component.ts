@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, SimpleChange, SimpleChanges, OnChanges, ViewChild } from '@angular/core';
-import { EmployeeService } from '../../services/employee.service';
+import { EmployeeService } from '../../employee.service';
 import { FormGroup, FormBuilder } from '../../../../../node_modules/@angular/forms';
 import { MatTableDataSource, MatSnackBar, MatPaginator } from '../../../../../node_modules/@angular/material';
 
@@ -101,7 +101,6 @@ export class ShiftComponent implements OnInit, OnChanges {
     });
   }
   populateTable(event: any) {
-    console.log(event);
     if (this.dataSource.length !== 0) {
       const data = this.dataSource.data;
       data.push(event);

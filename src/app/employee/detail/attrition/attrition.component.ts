@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Employee, EmployeeAttrition } from '../../Employee';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
-import { EmployeeService } from '../../services/employee.service';
-import { SessionService } from '../../../session/services/session.service';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
 
 @Component({
   selector: 'attrition-info',
@@ -103,7 +103,6 @@ export class AttritionComponent implements OnInit {
         user,
         this.employee._id );
       this.employeeService.saveAttrition(com).subscribe(data => {
-        console.log('success:' + data);
         this.populateTable(data);
       }, error => {});
     }else {

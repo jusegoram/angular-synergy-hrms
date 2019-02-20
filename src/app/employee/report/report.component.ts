@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EmployeeService } from '../services/employee.service';
+import { EmployeeService } from '../employee.service';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
@@ -112,7 +112,6 @@ export class ReportComponent implements OnInit {
     this.employeeService.getReport(obj).subscribe(
         data => {
           this.buildTable(data);
-          console.log(data);
         }, error => { console.error(error); });
   }
   export() {
@@ -154,7 +153,6 @@ export class ReportComponent implements OnInit {
       });
       const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mainInfo);
         XLSX.utils.book_append_sheet(this.wb, main, 'main-info');
-        console.log('added main');
         res();
     });
     return promise;
@@ -168,7 +166,6 @@ export class ReportComponent implements OnInit {
       });
       const company: XLSX.WorkSheet = XLSX.utils.json_to_sheet(companyInfo);
       XLSX.utils.book_append_sheet(this.wb, company, 'company-info');
-      console.log('added company');
       res();
     });
     return promise;
@@ -223,7 +220,6 @@ export class ReportComponent implements OnInit {
     });
     const shift: XLSX.WorkSheet = XLSX.utils.json_to_sheet(shiftInfo);
     XLSX.utils.book_append_sheet(this.wb, shift, 'shift-info');
-    console.log('added shift');
     res();
     });
     return promise;

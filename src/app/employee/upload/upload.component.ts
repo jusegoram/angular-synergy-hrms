@@ -81,7 +81,6 @@ export class UploadComponent {
   }
 
   onSelectChange() {
-    console.log(this.selected.value);
     this.uploader = null;
     this.setUploader();
   }

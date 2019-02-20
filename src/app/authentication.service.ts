@@ -3,12 +3,15 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } 
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {tap} from 'rxjs/operators';
+import { SessionService } from './session/session.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, private _session: SessionService, private dialog: MatDialog) {}
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -21,7 +24,9 @@ export class AuthenticationService {
             if (err.status === 401) {
             // redirect to the login route
             // or show a modal
-              this.router.navigate(['signin'])
+            this._session.logout();
+            this.router.navigate(['signin']);
+
             }
           }
         })

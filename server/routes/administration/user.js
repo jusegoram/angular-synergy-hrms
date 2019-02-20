@@ -72,8 +72,14 @@ router.get('/allUsers', (req, res, next) => {
 
 router.put('/user', (req, res, next) => {
   let _id = req.body._id;
-  let query = req.body.query;
-  User.findOneAndUpdate(_id, {query}, {new: true}, (err, doc) => {
+  let query = req.body;
+  for (let propName in query) {
+    if (query[propName] === null || query[propName] === undefined || query[propName] === '') {
+      delete query[propName];
+    }
+  }
+  delete query._id;
+  User.findOneAndUpdate(_id, {$set: query}, {new: true}, (err, doc) => {
     if(err){
       res.status(500).json(err);
     }else {
@@ -84,12 +90,11 @@ router.put('/user', (req, res, next) => {
 
 router.delete('/user', (req, res, next) => {
   let id = req.query._id;
-  console.log(id);
   User.remove({_id: id}, (err, doc) => {
     if(err){
       res.status(500).json(err);
     }else{
-      console.log(doc);
+
       res.status(200).json(doc);
     }
   });

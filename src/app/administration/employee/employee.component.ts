@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../services/admin.services';
+import { AdminService } from '../admin.service';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Employee } from '../../employee/Employee';
@@ -43,7 +43,6 @@ export class EmployeeComponent implements OnInit {
     this.selectedEmployee = employee;
   }
   getEmployee(): object {
-    console.log(this.selectedEmployee);
     return this.selectedEmployee;
   }
   onUpdateEmployee() {

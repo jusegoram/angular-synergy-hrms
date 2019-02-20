@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Department, Position } from '../models/positions-models';
-import { AdminService } from '../../services/admin.services';
+import { AdminService } from '../../admin.service';
 import { MatSnackBar, MatDialog, MatTableDataSource } from '@angular/material';
 import { CreateDepartmentDialogComponent } from './create-department-dialog/create-department-dialog.component';
 import { EditPositionDialogComponent } from './edit-position-dialog/edit-position-dialog.component';
@@ -59,7 +59,6 @@ export class PositionComponent implements OnInit {
 
   editDepartment(department: Department) {
     this._admService.updateDepartment(department).subscribe(result => {
-      console.log(result);
       this.editDep = false;
       this.openSuccess();
     }, error => {

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {EmployeeService} from '../services/employee.service';
+import {EmployeeService} from '../employee.service';
 import {Employee} from '../Employee';
 import { Router } from '../../../../node_modules/@angular/router';
 

@@ -2,8 +2,8 @@ import {Component, Input, OnInit} from '@angular/core';
 import {Employee, EmployeeComment} from '../../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
-import { EmployeeService } from '../../services/employee.service';
-import { SessionService } from '../../../session/services/session.service';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
 
 @Component({
   selector: 'comment-info',
@@ -59,7 +59,6 @@ export class CommentComponent implements OnInit {
         user,
         this.employee._id );
       this.employeeService.saveComment(com).subscribe(data => {
-        console.log('success:' + data);
         this.populateTable(data);
       }, error => {});
     }else {

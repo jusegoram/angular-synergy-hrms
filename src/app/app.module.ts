@@ -1,5 +1,5 @@
 import { SessionGuard } from './session/guards/session.guard';
-import { SessionService } from './session/services/session.service';
+import { SessionService } from './session/session.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialSharedModule } from './shared/material.shared.module';
