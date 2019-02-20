@@ -24,7 +24,7 @@
         </a>
       </div>
     </div>
-    <mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+    <mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sortData()">
       <!--
         <ng-container matColumnDef="selected">
           <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
