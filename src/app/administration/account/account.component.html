@@ -20,7 +20,7 @@
         <div fxFlex="auto"></div>
         <button mat-icon-button (click)="reload()"><mat-icon>refresh</mat-icon></button>
     </div>
-    <mat-table #table [dataSource]="dataSource" matSort #matSort="matSort" (matSortChange)="sortData($event)">
+    <mat-table #table [dataSource]="dataSource" matSort #matSort="matSort">
 
       <ng-container matColumnDef="employee.employeeId">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Employee ID. </mat-header-cell>
