@@ -19,15 +19,15 @@ let EmployeeAttrition = require("../../../models/app/employee/employee-attrition
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
     let employees = [];
-    let cursor = Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status company').lean().sort({status: 1, employeeId: -1}).cursor()
-    cursor.on('data', item => employees.push(item))
-    cursor.on('end', ()=> {
+    let cursor = Employee.find({},'_id employeeId firstName middleName lastName socialSecurity status company').lean().sort({status: 1, employeeId: -1}).cursor();
+    cursor.on('data', item => employees.push(item));
+    cursor.on('end', () => {
       if(!employees){
         res.status(404).json({message: 'Error in the query'});
       }else {
         res.status(200).json(employees);
       }
-    })
+    });
 });
 
 

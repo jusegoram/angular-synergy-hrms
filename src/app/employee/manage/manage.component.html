@@ -51,12 +51,12 @@
 
       <ng-container matColumnDef="company.client">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Client </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.company.client}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.company?.client}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="company.campaign">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Campaign </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.company.campaign}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element.company?.campaign}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="status">
