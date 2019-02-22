@@ -23,7 +23,7 @@ router.get('/populateTable', function(req, res, next) {
     cursor.on('data', item => employees.push(item))
     cursor.on('end', ()=> {
       if(!employees){
-        res.status(404).json({message: 'Error in the query'})
+        res.status(404).json({message: 'Error in the query'});
       }else {
         res.status(200).json(employees);
       }
