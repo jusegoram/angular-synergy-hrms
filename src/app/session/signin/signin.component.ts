@@ -14,6 +14,9 @@ export class SigninComponent implements OnInit {
 
   public form: FormGroup;
   return = '';
+  synergyId = '@readycallcenter.com'
+  hide = true;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -48,4 +51,6 @@ export class SigninComponent implements OnInit {
       duration: 5000,
     });
   }
+
+
 }

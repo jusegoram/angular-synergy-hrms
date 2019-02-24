@@ -1,7 +1,7 @@
 <div class="app mat-typography" [dir]="dir" [ngClass]="{'app-dark': dark, 'boxed': boxed, 'collapsed-sidebar': collapseSidebar, 'compact-sidebar': compactSidebar, 'side-panel-opened': sidePanelOpened, 'side-panel-closed': !sidePanelOpened }">
   <mat-toolbar class="main-header" color="primary">
-    <button (click)="sidemenu.toggle()" mat-icon-button>
-      <mat-icon>menu</mat-icon>
+    <button style="height: 48px !important; width: 48px !important;" (click)="sidemenu.toggle()" mat-icon-button matTooltip="Open menu">
+      <mat-icon style="height: 48px !important; width: 48px !important;" svgIcon="icon-white"></mat-icon>
     </button>
     <div class="branding">
       <div class="logo"></div>

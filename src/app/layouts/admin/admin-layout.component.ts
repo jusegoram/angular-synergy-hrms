@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { SessionService } from '../../session/session.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 
@@ -43,9 +45,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   public config: PerfectScrollbarConfigInterface = {};
   menus: Menu[];
   constructor(
-    private router: Router, public menuItems: MenuItems, zone: NgZone, private sessionService: SessionService) {
+    private router: Router, public menuItems: MenuItems, zone: NgZone, private sessionService: SessionService,
+    private domSanitizer: DomSanitizer, private matIconRegistry: MatIconRegistry) {
     this.mediaMatcher.addListener(mql => zone.run(() => {
     }));
+    this.matIconRegistry.addSvgIcon(
+      `icon-white`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/images/icon-white.svg")
+    );
   }
 
   ngOnInit(): void {

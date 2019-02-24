@@ -56,7 +56,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.pag = params['page'];
           this.pagSize = params['size'];
           this.filterValue = params['filter']
-          this.applyFilter(params['filter']);
+         this.applyFilter(params['filter']);
           this.setSort(params['srtAct'], params['srtDir']);
           this.setPage(this.pag, this.pagSize);
         });
@@ -68,11 +68,12 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         this.getAuth();
       }
       applyFilter(filter: string) {
-
-        filter = filter.trim(); // Remove whitespace
-        filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filter;
-        this.sortData();
+        if(filter){
+          filter = filter.trim(); // Remove whitespace
+          filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+          this.dataSource.filter = filter;
+          this.sortData();
+        }
       }
       onSelected(event: string) {
         const eventid: string = event;
