@@ -89,9 +89,7 @@ export class EditUserDialogComponent implements OnInit{
       password: formValue.password,
       employee: this.employee
     }
-    this._adminService.editUser(user).subscribe(result => {
-      this.dialogRef.close(result);
-    });
+    this.dialogRef.close(user);
   }
 
   verifyPassword() {

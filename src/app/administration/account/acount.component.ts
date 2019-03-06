@@ -1,6 +1,6 @@
 import { SessionService } from "../../session/session.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
-import {  MatTableDataSource,MatPaginator, MatDialog, MatSort, Sort } from "@angular/material";
+import {  MatTableDataSource,MatPaginator, MatDialog, MatSort, Sort, MatSnackBar } from "@angular/material";
 import { AdminService } from "../admin.service";
 import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
 
@@ -22,7 +22,8 @@ export class AccountComponent implements OnInit {
   constructor(
     private sessionService: SessionService,
     private adminService: AdminService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
     this.adminService.getUsers().subscribe(data => {
@@ -59,13 +60,20 @@ export class AccountComponent implements OnInit {
     );
   }
   openEditDialog(user){
+    console.log(user);
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       width: '500px',
       data: user,
     });
 
     dialogRef.afterClosed().subscribe( result => {
-      this.reload();
+      console.log(result);
+      this.adminService.editUser(result).subscribe(resp => {
+        this.reload();
+        this.snackBar.open("User was edited succesfully", "thank you", {
+          duration: 2000
+        });
+      });
     });
   }
 
