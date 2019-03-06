@@ -83,6 +83,7 @@ router.put('/user', (req, res, next) => {
   if('password' in query) {
     query.password = bcrypt.hashSync(query.password, 10);
   }
+
   User.findOneAndUpdate(_id, {$set: query}, {new: true}, (err, doc) => {
     if(err){
       res.status(500).json(err);
