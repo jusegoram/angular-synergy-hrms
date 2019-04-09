@@ -39,13 +39,13 @@ router.get('/main', function(req, res){
 });
 
 router.put('/main', function (req, res, next) {
-  Employee.findById(req.query.id, (err, result) => {
+  let id = req.query.id;
+  let newStatus = req.body.status.toLowerCase();
+
+  Employee.findByIdAndUpdate(id, {$set: {status: newStatus}}, {new: true}, (err, result) => {
     if (!result)
       return next(new Error('Could not load Document'));
     else {
-      console.log(req.body);
-      result.status = req.body.status.toLowerCase();
-      result.save();
       if (err) {
         return res.status(500).json({
           title: 'An error occurred',
@@ -55,6 +55,21 @@ router.put('/main', function (req, res, next) {
     }
     res.status(200).json(result);
   });
+  // Employee.findById(req.query.id, (err, result) => {
+  //   if (!result)
+  //     return next(new Error('Could not load Document'));
+  //   else {
+  //     result.status = req.body.status.toLowerCase();
+  //     result.save();
+  //     if (err) {
+  //       return res.status(500).json({
+  //         title: 'An error occurred',
+  //         error: err
+  //       });
+  //     }
+  //   }
+  //   res.status(200).json(result);
+  // });
 });
 
 router.put('/shift', function(req,res, next){
