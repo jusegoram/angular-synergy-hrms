@@ -17,14 +17,14 @@ import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../../environments/environment';
 
-const config: SocketIoConfig = { url: environment.apiUrl + '/dashboard', options: {} };
+//const config: SocketIoConfig = { url: environment.apiUrl + '/dashboard', options: {} };
 FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme, TimeSeries);
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(DashboardRoutes),
-    SocketIoModule.forRoot(config),
+   // SocketIoModule.forRoot(config),
     MaterialSharedModule,
     FusionChartsModule
   ],

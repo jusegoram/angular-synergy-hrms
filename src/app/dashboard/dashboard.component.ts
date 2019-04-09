@@ -68,8 +68,8 @@ constructor(private _dashboardService: DashboardService){
 }
 
 ngOnInit(){
-  this.employeeDistribution = this._dashboardService.employeeDistribution;
-  this.employeeCount = this._dashboardService.employeeCount;
+  // this.employeeDistribution = this._dashboardService.employeeDistribution;
+  // this.employeeCount = this._dashboardService.employeeCount;
 }
 fetchData() {
     const data = [
@@ -8370,16 +8370,16 @@ fetchData() {
     this.dataSource2.data = fusionTable;
 }
 
-getEmployeeDist(){
-  this._dashboardService.getEmployeeDistribution();
-  this.employeeDistribution.subscribe(doc => {
-    console.log(doc);
-  })
-}
-getActiveEmployeeCount(){
-  this._dashboardService.getActiveEmployeeCount();
-  this.employeeCount.subscribe(doc => {
-    console.log(doc);
-  })
-}
+// getEmployeeDist(){
+//   this._dashboardService.getEmployeeDistribution();
+//   this.employeeDistribution.subscribe(doc => {
+//     console.log(doc);
+//   })
+// }
+// getActiveEmployeeCount(){
+//   this._dashboardService.getActiveEmployeeCount();
+//   this.employeeCount.subscribe(doc => {
+//     console.log(doc);
+//   })
+// }
 }
