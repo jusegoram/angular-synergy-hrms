@@ -43,6 +43,7 @@ router.put('/main', function (req, res, next) {
     if (!result)
       return next(new Error('Could not load Document'));
     else {
+      console.log(req.body);
       result.status = req.body.status.toLowerCase();
       result.save();
       if (err) {

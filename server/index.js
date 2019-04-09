@@ -115,6 +115,18 @@ app.set('port', port);
 // var httpsServer = https.createServer(options, app);
 var server = http.createServer(app);
 
+/**
+ * Initiate Socket
+ */
+
+var appDashboard = require('./sockets/dashboard');
+
+var io = require('socket.io')(server);
+io.of('/api/v1/dashboard').on('connection', socket => {
+  console.log('connected');
+  socket.on('getEmployeeDistribution',  appDashboard.getEmployeeDistribution.bind({socket, io}));
+  socket.on('getActiveEmployeeCount', appDashboard.getActiveEmployeeCount.bind({socket, io}));
+});
 
 /**
  * Listen on provided port, on all network interfaces.

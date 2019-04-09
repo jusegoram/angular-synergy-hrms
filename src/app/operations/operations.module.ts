@@ -42,7 +42,6 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
     FormsModule,
     FusionChartsModule,
     ScrollingModule,
-
   ],
   declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent],
   providers: [

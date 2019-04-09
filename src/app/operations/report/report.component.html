@@ -83,7 +83,7 @@
               <mat-icon>clear</mat-icon>
             </button>
           <mat-card-content>
-            <cdk-virtual-scroll-viewport class="container" itemSize="48" minBufferPx="200" maxBufferPx="400">
+            <cdk-virtual-scroll-viewport mat-table class="container" itemSize="48" minBufferPx="200" maxBufferPx="400">
               <tr class="mat-header-row">
                 <th mat-header-cell>
                   Employee ID
@@ -169,3 +169,12 @@
   </mat-tab>
 
 </mat-tab-group>
+<mat-table style="visibility: hidden;">
+    <ng-container matColumnDef="employeeId">
+        <mat-header-cell *matHeaderCellDef> Employee ID </mat-header-cell>
+        <mat-cell *matCellDef="let element"></mat-cell>
+      </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns2;">
+    </mat-row>
+</mat-table>

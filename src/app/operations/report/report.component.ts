@@ -20,6 +20,7 @@ export class ReportComponent implements OnInit {
   campaigns = [];
   queryForm: FormGroup;
   notfound;
+  displayedColumns2 = ['employeeId'];
   constructor(private _opsService: OperationsService, private fb: FormBuilder) { }
   ngOnInit() {
     this._opsService.getClient().subscribe(data => {

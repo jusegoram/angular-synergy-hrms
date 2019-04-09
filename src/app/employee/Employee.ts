@@ -60,6 +60,7 @@ export class EmployeeCompany {
               public employee: string,
               public client: string,
               public campaign: string,
+              public manager: string,
               public supervisor: string,
               public trainer: string,
               public trainingGroupRef: string,

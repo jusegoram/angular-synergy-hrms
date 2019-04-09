@@ -35,7 +35,7 @@ export class DetailComponent implements OnInit {
     this.newCompany = new EmployeeCompany(
       '',
       '', '', '',
-      '', '', '',
+      '', '', '','',
       '', null,
       null, null,
       null, null);
@@ -92,6 +92,7 @@ export class DetailComponent implements OnInit {
     this.companyForm = this.fb.group({
       client: [this.company.client],
       campaign: [this.company.campaign],
+      manager:[this.company.manager],
       supervisor: [this.company.supervisor],
       trainer: [this.company.trainer],
       trainingGroupRef: [this.company.trainingGroupRef],
@@ -133,6 +134,7 @@ export class DetailComponent implements OnInit {
       this.employee._id,
       this.companyForm.value.client,
       this.companyForm.value.campaign,
+      this.companyForm.value.manager,
       this.companyForm.value.supervisor,
       this.companyForm.value.trainer,
       this.companyForm.value.trainingGroupRef,

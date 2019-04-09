@@ -1,17 +1,35 @@
-<div class="pa-1">
-  <mat-card>
     <mat-toolbar color="primary">
         <span>Welcome</span>
     </mat-toolbar>
-    <mat-card-header>
-        <mat-card-title>Date today</mat-card-title>
-        <mat-card-subtitle></mat-card-subtitle>
-    </mat-card-header>
+  <mat-card class="ma-1">
+      <mat-card-title>
+        Today's Date
+      </mat-card-title>
     <mat-card-content>
     <div fxLayout="column" >
         <h1 class="ma-0">{{ today | date:'EEEE' }}</h1>
-        <h2 class="mat-text-muted ma-0"><span>{{ today | date:'dd' }}</span>&nbsp;<span>{{ today | date:'MMMM' }}</span></h2>
+        <h2 class="mat-text-muted ma-0"><span>{{ today | date:'MMMM' }}</span>&nbsp;<span>{{ today | date:'dd' }}</span></h2>
       </div>
     </mat-card-content>
-</mat-card>  
-</div>
+</mat-card >
+
+<mat-card class="ma-1" fxLayout="row" style="visibility: hidden">
+    <fusioncharts
+    width="600"
+    height="400"
+    type="doughnut2d"
+    [dataSource]=dataSource1 >
+
+</fusioncharts>
+<fusioncharts
+  [type]="type"
+  [width]="width"
+  [height]="height"
+  [dataSource]="dataSource2"
+>
+</fusioncharts>
+
+
+</mat-card>
+<!-- <button mat-button (click)="getEmployeeDist()">getEmployeeDistTest</button>
+<button mat-button (click)="getActiveEmployeeCount()">getActiveEmployeeCountTest</button> -->

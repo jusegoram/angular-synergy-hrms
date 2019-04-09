@@ -16,6 +16,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
+import { CdkColumnDef } from '@angular/cdk/table';
 
 @NgModule({
   imports: [
@@ -29,7 +30,7 @@ import { AuthenticationService } from '../authentication.service';
 
   ],
   declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, BonusComponent, DeductionComponent],
-  providers: [ PayrollService, TitleCasePipe,
+  providers: [ PayrollService, TitleCasePipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

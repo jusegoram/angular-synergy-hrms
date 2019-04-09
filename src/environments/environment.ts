@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
-   siteUri: 'http://localhost:3000'
+   siteUri: 'http://localhost:3000',
+   apiUrl: 'http://localhost:3000/api/v1'
   // siteUri: 'https://synergy.rccbpo.com'
 };
