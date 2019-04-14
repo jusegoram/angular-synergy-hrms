@@ -14,25 +14,41 @@ let path = require('path');
 const RSA_KEY = fs.readFileSync(path.join(__dirname, '../routes/pub.key'));
 
 
- authentication = ( req, res, next) => {
-   const header = req.headers.authorization;
-   let token = header.split(' ');
-   token = token[1];
-  if(!header){
-    res.status(401).json({message: 'unauthorized user'});
-  }else if(!token){
-    res.status(401).json({message: 'unauthorized user'});
-  }else if(token === 'null'){
-    res.status(401).json({message: 'unauthorized user'});
-  }else{
-    jwt.verify(token, RSA_KEY, { algorithm: 'RS256', expiresIn: 60*30 }, (err, dec) => {
-      if(err)  res.status(401).json({message: 'unauthorized user'});
+authentication = (req, res, next) => {
+  const header = req.headers.authorization;
+  let token;
+  if (header) {
+    token = header.split(' ');
+    token = token[1];
+  }
+  if (!header) {
+    res.status(401).json({
+      message: 'unauthorized user'
+    });
+  } else if (!token) {
+    res.status(401).json({
+      message: 'unauthorized user'
+    });
+  } else if (token === 'null') {
+    res.status(401).json({
+      message: 'unauthorized user'
+    });
+  } else {
+    jwt.verify(token, RSA_KEY, {
+      algorithm: 'RS256',
+      expiresIn: 60 * 30
+    }, (err, dec) => {
+      if (err) res.status(401).json({
+        message: 'unauthorized user'
+      });
       else {
         next();
       }
-     });
+    });
   }
 
 }
 
-module.exports = {authentication}
+module.exports = {
+  authentication
+}

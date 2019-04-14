@@ -9,18 +9,18 @@ import { Socket } from 'ngx-socket-io';
 })
 export class DashboardService {
   // private socket;
-  employeeDistribution = this.socket.fromEvent<object[]>('employeeDistribution')
-  employeeCount = this.socket.fromEvent<object>('employeeCount')
+  // employeeDistribution = this.socket.fromEvent<object[]>('employeeDistribution')
+  // employeeCount = this.socket.fromEvent<object>('employeeCount')
 
-  constructor(private socket: Socket) { }
+  // constructor(private socket: Socket) { }
 
-  getEmployeeDistribution(){
-    this.socket.emit('getEmployeeDistribution');
-  }
+  // getEmployeeDistribution(){
+  //   this.socket.emit('getEmployeeDistribution');
+  // }
 
-  getActiveEmployeeCount(){
-    this.socket.emit('getActiveEmployeeCount');
-  }
+  // getActiveEmployeeCount(){
+  //   this.socket.emit('getActiveEmployeeCount');
+  // }
   // connect(): Subject<MessageEvent> {
   //   this.socket = io(environment.siteUri);
   //   let observable = new Observable(observer => {

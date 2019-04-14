@@ -15,7 +15,7 @@ var schema = new Schema({
     reapplicant: { type: Boolean, required: false},
     reapplicantTimes: {type: Number, required: false},
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
-
+    //TODO: ADD LASTVACATION PARAMETER
 });
 // add training group (ref:num), and trainer
 module.exports = mongoose.model('Employee-Company', schema);

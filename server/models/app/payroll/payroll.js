@@ -1,53 +1,76 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-// let PayrollCurrent = new Schema({
-//   _id: mongoose.Schema.Types.ObjectId,
-//   employeeId: { type: String, required: true },
-//   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
-//   payrollType: {type: String, required: true},
-//   totalPayed: { type: Number, Required: false },
-//   totalHours:{type: Number, Required: true},
-//   totalOvertime:{type: Number, Required: true},
-//   rate:{type: Number, Required: true},
-//   overtimeRate:{type: Number, Required: true},
-//   totalBonus:{type: Number, Required: true},
-//   bonusReason:{type: Number, Required: true},
-//   totalDeductions:{type: String, required: true},
-//   deductionsReason:{type: String, required: true},
-//   date: { type: Date, required: true }
-// });
-
-// module.exports = mongoose.model('Payroll-Current', PayrollCurrent);
+//TODO: PAYED LEAVES
 
 
-let PayrollDetail = new Schema({
-  date:{type: Date},
-  Hours: {type: Number},
-  holidayRate:{type: Number},
-  employeePosition: {type: Object},
-  employeePayroll:{type: Object},
-  employeeVacation:{type: Object},
-  Overtime:{type: [Object]},
-  otherPayment:{type: [Object]},
-  Deduction:{type: [Object]},
+let BonusSchema = new Schema({
+  employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  reason: {type: String},
+  date: {type: Date},
+  amount: {type: Number}
 });
+BonusSchema.index({date: -1});
+
+let DeductionSchema = new Schema({
+  employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  reason: {type: String},
+  date: {type: Date},
+  amount: {type: Number}
+});
+DeductionSchema.index({date: -1});
+
+let OtherPaySchema = new Schema({
+  employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  reason: {type: String},
+  date: {type: Date},
+  amount: {type: Number}
+});
+OtherPaySchema.index({date: -1});
+
+let OvertimeSchema = new Schema({
+  employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  overtimeHours: {type: Number},
+  payedOvertimeHours: {type: Number},
+  rate:{type: Number},
+  amount: {type: Number}
+});
+OvertimeSchema.index({date: -1});
 
 let PayrollStorage = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee' },
+  firstName: { type: String},
+  middleName: {type: String},
+  lastName: {type: String},
+  socialSecurity: {type: String},
+  status: {type: String},
   payrollType: {type: String, required: true},
+  hours: {type: Number},
+  holidayRate:{type: Number},
+  employeePosition: {type: Object},
+  employeePayroll:{type: Object},
+  employeeCompany:{type: Object},
+  employeeVacation:{type: Object}, //TODO: create object structure
+  overtime:{type: [OvertimeSchema]},
+  otherPayment:{type: [OtherPaySchema]},
+  bonus: {type: [BonusSchema]},
+  deduction:{type: [DeductionSchema]},
   grossSalary: { type: Number, Required: true},
   totalBonus: { type: Number, Required: true},
   totalDeduction: { type: Number, Required: true},
   totalSocialSecurity: {type: Number, required: true},
   netSalary: { type: Number, Required: true},
-  detail: {type: PayrollDetail, required: true},
-  date: { type: String, required: true }
+  dateFrom: { type: String, required: true },
+  dateTo: { type: String, required: true },
 });
 
-const payrollStorage = mongoose.model('Payroll', PayrollStorage);
+PayrollStorage.index({dateFrom: -1});
+
+const payrollStorage = mongoose.model('payroll', PayrollStorage);
+const bonus = mongoose.model('payroll-bonus', BonusSchema);
+const deduction = mongoose.model('payroll-deduction', DeductionSchema);
+const overtime = mongoose.model('payroll-overtime', OvertimeSchema);
 
 module.exports = {
   bonus, deduction, overtime, payrollStorage
