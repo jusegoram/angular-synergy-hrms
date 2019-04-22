@@ -19,6 +19,7 @@ export class Store {
 
 @Injectable()
 export class EmployeeService {
+
   siteURI = environment.siteUri;
   _clients: Observable<any> = null;
   _shift: Observable<any> = null;
@@ -101,6 +102,9 @@ export class EmployeeService {
     }
     return this._shift;
   }
+  tokenGetter() {
+    return 'JWT ' + localStorage.getItem('id_token');
+  }
   /**
    *
    *
@@ -115,6 +119,10 @@ export class EmployeeService {
       );
     }
     return this._employees;
+  }
+
+  getTemplate(templateUrl) {
+    return this.httpClient.get(templateUrl, {responseType: 'blob'});
   }
   /**
    *

@@ -52,7 +52,7 @@ public clients: any;
     return this.httpClient.get(templateUrl, {responseType: 'blob'});
   }
   tokenGetter() {
-    return localStorage.getItem('id_token');
+    return 'JWT ' + localStorage.getItem('id_token');
   }
 
 }

@@ -10,17 +10,16 @@
 </mat-toolbar>
 <mat-card class="mat-card-top">
   <div style="padding: 5px; padding-top: 15px">
-      <mat-card-header>
         <mat-card-title>
-          Hours & KPI
+          Download Template & Upload
         </mat-card-title>
         <mat-card-subtitle>
             Select the template > Download & fill > Select the upload type > Select File & Upload
         </mat-card-subtitle>
-      </mat-card-header>
       <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
         <mat-form-field appearance="outline">
-          <mat-select [(ngModel)]="templateSelected">
+          <mat-select placeholder="Upload Type" [(ngModel)]="templateSelected">
+            <mat-option> SELECT TEMPLATE</mat-option>
             <mat-option *ngFor="let option of templates" [value]="option.value" (click)="getTemplate(option)">
               {{option.viewValue}}
             </mat-option>
@@ -31,7 +30,6 @@
 <mat-card-content>
   <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
     <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-      <h4 class="mt-0">Select Information</h4>
       <mat-form-field appearance="outline">
         <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
           <mat-option *ngFor="let item of items" [value]="item"> {{item.viewValue}}</mat-option>

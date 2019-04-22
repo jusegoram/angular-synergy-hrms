@@ -10,26 +10,26 @@
   </mat-toolbar>
 <mat-card class="mat-card-top">
     <div style="padding: 5px; padding-top: 15px">
-        <mat-card-header>
-          <h4 class="mt-0">1. Download Template</h4>
-        </mat-card-header>
+
+          <mat-card-title>Download Template & Upload</mat-card-title>
+          <mat-card-subtitle> <span> Select the template > Download & fill > Select the upload type > Select File & Upload</span>
+          </mat-card-subtitle>
+
         <mat-card-content fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="gappx">
-           <span> Select the template > Download & fill > Select the upload type > Select File & Upload</span>
-          <mat-form-field>
-            <mat-select [(ngModel)]="templateSelected">
-              <mat-option *ngFor="let option of templates" [value]="option.value">
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Upload Type" [(ngModel)]="templateSelected">
+                <mat-option> SELECT TEMPLATE</mat-option>
+              <mat-option *ngFor="let option of templates" [value]="option.value" (click)="getTemplate(option)">
                 {{option.text}}
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <a [href]="templateSelected" ><button mat-button color="primary"> Download Template </button></a>
         </mat-card-content>
     </div>
   <mat-card-content>
     <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
       <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
-        <h4 class="mt-0">2. Select Information</h4>
-        <mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
             <mat-option *ngFor="let item of items" [value]="item"> {{item.viewValue}}</mat-option>
           </mat-select>
