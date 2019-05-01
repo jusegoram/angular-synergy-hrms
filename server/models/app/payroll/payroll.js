@@ -6,6 +6,7 @@ let Schema = mongoose.Schema;
 
 let BonusSchema = new Schema({
   employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  employeeId: {type: String},
   reason: {type: String},
   date: {type: Date},
   amount: {type: Number}
@@ -14,6 +15,7 @@ BonusSchema.index({date: -1});
 
 let DeductionSchema = new Schema({
   employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  employeeId: {type: String},
   reason: {type: String},
   date: {type: Date},
   amount: {type: Number}
@@ -22,6 +24,7 @@ DeductionSchema.index({date: -1});
 
 let OtherPaySchema = new Schema({
   employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  employeeId: {type: String},
   reason: {type: String},
   date: {type: Date},
   amount: {type: Number}
@@ -30,6 +33,7 @@ OtherPaySchema.index({date: -1});
 
 let OvertimeSchema = new Schema({
   employee: {type: mongoose.Schema.Types.ObjectId, ref: 'Employee'},
+  employeeId: {type: String},
   overtimeHours: {type: Number},
   payedOvertimeHours: {type: Number},
   rate:{type: Number},
@@ -47,7 +51,7 @@ let PayrollStorage = new Schema({
   status: {type: String},
   payrollType: {type: String, required: true},
   hours: {type: Number},
-  holidayRate:{type: Number},
+  hourlyRate:{type: Number},
   employeePosition: {type: Object},
   employeePayroll:{type: Object},
   employeeCompany:{type: Object},

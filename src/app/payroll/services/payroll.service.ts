@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 
 @Injectable()
 export class PayrollService {
+
+
   public status = [
     { value: 'active', viewValue: 'Active' },
     { value: 'resignation', viewValue: 'Resignation' },
@@ -67,5 +69,17 @@ export class PayrollService {
       );
     }
     return this._clients;
+  }
+
+  getEmployeesByPayrollType(payrollType, from, to) {
+    //FIX
+    return this.httpClient.get<any>(`/api/v1/payroll/getPayroll?payrollType=${payrollType}?from=${from}?to=${to}`);
+  }
+  getHours(from: any, to: any) {
+
+    let params = new HttpParams().set('gte', from);
+    params.set('lte', to);
+    return this.httpClient.get<any>('/api/v1/payroll/getHours', {params: params});
+
   }
 }

@@ -51,6 +51,7 @@ let payrollSchema = new Schema({
   billable: {type: Boolean, required: false},
   lastVacation:{type: Object, required: false},
   lastPayment: {type: Date, required: false},
+  lastPaymentAmount: {type: Number, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 

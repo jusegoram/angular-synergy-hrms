@@ -6,8 +6,7 @@ import { MainComponent } from './components/main/main.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { ExportComponent } from './components/export/export.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
-import { BonusComponent } from './components/bonus/bonus.component';
-import { DeductionComponent } from './components/deduction/deduction.component';
+import { PayrollConceptsComponent } from './components/concepts/payrollConcepts.component';
 import {MaterialSharedModule} from '../shared/material.shared.module';
 import {FileUploadModule} from 'ng2-file-upload';
 import {FormsModule} from '@angular/forms';
@@ -29,7 +28,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
     NgxDatatableModule,
 
   ],
-  declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, BonusComponent, DeductionComponent],
+  declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent],
   providers: [ PayrollService, TitleCasePipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
