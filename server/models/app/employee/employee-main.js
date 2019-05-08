@@ -43,7 +43,7 @@ let payrollSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   TIN: {type: String, required: true },
-  positionId: { type: String, required: true },
+  positionId: { type: String, required: false },
   payrollType: {type: String, required: true },
   baseWage: {type: String, required: false },
   bankName: {type: String, required: false },

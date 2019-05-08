@@ -10,7 +10,7 @@ import { MatTableDataSource, MatSnackBar, MatPaginator } from '../../../../../no
 })
 export class ShiftComponent implements OnInit, OnChanges {
   @Input() employee: any;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
 
   dataSource: any = [];
   currentShift: any;

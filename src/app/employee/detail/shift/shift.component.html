@@ -41,19 +41,24 @@
     </div>
     <div class="example-container">
       <div class="example-header" [formGroup]="wpForm">
-          <mat-form-field>
+          <mat-form-field appearance="outline">
+              <mat-label>Work Pattern</mat-label>
              <mat-select placeholder="Work Patterns" name="item" formControlName="shift">
                <mat-option *ngFor="let shift of shifts" [value]="shift._id">
                  {{shift.name}}
                </mat-option>
              </mat-select>
           </mat-form-field>
-          <mat-form-field>
+          &nbsp;
+          <mat-form-field appearance="outline">
+              <mat-label>Active Since</mat-label>
             <input matInput [matDatepicker]="shiftPicker" placeholder="Active Date" formControlName="createdDate">
             <mat-datepicker-toggle matSuffix [for]="shiftPicker"></mat-datepicker-toggle>
             <mat-datepicker #shiftPicker></mat-datepicker>
           </mat-form-field>
-          <button mat-button color="primary" (click)="onSave()"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
+          &nbsp;
+          &nbsp;
+          <button mat-button color="primary" (click)="onSave()"><mat-icon>add</mat-icon>&nbsp; ADD SHIFT</button>
       </div>
       <div class="table1">
           <mat-table #table [dataSource]="currentShift" matSort>

@@ -11,6 +11,11 @@ var rightsSchema = new Schema({
   upload: { type: Boolean},
 });
 
+var logSchema = new Schema({
+  log: {type: String},
+  date: {type: Date}
+})
+
 var schema = new Schema({
     firstName: {type: String, required: true},
     middleName:{type: String, required: false },
@@ -22,7 +27,7 @@ var schema = new Schema({
     rights: {type: rightsSchema, required: false},
     creationDate : {type: Date, required: true },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false, unique: true},
-    log: { type: [Object] , required: false },
+    log: { type: [logSchema] , required: false },
     lastLogin:{type: Date, required:false },
 
 });

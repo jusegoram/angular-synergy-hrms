@@ -12,7 +12,7 @@ import { SessionService } from '../../../session/session.service';
 })
 export class AttritionComponent implements OnInit {
   @Input() employee: Employee;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
   dataSource: any;
   public isEdit: false;
   employeeAttrition: any;

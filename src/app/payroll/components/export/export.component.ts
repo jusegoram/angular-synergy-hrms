@@ -228,23 +228,24 @@ export class ExportComponent implements OnInit {
       const positionInfo: any[] = [];
       data.forEach(element => {
         let position = element.position[element.position.length-1];
+        console.log(position);
         if(position) {
-          position.baseWage = position.position.baseWage;
-        position.name = position.position.name;
-        position.positionId = position.position.positionId;
-
-        let exportPosition = {
-          employeeId: position.employeeId,
-          client: position.client,
-          department: position.department,
-          positionId: position.positionId,
-          positionName: position.name,
-          baseWage: position.baseWage,
-          startDate: position.startDate,
-          endDate: position.endDate,
-        }
-
-        positionInfo.push(exportPosition);
+            if(position.position){
+              position.baseWage = position.position.baseWage;
+              position.name = position.position.name;
+              position.positionId = position.position.positionId;
+              let exportPosition = {
+                employeeId: position.employeeId,
+                client: position.client,
+                department: position.department,
+                positionId: position.positionId,
+                positionName: position.name,
+                baseWage: position.baseWage,
+                startDate: position.startDate,
+                endDate: position.endDate,
+              }
+              positionInfo.push(exportPosition);
+            }
         }
       });
       const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);

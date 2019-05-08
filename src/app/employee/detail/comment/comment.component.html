@@ -9,7 +9,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <mat-card class="pa-1">
+    <div class="pa-1">
       <mat-table #table [dataSource]="dataSource">
         <ng-container matColumnDef="comment">
           <mat-header-cell *matHeaderCellDef> Comment </mat-header-cell>
@@ -26,14 +26,22 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-    </mat-card>
+
+      <ng-container *ngIf="this.dataSource.data.length === 0">
+        <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
+        No Comments Available
+        </div>
+      </ng-container>
+
+
+    </div>
     <div fxLayout="column" class="comment pa-1">
-    <div fxLayout="row" [formGroup]="commentForm">
-      <mat-form-field>
+    <div fxLayout="row" [formGroup]="commentForm" *ngIf="this.authorization.edit && this.authorization.create">
+      <mat-form-field appearance="fill">
         <textarea matInput formControlName="comment" placeholder="Leave a comment"></textarea>
       </mat-form-field>
     </div>
     </div>
-    <button mat-button color="primary" (click)="onSubmit()"><mat-icon>check</mat-icon>&nbsp;Submit</button>
+    <button mat-button color="primary" (click)="onSubmit()" *ngIf="this.authorization.edit && this.authorization.create"><mat-icon>check</mat-icon>&nbsp;Submit</button>
   </mat-expansion-panel>
 </mat-accordion>

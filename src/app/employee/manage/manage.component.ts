@@ -25,8 +25,6 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   displayedColumns = ['employeeId', 'firstName', 'socialSecurity','company.client', 'company.campaign', 'status', 'details'];
   constructor(
     private employeeService: EmployeeService,
-    private sessionService: SessionService,
-    private router: Router,
     private route: ActivatedRoute) {
   }
   ngAfterViewInit() {
@@ -65,7 +63,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
 
       ngOnInit() {
         this.populateTable();
-        this.getAuth();
+        this.auth = this.employeeService.getAuth();
       }
       applyFilter(filter: string) {
         if(filter){
@@ -84,9 +82,6 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.selectedEmployees.splice(index, 1);
         }
         console.log(this.selectedEmployees);
-      }
-      getAuth() {
-        this.auth = this.sessionService.permission();
       }
       reload() {
         this.employeeService.clearEmployees();

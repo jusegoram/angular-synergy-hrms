@@ -12,7 +12,7 @@ import { SessionService } from '../../../session/session.service';
 })
 export class AvatarComponent implements OnInit {
   @Input() id: string;
-  @Input() auth: boolean;
+  @Input() authorization: any;
   imageData: any;
   selected = '/api/v1/employee/upload/avatars';
   URL = environment.siteUri + this.selected;
@@ -62,6 +62,6 @@ export class AvatarComponent implements OnInit {
   }
   getPermission() {
     // this.auth = this.sessionService.permission();
-    return this.auth;
+    return this.authorization;
   }
 }

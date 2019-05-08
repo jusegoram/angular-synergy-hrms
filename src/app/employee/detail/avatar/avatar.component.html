@@ -5,14 +5,14 @@
 </div>
 
 <div fxLayout="row" fxFlexAlign="center">
-    <button mat-button [disabled]="!this.auth" (click)="fileInput.click(); this.onclick()"><mat-icon>add_a_photo
+    <button mat-button [disabled]="!this.authorization.upload" (click)="fileInput.click(); this.onclick()"><mat-icon>add_a_photo
     </mat-icon> &nbsp;Photo
     </button>
     <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
       <input type="file" #fileInput ng2FileSelect [uploader]="uploader" />
     </span>
   <button mat-button mat-button-sm color="primary" type="button"
-          (click)="uploader.uploadAll()" [disabled]="!this.auth"> <mat-icon>file_upload</mat-icon>
+          (click)="uploader.uploadAll()" [disabled]="!this.authorization.upload"> <mat-icon>file_upload</mat-icon>
           Upload</button>
 </div>
   <button mat-button color="warn" disabled="true"><mat-icon>delete</mat-icon> Remove</button>

@@ -56,3 +56,10 @@ mat-form-field {
    flex-flow: column wrap;
    align-content: stretch;
 }
+
+.readonly-wrapper {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+

@@ -1,4 +1,4 @@
-<mat-accordion class="container" >
+<mat-accordion class="container">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -9,84 +9,91 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="example-container">
-        <div class="example-header">
-            <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-            </mat-form-field>
-        </div>
-        <mat-table #table [dataSource]="dataSource" matSort>
-
-            <ng-container matColumnDef="client">
-                <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
-              </ng-container>
-
-            <ng-container matColumnDef="positionId">
-                <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.position.positionId}} </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="department">
-              <mat-header-cell *matHeaderCellDef>Department</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.department}} </mat-cell>
-            </ng-container>
-
-          <ng-container matColumnDef="position">
-            <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.position.name}} </mat-cell>
-          </ng-container>
-
-
-          <!-- Position Column -->
-
-          <ng-container matColumnDef="startDate">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
-          </ng-container>
-
-          <!-- Name Column -->
-          <ng-container matColumnDef="endDate">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
-          </ng-container>
-
-          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        </mat-table>
-        <mat-paginator #paginator
-        [pageSize]="5"
-        [pageSizeOptions]="[5, 10, 15]">
-        </mat-paginator>
+      <div class="example-header">
+        <mat-form-field appearance="fill">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+        </mat-form-field>
       </div>
-    <div [formGroup]="positionForm" fxLayout="row">
-        <mat-form-field>
-            <mat-select placeholder="Client"  formControlName="client">
-                <mat-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        <mat-form-field>
-            <mat-select placeholder="Department"  (selectionChange)="setPositions($event.value.positions)" formControlName="department">
-                <mat-option *ngFor="let department of departments" [value]="department">{{department.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-      <mat-form-field>
-        <mat-select placeholder="Position" (selectionChange)="position = $event.value" formControlName="position">
-            <mat-option *ngFor="let position of positions" [value]="position">{{position.name}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-    <span class="fill-remaining-space"></span>
-    <mat-form-field>
-      <input matInput placeholder="Start" [matDatepicker]="startPicker" formControlName="start">
-      <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-      <mat-datepicker #startPicker></mat-datepicker>
-  </mat-form-field>
-    <mat-form-field>
-      <input matInput placeholder="End" [matDatepicker]="endPicker" formControlName="end">
-      <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-      <mat-datepicker #endPicker></mat-datepicker>
-    </mat-form-field>
-    <button mat-icon-button color="primary" (click)="onAdd()"><mat-icon>add_circle</mat-icon></button>
+      <mat-table #table [dataSource]="dataSource" matSort>
 
-  </div>
+        <ng-container matColumnDef="client">
+          <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="positionId">
+          <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.position.positionId}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="department">
+          <mat-header-cell *matHeaderCellDef>Department</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.department}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="position">
+          <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.position.name}} </mat-cell>
+        </ng-container>
+
+
+        <!-- Position Column -->
+
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+      <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15]">
+      </mat-paginator>
+    </div>
+    <ng-container *ngIf="this.authorization.create">
+      <div [formGroup]="positionForm" fxLayout="row" fxLayout.xs="column">
+        <mat-form-field appearance="outline">
+            <mat-label>Client</mat-label>
+          <mat-select placeholder="Client" formControlName="client">
+            <mat-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Department</mat-label>
+          <mat-select placeholder="Department" (selectionChange)="setPositions($event.value.positions)"
+            formControlName="department">
+            <mat-option *ngFor="let department of departments" [value]="department">{{department.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Position</mat-label>
+          <mat-select placeholder="Position" (selectionChange)="position = $event.value" formControlName="position">
+            <mat-option *ngFor="let position of positions" [value]="position">{{position.name + ' - (' + position.positionId +')' }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <span class="fill-remaining-space"></span>
+        <mat-form-field appearance="outline">
+            <mat-label>Start</mat-label>
+          <input matInput placeholder="Start" [matDatepicker]="startPicker" formControlName="start">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>End</mat-label>
+          <input matInput placeholder="End" [matDatepicker]="endPicker" formControlName="end">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <button style="left: 90%" mat-button color="primary" (click)="onAdd()">
+        <mat-icon>add</mat-icon>&nbsp; ADD POSITION
+      </button>
+    </ng-container>
   </mat-expansion-panel>
 </mat-accordion>

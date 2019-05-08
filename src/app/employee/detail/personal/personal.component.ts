@@ -14,7 +14,7 @@ import { Params, ActivatedRoute } from '@angular/router';
 export class PersonalComponent implements OnInit, OnChanges {
   userId: string;
   @Input() employee: Employee;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
   isNew = false;
   personal: any;
   newPersonal: any;
@@ -139,7 +139,7 @@ export class PersonalComponent implements OnInit, OnChanges {
       addressDate: [arg.addressDate],
       celNumber: [arg.celNumber],
       telNumber: [arg.telNumber],
-      emailAddress: [arg.emailAddress],
+      emailAddress: [arg.emailAddress, Validators.email],
       emailDate: [arg.emailDate]
     });
   }

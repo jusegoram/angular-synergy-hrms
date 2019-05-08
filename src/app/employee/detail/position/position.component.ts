@@ -16,7 +16,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 export class PositionComponent implements OnInit {
   userId: string;
   @Input() employee: any;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
   // positions = [
   //   { id: '1001', name: 'ED 1' },
   //   { id: '1002', name: 'Rep 2: A' },

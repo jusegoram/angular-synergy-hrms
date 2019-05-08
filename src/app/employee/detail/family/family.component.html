@@ -2,16 +2,16 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Family
+        Emergency Contacts
       </mat-panel-title>
       <mat-panel-description>
         Information
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class=pa-1 fxLayout="column">
-        <mat-card class="pa-1" fxLayout="column">
+        <div class="pa-1" fxLayout="column">
           <div class="filter">
-            <mat-form-field>
+            <mat-form-field appearance="fill">
                 <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
             </mat-form-field>
           </div>
@@ -59,30 +59,42 @@
         [pageSize]="5"
         [pageSizeOptions]="[5, 10, 15]">
         </mat-paginator>
-        </mat-card>
-      <mat-card class="pa-1" fxLayout="column">
-        <div fxLayout="row" [formGroup]="familyForm">
-          <mat-form-field class="form">
-          <input matInput placeholder="name" formControlName="name">
+        </div>
+      <div class="pa-1" fxLayout="column">
+        <div fxLayout="row" fxLayout.xs="column" [formGroup]="familyForm">
+          <mat-form-field class="form" appearance="outline">
+            <mat-label>Contact's Name</mat-label>
+          <input matInput placeholder="Contact Name" formControlName="name">
         </mat-form-field>
-        <mat-form-field class="form">
-          <input matInput placeholder="relationship" formControlName="relationship">
+        <mat-form-field class="form" appearance="outline">
+            <mat-label>Contact's Relationship</mat-label>
+          <input matInput placeholder="Father / Mother / Son ... etc" formControlName="relationship">
         </mat-form-field>
-        <mat-form-field class="form">
-          <input matInput placeholder="Cellular Phone Number" formControlName="celNumber">
+        <mat-form-field class="form" appearance="outline">
+          <mat-label>Contact's Phone Number (Cel)</mat-label>
+          <input matInput placeholder="600-0000" formControlName="celNumber" type="tel"  pattern="[0-9]{3}-[0-9]{4}">
         </mat-form-field>
-        <mat-form-field class="form">
-          <input matInput placeholder="Telephone Number" formControlName="telNumber" >
+        <mat-form-field class="form" appearance="outline">
+          <mat-label>Contat's Phone Number (Tel)</mat-label>
+          <input matInput placeholder="600-0000" formControlName="telNumber"  type="tel"  pattern="[0-9]{3}-[0-9]{4}">
         </mat-form-field>
-        <mat-form-field class="form">
-          <input matInput placeholder="Email Address" formControlName="emailAddress">
+        <mat-form-field class="form" appearance="outline">
+          <mat-label>Contact's Email Address</mat-label>
+          <input matInput placeholder="email@provider.com" formControlName="emailAddress">
         </mat-form-field>
-        <mat-form-field class="form">
-          <input matInput placeholder="Home Address" formControlName="address">
+        <mat-form-field class="form" appearance="outline">
+          <mat-label>Contact's Home Address</mat-label>
+          <input matInput placeholder="123 Example St. Belize City" formControlName="address">
         </mat-form-field>
-        <button mat-icon-button color="primary" (click)="onSubmit()"><mat-icon>{{this.isEdit?'check_circle':'add_circle'}}</mat-icon></button>
+
       </div>
-      </mat-card>
+      <div fxLayout="row" fxLayout.xs="column">
+          <div fxFlex="95%" fxFlexFill>
+          </div>
+          <button mat-button color="primary" (click)="onSubmit()" [disabled]="!this.familyForm.valid"><mat-icon>{{this.isEdit?'check_circle':'add_circle'}}</mat-icon> &nbsp; {{this.isEdit?'EDIT CONTACT ':'ADD CONTACT '}} &nbsp;</button>
+      </div>
+
+      </div>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

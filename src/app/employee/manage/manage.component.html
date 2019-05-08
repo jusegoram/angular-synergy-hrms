@@ -18,7 +18,7 @@
       <button mat-icon-button (click)="reload()">
         <mat-icon>refresh</mat-icon>
       </button>
-      <div *ngIf="auth.edit">
+      <div *ngIf="auth.create">
         <a [routerLink]="['/', 'employee', 'new' ]" mat-icon-button>
           <mat-icon>person_add</mat-icon>
         </a>

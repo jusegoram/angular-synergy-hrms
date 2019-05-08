@@ -14,7 +14,7 @@ import { EmployeePayroll} from '../../Employee';
 export class PayrollComponent implements OnInit {
   @Input() payroll: any;
   @Input() employee: any;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
   new: boolean;
   isAuth: boolean;
   newPayroll: EmployeePayroll;
@@ -30,7 +30,6 @@ export class PayrollComponent implements OnInit {
     public snackBar: MatSnackBar,
     public fb: FormBuilder) {
     this.newPayroll = new EmployeePayroll('', '', '', '', '', '', '', '', null);
-    this.isAuth = true;
     this.new = false;
   }
 

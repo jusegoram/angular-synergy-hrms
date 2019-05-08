@@ -16,6 +16,7 @@ import { async } from '@angular/core/testing';
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
+ auth: any;
  employee: Employee;
  positions: any;
  latestPos: any;
@@ -30,7 +31,7 @@ export class DetailComponent implements OnInit {
  reaptimes: any[];
  genders: any[];
   constructor(private employeeService: EmployeeService,
-    private route: ActivatedRoute, private sessionService: SessionService,
+    private route: ActivatedRoute,
     public snackBar: MatSnackBar, private fb: FormBuilder, private datePipe: DatePipe) {
     this.newCompany = new EmployeeCompany(
       '',
@@ -46,6 +47,7 @@ export class DetailComponent implements OnInit {
   }
 
    ngOnInit() {
+     this.auth = this.employeeService.getAuth();
      this.clients = this.employeeService.clients;
      this.employee = this.route.snapshot.data['employee'];
      this.positions = this.employee.position;

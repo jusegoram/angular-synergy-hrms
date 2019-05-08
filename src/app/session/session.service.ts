@@ -72,6 +72,7 @@ export class SessionService {
       //   case 'view': return (this.getRole() >= 0) ? true : false;
       //   default: return false;
       // };
+      console.log(this.getRights());
       const auth = {
         edit: (this.getRole() >= 3) ? true : false,
         delete: (this.getRole() >= 4) ? true : false,

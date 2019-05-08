@@ -1,5 +1,5 @@
 mat-form-field{
-    min-width: 80px;
+    min-width: 90px;
     max-width: 600px;
 }
 .container{
@@ -8,12 +8,9 @@ mat-form-field{
 
 .form{
     margin: 10px;
-    max-height: 250px;
-    display: flex;
-    flex: 0 0 50%;
-   align-items: center;
-   justify-content: center;
-   flex-flow: column wrap;
-   align-content: stretch;
 }
 
+.readonly-wrapper {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}

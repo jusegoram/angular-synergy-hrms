@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Employee, EmployeeFamily} from '../../Employee';
 import { MatSnackBar, MatTableDataSource } from '@angular/material';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '../../employee.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { EmployeeService } from '../../employee.service';
 })
 export class FamilyComponent implements OnInit {
   @Input() employee: Employee;
-  @Input() authorization: boolean;
+  @Input() authorization: any;
   public employeeFamily: any;
   public dataSource: any;
   public familyForm: FormGroup;
@@ -41,7 +41,7 @@ export class FamilyComponent implements OnInit {
       relationship: [''],
       celNumber: [''],
       telNumber: [''],
-      emailAddress: [''],
+      emailAddress: ['', Validators.email],
       address: ['']
     });
   }

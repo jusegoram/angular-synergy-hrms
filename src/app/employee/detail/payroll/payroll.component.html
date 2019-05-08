@@ -10,30 +10,33 @@
     </mat-expansion-panel-header>
     <form class="form"
           [formGroup]="payrollForm"
-          id="payrollForm">
+          id="payrollForm" fxLayout="row" fxLayout.xs="column" fxLayoutGap="15px" fxLayoutAlign="center center">
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+          <mat-label>TIN #</mat-label>
           <input matInput formControlName="TIN"
           placeholder="Tax Identification Number"
-          [disabled]="!isAuth">
+          [readonly]="!this.authorization.edit">
       </mat-form-field>
 
-      <mat-form-field>
-          <input matInput formControlName="positionId"
-          placeholder="Position ID"
-          [disabled]="!isAuth">
-      </mat-form-field>
-
-      <mat-form-field>
-          <mat-select placeholder="Payroll Type" formControlName="payrollType">
+      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+          <mat-label>Payroll Type</mat-label>
+          <mat-select placeholder="Payroll Type" formControlName="payrollType" >
+              <mat-option value="">
+                  N/A
+              </mat-option>
             <mat-option *ngFor="let payrollType of payrollTypes" [value]="payrollType.value">
                 {{payrollType.name}}
             </mat-option>
           </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+          <mat-label>Bank Name</mat-label>
           <mat-select placeholder="Bank Name" formControlName="bankName">
+              <mat-option value="">
+                  N/A
+              </mat-option>
             <mat-option value="Scotiabank">
                 Scotiabank
             </mat-option>
@@ -49,14 +52,19 @@
           </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
+          <mat-label>Bank Account No.</mat-label>
           <input matInput formControlName="bankAccount"
-          placeholder="Bank Account No."
-          [disabled]="!isAuth">
+          placeholder="1234567"
+          [readonly]="!this.authorization.edit">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+          <mat-label>Billable</mat-label>
         <mat-select placeholder="Billable" formControlName="billable">
+            <mat-option value=null>
+                N/A
+            </mat-option>
           <mat-option [value]=true>
              Yes
           </mat-option>
@@ -66,6 +74,6 @@
         </mat-select>
       </mat-form-field>
     </form>
-  <button mat-button color="primary" class="button" (click)="onSubmit()"> <mat-icon>save</mat-icon>&nbsp; SAVE</button>
+  <button mat-stroked-button color="primary" class="button" (click)="onSubmit()" *ngIf="this.authorization.edit"> <mat-icon>save</mat-icon>&nbsp; SAVE</button>
   </mat-expansion-panel>
 </mat-accordion>

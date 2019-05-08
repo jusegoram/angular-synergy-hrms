@@ -14,7 +14,7 @@ export class SigninComponent implements OnInit {
 
   public form: FormGroup;
   return = '';
-  synergyId = '@readycallcenter.com'
+  synergyId = '@rccbpo.com'
   hide = true;
 
   constructor(
@@ -26,7 +26,7 @@ export class SigninComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.fb.group ( {
-      uname: [null , Validators.compose ( [ Validators.required ] )] , password: [null , Validators.compose ( [ Validators.required ] )]
+      uname: [null , Validators.compose ( [ Validators.required, Validators.email ] )] , password: [null , Validators.compose ( [ Validators.required ] )]
     } );
     this.route.queryParams
     .subscribe(params => this.return = params['return'] || '/main');

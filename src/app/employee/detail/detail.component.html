@@ -11,7 +11,7 @@
 </mat-toolbar>
 <div class="mat-card-top pa-1">
     <div fxLayout="row" fxLayout.xs="column">
-        <avatar-detail [id]="this.employee._id" auth="true"></avatar-detail>
+        <avatar-detail [id]="this.employee._id" [authorization]="this.auth"></avatar-detail>
         <mat-card class="main-info pa-1">
             <mat-card-header>
               <mat-card-title>
@@ -35,13 +35,13 @@
                     <mat-label>Last Name</mat-label>
                     <input matInput formControlName="lastName" placeholder="Last Name" readonly="true">
                 </mat-form-field>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': true}">
                     <mat-label>Gender</mat-label>
-                    <mat-select formControlName="gender" placeholder="Gender" disabled="true">
+                    <mat-select formControlName="gender" placeholder="Gender">
                         <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.auth.edit}">
                     <mat-label>Company Status</mat-label>
                     <mat-select formControlName="status" placeholder="Status">
                         <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
@@ -65,24 +65,23 @@
                     <h3>Social security:{{" "+this.employee.socialSecurity}}</h3>
                 </div>
             </form>
-            <button mat-button color="primary" (click)="onSubmit()"><mat-icon>save</mat-icon> &nbsp; SAVE</button>
+            <button mat-stroked-button color="primary" (click)="onSubmit()" *ngIf="this.auth.edit"><mat-icon>save</mat-icon> &nbsp; SAVE</button>
 
-            <mat-divider inset="true"></mat-divider>
-            <br/>
+            <mat-divider style="margin-top:20px; margin-bottom:30px" inset="true"></mat-divider>
             <mat-card-subtitle>
                 Company Information
               </mat-card-subtitle>
             <form class="ma-2" [formGroup]="companyForm" id="companyForm" fxLayoutGap="5px">
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.auth.edit}">
                     <mat-label>Client</mat-label>
-                    <mat-select placeholder="Client" (selectionChange)="setCampaigns()" formControlName="client" >
+                    <mat-select placeholder="Client" (selectionChange)="setCampaigns()" formControlName="client">
                         <mat-option *ngFor="let client of clients" [value]="client?.name">
                             {{client.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.auth.edit}">
                     <mat-label>Campaign</mat-label>
                     <mat-select placeholder="Campaign" formControlName="campaign">
                         <mat-option *ngFor="let campaign of campaigns" [value]="campaign?.name">
@@ -93,36 +92,36 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Manager</mat-label>
-                    <input matInput formControlName="manager" placeholder="Manager" >
+                    <input matInput formControlName="manager" placeholder="Manager" [readonly]="!this.auth.edit">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Supervisor</mat-label>
-                    <input matInput formControlName="supervisor" placeholder="Supervisor Name" >
+                    <input matInput formControlName="supervisor" placeholder="Supervisor Name" [readonly]="!this.auth.edit">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Trainer</mat-label>
-                    <input matInput formControlName="trainer" placeholder="Trainer" >
+                    <input matInput formControlName="trainer" placeholder="Trainer" [readonly]="!this.auth.edit">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Training Group Name</mat-label>
-                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Name">
+                    <input matInput formControlName="trainingGroupRef" placeholder="Training Group Name" [readonly]="!this.auth.edit">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Training Group No.</mat-label>
-                    <input matInput formControlName="trainingGroupNum" placeholder="Training Group No.">
+                    <input matInput formControlName="trainingGroupNum" placeholder="Training Group No." [readonly]="!this.auth.edit">
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.auth.edit}">
                     <mat-label>Hire Date (mm/dd/yyyy)</mat-label>
                     <input matInput formControlName="hireDate" placeholder="Hire Date (mm/dd/yyyy)" [matDatepicker]="hirePicker" (focus)="hirePicker.open()">
                     <mat-datepicker #hirePicker></mat-datepicker>
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.auth.edit}">
                     <mat-label>Termination Date (mm/dd/yyyy)</mat-label>
                     <input matInput formControlName="terminationDate" placeholder="Termination Date (mm/dd/yyyy)" [matDatepicker]="terminationPicker"
                         (focus)="terminationPicker.open()">
@@ -131,7 +130,7 @@
 
                 <!-- reapplicant yes|no && reapplicant times (number)-->
 
-                <mat-slide-toggle formControlName="reapplicant" >REAPPLICANT (NO / YES)</mat-slide-toggle>
+                <mat-slide-toggle formControlName="reapplicant" [ngClass]="{'readonly-wrapper': !this.auth.edit}">REAPPLICANT (NO / YES)</mat-slide-toggle>
 
 
                 <mat-form-field *ngIf="this.companyForm.value.reapplicant" appearance="outline">
@@ -142,14 +141,14 @@
                     </mat-select>
                 </mat-form-field>
             </form>
-            <button mat-button color="primary" (click)="onCompanySubmit()"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
+            <button  mat-stroked-button color="primary" (click)="onCompanySubmit()" *ngIf="this.auth.edit"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
         </mat-card>
     </div>
-    <shift [employee]="this.employee"></shift>
-    <position-info [employee]="this.employee"></position-info>
-    <payroll-info [payroll]="this.employee.payroll" [employee]="this.employee" ></payroll-info>
-    <personal-info [employee]="this.employee"></personal-info>
-    <family-info [employee]="this.employee"></family-info>
-    <comment-info [employee]="this.employee"></comment-info>
-    <attrition-info [employee]="this.employee"></attrition-info>
+    <shift [employee]="this.employee" [authorization]="this.auth" ></shift>
+    <position-info [employee]="this.employee" [authorization]="this.auth"></position-info>
+    <payroll-info [payroll]="this.employee.payroll" [employee]="this.employee" [authorization]="this.auth"></payroll-info>
+    <personal-info [employee]="this.employee" [authorization]="this.auth"></personal-info>
+    <family-info [employee]="this.employee" [authorization]="this.auth"></family-info>
+    <comment-info [employee]="this.employee" [authorization]="this.auth"></comment-info>
+    <attrition-info [employee]="this.employee" [authorization]="this.auth"></attrition-info>
 </div>

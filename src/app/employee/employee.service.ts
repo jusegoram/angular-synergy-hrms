@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { SessionService } from '../session/session.service';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {
@@ -54,7 +55,7 @@ export class EmployeeService {
     { value: 'male', viewValue: 'Male' },
     { value: 'female', viewValue: 'Female' }];
 
-  constructor(protected httpClient: HttpClient) {
+  constructor(protected httpClient: HttpClient, private sessionService: SessionService) {
     this.store = [];
   }
 
@@ -300,5 +301,10 @@ export class EmployeeService {
   clearShift() {
     this._shift = null;
   }
+
+  getAuth() {
+    return this.sessionService.getRights();
+  }
+
 }
 
