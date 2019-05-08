@@ -111,7 +111,7 @@ public _id: string,
 public employeeId: string,
 public comment: string,
 public commentDate: Date,
-public submittedBy: string,
+public submittedBy: object,
 public employee: string
   ) { }
 }
@@ -124,7 +124,7 @@ public reason1: string,
 public reason2: string,
 public comment: string,
 public commentDate: Date,
-public submittedBy: string,
+public submittedBy: object,
 public employee: string
   ) { }
 }

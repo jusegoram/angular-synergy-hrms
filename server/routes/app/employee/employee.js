@@ -7,14 +7,10 @@ let mongoose = require('mongoose');
 
 let Employee = require('../../../models/app/employee/employee-main');
 let EmployeePosition = require("../../../models/app/employee/employee-position");
-let EmployeePersonal = require("../../../models/app/employee/employee-personal");
-let EmployeePayroll = require("../../../models/app/employee/employee-payroll");
 let EmployeeFamily = require("../../../models/app/employee/employee-family");
-let EmployeeCompany = require("../../../models/app/employee/employee-company");
 let EmployeeEducation = require("../../../models/app/employee/employee-education");
 let EmployeeComment = require("../../../models/app/employee/employee-comment");
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
-let EmployeeAttrition = require("../../../models/app/employee/employee-attrition");
 
 router.get('/populateTable', function(req, res, next) {
     var token = jwt.decode(req.query.token);
@@ -400,7 +396,7 @@ router.post('/comment', (req, res) => {
 router.post('/attrition', function(req, res, next){
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let newAttrition = new EmployeeAttrition({
+    let newAttrition = {
       _id: id,
       employeeId: req.body.employeeId,
       reason1: req.body.reason1,
@@ -409,7 +405,7 @@ router.post('/attrition', function(req, res, next){
       commentDate: req.body.commentDate,
       submittedBy: req.body.submittedBy,
       employee: req.body.employee
-    });
+    };
     Employee.findByIdAndUpdate(req.body.employee, {$push: {attrition: newAttrition}}, (err, doc) => {
       if (err) res.status(500).json(err)
       else res.status(200).json(newAttrition);

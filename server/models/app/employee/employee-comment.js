@@ -8,7 +8,7 @@ var schema = new Schema({
     reason: {type: String, required: false},
     comment: {type: String, required: true },
     commentDate: {type: Date, required: true},
-    submittedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'Administration-User', required: true, autopopulate: true},
+    submittedBy: {type: Object},
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
 });
 

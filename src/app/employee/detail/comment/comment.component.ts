@@ -20,6 +20,7 @@ export class CommentComponent implements OnInit {
   editCommentDate: Date;
   displayedColumns = ['comment', 'by', 'date'];
   public commentForm: FormGroup;
+  userFullName: any;
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
@@ -30,6 +31,7 @@ export class CommentComponent implements OnInit {
     this.employeeComment = this.employee.comments;
     this.populateTable(this.employeeComment);
     this.buildForms();
+    this.userFullName = this.sessionService.getName().split(' ');
   }
   buildForms() {
     this.commentForm = this.fb.group({
@@ -56,7 +58,11 @@ export class CommentComponent implements OnInit {
         this.employee.employeeId.toString(10),
         current.comment,
         new Date(),
-        user,
+        {
+          _id : user,
+          firstName : this.userFullName[0],
+          lastName : this.userFullName[this.userFullName.length - 1]
+        },
         this.employee._id );
       this.employeeService.saveComment(com).subscribe(data => {
         this.populateTable(data);
@@ -67,7 +73,11 @@ export class CommentComponent implements OnInit {
         this.employee.employeeId.toString(10),
         current.comment,
         this.editCommentDate,
-        user,
+        {
+          _id : user,
+          firstName : this.userFullName[0],
+          lastName : this.userFullName[this.userFullName.length - 1]
+        },
         this.employee._id
     );
      this.employeeService.updateComment(com).subscribe(data => {}, error => {});

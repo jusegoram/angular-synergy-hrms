@@ -17,6 +17,11 @@ export class AttritionComponent implements OnInit {
   public isEdit: false;
   employeeAttrition: any;
   editAttritionId: string;
+  userFullName: any;
+  nameToSplit = (name: string) => {
+   let split = name.split(' ');
+    return split;
+  };
   editAttritionDate: Date;
   reasons = [
     {value: 'Absenteeism'},
@@ -74,6 +79,7 @@ export class AttritionComponent implements OnInit {
     this.employeeAttrition = this.employee.attrition;
     this.populateTable(this.employeeAttrition);
     this.buildForms();
+    this.userFullName= this.nameToSplit(this.sessionService.getName());
   }
   buildForms() {
     this.attritionForm = this.fb.group({
@@ -100,7 +106,12 @@ export class AttritionComponent implements OnInit {
         current.secondaryReason,
         current.comment,
         new Date(),
-        user,
+        {
+          _id : user,
+          firstName : this.userFullName[0],
+          lastName : this.userFullName[this.userFullName.length - 1]
+        }
+        ,
         this.employee._id );
       this.employeeService.saveAttrition(com).subscribe(data => {
         this.populateTable(data);
@@ -113,7 +124,12 @@ export class AttritionComponent implements OnInit {
         current.secondaryReason,
         current.comment,
         this.editAttritionDate,
-        user,
+        {
+          _id : user,
+          firstName : this.userFullName[0],
+          lastName : this.userFullName[this.userFullName.length - 1]
+        }
+        ,
         this.employee._id
     );
      this.employeeService.saveAttrition(com).subscribe(data => {}, error => {});
