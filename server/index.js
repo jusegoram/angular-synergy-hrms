@@ -41,9 +41,7 @@ const COLLECTION= '/mongo-blink';
 const DB = HOST + DB_PORT + COLLECTION;
 const URL = "http://localhost:3000";
 
-mongoose.connect(DB, {
-  useMongoClient: true,
- });
+mongoose.connect(DB);
  app.set('dist', path.join(__dirname, '../dist'));
  app.engine('html', require('ejs').renderFile);
  app.use(logger('dev'));

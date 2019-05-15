@@ -24,12 +24,12 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
   width: 100% !important;
 }
 .fill-remaining-space {
-  flex: 1 1 auto;
+  width: 100%;
 }
 
 .main-info {
   width: 90%;
 }
 mat-form-field, mat-slide-toggle {
-  margin: 5px;
+  margin: 15px;
 }

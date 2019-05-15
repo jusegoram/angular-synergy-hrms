@@ -36,18 +36,25 @@
           <mat-cell *matCellDef="let element"> {{element.position.name}} </mat-cell>
         </ng-container>
 
-
-        <!-- Position Column -->
-
         <ng-container matColumnDef="startDate">
           <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
         </ng-container>
 
-        <!-- Name Column -->
         <ng-container matColumnDef="endDate">
           <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
           <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+          <mat-cell *matCellDef="let element"> <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="deletePosition(element)"><mat-icon>calendar_today</mat-icon> Add End Date</button>
+            <button mat-menu-item (click)="openEditDialog(element)"><mat-icon>create</mat-icon> Edit</button>
+            <button mat-menu-item (click)="deletePosition(element)"><mat-icon color="warn">delete</mat-icon> Delete</button>
+          </mat-menu>
+          </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -91,7 +98,7 @@
           <mat-datepicker #endPicker></mat-datepicker>
         </mat-form-field>
       </div>
-      <button style="left: 90%" mat-button color="primary" (click)="onAdd()">
+      <button style="float: right;" mat-button color="primary" (click)="onAdd()">
         <mat-icon>add</mat-icon>&nbsp; ADD POSITION
       </button>
     </ng-container>

@@ -48,6 +48,7 @@ export class DetailComponent implements OnInit {
 
    ngOnInit() {
      this.auth = this.employeeService.getAuth();
+     console.log(this.auth);
      this.clients = this.employeeService.clients;
      this.employee = this.route.snapshot.data['employee'];
      this.positions = this.employee.position;

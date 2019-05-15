@@ -468,7 +468,21 @@ router.post('/new', function(req, res, next){
    });
 });
 
+router.delete('/position', (req, res) => {
+  id = req.query.id;
+  employee = req.query.employee;
 
+
+  Employee.findByIdAndUpdate(employee, {$pull : {position: id}}, {new: true}, (err, doc) => {
+    if(err) res.status(500).json(err);
+    else{
+      EmployeePosition.findOneAndDelete({_id:id}, (er, re) => {
+        if(er) res.status(500).json(er);
+        else res.status(200).json(re);
+      });
+    }
+  });
+});
 
 
 module.exports = router;

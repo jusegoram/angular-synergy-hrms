@@ -51,7 +51,7 @@
     "json2csv": "^3.11.5",
     "jsonwebtoken": "^8.2.2",
     "moment": "^2.22.2",
-    "mongoose": "^4.13.14",
+    "mongoose": "^5.5.8",
     "mongoose-autopopulate": "^0.8.0",
     "mongoose-paginator": "^0.2.5",
     "mongoose-query-parser": "^1.1.3",

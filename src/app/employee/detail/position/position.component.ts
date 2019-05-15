@@ -47,12 +47,15 @@ export class PositionComponent implements OnInit {
   public employeePosition: any;
   public departments: Department[];
   public clients: Client[];
+  isSuperAdmin = false;
   positionForm: FormGroup;
   displayedColumns = ['client', 'department', 'position', 'positionId', 'startDate', 'endDate'];
   constructor(private fb: FormBuilder, public snackBar: MatSnackBar, public dialog: MatDialog, private employeeService: EmployeeService) { }
   ngOnInit() {
     this.employeeService.getClient().subscribe(data => this.clients = data);
     this.employeeService.getDepartment().subscribe(data => this.departments = data);
+    this.isSuperAdmin = this.authorization.role === 4 ? true : false;
+    this.addActionColumn(this.isSuperAdmin);
     this.employeePositions = this.employee.position;
     this.populateTable(this.employeePositions);
     this.positionForm = this.fb.group({
@@ -70,6 +73,11 @@ export class PositionComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
+  addActionColumn(rights: boolean) {
+    if(rights){
+      this.displayedColumns.push('action');
+    }
+  }
   onAdd() {
     const newPosition = new EmployeePosition(
       '',
@@ -142,5 +150,31 @@ export class PositionComponent implements OnInit {
   }
   setPositions(event: any) {
     this.positions = event;
+  }
+
+  openEditDialog(element) {
+    console.log(element);
+  }
+
+  deletePosition(position: object){
+    this.employeeService.deletePosition(position).subscribe((result:any) => {
+     let i = this.dataSource.data.indexOf(position);
+     console.log(i);
+    if(i > -1) {
+      let newData = JSON.parse(JSON.stringify(this.dataSource.data));
+      newData.splice(i, 1);
+      this.dataSource = undefined;
+      console.log(this.dataSource);
+      console.log(newData);
+      this.populateTable(newData);
+    }
+      this.snackBar.open('Employee information updated successfully', 'thank you', {
+        duration: 2000,
+      });
+    }, error => {
+      this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+        duration: 2000,
+      });
+    })
   }
 }

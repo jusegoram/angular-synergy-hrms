@@ -63,26 +63,26 @@ export class SessionService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post('/api/v1/signup', body, { headers: headers });
   }
-  permission() {
-    if (this.isLoggedIn()) {
-      // const val: string;
-      // switch (val) {
-      //   case 'edit': return (this.getRole() >= 3) ? true : false;
-      //   case 'delete': return (this.getRole() >= 4) ? true : false;
-      //   case 'view': return (this.getRole() >= 0) ? true : false;
-      //   default: return false;
-      // };
-      console.log(this.getRights());
-      const auth = {
-        edit: (this.getRole() >= 3) ? true : false,
-        delete: (this.getRole() >= 4) ? true : false,
-        view: (this.getRole() >= 0) ? true : false
-      };
-      return auth;
-    } else {
-      return false;
-    }
-  }
+  // permission() {
+  //   if (this.isLoggedIn()) {
+  //     // const val: string;
+  //     // switch (val) {
+  //     //   case 'edit': return (this.getRole() >= 3) ? true : false;
+  //     //   case 'delete': return (this.getRole() >= 4) ? true : false;
+  //     //   case 'view': return (this.getRole() >= 0) ? true : false;
+  //     //   default: return false;
+  //     // };
+  //     console.log(this.getRights());
+  //     const auth = {
+  //       edit: (this.getRole() >= 3) ? true : false,
+  //       delete: (this.getRole() >= 4) ? true : false,
+  //       view: (this.getRole() >= 0) ? true : false
+  //     };
+  //     return auth;
+  //   } else {
+  //     return false;
+  //   }
+  // }
   decodeToken() {
     return this.jwtHelper.decodeToken();
   }
@@ -100,6 +100,7 @@ export class SessionService {
   }
   getRights(){
     const dec = this.decodeToken();
+    dec.rights.role = this.getRole();
     return dec.rights;
   }
   clearRole() {

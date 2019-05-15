@@ -21,6 +21,7 @@ export class Store {
 @Injectable()
 export class EmployeeService {
 
+
   siteURI = environment.siteUri;
   _clients: Observable<any> = null;
   _shift: Observable<any> = null;
@@ -306,5 +307,11 @@ export class EmployeeService {
     return this.sessionService.getRights();
   }
 
+
+  deletePosition(position: any) {
+    console.log(position);
+    let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`
+    return this.httpClient.delete(url);
+  }
 }
 

@@ -36,10 +36,10 @@ export class NewComponent implements OnInit {
 
   ngOnInit() {
     this.mainForm = new FormGroup({
-      idToggle: new FormControl(),
+      idToggle: new FormControl(true),
       employeeId: new FormControl(),
       firstName: new FormControl('' , [Validators.required]),
-      middleName: new FormControl('' , [Validators.required]),
+      middleName: new FormControl(''),
       lastName: new FormControl('' , [Validators.required]),
       gender: new FormControl('' , [Validators.required]),
       status: new FormControl('' , [Validators.required]),
