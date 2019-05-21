@@ -4,7 +4,7 @@ import { EmployeeService } from '../../employee.service';
 import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { DialogComponent } from './dialog/dialog.component';
 import { Department, Client } from '../../../administration/employee/models/positions-models';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 
 
@@ -59,10 +59,10 @@ export class PositionComponent implements OnInit {
     this.employeePositions = this.employee.position;
     this.populateTable(this.employeePositions);
     this.positionForm = this.fb.group({
-      client: [''],
-      department: [''],
-      position: [''],
-      start: [''],
+      client: ['', [Validators.required]],
+      department: ['', [Validators.required]],
+      position: ['', [Validators.required]],
+      start: ['', [Validators.required]],
       end: [''],
     });
   }

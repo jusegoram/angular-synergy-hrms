@@ -1,6 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
-let mongooseAutopopulate = require("mongoose-autopopulate")
+let mongooseAutopopulate = require("mongoose-autopopulate");
 
 let positionSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -19,7 +19,7 @@ positionSchema.statics.latestPosition =   function (employeeid, callback) {
     .find({employeeId: employeeid})
     .sort({"startDate": -1})
     .limit(1)
-    .exec(callback)
-}
+    .exec(callback);
+};
 positionSchema.plugin(mongooseAutopopulate);
 module.exports = mongoose.model('Employee-Position', positionSchema);

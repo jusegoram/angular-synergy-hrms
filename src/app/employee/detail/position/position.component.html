@@ -70,6 +70,7 @@
           <mat-select placeholder="Client" formControlName="client">
             <mat-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</mat-option>
           </mat-select>
+          <mat-error> Client is required</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Department</mat-label>
@@ -77,12 +78,14 @@
             formControlName="department">
             <mat-option *ngFor="let department of departments" [value]="department">{{department.name}}</mat-option>
           </mat-select>
+          <mat-error> Position's department is required</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Position</mat-label>
           <mat-select placeholder="Position" (selectionChange)="position = $event.value" formControlName="position">
             <mat-option *ngFor="let position of positions" [value]="position">{{position.name + ' - (' + position.positionId +')' }}</mat-option>
           </mat-select>
+          <mat-error> Position field is required</mat-error>
         </mat-form-field>
         <span class="fill-remaining-space"></span>
         <mat-form-field appearance="outline">
@@ -90,6 +93,7 @@
           <input matInput placeholder="Start" [matDatepicker]="startPicker" formControlName="start">
           <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
           <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error> Position's start date is required</mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>End</mat-label>
@@ -98,9 +102,11 @@
           <mat-datepicker #endPicker></mat-datepicker>
         </mat-form-field>
       </div>
-      <button style="float: right;" mat-button color="primary" (click)="onAdd()">
-        <mat-icon>add</mat-icon>&nbsp; ADD POSITION
-      </button>
+      <div matTooltip="Please remember to fill in all the drop down menus.">
+        <button style="float: right;" mat-button color="primary" (click)="onAdd()" [disabled]="this.positionForm.invalid" >
+          <mat-icon>add</mat-icon>&nbsp; ADD POSITION
+        </button>
+      </div>
     </ng-container>
   </mat-expansion-panel>
 </mat-accordion>
