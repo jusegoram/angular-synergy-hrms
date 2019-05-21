@@ -23,7 +23,7 @@
 
         <ng-container matColumnDef="positionId">
           <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.position.positionId}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.position?.positionId}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="department">
@@ -33,7 +33,7 @@
 
         <ng-container matColumnDef="position">
           <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.position.name}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{element.position?.name}} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="startDate">
