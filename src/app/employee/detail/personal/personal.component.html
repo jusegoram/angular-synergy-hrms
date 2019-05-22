@@ -14,7 +14,7 @@
         <tr>
           <td>
               <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                  <mat-label>Hire Date</mat-label>
+                  <mat-label>Birth Date</mat-label>
                   <input matInput formControlName="birthDate" placeholder="MM/DD/YYYY" [matDatepicker]="bdayPicker"
                     (focus)="bdayPicker.open()" [readonly]="!this.authorization.edit">
                   <mat-datepicker #bdayPicker></mat-datepicker>

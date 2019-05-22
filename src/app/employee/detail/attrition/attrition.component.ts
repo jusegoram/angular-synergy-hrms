@@ -42,6 +42,7 @@ export class AttritionComponent implements OnInit {
     {value: 'Job Abandonment'},
     {value: 'Job Too Stressful'},
     {value: 'Lack Supervisor Assistance'},
+    {value: 'Loss Jobs'},
     {value: 'Low Conversion Rate'},
     {value: 'Low Productivity'},
     {value: 'Low QA Scores'},
