@@ -37,8 +37,8 @@ let Payroll = PayrollSchemas.payrollStorage;
 
 router.get("/getPayroll", (req, res) => {
   let type = req.query.payrollType + "";
-  let from = req.query.from;
-  let to = req.query.to;
+  let from = decodeURIComponent(req.query.from);
+  let to = decodeURIComponent(req.query.to);
 
   getActiveAndPayrolltypeEmployees(type, from, to).then(
     resolve => {

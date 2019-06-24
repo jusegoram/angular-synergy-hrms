@@ -1,0 +1,57 @@
+<div class="pa-1">
+
+  <ng-container *ngIf="!this.isLoaded; else elseTemplate">
+    <button mat-flat-button (click)="onLoad()">
+      <mat-icon>cached</mat-icon> &nbsp; LOAD REPORT
+    </button>
+  </ng-container>
+  <ng-template #elseTemplate>
+    <button mat-flat-button color="primary" (click)="onExport()">EXPORT</button>
+    <button mat-icon-button color="warn" matTooltip="Clear" (click)="onClear()" ><mat-icon>clear</mat-icon></button>
+    <div class="table-container ma-1">
+      <table #reportTable mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef> No.</th>
+          <td mat-cell *matCellDef="let element; let rIndex = index;"> {{rIndex + 1 }} </td>
+        </ng-container>
+        <ng-container matColumnDef="employeeId">
+          <th mat-header-cell *matHeaderCellDef> Employee ID </th>
+          <td mat-cell *matCellDef="let element"> {{element.employeeId}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.middleName}} {{element.lastName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="client">
+          <th mat-header-cell *matHeaderCellDef> Client </th>
+          <td mat-cell *matCellDef="let element"> {{element.company.client}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="campaign">
+          <th mat-header-cell *matHeaderCellDef> Campaign </th>
+          <td mat-cell *matCellDef="let element"> {{element.company.campaign}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef> Fix </th>
+          <td mat-cell *matCellDef="let element">
+            <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: element._id}" mat-menu-item
+              matTooltip="Go to details">
+              <span> FIX MISSING INFO </span>
+              <mat-icon>arrow_forward</mat-icon>
+            </a> </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </ng-template>
+
+
+
+</div>

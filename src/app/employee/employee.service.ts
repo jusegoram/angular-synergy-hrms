@@ -20,8 +20,6 @@ export class Store {
 
 @Injectable()
 export class EmployeeService {
-
-
   siteURI = environment.siteUri;
   _clients: Observable<any> = null;
   _shift: Observable<any> = null;
@@ -312,6 +310,12 @@ export class EmployeeService {
     console.log(position);
     let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`
     return this.httpClient.delete(url);
+  }
+
+  availableInformation(query: any) {
+    const body = JSON.stringify(query);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/employee/report/information', body, { headers: headers });
   }
 }
 

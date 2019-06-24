@@ -29,7 +29,27 @@ export class ReportComponent implements OnInit {
   attritionInfoToggle= false;
   familyInfoToggle= false;
    wb: XLSX.WorkBook;
-
+  selectedTab = 0;
+  avatarQuery = {
+    reportType: 'avatar',
+    employeeStatus: 'active'
+  }
+  mainQuery = {
+    reportType: 'main',
+    employeeStatus: 'active'
+  }
+  companyQuery = {
+    reportType: 'company',
+    employeeStatus: 'active'
+  }
+  shiftQuery = {
+    reportType: 'shift',
+    employeeStatus: 'active'
+  }
+  positionQuery = {
+    reportType: 'position',
+    employeeStatus: 'active'
+  }
   constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
     this.campaigns = [];
@@ -312,6 +332,9 @@ export class ReportComponent implements OnInit {
   }
   }
 
+  tabChanged(event){
+    this.selectedTab = event.index;
+  }
   clear() {
     this.dataSource = null;
     this.data = null;

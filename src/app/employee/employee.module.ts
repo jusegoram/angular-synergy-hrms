@@ -4,7 +4,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
 import { UploadComponent } from './upload/upload.component';
 import { ReportComponent } from './report/report.component';
-import { DownloadComponent } from './download/download.component';
 import { DetailComponent } from './detail/detail.component';
 import { ManageComponent } from './manage/manage.component';
 import { EmployeeRoutingModule } from './employee.routing';
@@ -29,6 +28,7 @@ import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
+import { AvailableInformationComponent } from './report/available-information/available-information.component';
 
 @NgModule({
   imports: [
@@ -44,7 +44,6 @@ import { AuthenticationService } from '../authentication.service';
   declarations: [
     UploadComponent,
     ReportComponent,
-    DownloadComponent,
     DetailComponent,
     ManageComponent,
     PersonalComponent,
@@ -60,7 +59,8 @@ import { AuthenticationService } from '../authentication.service';
     FamilyEditDialogComponent,
     PersonalEditDialogComponent,
     ShiftComponent,
-    AttritionComponent
+    AttritionComponent,
+    AvailableInformationComponent
     ],
     entryComponents: [
       DialogComponent,
