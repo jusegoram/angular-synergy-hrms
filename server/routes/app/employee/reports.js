@@ -204,7 +204,6 @@ let mainMissing = () => {
 let companyMissing = () => {
   return new Promise((resolve, reject) => {
     let check = employees => {
-      console.log(employees);
       let checkedEmployees = [];
       let employeesLength = employees.length;
       for (let i = 0; i < employeesLength; i++) {
@@ -230,7 +229,7 @@ let companyMissing = () => {
         else if (hireDate < 1) checkedEmployees.push(employees[i]);
 
         if (i === employees.length - 1) {
-          console.log(checkedEmployees)
+          console.log(checkedEmployees);
           resolve(checkedEmployees);
         }
       }
@@ -240,6 +239,7 @@ let companyMissing = () => {
         check(result);
       })
       .catch(err => {
+        console.log(err);
         reject(err);
       });
   });
