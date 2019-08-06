@@ -7,6 +7,7 @@ import { map, publishReplay, refCount } from 'rxjs/operators';
 export class PayrollService {
 
 
+
   public status = [
     { value: 'active', viewValue: 'Active' },
     { value: 'resignation', viewValue: 'Resignation' },
@@ -73,8 +74,21 @@ export class PayrollService {
 
   getEmployeesByPayrollType(payrollType, from, to) {
     //FIX
-    return this.httpClient.get<any>(`/api/v1/payroll/getPayroll?payrollType=${payrollType}?from=${from}?to=${to}`);
+    return this.httpClient.get<any>(`/api/v1/payroll/getPayroll?payrollType=${payrollType}&from=${from}&to=${to}`);
   }
+
+  getOtherPayrollInfo(employees: any, payroll: any, from: any, to: any) {
+    let query = {
+      employees: employees,
+      payrollType: payroll,
+      from: from,
+      to: to,
+    }
+    const body = query;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/payroll/getOtherPayrollInfo', body, { headers: headers });
+  }
+
   getHours(from: any, to: any) {
 
     let params = new HttpParams().set('gte', from);

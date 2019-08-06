@@ -32,8 +32,25 @@ $mat-toolbar-height-mobile-landscape: 148px !default;
 .fill-remaining-space {
   flex: 1 1 auto;
 }
+
+.socialTable {
+padding: 5px;
+}
 tr {
   padding-left: 10px;
   padding-right: 10px;
   height: 48px;
+}
+
+button {
+  margin-right: 5px;
+}
+
+mat-expansion-panel {
+  margin: 5px;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
 }

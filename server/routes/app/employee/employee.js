@@ -7,9 +7,6 @@ let mongoose = require('mongoose');
 
 let Employee = require('../../../models/app/employee/employee-main');
 let EmployeePosition = require("../../../models/app/employee/employee-position");
-let EmployeeFamily = require("../../../models/app/employee/employee-family");
-let EmployeeEducation = require("../../../models/app/employee/employee-education");
-let EmployeeComment = require("../../../models/app/employee/employee-comment");
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
 
 router.get('/populateTable', function(req, res, next) {
@@ -119,46 +116,24 @@ router.put('/personal', function (req, res, next) {
   }
 });
 router.put('/family', function (req, res, next) {
-  EmployeeFamily.findById(req.query.id, function(err, result){
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.referenceName = req.body.referenceName;
-    result.relationship = req.body.relationship;
-    result.celNumber = req.body.celNumber;
-    result.telNumber = req.body.telNumber;
-    result.emailAddress = req.body.emailAddress;
-    result.address = req.body.address;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
+  let familyInfo = req.body;
+  let employee = req.body.employee;
+  if (employee) {
+    Employee.findByIdAndUpdate(familyInfo.employee, {$set: {family: familyInfo}}, (err, result) => {
+      if(err) res.status(500).json(err);
+      else res.status(200).json(result);
+    });
+  }
 });
 router.put('/education', function (req, res, next) {
-  EmployeeEducation.findById(req.query.id, function(err, result){
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.institution = req.body.institution;
-    result.description = req.body.description;
-    result.startDate = doc.startDate;
-    result.endDate = req.body.endDate;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
+  let educationInfo = req.body;
+  let employee = req.body.employee;
+  if (employee) {
+    Employee.findByIdAndUpdate(educationInfo.employee, {$set: {education: educationInfo}}, (err, result) => {
+      if(err) res.status(500).json(err);
+      else res.status(200).json(result);
+    });
+  }
 });
 router.put('/payroll', (req, res) => {
   let payrollInfo = req.body;
@@ -168,25 +143,16 @@ router.put('/payroll', (req, res) => {
     else res.status(200).json(doc);
   });
 });
-router.put('/comment', function(req, res, next) {
-  EmployeeComment.findById(req.query.id, function(err, result){
-    if (!result)
-      return next(new Error('Could not load Document'));
-    else {
-    result.comment = req.body.comment;
-    result.commentDate = req.body.commentDate;
-    result.submittedBy = doc.submittedBy;
-      result.save();
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
-        });
-      }
-    }
-    res.status(200).json(result);
-  });
-});
+
+//TODO: Update put function for Array type properties
+// router.put('/comment', function(req, res, next) {
+//   let payrollInfo = req.body;
+//   let employee = req.body.employee
+//   Employee.findByIdAndUpdate(employee, {$set: {payroll: payrollInfo}}, (err, doc) => {
+//     if(err) res.status(500).json(err);
+//     else res.status(200).json(doc);
+//   });
+// });
 router.post('/main', function(req, res){
 var employee = new Employee({
     _id: new mongoose.Types.ObjectId(),
@@ -338,7 +304,7 @@ router.post('/family', (req, res) => {
 router.post('/education',  (req, res) => {
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let newEducation = new EmployeeEducation({
+    let newEducation = {
       _id: id,
       employeeId: req.body.employeeId,
       institution: req.body.institution,
@@ -346,7 +312,7 @@ router.post('/education',  (req, res) => {
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       employee: req.body.employee
-    });
+    };
     Employee.findOneAndUpdate(newEducation.employee, {$push:{education: newEducation}}, (err, doc) => {
       if(err) res.status(500).json(err)
       else res.status(200).json({});
@@ -377,7 +343,7 @@ router.post('/payroll', (req, res) => {
 router.post('/comment', (req, res) => {
   if (req.body.employeeId){
     let id = new mongoose.Types.ObjectId();
-    let newComment = new EmployeeComment({
+    let newComment = {
       _id: id,
       employeeId: req.body.employeeId,
       reason: req.body.reason,
@@ -385,7 +351,7 @@ router.post('/comment', (req, res) => {
       commentDate: req.body.commentDate,
       submittedBy: req.body.submittedBy,
       employee: req.body.employee
-    });
+    };
     Employee.findByIdAndUpdate(req.body.employee, {$push: {comments: newComment}}, (err, doc) => {
       if(err) res.status(500).json(err);
       else res.status(200).json(newComment);

@@ -3,7 +3,6 @@ var router = express.Router();
 var jwt = require("jsonwebtoken");
 var fastcsv = require("fast-csv");
 var Employee = require("../../../models/app/employee/employee-main");
-var Company = require("../../../models/app/employee/employee-company");
 var fs = require("fs");
 
 router.post("/", function(req, res, next) {

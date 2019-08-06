@@ -50,6 +50,17 @@ router.get("/getPayroll", (req, res) => {
   );
 });
 
+router.post("/getOtherPayrollInfo", (req, res)=> {
+  let employeeIds;
+  let from = req.body.from;
+  let to = req.body.to;
+  Promise.all([getHours(employeeIds, from, to), getOvertime(employeeIds, from, to), getBonus(employeeIds, from, to), getDeductions(employeeIds, from, to)]).then(result => {
+    res.status(200).json(result);
+  }).catch(err => {
+    console.log(err);
+  })
+});
+
 router.post("/setDeduction", (req, res) => {
   let deductions = req.body;
   Deduction.insertMany(deductions, err => {
@@ -77,7 +88,7 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
         "payroll.payrollType": type
       },
       "_id employeeId firstName middleName lastName socialSecurity status company payroll position"
-    ).cursor();
+    ).sort({_id:-1}).cursor();
     cursor.on("data", item => {
       employees.push(item);
     });
@@ -86,7 +97,8 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
     });
     cursor.on("end", () => {
       let mappedEmployees = employees.map(async employee => {
-        let resEmployee = JSON.parse(JSON.stringify(employee));
+        let hours;
+        let resEmployee= JSON.parse(JSON.stringify(employee));
         delete resEmployee._id;
         delete resEmployee.payroll;
         delete resEmployee.company;
@@ -112,45 +124,6 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
             ? resEmployee.employeePosition.baseWage
             : null
         );
-        promiseArray = [];
-        promiseArray.push(
-          (resEmployee.bonus = getBonus(employee._id, from, to)
-            .then(resolved => {
-              resEmployee.totalBonus = getTotal(resolved);
-              return resolved;
-            })
-            .catch(err => console.log(err)))
-        );
-        promiseArray.push(
-          (resEmployee.deduction = getDeductions(employee._id, from, to)
-            .then(resolved => {
-              resEmployee.totalDeduction = getTotal(resolved);
-              return resolved;
-            })
-            .catch(err => console.log(err)))
-        );
-
-        promiseArray.push(
-          (resEmployee.hours = getHours(employee._id, from, to)
-            .then(resolved => {
-              resEmployee.totalHours = getTotalHours(resolved);
-              return resolved;
-            })
-            .catch(err => console.log(err)))
-        );
-
-        promiseArray.push(
-          (resEmployee.overtime = getOvertime(employee._id, from, to)
-            .then(resolved => {
-              resEmployee.totalOvertime = getTotalHours(resolved);
-              return resolved;
-            })
-            .catch(err => console.log(err)))
-        );
-
-        const resolvedPromises = await Promise.all(promiseArray).then(
-          completed => {}
-        );
         return resEmployee;
       });
       Promise.all(mappedEmployees).then(completed => {
@@ -159,6 +132,7 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
     });
   });
 };
+
 
 var getTotal = arr => {
   if (arr.length > 0) {
@@ -176,7 +150,6 @@ var getTotalHours = arr => {
     totaled.ss = arr.reduce((p, c) => p + c.ss, 0);
 
     let time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-    console.log(time);
     var hrs = ~~(time / 3600);
     var mins = ~~((time % 3600) / 60);
     var secs = ~~time % 60;
@@ -212,32 +185,12 @@ var getTotalHours = arr => {
 var getDeductions = (employee, fromDate, toDate) => {
   // let mappedEmployees = employees.map(employee => employee.employee);
   return new Promise((resolve, reject) => {
-    Deduction.find(
-      {
-        _id: employee,
-        date: {
-          $gte: fromDate,
-          $lte: toDate
-        }
-      },
-      (err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      }
-    );
-  });
-};
-
-var getBonus = (employee, fromDate, toDate) => {
-  // let mappedEmployees = employees.map(employee => employee.employee);
-  return new Promise((resolve, reject) => {
-    Bonus.find({
-      _id: employee,
+    Deduction.find({
       date: {
         $gte: fromDate,
         $lte: toDate
       }
-    })
+    }).sort({employee: -1})
       .lean()
       .exec((err, res) => {
         if (err) reject(err);
@@ -246,36 +199,54 @@ var getBonus = (employee, fromDate, toDate) => {
   });
 };
 
-var getHours = (employee, fromDate, toDate) => {
+var getBonus = (employees, fromDate, toDate) => {
   // let mappedEmployees = employees.map(employee => employee.employee);
   return new Promise((resolve, reject) => {
-    Hours.find({
-      _id: employee,
+    Bonus.find({
       date: {
         $gte: fromDate,
         $lte: toDate
       }
-    })
+    }).sort({employee: -1})
+      .lean()
+      .exec((err, res) => {
+        if (err) reject(err);
+        else resolve(res);
+      });
+  });
+};
+
+var getHours = (employees, fromDate, toDate) => {
+  // let mappedEmployees = employees.map(employee => employee.employee);
+  return new Promise((resolve, reject) => {
+    if(fromDate === undefined || toDate === undefined){
+      reject('hours error');
+    }
+    Hours.find({
+      date: {
+        $gte: fromDate,
+        $lte: toDate
+      }
+    }).sort({employee: -1})
       .lean()
       .exec((err, res) => {
         if (err) reject(err);
         else {
-          console.log(res);
           resolve(res);
           };
       });
   });
 };
 
-var getOvertime = (employee, fromDate, toDate) => {
+var getOvertime = (employees, fromDate, toDate) => {
   return new Promise((resolve, reject) => {
     Overtime.find({
-      _id: employee,
       date: {
         $gte: fromDate,
         $lte: toDate
       }
     })
+       .sort({employee: -1})
       .lean()
       .exec((err, res) => {
         if (err) reject(err);

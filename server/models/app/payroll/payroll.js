@@ -50,7 +50,8 @@ let PayrollStorage = new Schema({
   socialSecurity: {type: String},
   status: {type: String},
   payrollType: {type: String, required: true},
-  hours: {type: Number},
+  hours: {type: Object},
+  totalHours: {type: Object},
   hourlyRate:{type: Number},
   employeePosition: {type: Object},
   employeePayroll:{type: Object},
@@ -75,7 +76,8 @@ const payrollStorage = mongoose.model('payroll', PayrollStorage);
 const bonus = mongoose.model('payroll-bonus', BonusSchema);
 const deduction = mongoose.model('payroll-deduction', DeductionSchema);
 const overtime = mongoose.model('payroll-overtime', OvertimeSchema);
+const otherPay = mongoose.model('payroll-otherPay', OtherPaySchema);
 
 module.exports = {
-  bonus, deduction, overtime, payrollStorage
+  bonus, deduction, overtime, otherPay, payrollStorage
 }

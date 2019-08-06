@@ -10,12 +10,6 @@ let csv = require('fast-csv');
 let Department = require('../../../models/administration/administration-department');
 let EmployeeSchema = require ('../../../models/app/employee/employee-main');
 let Position = require ('../../../models/app/employee/employee-position');
-let Personal = require ('../../../models/app/employee/employee-personal');
-let Payroll = require ('../../../models/app/employee/employee-payroll');
-let Family = require ('../../../models/app/employee/employee-family');
-let Education = require ('../../../models/app/employee/employee-education');
-let Comment = require('../../../models/app/employee/employee-comment');
-let Company = require('../../../models/app/employee/employee-company');
 let EmployeeShift = require('../../../models/app/employee/employee-shift');
 // set the directory for the uploads to the uploaded to
 let DIR = 'uploads/employeeFiles';
