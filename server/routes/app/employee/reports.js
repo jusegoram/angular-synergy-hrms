@@ -209,11 +209,11 @@ let companyMissing = () => {
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i].company;
         let client =
-          element.client.length !== undefined ? element.client.length : 0;
+          element.client.length !== undefined && element.client !== null ? element.client.length : 0;
         let campaign =
-          element.campaign.length !== undefined ? element.campaign.length : 0;
+          element.campaign.length !== undefined && element.campaign !== null ? element.campaign.length : 0;
         let manager =
-          element.manager !== undefined ? element.manager.length : 0;
+          element.manager !== undefined && element.manager !== null ? element.manager.length : 0;
         let supervisor =
           element.supervisor.length !== undefined
             ? element.supervisor.length
