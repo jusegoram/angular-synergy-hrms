@@ -50,6 +50,18 @@ export class ReportComponent implements OnInit {
     reportType: 'position',
     employeeStatus: 'active'
   }
+  payrollQuery = {
+    reportType: 'payroll',
+    employeeStatus: 'active'
+  }
+  personalQuery = {
+    reportType: 'personal',
+    employeeStatus: 'active'
+  }
+  familyQuery = {
+    reportType: 'family',
+    employeeStatus: 'active'
+  }
   constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
     this.campaigns = [];

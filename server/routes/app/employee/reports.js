@@ -108,7 +108,7 @@ router.post("/information", (req, res) => {
         }
       );
       break;
-    case "emergencyContact":
+    case "family":
       emergencyContactMissing().then(
         result => {
           res.status(200).json(result);
@@ -209,11 +209,17 @@ let companyMissing = () => {
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i].company;
         let client =
-          element.client.length !== undefined && element.client !== null ? element.client.length : 0;
+          element.client.length !== undefined && element.client !== null
+            ? element.client.length
+            : 0;
         let campaign =
-          element.campaign.length !== undefined && element.campaign !== null ? element.campaign.length : 0;
+          element.campaign.length !== undefined && element.campaign !== null
+            ? element.campaign.length
+            : 0;
         let manager =
-          element.manager !== undefined && element.manager !== null ? element.manager.length : 0;
+          element.manager !== undefined && element.manager !== null
+            ? element.manager.length
+            : 0;
         let supervisor =
           element.supervisor.length !== undefined
             ? element.supervisor.length
@@ -252,7 +258,10 @@ let shiftMissing = () => {
       let employeesLength = employees.length;
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i];
-        let shifts = (element.shift !== undefined && element.shift !== null)? element.shift.length: 0;
+        let shifts =
+          element.shift !== undefined && element.shift !== null
+            ? element.shift.length
+            : 0;
         if (shifts === 0) checkedEmployees.push(element);
         if (i === employees.length - 1) {
           resolve(checkedEmployees);
@@ -260,12 +269,12 @@ let shiftMissing = () => {
       }
     };
     getEmployees()
-    .then(result => {
-      check(result);
-    })
-    .catch(err => {
-      reject(err);
-    });
+      .then(result => {
+        check(result);
+      })
+      .catch(err => {
+        reject(err);
+      });
   });
 };
 
@@ -276,7 +285,10 @@ let positionMissing = () => {
       let employeesLength = employees.length;
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i];
-        let positions = (element.position !== undefined && element.position !== null)? element.position.length: 0;
+        let positions =
+          element.position !== undefined && element.position !== null
+            ? element.position.length
+            : 0;
         if (positions === 0) checkedEmployees.push(element);
         if (i === employees.length - 1) {
           resolve(checkedEmployees);
@@ -284,29 +296,102 @@ let positionMissing = () => {
       }
     };
     getEmployees()
-    .then(result => {
-      check(result);
-    })
-    .catch(err => {
-      reject(err);
-    });
+      .then(result => {
+        check(result);
+      })
+      .catch(err => {
+        reject(err);
+      });
   });
 };
 
 let payrollMissing = () => {
   return new Promise((resolve, reject) => {
-    let check = employees => {
-
-    }
+    let employees = [];
+    let cursor = Employee.find({
+      $and: [
+        {
+          $or: [
+            { payroll: { $exists: false } },
+            { "payroll.TIN": { $exists: false } },
+            { "payroll.payrollType": { $exists: false } },
+            { "payroll.bankName": { $exists: false } },
+            { "payroll.bankAccount": { $exists: false } },
+            { "payroll.billable": { $exists: false } }
+          ]
+        },
+        { status: "active" }
+      ]
+    })
+      .lean()
+      .cursor();
+    cursor.on("data", item => {
+      employees.push(item);
+    });
+    cursor.on("error", err => {
+      reject(err);
+    });
+    cursor.on("end", () => {
+      resolve(employees);
+    });
   });
 };
 
 let personalMissing = () => {
-  return new Promise((resolve, reject) => {});
+  return new Promise((resolve, reject) => {
+    let employees = [];
+    let cursor = Employee.find({
+      $and: [
+        {
+          $or: [
+            { "personal.maritalStatus": { $exists: false } },
+            { "personal.address": { $exists: false } },
+            { "personal.town": { $exists: false } },
+            { "personal.district": { $exists: false } },
+            { "personal.addressDate": { $exists: false } },
+            { "personal.celNumber": { $exists: false } },
+            { "personal.telNumber": { $exists: false } },
+            { "personal.birthDate": { $exists: false } },
+            { "personal.birthPlace": { $exists: false } },
+            { "personal.birthPlaceDis": { $exists: false } },
+            { "personal.birthPlaceTow": { $exists: false } },
+            { "personal.emailAddress": { $exists: false } },
+            { "personal.emailDate": { $exists: false } }
+          ]
+        },
+        { status: "active" }
+      ]
+    })
+      .lean()
+      .cursor();
+    cursor.on("data", item => {
+      employees.push(item);
+    });
+    cursor.on("error", err => {
+      reject(err);
+    });
+    cursor.on("end", () => {
+      resolve(employees);
+    });
+  });
 };
 
 let emergencyContactMissing = () => {
-  return new Promise((resolve, reject) => {});
+  return new Promise((resolve, reject) => {
+    let employees = [];
+    let cursor = Employee.find({ $and: [ {family: { $exists: false }}, { status: "active" }] })
+      .lean()
+      .cursor();
+    cursor.on("data", item => {
+      employees.push(item);
+    });
+    cursor.on("error", err => {
+      reject(err);
+    });
+    cursor.on("end", () => {
+      resolve(employees);
+    });
+  });
 };
 
 module.exports = router;
