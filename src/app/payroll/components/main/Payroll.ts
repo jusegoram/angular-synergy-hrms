@@ -1,14 +1,18 @@
 import { PayrollRow } from "../main/PayrollRow";
+import * as moment from "moment";
+
 
 export class Payroll {
   private _employees: PayrollRow[] = [];
   private _holidays:any[] = [];
   private _fromDate;
   private _toDate;
-  constructor(employees: any[], fromDate: Date, toDate: Date,) {
-    this.employees = employees
+  constructor(employees: any[], fromDate: Date, toDate: Date, holidays: any) {
     this.fromDate = fromDate;
     this.toDate = toDate;
+    this.holidays = holidays;
+    this.employees = employees
+
   }
 
   public set employees(employees: any[]) {
@@ -16,6 +20,7 @@ export class Payroll {
     employees.forEach(e => {
       e.fromDate = this.fromDate;
       e.toDate = this.toDate;
+      e.holidayList = this.holidays;
       let newEmployee = new PayrollRow(
         e.employeeId,
         e.employee,
@@ -30,8 +35,10 @@ export class Payroll {
         e.employeeCompany,
         e.employeePosition,
         e.employeePayroll,
+        e.employeeShift,
         e.fromDate,
         e.toDate,
+        e.holidayList
       )
       allPayrollRows.push(newEmployee);
 
@@ -46,19 +53,19 @@ export class Payroll {
   }
 
 
-  public set fromDate(v : Date) {
-    this._fromDate = v;
+  public set fromDate(v : any) {
+    this._fromDate = moment(v).startOf('day').toDate();
   }
-  public get fromDate() : Date {
+  public get fromDate() : any {
     return this._fromDate;
   }
 
 
-  public set toDate(v : Date) {
-    this._toDate = v;
+  public set toDate(v : any) {
+    this._toDate = moment(v).endOf('day').toDate();
   }
 
-  public get toDate() : Date {
+  public get toDate() : any {
     return this._toDate;
   }
 
@@ -73,77 +80,19 @@ export class Payroll {
 
 
   calculatePayroll() {
-    this.employees.forEach((employee: PayrollRow) => {
-      employee.calculateHolidays(this._holidays);
-      employee.calculateSystemHours();
-      employee.calculateOvertimeHours();
-      employee.calculateTotalOtherpay();
-      employee.calculateTotalBonuses();
-      employee.calculateTotalDeductions();
-      employee.calculateTotalSocialSecurity();
-      employee.calculateTotalPayment();
-    })
+    for (let i = 0; i < this.employees.length; i++) {
+      const employee: PayrollRow= this.employees[i];
+      employee.calculatePayrollRow();
+      if(i === this.employees.length - 1){
+        console.log(this.employees);
+      }
+    }
   }
+
   getEmployeeIds(){
 
   }
-  // joinBonusUploadAndEmployee(bnus) {
-  //   var array1 = bnus,
-  //     array2 = this._employees,
-  //     map = array1.reduce((m, o) => m.set(o.employeeId, o), new Map()),
-  //     array3 = array2.reduce((r, o) => {
-  //       if (map.has(o.employeeId)) {
-  //         o.bonus = [];
-  //         o.bonus.push(map.get(o.employeeId));
-  //         r.push(o);
-  //       } else {
-  //         r.push(o);
-  //       }
-  //       return r;
-  //     }, []);
 
-  //   let totaledArray = array3.map(e => {
-  //     if ("bonus" in e) {
-  //       let mappedBonus = e.bonus.map(b => b.amount);
-  //       e.totalBonus = parseInt(
-  //         mappedBonus.reduce((partial_sum, a) => partial_sum + a),
-  //         10
-  //       );
-  //     }
-  //     return e;
-  //   });
-
-  //   return totaledArray;
-  // }
-
-  // joinDeductionsUploadAndEmployee(deductions) {
-  //   var array1 = deductions,
-  //     array2 = this._employees,
-  //     map = array1.reduce((m, o) => m.set(o.employeeId, o), new Map()),
-  //     array3 = array2.reduce((r, o) => {
-  //       if (map.has(o.employeeId)) {
-  //         o.deductions = [];
-  //         o.deductions.push(map.get(o.employeeId));
-  //         r.push(o);
-  //       } else {
-  //         r.push(o);
-  //       }
-  //       return r;
-  //     }, []);
-
-  //   let totaledArray = array3.map(e => {
-  //     if ("deductions" in e) {
-  //       let mappedDeductions = e.deductions.map(b => b.amount);
-  //       e.totalBonus = parseInt(
-  //         mappedDeductions.reduce((partial_sum, a) => partial_sum + a),
-  //         10
-  //       );
-  //     }
-  //     return e;
-  //   });
-
-  //   return totaledArray;
-  // }
 
   joinEmployee(table, param) {
     let arrayLength = this._employees.length;

@@ -76,16 +76,15 @@ export class MainComponent implements OnInit {
       totalContributions: 25.60
     }
   ];
+
+  // Make Holiday interface for saving in database.
   dataSource: any;
   payroll: Payroll;
-  deductions: any;
-  bonus: any;
-  hours: any;
-  businesDays: number;
-
   payrollType = new FormControl("", [Validators.required]);
   fromDate = new FormControl("", [this.dateMinimum(moment().add( -10,"days"))]);
   toDate = new FormControl("", [this.dateMaximum(this.fromDate.value)]);
+  holidays = [];
+
   lastPayrollSettings: any;
   currentPayrollSettings: any;
   dataSourceSocialTable: any;
@@ -109,10 +108,12 @@ export class MainComponent implements OnInit {
       .getOtherPayrollInfo(employeeIds, payroll, from, to)
       .subscribe((result: any[]) => {
         let hours = result[0];
+        console.log(hours);
         let overtime = result[1];
         let bonus = result[2];
         let deductions = result[3];
-        let otherpay = result[4];
+        let otherpay = []; //TODO: FIX IN SERVERSIDE
+
         this.payroll.joinEmployee(hours, "hours");
         this.payroll.joinEmployee(overtime, "overtime");
         this.payroll.joinEmployee(bonus, "bonus");
@@ -124,7 +125,7 @@ export class MainComponent implements OnInit {
     this._payrollService
       .getEmployeesByPayrollType(payroll, from, to)
       .subscribe((result: PayrollRow[]) => {
-        this.payroll = new Payroll(result, from, to);
+        this.payroll = new Payroll(result, this.fromDate.value, this.toDate.value, this.holidays);
         this.populateTable(this.payroll.employees);
       });
   }
@@ -229,6 +230,7 @@ export class MainComponent implements OnInit {
     //   console.log(this.employees);
     //   };
     // }
+    this.payroll.calculatePayroll();
   }
   //migrated
   // getTotalHours = arr => {

@@ -87,12 +87,13 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
         status: "active",
         "payroll.payrollType": type
       },
-      "_id employeeId firstName middleName lastName socialSecurity status company payroll position"
-    ).sort({_id:-1}).cursor();
+      "_id employeeId firstName middleName lastName socialSecurity status company payroll position shift"
+    ).populate({path: 'Employee-Shift', options: { sort: { 'startDate': -1 }, limit: 1} }).sort({_id:-1}).cursor();
     cursor.on("data", item => {
       employees.push(item);
     });
     cursor.on("error", err => {
+      console.log(err);
       if (err) reject(err);
     });
     cursor.on("end", () => {
@@ -104,6 +105,7 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
         delete resEmployee.company;
         delete resEmployee.payroll;
         delete resEmployee.position;
+        delete resEmployee.shift;
         resEmployee.employeeName = `${employee.firstName} ${
           employee.middleName
         } ${employee.lastName}`;
@@ -115,6 +117,7 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
         ]
           ? employee.position[employee.position.length - 1].position
           : null;
+        resEmployee.employeeShift = employee.shift[0] ? employee.shift[0].shift: null;
         resEmployee.employee = employee._id;
         resEmployee.employeePayroll = employee.payroll;
         resEmployee.payrollType = employee.payroll.payrollType;
@@ -270,18 +273,10 @@ function calculateHourlyRate(employeeWage) {
   }
 }
 
-function calculateTotalBonus(employees) {}
 
-function calculateTotalDeduction(employees) {}
 
-function calculateTotalOvertime(employees) {}
 
-function getSocialSecurityCharge() {}
 
 function getVacationSalary(employeeVacation) {}
-/**
- *
- *Gross salary:
- */
-function calculateGrossSalary() {}
+
 module.exports = router;

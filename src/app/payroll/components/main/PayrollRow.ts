@@ -1,9 +1,9 @@
-import { ReturnStatement } from "@angular/compiler";
+import * as moment from "moment";
 
 export class PayrollRow {
   // these properties are needed for object creation and are gotten from DB.
 
-  socialSecurityTable = [
+  private socialSecurityTable = [
     {
       earnings: 0,
       employeeDeductions: 0,
@@ -73,15 +73,15 @@ export class PayrollRow {
   employeeCompany;
   employeePosition;
   employeePayroll;
-  fromDate;
-  toDate;
-
-  //Need to know how is regular hours calculated;
+  employeeShift;
+  _fromDate: moment.Moment;
+  _toDate: moment.Moment;
+  holidayList = [];
   regularHours = 45;
   wage = 0;
   //These properties are gotten later, not in object creation.
   _hours = [];
-  overtime = [];
+  overtime = 0;
   holiday = [];
   bonus = [];
 
@@ -91,7 +91,7 @@ export class PayrollRow {
   vacations = [];
 
   deductions = [];
-  grossWage = 0; //Payable hours * hourlyRate
+  grossWage = 0;
   //Hours
   totalSystemHours: any = {};
   totalHolidayHours: any = {};
@@ -104,16 +104,35 @@ export class PayrollRow {
   //   rate: number;
   //   totalPayed: number;
   // }
-  totalRegularHoursPay = {}; //MAX 45
-  totalHolidayHoursPayX2 = {};
-  totalHolidayHoursPayX1 = {};
-  totalOvertimeHoursPay = {};
+  totalRegularHoursPay: any = {
+    hours: 0,
+    rate: 0,
+    totalPayed: 0
+  }; //MAX 45
+
+  totalHolidayHoursPayX2: any = {
+    hours: 0,
+    rate: 0,
+    totalPayed: 0
+  };
+  totalHolidayHoursPayX1: any = {
+    hours: 0,
+    rate: 0,
+    totalPayed: 0
+  };
+  totalOvertimeHoursPay: any = {
+    hours: 0,
+    rate: 0,
+    totalPayed: 0
+  };
+
   totalBonusPay = 0;
   totalOtherpay = 0; // Sickleaves, maternity leaves, vacations.
   totalDeductions = 0;
   socialSecurityEmployee = 0;
   socialSecurityEmployer = 0;
-  netWage = {};
+  incomeTax = 0;
+  netWage = 0;
   constructor(
     employeeId: number,
     employee: string,
@@ -128,8 +147,10 @@ export class PayrollRow {
     employeeCompany: any,
     employeePosition: any,
     employeePayroll: any,
-    fromDate: Date,
-    toDate: Date
+    employeeShift: any,
+    fromDate: any,
+    toDate: any,
+    holidayList: any
   ) {
     this.employee = employee;
     this.employeeId = employeeId;
@@ -144,23 +165,35 @@ export class PayrollRow {
     this.employeeCompany = employeeCompany;
     this.employeePosition = employeePosition;
     this.employeePayroll = employeePayroll;
+    this.employeeShift = employeeShift;
     this.fromDate = fromDate;
     this.toDate = toDate;
+    this.holidayList = holidayList;
     this.overtimeRate = hourlyRate * 1.5;
-    this.wage = hourlyRate * this.regularHours;
-    this.calculateTotalSocialSecurity();
+    this.calculateHolidays(this.holidayList);
   }
 
   public set hours(v: any[]) {
-    if (this.checkHours(v)) {
-      this._hours = v;
-    } else {
-      throw "There is duplicate dates on the hour registry.";
-    }
+    this._hours = v;
   }
 
   public get hours(): any[] {
     return this._hours;
+  }
+
+  public set fromDate(v: any) {
+    this._fromDate = moment(v);
+  }
+  public get fromDate(): any {
+    return this._fromDate;
+  }
+
+  public set toDate(v: any) {
+    this._toDate = moment(v);
+  }
+
+  public get toDate(): any {
+    return this._toDate;
   }
 
   checkHours(arr: any[]): boolean {
@@ -179,173 +212,290 @@ export class PayrollRow {
       return false;
     } else return true;
   }
-  calculateGrossWage() {}
 
   calculateHolidays(holidayList: any[]) {
-    if (this._hours.length > 0 && holidayList.length > 0) {
-      for (let i = 0; i < this._hours.length; i++) {
-        const hourDate = this._hours[i].date;
-        for (let e = 0; e < holidayList.length; e++) {
-          const holidayDate = holidayList[e].date;
-          if (this.dates.compare(hourDate, holidayDate) === 0) {
-            this._hours[i].holidayRate = holidayList[e].rate;
-            this.holiday.push(this._hours[i]);
-            delete this._hours[i];
+    return new Promise((res, rej) => {
+      if (this._hours.length > 0 && holidayList.length > 0) {
+        for (let i = 0; i < this._hours.length; i++) {
+          const hourDate = this._hours[i].date;
+          for (let e = 0; e < holidayList.length; e++) {
+            const holidayDate = holidayList[e].date;
+            if (this.dates.compare(hourDate, holidayDate) === 0) {
+              this._hours[i].holidayRate = holidayList[e].rate;
+              this.holiday.push(this._hours[i]);
+              delete this._hours[i];
+            }
+          }
+          if (i === this._hours.length - 1) {
+            this.calculateHolidayPayment().then(result => {
+              res();
+            });
           }
         }
-        if (i === this._hours.length - 1) {
-          this.calculateHolidayPayment();
-        }
       }
-    }
+      res();
+    });
   }
 
-  calculateHolidayPayment(): void {
-    let totalX2 = 0;
-    let totalX1 = 0;
-    if (this.holiday.length > 0) {
-      for (let i = 0; i < this.holiday.length; i++) {
-        const day = this.holiday[i];
-        let time = day.hh * 3600 + day.mm * 60 + day.ss;
-        let value = time / 3600;
-        let payed = day.holidayRate * value;
-        day.totalPay = payed;
-        if (parseInt(day.holidayRate, 10) === 2) {
-          totalX2 = totalX2 + payed;
-        } else if (parseInt(day.holidayRate, 10) === 1.5) {
-          totalX1 = totalX1 + payed;
-        }
-        if (this.holiday.length - 1 === i) {
-          this.totalHolidayHoursPayX2 = totalX2;
-          this.totalHolidayHoursPayX1 = totalX1;
-        }
+  checkForHoliday(date) {
+    if (this.holidayList.length > 0) {
+      for (let i = 0; i < this.holidayList.length; i++) {
+        const element = this.holidayList[i];
+        if (date.isSame(moment(element.date), "day")) {
+          return true;
+        } else return false;
       }
-    }
+    } else return false;
   }
-  calculateTotalHours(arr: any[]) {
-    if (arr.length > 0) {
-      let totaled: any = {};
-      totaled.hh = arr.reduce((p, c) => p + c.systemHours.hh, 0);
-      totaled.mm = arr.reduce((p, c) => p + c.systemHours.mm, 0);
-      totaled.ss = arr.reduce((p, c) => p + c.systemHours.ss, 0);
-
-      let time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-      var hrs = ~~(time / 3600);
-      var mins = ~~((time % 3600) / 60);
-      var secs = ~~time % 60;
-      var ret = "";
-
-      if (hrs > 0) {
-        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
-      }
-
-      ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-      ret += "" + secs;
-      let correctedTotal = {
-        hh: hrs,
-        mm: mins,
-        ss: secs,
-        value: time / 3600,
-        valueString: ret
+  calculateHolidayPayment(): Promise<any> {
+    return new Promise((res, rej) => {
+      let totalX2 = {
+        hours: 0,
+        rate: 2 * this.hourlyRate,
+        totalPayed: 0
       };
-      return correctedTotal;
-    } else {
-      let finished = {
-        hh: 0,
-        mm: 0,
-        ss: 0,
-        value: 0,
-        valueString: "00:00:00"
+      let totalX1 = {
+        hours: 0,
+        rate: 1.5 * this.hourlyRate,
+        totalPayed: 0
       };
-      return finished;
-    }
+
+      if (this.holiday.length > 0) {
+        for (let i = 0; i < this.holiday.length; i++) {
+          const day = this.holiday[i];
+          let time = day.hh * 3600 + day.mm * 60 + day.ss;
+          let value = time / 3600;
+          if (parseInt(day.holidayRate, 10) === 2) {
+            totalX2.hours = totalX2.hours + value;
+            totalX2.totalPayed = totalX2.hours * totalX2.rate;
+          } else if (parseInt(day.holidayRate, 10) === 1.5) {
+            totalX1.hours = totalX1.hours + value;
+            totalX1.totalPayed = totalX1.hours * totalX1.rate;
+          }
+          if (this.holiday.length - 1 === i) {
+            this.totalHolidayHoursPayX2 = totalX2;
+            this.totalHolidayHoursPayX1 = totalX1;
+            res();
+          }
+        }
+      }
+      res();
+    });
   }
 
+  calculateRegularHours() {
+    return new Promise((res, rej) => {
+      let dif = moment.duration(this.toDate.diff(this.fromDate)).asDays();
+      let sum = 0;
+      for (let i = 0; i < dif; i++) {
+        let localizedDate = this.fromDate;
+        localizedDate.add(i, "days").toDate();
+        let dayOfWeek = localizedDate.day();
+
+        if (
+          this.employeeShift !== null &&
+          this.employeeShift.shift[dayOfWeek].onShift &&
+          this.checkForHoliday(localizedDate)
+        ) {
+          let shiftElement = this.employeeShift.shift[dayOfWeek];
+          let hoursWorked =
+            (shiftElement.endTime - shiftElement.startTime) / 60;
+          this.regularHours = this.regularHours - hoursWorked;
+        }
+        localizedDate.subtract(i, "days").toDate();
+          this.wage = this.regularHours * this.hourlyRate;
+      }
+      res();
+    });
+  }
   calculateSystemHours() {
-    let totaled = this.calculateTotalHours(this._hours);
-    this.totalSystemHours = totaled;
-  }
-  calculateOvertimeHours(): void {
-    let totaled = this.calculateTotalHours(this.overtime);
-    this.totalOvertimeHours = totaled;
-    this.calculateOvertimePay();
-  }
+    return new Promise((res, rej) => {
+      let totaled = this.calculateTotalHours(this._hours);
+      this.totalSystemHours = totaled;
 
-  calculateOvertimePay() {
-    if (this.totalOvertimeHours.value !== undefined) {
-      let overtime = this.totalOvertimeHours.value;
-      let returnObj = {
-        hours: overtime,
-        rate: this.overtimeRate,
-        totalPayed: overtime * this.overtimeRate
+      let hours =
+        this.totalSystemHours.value >= this.regularHours
+          ? this.regularHours
+          : this.totalSystemHours.value;
+
+      let obj = {
+        hours: hours,
+        rate: this.hourlyRate,
+        totalPayed: hours * this.hourlyRate
       };
-      this.totalOvertimeHoursPay = returnObj;
-      return;
-    }
+      this.totalRegularHoursPay = obj;
+      res();
+    });
   }
 
-  calculateTotalDeductions() {
-    if (this.deductions.length > 0) {
-      let sum = this.deductions.reduce((x, y) => x.amount + y.amount);
-      this.totalDeductions = sum;
-    }
+  calculateOvertimeHours() {
+    return new Promise((res, rej) => {
+      if (this.totalSystemHours.value >= 45) {
+        this.overtime = this.totalSystemHours.value - this.regularHours;
+        let time = this.overtime * 3600;
+        let hrs = ~~(time / 3600);
+        let mins = ~~((time % 3600) / 60);
+        let secs = ~~time % 60;
+        var ret = "";
+        if (hrs > 0) {
+          ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+        }
+
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
+        this.totalOvertimeHoursPay = {
+          valueString: ret,
+          hours: this.overtime,
+          rate: this.overtimeRate,
+          totalPayed: this.overtime * this.overtimeRate
+        };
+      }
+      res();
+    });
   }
+
+  // calculateOvertimePay() {
+  //   if (this.totalOvertimeHours.value !== undefined) {
+  //     let overtime = this.totalOvertimeHours.value;
+  //     let returnObj = {
+  //       hours: overtime,
+  //       rate: this.overtimeRate,
+  //       totalPayed: overtime * this.overtimeRate
+  //     };
+  //     this.totalOvertimeHoursPay = returnObj;
+  //     return;
+  //   }
+  // }
 
   calculateTotalOtherpay() {
-    if (this.otherpay.length > 0) {
-      for (let i = 0; i < this.otherpay.length; i++) {
-        const element = this.otherpay[i];
-        switch (element.reason) {
-          case "CSL":
-            this.csl.push(element);
-            break;
-          case "MATERNITY":
-            this.maternity.push(element);
-            break;
-          case "VACATIONS":
-            this.vacations.push(element);
-            break;
-          default:
-            break;
+    return new Promise((res, rej) => {
+      if (this.otherpay.length > 0) {
+        for (let i = 0; i < this.otherpay.length; i++) {
+          const element = this.otherpay[i];
+          switch (element.reason) {
+            case "CSL":
+              this.csl.push(element);
+              break;
+            case "MATERNITY":
+              this.maternity.push(element);
+              break;
+            case "VACATIONS":
+              this.vacations.push(element);
+              break;
+            default:
+              break;
+          }
         }
+        let sum = this.otherpay.reduce((x, y) => x.amount + y.amount);
+        this.totalOtherpay = sum;
+        res();
       }
-      let sum = this.otherpay.reduce((x, y) => x.amount + y.amount);
-      this.totalOtherpay = sum;
-    }
+      res();
+    });
   }
 
   calculateTotalBonuses() {
-    if (this.bonus.length > 0) {
-      let sum = this.bonus.reduce((x, y) => x.amount + y.amount);
-      this.totalBonusPay = sum;
-    }
+    return new Promise((res, rej) => {
+      if (this.bonus.length > 0) {
+        let sum = this.bonus.reduce((x, y) => x.amount + y.amount);
+        this.totalBonusPay = sum;
+      }
+      res(this.totalBonusPay);
+    });
   }
 
-  calculateTotalPayment() {}
+  calculateTotalDeductions() {
+    return new Promise((res, rej) => {
+      if (this.deductions.length > 0) {
+        let sum = this.deductions.reduce((x, y) => x.amount + y.amount);
+        this.totalDeductions = sum;
+      }
+      res(this.totalDeductions);
+    });
+  }
 
   calculateTotalSocialSecurity() {
-    for (let i = 0; i < this.socialSecurityTable.length; i++) {
-      const social = this.socialSecurityTable[i];
-      const upperLimit =
-        this.socialSecurityTable[i + 1] !== undefined
-          ? this.socialSecurityTable[i + 1].earnings
-          : 0;
-      const identifier = this.grossWage - this.totalOtherpay;
-      if (
-        this.totalSystemHours >= 8 ||
-        this.grossWage - this.totalOtherpay >= this.hourlyRate * 8
-      ) {
-        if (identifier > social.earnings && identifier < upperLimit) {
-          this.socialSecurityEmployer = social.employerDeductions;
-          this.socialSecurityEmployee = social.employeeDeductions;
+    return new Promise((res, rej) => {
+      for (let i = 0; i < this.socialSecurityTable.length; i++) {
+        const social = this.socialSecurityTable[i];
+        const upperLimit =
+          this.socialSecurityTable[i + 1] !== undefined
+            ? this.socialSecurityTable[i + 1].earnings
+            : this.grossWage + 1;
+        const identifier = this.grossWage - this.totalOtherpay;
+        if (
+          this.totalSystemHours >= 8 ||
+          this.grossWage - this.totalOtherpay >= this.hourlyRate * 8
+        ) {
+          if (identifier > social.earnings && identifier < upperLimit) {
+            this.socialSecurityEmployer = social.employerDeductions;
+            this.socialSecurityEmployee = social.employeeDeductions;
+            res(social);
+          }
         }
-      } else {
-        break;
       }
-    }
+      res();
+    });
   }
 
-  calculateWorkableDays() {}
+  calculateTotalIncomeTax() {
+    return new Promise((res, rej) => {
+      this.incomeTax = 0;
+      res(this.incomeTax);
+    });
+  }
+
+  calculateGrossWage() {
+    return new Promise((res, rej) => {
+      this.grossWage =
+        this.totalRegularHoursPay.totalPayed +
+        this.totalOvertimeHoursPay.totalPayed +
+        this.totalHolidayHoursPayX1.totalPayed +
+        this.totalHolidayHoursPayX2.totalPayed +
+        this.totalBonusPay +
+        this.totalOtherpay;
+
+      res(this.grossWage);
+    });
+  }
+
+  calculateTotalPayment() {
+    return new Promise((res, rej) => {
+      this.netWage =
+        this.grossWage -
+        this.socialSecurityEmployee -
+        this.socialSecurityEmployer -
+        this.incomeTax -
+        this.totalDeductions;
+
+      res(this.netWage);
+    });
+  }
+
+  calculatePayrollRow() {
+    const tasks = [
+      this.calculateHolidays(this.holidayList),
+      this.calculateRegularHours(),
+      this.calculateSystemHours(),
+      this.calculateOvertimeHours(),
+      this.calculateTotalBonuses(),
+      this.calculateTotalOtherpay(),
+      this.calculateTotalDeductions(),
+      this.calculateTotalSocialSecurity(),
+      this.calculateTotalIncomeTax(),
+      this.calculateGrossWage(),
+      this.calculateTotalPayment()
+    ];
+    return tasks
+      .reduce((promiseChain, currentTask) => {
+        return promiseChain.then((chainResults: any) =>
+          currentTask.then(currentResult => [...chainResults, currentResult])
+        );
+      }, Promise.resolve([]))
+      .then(arrayOfResults => {
+        console.log("finished");
+      });
+  }
 
   dates = {
     convert: function(d) {
@@ -397,4 +547,46 @@ export class PayrollRow {
         : NaN;
     }
   };
+
+  calculateTotalHours(arr: any[]) {
+    if (arr.length > 0) {
+      let totaled: any = {
+        hh: Number,
+        mm: Number,
+        ss: Number
+      };
+      totaled.hh = arr.reduce((p, c) => p + c.systemHours.hh, 0);
+      totaled.mm = arr.reduce((p, c) => p + c.systemHours.mm, 0);
+      totaled.ss = arr.reduce((p, c) => p + c.systemHours.ss, 0);
+      let time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
+      var hrs = ~~(time / 3600);
+      var mins = ~~((time % 3600) / 60);
+      var secs = ~~time % 60;
+      var ret = "";
+
+      if (hrs > 0) {
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
+      }
+
+      ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+      ret += "" + secs;
+      let correctedTotal = {
+        hh: hrs,
+        mm: mins,
+        ss: secs,
+        value: time / 3600,
+        valueString: ret
+      };
+      return correctedTotal;
+    } else {
+      let finished = {
+        hh: 0,
+        mm: 0,
+        ss: 0,
+        value: 0,
+        valueString: "00:00:00"
+      };
+      return finished;
+    }
+  }
 }
