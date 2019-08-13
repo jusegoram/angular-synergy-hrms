@@ -13,13 +13,13 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
 // Import angular-fusioncharts
-import { FusionChartsModule } from 'angular-fusioncharts';
+//import { FusionChartsModule } from 'angular-fusioncharts';
 
 // Import FusionCharts library and chart modules
-import * as FusionCharts from 'fusioncharts';
-import * as Charts from 'fusioncharts/fusioncharts.charts';
-import * as Widgets from 'fusioncharts/fusioncharts.widgets';
-import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+//import * as FusionCharts from 'fusioncharts';
+//import * as Charts from 'fusioncharts/fusioncharts.charts';
+//import * as Widgets from 'fusioncharts/fusioncharts.widgets';
+//import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import { DetailComponent } from './detail/detail.component';
 import { KpiComponent } from './report/kpi/kpi.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
@@ -28,7 +28,7 @@ import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 
 // Pass the fusioncharts library and chart modules
-FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
+//FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
 
 
 @NgModule({
@@ -40,7 +40,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
-    FusionChartsModule,
+   // FusionChartsModule,
     ScrollingModule,
   ],
   declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent],

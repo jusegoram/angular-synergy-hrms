@@ -493,7 +493,6 @@ export class PayrollRow {
         );
       }, Promise.resolve([]))
       .then(arrayOfResults => {
-        console.log("finished");
       });
   }
 

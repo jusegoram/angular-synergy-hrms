@@ -2,17 +2,16 @@ import { Employee } from '../Employee';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import {MatTableDataSource, MatSort, MatPaginator, SortDirection} from '@angular/material';
 import { EmployeeService } from '../employee.service';
-import {SessionService} from '../../session/session.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component ({
     templateUrl: 'manage.component.html',
     styleUrls: ['manage.component.scss']
 })
 export class ManageComponent implements OnInit,  AfterViewInit {
-  //FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  // FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   employees: Employee [];
   selectedEmployees: string[] = [];
   // dataSource = any;
@@ -98,7 +97,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           pagSize = pagSize ? pagSize : 10;
 
           this.paginator._changePageSize(pagSize);
-          this.paginator._pageIndex = pag + 1;
+          this.paginator.pageIndex = pag + 1;
           this.paginator.previousPage();
       }
 

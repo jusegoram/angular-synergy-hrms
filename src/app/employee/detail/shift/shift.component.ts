@@ -11,6 +11,7 @@ import { MatTableDataSource, MatSnackBar, MatPaginator } from '../../../../../no
 export class ShiftComponent implements OnInit, OnChanges {
   @Input() employee: any;
   @Input() authorization: any;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   dataSource: any = [];
   currentShift: any;
@@ -30,7 +31,6 @@ export class ShiftComponent implements OnInit, OnChanges {
     this.populateTable1(shift);
     }
   }
-  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngOnInit() {
     this._employeeService.getShift().subscribe(result => { this.shifts = result; });

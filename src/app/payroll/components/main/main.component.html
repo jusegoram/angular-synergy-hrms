@@ -141,19 +141,25 @@
           Overtime Rate
         </th>
         <th mat-header-cell>
-          Gross Wage
-        </th>
-        <th mat-header-cell>
-          Social Security
-        </th>
-        <th mat-header-cell>
-          Deduction
+          Other Payments
         </th>
         <th mat-header-cell>
           Bonus
         </th>
         <th mat-header-cell>
-          Total Payment
+          Gross Salary
+        </th>
+        <th mat-header-cell>
+          Social Security
+        </th>
+        <th mat-header-cell>
+          Tax
+        </th>
+        <th mat-header-cell>
+          Other Deductions
+        </th>
+        <th mat-header-cell>
+          Net Salary
         </th>
         <th mat-header-cell>
           Dates
@@ -188,8 +194,14 @@
           <td mat-cell width="90px">
             <span>{{n.totalOvertimeHoursPay?.valueString ? n.totalOvertimeHoursPay?.valueString : '00:00' }}</span>
           </td>
-          <td mat-cell width="50px">
+          <td mat-cell width="80px">
             <span>{{n.overtimeRate?.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.totalOtherpay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.totalBonusPay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
           </td>
           <td mat-cell width="90px">
             <span>{{n.grossWage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
@@ -197,11 +209,11 @@
           <td mat-cell width="60px">
             <span>{{(n.socialSecurityEmployee + n.socialSecurityEmployer )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
           </td>
-          <td mat-cell width="70px">
-            <span>{{n.totalDeductions| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          <td mat-cell width="60px">
+            <span>{{(n.incomeTax )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
           </td>
           <td mat-cell width="70px">
-            <span>{{n.totalBonusPay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+            <span>{{n.totalDeductions| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
           </td>
           <td mat-cell width="90px">
             <span>{{n.netWage| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
@@ -242,5 +254,10 @@
       <mat-row *matRowDef="let row; columns: displayedColumns;">
       </mat-row>
     </mat-table>
+
+    <div>
+      <button mat-button>SAVE TO DATABASE</button>
+      <button mat-button>EXPORT</button>
+    </div>
   </mat-card-content>
 </mat-card>

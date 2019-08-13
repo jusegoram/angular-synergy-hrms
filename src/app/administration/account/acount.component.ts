@@ -1,24 +1,24 @@
-import { SessionService } from "../../session/session.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import {  MatTableDataSource,MatPaginator, MatDialog, MatSort, Sort, MatSnackBar } from "@angular/material";
-import { AdminService } from "../admin.service";
-import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
+import { SessionService } from '../../session/session.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {  MatTableDataSource, MatPaginator, MatDialog, MatSort, Sort, MatSnackBar } from '@angular/material';
+import { AdminService } from '../admin.service';
+import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 
 @Component({
-  selector: "app-account",
-  templateUrl: "./account.component.html",
-  styleUrls: ["./account.component.scss"]
+  selector: 'app-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator , {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort , {static: true}) sort: MatSort;
 
   dataSource;
 
 
-  displayedColumns = ["employee.employeeId", "firstName", "employee.status", "role", "details"];
+  displayedColumns = ['employee.employeeId', 'firstName', 'employee.status', 'role', 'details'];
   constructor(
     private sessionService: SessionService,
     private adminService: AdminService,
@@ -70,7 +70,7 @@ export class AccountComponent implements OnInit {
       console.log(result);
       this.adminService.editUser(result).subscribe(resp => {
         this.reload();
-        this.snackBar.open("User was edited succesfully", "thank you", {
+        this.snackBar.open('User was edited succesfully', 'thank you', {
           duration: 2000
         });
       });

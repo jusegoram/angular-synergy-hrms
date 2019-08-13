@@ -23,49 +23,49 @@ export const AppRoutes: Routes = [
         path: 'main',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './dashboard/dashboard.module#DashboardModule',
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'employee',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './employee/employee.module#EmployeeModule',
+        loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'training',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './training/training.module#TrainingModule',
+        loadChildren: () => import('./training/training.module').then(m => m.TrainingModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'operations',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './operations/operations.module#OperationsModule',
+        loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'payroll',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './payroll/payroll.module#PayrollModule',
+        loadChildren: () => import('./payroll/payroll.module').then(m => m.PayrollModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'admin',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './administration/admin.module#AdminModule',
+        loadChildren: () => import('./administration/admin.module').then(m => m.AdminModule),
         canLoad: [SessionGuard]
       },
       {
         path: 'user',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: './user/user.module#UserModule',
+        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
         canLoad: [SessionGuard]
       }
     ]
@@ -75,7 +75,7 @@ export const AppRoutes: Routes = [
   component: AuthLayoutComponent,
   children: [{
     path: '',
-    loadChildren: './session/session.module#SessionModule'
+    loadChildren: () => import('./session/session.module').then(m => m.SessionModule)
   }]
 },
  {

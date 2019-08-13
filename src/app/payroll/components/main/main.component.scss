@@ -28,6 +28,8 @@ $mat-toolbar-height-mobile-landscape: 148px !default;
 }
 .viewport {
   height: 500px;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
 }
 .fill-remaining-space {
   flex: 1 1 auto;
