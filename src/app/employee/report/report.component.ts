@@ -148,12 +148,12 @@ export class ReportComponent implements OnInit {
   }
   export() {
     const data: any = this.dataSource.data;
-    let promiseArray = [];
+    const promiseArray = [];
 
-    if (this.mainInfoToggle) promiseArray.push(this.exportMain(data));
-    if (this.companyInfoToggle) promiseArray.push(this.exportCompany(data));
-    if (this.personalInfoToggle) promiseArray.push(this.exportPersonal(data));
-    if (this.shiftInfoToggle) promiseArray.push(this.exportShift(data));
+    if (this.mainInfoToggle) {promiseArray.push(this.exportMain(data)); }
+    if (this.companyInfoToggle) {promiseArray.push(this.exportCompany(data)); }
+    if (this.personalInfoToggle) {promiseArray.push(this.exportPersonal(data)); }
+    if (this.shiftInfoToggle) {promiseArray.push(this.exportShift(data)); }
     if (this.attritionInfoToggle) {
       promiseArray.push(this.exportAttrition(data));
       promiseArray.push(this.exportComments(data));
@@ -166,11 +166,11 @@ export class ReportComponent implements OnInit {
       }).catch(err => console.log(err));
   }
   exportMain(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const mainInfo: any[] = [];
       data.forEach(element => {
         if(typeof element !== 'undefined' && element !== null) {
-          let mainData = {
+          const mainData = {
             _id: element._id,
             employeeId: element.employeeId,
             firstName: element.firstName,
@@ -179,6 +179,28 @@ export class ReportComponent implements OnInit {
             gender: element.gender,
             socialSecurity: element.socialSecurity,
             status: element.status,
+            client: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.client : '',
+            campaign:  (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.campaign : '',
+            manager:(typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.manager : '',
+            supervisor: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.supervisor : '',
+            trainer: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.trainer : '',
+            trainingGroup: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.trainingGroup : '',
+            hireDate: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.hireDate : '',
+            terminationDate: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.terminationDate : '',
+            reapplicant: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.reapplicant : '',
+            reapplicantTimes: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.reapplicantTimes : '',
+            bilingual: (typeof element.company !== 'undefined' && element.company !== null)
+            ? element.company.bilingual : '',
           }
           mainInfo.push(mainData);
         }
@@ -190,7 +212,7 @@ export class ReportComponent implements OnInit {
     return promise;
   }
   exportCompany(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const companyInfo: any[] = [];
       data.forEach(element => {
         (typeof element.company !== 'undefined' && element.company !== null)
@@ -204,7 +226,7 @@ export class ReportComponent implements OnInit {
   }
 
   exportPersonal(data){
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const personalInfo: any[] = [];
       data.forEach(element => {
         (typeof element.personal !== 'undefined' && element.personal !== null)
@@ -218,12 +240,12 @@ export class ReportComponent implements OnInit {
   }
 
   exportShift(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const shiftInfo: any[] = [];
     data.forEach(element => {
-      let workpatterns = element.shift;
-      let workpattern = workpatterns[workpatterns.length-1];
-      let exportShift: any = {};
+      const workpatterns = element.shift;
+      const workpattern = workpatterns[workpatterns.length-1];
+      const exportShift: any = {};
       if (workpattern) {
         const shift = workpattern.shift;
         const week = shift.shift;
@@ -258,7 +280,7 @@ export class ReportComponent implements OnInit {
   }
 
   exportComments(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const commentsInfo: any[] = [];
       data.forEach(element => {
         if (typeof element.comments !== 'undefined' && element.comments !== null) {
@@ -275,7 +297,7 @@ export class ReportComponent implements OnInit {
   }
 
   exportAttrition(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const attritionInfo: any[] = [];
       data.forEach(element => {
         if (typeof element.attrition !== 'undefined' && element.attrition !== null) {
@@ -291,13 +313,13 @@ export class ReportComponent implements OnInit {
     return promise;
   }
   exportEmergency(data) {
-    let promise = new Promise((res, rej) => {
+    const promise = new Promise((res, rej) => {
       const familyInfo: any[] = [];
       data.forEach(element => {
-        let familyArr: any[] = element.family
+        const familyArr: any[] = element.family
         if (typeof familyArr !== 'undefined' && familyArr !== null && familyArr.length !== 0) {
           familyArr.forEach(item => {
-            let familyExport = {
+            const familyExport = {
               _id: item._id,
               employeeId: item.employeeId,
               referenceName: item.referenceName,

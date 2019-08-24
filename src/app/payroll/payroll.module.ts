@@ -16,6 +16,7 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { CdkColumnDef } from '@angular/cdk/table';
+import { ConceptComponent } from './components/concepts/concept/concept.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
     NgxDatatableModule,
 
   ],
-  declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent],
+  declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent, ConceptComponent],
   providers: [ PayrollService, TitleCasePipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,

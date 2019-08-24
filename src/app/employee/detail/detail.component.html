@@ -130,7 +130,7 @@
 
                 <!-- reapplicant yes|no && reapplicant times (number)-->
 
-                <mat-slide-toggle formControlName="reapplicant" [ngClass]="{'readonly-wrapper': !this.auth.edit}">REAPPLICANT (NO / YES)</mat-slide-toggle>
+                <mat-slide-toggle formControlName="reapplicant" color="primary" [ngClass]="{'readonly-wrapper': !this.auth.edit}">REAPPLICANT (NO / YES)</mat-slide-toggle>
 
 
                 <mat-form-field *ngIf="this.companyForm.value.reapplicant" appearance="outline">
@@ -140,6 +140,9 @@
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
+                <mat-slide-toggle formControlName="bilingual" color="primary" [ngClass]="{'readonly-wrapper': !this.auth.edit}">BILINGUAL (NO / YES)</mat-slide-toggle>
+
             </form>
             <button  mat-stroked-button color="primary" (click)="onCompanySubmit()" *ngIf="this.auth.edit"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
         </mat-card>

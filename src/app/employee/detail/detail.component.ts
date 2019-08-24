@@ -39,7 +39,7 @@ export class DetailComponent implements OnInit {
       '', '', '','',
       '', null,
       null, null,
-      null, null);
+      null, null, false);
     this.isNewCompany = false;
     this.items = this.employeeService.status;
     this.reaptimes = this.employeeService.reaptimes;
@@ -95,7 +95,7 @@ export class DetailComponent implements OnInit {
     this.companyForm = this.fb.group({
       client: [this.company.client],
       campaign: [this.company.campaign],
-      manager:[this.company.manager],
+      manager: [this.company.manager],
       supervisor: [this.company.supervisor],
       trainer: [this.company.trainer],
       trainingGroupRef: [this.company.trainingGroupRef],
@@ -104,6 +104,7 @@ export class DetailComponent implements OnInit {
       terminationDate: [this.company.terminationDate],
       reapplicant: [this.company.reapplicant],
       reapplicantTimes: [this.company.reapplicantTimes],
+      bilingual: [this.company.bilingual]
     });
   }
   onSubmit() {
@@ -146,6 +147,7 @@ export class DetailComponent implements OnInit {
       this.companyForm.value.terminationDate,
       this.companyForm.value.reapplicant,
       this.companyForm.value.reapplicantTimes,
+      this.companyForm.value.bilingual
     );
     if (!this.isNewCompany) {
       this.employeeService.updateCompany(employeeCompany).subscribe(

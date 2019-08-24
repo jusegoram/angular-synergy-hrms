@@ -17,6 +17,7 @@ var companySchema = new Schema({
   terminationDate:{ type: Date, required: false },
   reapplicant: { type: Boolean, required: false},
   reapplicantTimes: {type: Number, required: false},
+  bilingual: {type: Boolean, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 

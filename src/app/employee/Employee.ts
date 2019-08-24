@@ -69,6 +69,7 @@ export class EmployeeCompany {
               public terminationDate: Date,
               public reapplicant: boolean,
               public reapplicantTimes: number,
+              public bilingual: boolean,
   ) {
   }
 }
