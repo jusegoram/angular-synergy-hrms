@@ -31,7 +31,7 @@ router.post("/", function(req, res, next) {
     delete query["company.terminationDate"];
   }
   let employees = [];
-  let cursor = Employee.find(query).cursor();
+  let cursor = Employee.find(query).select('-position.position.baseWage').cursor();
   cursor.on("data", item => employees.push(item));
   cursor.on("end", () => res.status(200).json(employees));
 });

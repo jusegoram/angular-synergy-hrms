@@ -25,6 +25,7 @@ export class ReportComponent implements OnInit {
   mainInfoToggle= true;
   companyInfoToggle= false;
   personalInfoToggle= false;
+  positionInfoToggle = false;
   shiftInfoToggle= false;
   attritionInfoToggle= false;
   familyInfoToggle= false;
@@ -33,35 +34,35 @@ export class ReportComponent implements OnInit {
   avatarQuery = {
     reportType: 'avatar',
     employeeStatus: 'active'
-  }
+  };
   mainQuery = {
     reportType: 'main',
     employeeStatus: 'active'
-  }
+  };
   companyQuery = {
     reportType: 'company',
     employeeStatus: 'active'
-  }
+  };
   shiftQuery = {
     reportType: 'shift',
     employeeStatus: 'active'
-  }
+  };
   positionQuery = {
     reportType: 'position',
     employeeStatus: 'active'
-  }
+  };
   payrollQuery = {
     reportType: 'payroll',
     employeeStatus: 'active'
-  }
+  };
   personalQuery = {
     reportType: 'personal',
     employeeStatus: 'active'
-  }
+  };
   familyQuery = {
     reportType: 'family',
     employeeStatus: 'active'
-  }
+  };
   constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
     this.campaigns = [];
@@ -69,22 +70,25 @@ export class ReportComponent implements OnInit {
   }
 
   public clickMain = (event) => {
-    this.mainInfoToggle = !this.mainInfoToggle
+    this.mainInfoToggle = !this.mainInfoToggle;
   }
   public clickCompany = (event) => {
-    this.companyInfoToggle = !this.companyInfoToggle
+    this.companyInfoToggle = !this.companyInfoToggle;
   }
   public clickPersonal = (event) => {
-    this.personalInfoToggle = !this.personalInfoToggle
+    this.personalInfoToggle = !this.personalInfoToggle;
+  }
+  public clickPosition = (event) => {
+    this.positionInfoToggle = !this.positionInfoToggle;
   }
   public clickShift = (event) => {
-    this.shiftInfoToggle = !this.shiftInfoToggle
+    this.shiftInfoToggle = !this.shiftInfoToggle;
   }
   public clickAttrition = (event) => {
-    this.attritionInfoToggle = !this.attritionInfoToggle
+    this.attritionInfoToggle = !this.attritionInfoToggle;
   }
   public clickEmergency = (event) => {
-    this.familyInfoToggle = !this.familyInfoToggle
+    this.familyInfoToggle = !this.familyInfoToggle;
   }
 
 
@@ -120,12 +124,13 @@ export class ReportComponent implements OnInit {
 
     this.sheetControl = new FormControl();
     this.wb = XLSX.utils.book_new();
-    this.mainInfoToggle= true;
-    this.companyInfoToggle= false;
-    this.personalInfoToggle= false;
-    this.shiftInfoToggle= false;
-    this.attritionInfoToggle= false;
-    this.familyInfoToggle= false;
+    this.mainInfoToggle = true;
+    this.companyInfoToggle = false;
+    this.personalInfoToggle = false;
+    this.positionInfoToggle = false;
+    this.shiftInfoToggle = false;
+    this.attritionInfoToggle = false;
+    this.familyInfoToggle = false;
 
   }
   getReport() {
@@ -153,6 +158,7 @@ export class ReportComponent implements OnInit {
     if (this.mainInfoToggle) {promiseArray.push(this.exportMain(data)); }
     if (this.companyInfoToggle) {promiseArray.push(this.exportCompany(data)); }
     if (this.personalInfoToggle) {promiseArray.push(this.exportPersonal(data)); }
+    if (this.positionInfoToggle) {promiseArray.push(this.exportPersonal(data)); }
     if (this.shiftInfoToggle) {promiseArray.push(this.exportShift(data)); }
     if (this.attritionInfoToggle) {
       promiseArray.push(this.exportAttrition(data));
@@ -169,7 +175,7 @@ export class ReportComponent implements OnInit {
     const promise = new Promise((res, rej) => {
       const mainInfo: any[] = [];
       data.forEach(element => {
-        if(typeof element !== 'undefined' && element !== null) {
+        if (typeof element !== 'undefined' && element !== null) {
           const mainData = {
             _id: element._id,
             employeeId: element.employeeId,
@@ -183,7 +189,7 @@ export class ReportComponent implements OnInit {
             ? element.company.client : '',
             campaign:  (typeof element.company !== 'undefined' && element.company !== null)
             ? element.company.campaign : '',
-            manager:(typeof element.company !== 'undefined' && element.company !== null)
+            manager: (typeof element.company !== 'undefined' && element.company !== null)
             ? element.company.manager : '',
             supervisor: (typeof element.company !== 'undefined' && element.company !== null)
             ? element.company.supervisor : '',
@@ -201,7 +207,7 @@ export class ReportComponent implements OnInit {
             ? element.company.reapplicantTimes : '',
             bilingual: (typeof element.company !== 'undefined' && element.company !== null)
             ? element.company.bilingual : '',
-          }
+          };
           mainInfo.push(mainData);
         }
       });
@@ -239,20 +245,46 @@ export class ReportComponent implements OnInit {
     return promise;
   }
 
+  exportPosition(data){
+    return new Promise((resolve, reject) => {
+      const positionInfo: any[] = [];
+      data.forEach(element => {
+        const position = element.position[element.position.length - 1];
+        if (position && position.position) {
+              position.name = position.position.name;
+              position.positionId = position.position.positionId;
+              const exportPosition = {
+                employeeId: position.employeeId,
+                client: position.client,
+                department: position.department,
+                positionId: position.positionId,
+                positionName: position.name,
+                startDate: position.startDate,
+                endDate: position.endDate,
+              };
+              positionInfo.push(exportPosition);
+        }
+      });
+      const position: XLSX.WorkSheet = XLSX.utils.json_to_sheet(positionInfo);
+      XLSX.utils.book_append_sheet(this.wb, position, 'position-info');
+      resolve();
+    });
+  }
+
   exportShift(data) {
     const promise = new Promise((res, rej) => {
       const shiftInfo: any[] = [];
     data.forEach(element => {
       const workpatterns = element.shift;
-      const workpattern = workpatterns[workpatterns.length-1];
+      const workpattern = workpatterns[workpatterns.length - 1];
       const exportShift: any = {};
       if (workpattern) {
         const shift = workpattern.shift;
         const week = shift.shift;
-        if(shift !== undefined) {
+        if (shift !== undefined) {
           exportShift._id = workpattern._id;
           exportShift.employeeId = workpattern.employeeId;
-          exportShift.name = shift.name
+          exportShift.name = shift.name;
         exportShift.monday = ( week[0].onShift) ?
         this.transformTime(week[0].startTime) + ' - ' + this.transformTime(week[0].endTime) : 'DAY OFF';
         exportShift.tuesday = ( week[1].onShift) ?
@@ -316,7 +348,7 @@ export class ReportComponent implements OnInit {
     const promise = new Promise((res, rej) => {
       const familyInfo: any[] = [];
       data.forEach(element => {
-        const familyArr: any[] = element.family
+        const familyArr: any[] = element.family;
         if (typeof familyArr !== 'undefined' && familyArr !== null && familyArr.length !== 0) {
           familyArr.forEach(item => {
             const familyExport = {
@@ -329,7 +361,7 @@ export class ReportComponent implements OnInit {
               emailAddress: item.emailAddress,
               address: item.address,
               employee: item.employee,
-            }
+            };
             familyInfo.push(familyExport);
           });
         }
