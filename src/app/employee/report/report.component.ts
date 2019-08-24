@@ -158,7 +158,7 @@ export class ReportComponent implements OnInit {
     if (this.mainInfoToggle) {promiseArray.push(this.exportMain(data)); }
     if (this.companyInfoToggle) {promiseArray.push(this.exportCompany(data)); }
     if (this.personalInfoToggle) {promiseArray.push(this.exportPersonal(data)); }
-    if (this.positionInfoToggle) {promiseArray.push(this.exportPersonal(data)); }
+    if (this.positionInfoToggle) {promiseArray.push(this.exportPosition(data)); }
     if (this.shiftInfoToggle) {promiseArray.push(this.exportShift(data)); }
     if (this.attritionInfoToggle) {
       promiseArray.push(this.exportAttrition(data));
