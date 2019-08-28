@@ -2,10 +2,9 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-        Emergency Contacts
+        Family Info & Emergency Contacts
       </mat-panel-title>
       <mat-panel-description>
-        Information
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class=pa-1 fxLayout="column">
@@ -47,9 +46,14 @@
             <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
           </ng-container>
 
+          <ng-container matColumnDef="comment">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Comment </mat-header-cell>
+            <mat-cell *matCellDef="let element"> <p [ngClass]="expandedComment ? 'noExpandedComment' : 'expandedComment'"> {{element.comment}} </p>  <button mat-icon-button (click)="onExpandComment()"><mat-icon>expand_more</mat-icon></button></mat-cell>
+          </ng-container>
+
           <ng-container matColumnDef="edit">
               <mat-header-cell *matHeaderCellDef mat-sort-header> Edit </mat-header-cell>
-              <mat-cell *matCellDef="let element"><button mat-icon-button (click)="editReference(element._id)"><mat-icon>border_color</mat-icon></button> </mat-cell>
+              <mat-cell *matCellDef="let element"><button mat-icon-button  disabled=true (click)="editReference(element._id)"><mat-icon>border_color</mat-icon></button> </mat-cell>
             </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -87,6 +91,12 @@
           <input matInput placeholder="123 Example St. Belize City" formControlName="address">
         </mat-form-field>
 
+      </div>
+      <div [formGroup]="familyForm" style="width: 100%">
+          <mat-form-field appearance="fill" class="form">
+              <mat-label>Family member comments</mat-label>
+            <textarea matInput placeholder="Comments on family member"  formControlName="comment"></textarea>
+          </mat-form-field>
       </div>
       <div fxLayout="row" fxLayout.xs="column">
           <div fxFlex="95%" fxFlexFill>

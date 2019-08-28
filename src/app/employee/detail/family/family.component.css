@@ -9,3 +9,14 @@ mat-form-field {
 .container{
   margin: 5px;
 }
+.form{
+  width: 100%;
+}
+
+.expandedComment{
+  display: none
+}
+
+.noExpandedComment{
+  display: inline
+}

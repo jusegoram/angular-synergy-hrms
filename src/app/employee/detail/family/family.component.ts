@@ -16,7 +16,8 @@ export class FamilyComponent implements OnInit {
   public dataSource: any;
   public familyForm: FormGroup;
   public isEdit = false;
-  displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address', 'edit'];
+  public expandedComment = false;
+  displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address', 'comment', 'edit'];
   editReferenceId: string;
 
   constructor(
@@ -42,7 +43,8 @@ export class FamilyComponent implements OnInit {
       celNumber: [''],
       telNumber: [''],
       emailAddress: ['', Validators.email],
-      address: ['']
+      address: [''],
+      comment: ['']
     });
   }
   populateTable(event: any) {
@@ -67,6 +69,7 @@ export class FamilyComponent implements OnInit {
     this.familyForm.controls['telNumber'].setValue(ref.telNumber);
     this.familyForm.controls['emailAddress'].setValue(ref.emailAddress);
     this.familyForm.controls['address'].setValue(ref.address);
+    this.familyForm.controls['comment'].setValue(ref.comment);
     this.isEdit = true;
   }
   onSubmit() {
@@ -81,7 +84,8 @@ export class FamilyComponent implements OnInit {
         current.celNumber,
         current.telNumber,
         current.emailAddress,
-        current.address);
+        current.address,
+        current.comment);
         this.employeeService.saveFamily(ref).subscribe(data => {
           this.populateTable(data);
           this.clearForm();
@@ -96,8 +100,13 @@ export class FamilyComponent implements OnInit {
         current.celNumber,
         current.telNumber,
         current.emailAddress,
-        current.address);
+        current.address,
+        current.comment);
         this.employeeService.updateFamily(ref).subscribe(data => {this.isEdit = false; this.clearForm();}, error => {});
     }
+  }
+
+  onExpandComment(){
+    this.expandedComment = ! this.expandedComment;
   }
 }

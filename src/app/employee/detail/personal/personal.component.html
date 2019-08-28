@@ -125,10 +125,47 @@
           </td>
 
         </tr>
+        <tr>
+          <td colspan="4" align="right">
+            <button mat-button color="primary" class="button" [disabled]="!this.myForm.valid" *ngIf="this.authorization.edit">
+              <mat-icon>save</mat-icon>&nbsp; SAVE
+            </button>
+          </td>
+        </tr>
       </table>
+
     </form>
-    <button mat-button color="primary" class="button" form="personalForm" [disabled]="!this.myForm.valid" *ngIf="this.authorization.edit">
-      <mat-icon>save</mat-icon>&nbsp; SAVE
-    </button>
+
+
+    <mat-card-subtitle> HOBBIES </mat-card-subtitle>
+
+    <table mat-table [dataSource]="hobbiesDataSource" class ="hobbyClass">
+      <ng-container matColumnDef="hobbyTitle">
+        <th mat-header-cell *matHeaderCellDef> Hobby </th>
+        <td mat-cell *matCellDef="let row"> {{row.hobbyTitle}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="hobbyComment">
+          <th mat-header-cell *matHeaderCellDef> Description </th>
+          <td mat-cell *matCellDef="let row"> {{row.hobbyComment}} </td>
+        </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['hobbyTitle', 'hobbyComment']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['hobbyTitle', 'hobbyComment'];"></tr>
+    </table>
+    <div [formGroup]="hobbiesForm" fxLayout="column" fxLayoutGap="5px">
+      <mat-form-field appearance="fill">
+          <mat-label>Hobby Title</mat-label>
+        <input matInput placeholder="Hobby Title" formControlName="hobbyTitle">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+          <mat-label>Description</mat-label>
+        <textarea matInput placeholder="Description" formControlName="hobbyComment"></textarea>
+      </mat-form-field>
+
+      <button mat-button color="primary" class="button" (click)="onAddHobby()" [disabled]="!this.myForm.valid" *ngIf="this.authorization.edit">
+        <mat-icon>add</mat-icon>&nbsp; ADD HOBBY
+      </button>
+    </div>
   </mat-expansion-panel>
 </mat-accordion>

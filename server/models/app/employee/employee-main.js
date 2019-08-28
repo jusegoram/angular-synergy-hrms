@@ -21,6 +21,11 @@ var companySchema = new Schema({
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 
+var hobbySchema = new Schema({
+  hobbyTitle: {type: String, required: false},
+  hobbyComment: {type: String, required: false}
+});
+
 var personalSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true},
@@ -37,6 +42,7 @@ var personalSchema = new Schema({
   birthPlaceTow: { type: String, required: false },
   emailAddress: { type: String, required: false },
   emailDate: {type: Date, required: false },
+  hobbies: { type: [hobbySchema], required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
 });
 
@@ -86,6 +92,7 @@ var familySchema = new Schema({
   telNumber: { type: String, required: false },
   emailAddress: { type: String, required: false },
   address: { type: String, required: false },
+  comment: {type: String, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
 });
 

@@ -90,7 +90,8 @@ export class EmployeePersonal {
               public birthPlaceDis: string,
               public birthPlaceTow: string,
               public emailAddress: string,
-              public emailDate: string
+              public emailDate: string,
+              public hobbies: any[],
   ) { }
 }
 // updated as of april 22 7:08 2018
@@ -103,7 +104,8 @@ export class EmployeeFamily {
               public celNumber: string,
               public telNumber: string,
               public emailAddress: string,
-              public address: string
+              public address: string,
+              public comment: string,
   ) { }
 }
 export class EmployeeComment {

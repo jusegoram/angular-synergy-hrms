@@ -3,7 +3,7 @@ import { EmployeeService } from '../../employee.service';
 import { SessionService } from '../../../session/session.service';
 import {Employee, EmployeePersonal} from '../../Employee';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatTableDataSource } from '@angular/material';
 import { Params, ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -85,6 +85,10 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'Yo Creek Village', name: 'Yo Creek Village' },
       ];
   myForm: FormGroup;
+  hobbies: any[] = [];
+  hobbiesForm: FormGroup;
+  hobbiesDataSource: any;
+
   public isAuth = false;
 // sand hill, August Pine Ridge,Double Head Cabbage, San Lazaro Village, libertad village, palmar village, santa rita,
   ngOnChanges(changes: SimpleChanges) {
@@ -95,16 +99,19 @@ export class PersonalComponent implements OnInit, OnChanges {
       '', '', '', '',
       '', '', '' , null ,
       '' , '', null, '',
-      '', '', null);
+      '', '', null, []);
     }
 
   ngOnInit() {
     this.personal = this.employee.personal;
+    this.hobbies = this.personal.hobbies;
     if (!this.employee.personal) {
       this.personal = this.newPersonal;
       this.isNew = true;
     }
     this.buildForm(this.personal);
+    this.buildHobbiesForm();
+    this.buildHobbiesTable(this.personal.hobbies);
   }
   // public isAuthorized(): boolean {
   //   this.sessionService.getRole().subscribe(
@@ -143,7 +150,26 @@ export class PersonalComponent implements OnInit, OnChanges {
       emailDate: [arg.emailDate]
     });
   }
+
+  buildHobbiesForm(){
+    this.hobbiesForm = this.fb.group({
+      hobbyTitle: [''],
+      hobbyComment: ['']
+    });
+  }
+
+  buildHobbiesTable(hobbies){
+    this.hobbiesDataSource = new MatTableDataSource(hobbies);
+  }
+
+  onAddHobby(){
+    let values = this.hobbiesForm.value;
+    this.hobbies.push({hobbyTitle: values.hobbyTitle, hobbyComment: values.hobbyComment });
+    this.buildHobbiesTable(this.hobbies);
+    this.onSubmit();
+  }
   onSubmit() {
+    this.hobbiesForm.reset();
     const employeePersonal = new EmployeePersonal(
       this.personal._id,
       this.employee.employeeId + '',
@@ -159,12 +185,14 @@ export class PersonalComponent implements OnInit, OnChanges {
       this.myForm.value.birthPlaceDis,
       this.myForm.value.birthPlaceTow, // add to form
       this.myForm.value.emailAddress,
-      this.myForm.value.emailDate
+      this.myForm.value.emailDate,
+      this.hobbies,
     );
 
     if (this.isNew) {
       this.employeeService.savePersonal(employeePersonal).subscribe(
         data => {
+          console.log(data);
           this.snackBar.open('Employee information saved successfully', 'Thank you', {
             duration: 2000,
           });
@@ -178,6 +206,7 @@ export class PersonalComponent implements OnInit, OnChanges {
     } else {
       this.employeeService.updatePersonal(employeePersonal).subscribe(
         data => {
+          console.log(data);
           this.snackBar.open('Employee information updated successfully', 'Thank you', {
             duration: 2000,
           });

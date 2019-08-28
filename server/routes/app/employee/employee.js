@@ -271,6 +271,7 @@ router.post('/personal', (req, res) => {
   birthDate: req.body.birthDate,
   emailAddress: req.body.emailAddress,
   emailDate: req.body.emailDate,
+  hobbies: req.body.hobbies,
   employee: req.body.employee
 };
   Employee.findByIdAndUpdate(req.body.employee, {$set: {personal: personal}}, (err, doc) => {
@@ -291,6 +292,7 @@ router.post('/family', (req, res) => {
       telNumber: req.body.telNumber,
       emailAddress: req.body.emailAddress,
       address: req.body.address,
+      comment: req.body.comment,
       employee: req.body.employee
     };
     Employee.findByIdAndUpdate(newFamily.employee, {$push:{family: newFamily }}, (err, doc) => {
