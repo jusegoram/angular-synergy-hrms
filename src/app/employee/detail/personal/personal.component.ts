@@ -104,7 +104,7 @@ export class PersonalComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.personal = this.employee.personal;
-    this.hobbies = this.personal.hobbies;
+    this.hobbies = this.personal ? this.personal.hobbies : [];
     if (!this.employee.personal) {
       this.personal = this.newPersonal;
       this.isNew = true;
