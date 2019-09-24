@@ -11,9 +11,10 @@ const SocialTable = mongoose.model('payroll-SocialTable', SocialTableSchema);
 
 let HolidayTableSchema = new Schema ({
   _id: mongoose.Schema.Types.ObjectId,
+  year: {type: Number, required: true},
   name: { type: String, required: true },
   date: {type: Date, required: true},
-  rate: {type: Number, required: false}
+  rate: {type: Number, required: true}
 });
 const HolidayTable = mongoose.model('payroll-HolidayTable', HolidayTableSchema);
 
@@ -41,8 +42,15 @@ let DeductionsTableSchema = new Schema ({
 });
 const DeductionsTable = mongoose.model('payroll-DeductionsTable', DeductionsTableSchema);
 
+let IncomeTaxTableSchema = new Schema ({
+  _id: mongoose.Schema.Types.ObjectId,
+  fromAmount: {type: Number, required: false},
+  toAmount: {type: Number, required: false},
+  taxAmount: {type: Number, required: false},
+});
+const IncomeTaxTable = mongoose.model('payroll-IncomeTaxTable', IncomeTaxTableSchema);
 
 module.exports = {
-  SocialTable, HolidayTable, ExceptionsTable, OtherPayTable, DeductionsTable
+  SocialTable, HolidayTable, ExceptionsTable, OtherPayTable, DeductionsTable, IncomeTaxTable
 }
 

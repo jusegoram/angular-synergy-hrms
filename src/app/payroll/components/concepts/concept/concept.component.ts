@@ -42,7 +42,7 @@ export class ConceptComponent implements OnInit, OnChanges{
       this._employee.employeeId,
       this.reason.value,
       this.date.value,
-      this.amount.value);
+      parseInt(this.amount.value, 10));
 
     switch (this.conceptTitle.toLowerCase()) {
       case 'bonus':
@@ -95,7 +95,7 @@ export class ConceptComponent implements OnInit, OnChanges{
       employeeId: employeeId,
       reason: reason,
       date: date,
-      amount: amount
+      amount: amount,
     };
   }
 }

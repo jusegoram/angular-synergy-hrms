@@ -1,181 +1,155 @@
+import { PayrollConceptsComponent } from './../concepts/payrollConcepts.component';
 import { PayrollRow } from './PayrollRow';
-import { map } from "rxjs/operators";
-import { PayrollService } from "./../../services/payroll.service";
+import { PayrollService } from './../../services/payroll.service';
 import {
   FormControl,
   Validators,
   AbstractControl,
   ValidationErrors,
   ValidatorFn
-} from "@angular/forms";
-import { Component, OnInit } from "@angular/core";
-import { MatTableDataSource } from "@angular/material";
-import * as XLSX from "xlsx";
-import * as moment from "moment";
+} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource, MatDialog, MatSnackBar, MatBottomSheet } from '@angular/material';
+import * as XLSX from 'xlsx';
+import * as moment from 'moment';
 import { Payroll } from './Payroll';
+import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
 
 @Component({
-  selector: "app-main",
-  templateUrl: "./main.component.html",
-  styleUrls: ["./main.component.scss"]
+  selector: 'app-main',
+  templateUrl: './main.component.html',
+  styleUrls: ['./main.component.scss']
 })
 export class MainComponent implements OnInit {
-  socialSecurityTable = [
-    {
-      earnings: 0,
-      employeeDeductions: 0,
-      employerDeductions: 0,
-      totalContributions: 0
-    },
-    {
-      earnings: 1,
-      employerDeductions: 3.57,
-      employeeDeductions: 0.83,
-      totalContributions: 4.40,
-    },
-    {
-      earnings: 70,
-      employerDeductions: 5.85,
-      employeeDeductions: 1.35,
-      totalContributions: 7.20
-    },
-    {
-      earnings: 110,
-      employerDeductions: 8.45,
-      employeeDeductions: 1.95,
-      totalContributions: 10.40
-    },
-    {
-      earnings: 140,
-      employerDeductions: 9.65,
-      employeeDeductions: 3.15,
-      totalContributions: 12.80
-    },
-    {
-      earnings: 180,
-      employerDeductions: 11.25,
-      employeeDeductions: 4.75,
-      totalContributions: 16
-    },
-    {
-      earnings: 220,
-      employerDeductions: 12.85,
-      employeeDeductions: 6.35,
-      totalContributions: 19.20
-    },
-    {
-      earnings: 260,
-      employerDeductions: 14.45,
-      employeeDeductions: 7.95,
-      totalContributions: 22.40
-    },
-    {
-      earnings: 300,
-      employerDeductions: 16.05,
-      employeeDeductions: 9.55,
-      totalContributions: 25.60
-    }
-  ];
+  socialSecurityTable: any[];
 
   // Make Holiday interface for saving in database.
   dataSource: any;
-  payroll: Payroll;
-  payrollType = new FormControl("", [Validators.required]);
-  fromDate = new FormControl("", [this.dateMinimum(moment().add( -10,"days"))]);
-  toDate = new FormControl("", [this.dateMaximum(this.fromDate.value)]);
+  payrollSettings: any[];
+  payrollType = new FormControl('', [Validators.required]);
+  fromDate = new FormControl('', [this.dateMinimum(moment().add(-10, 'days'))]);
+  toDate = new FormControl('', [this.dateMaximum(this.fromDate.value)]);
   holidays = [];
 
   lastPayrollSettings: any;
   currentPayrollSettings: any;
   dataSourceSocialTable: any;
   socialTableDisplayedColumns: string[] = [];
-  displayedColumns = ["employeeId"];
-  constructor(private _payrollService: PayrollService) {}
+  displayedColumns = ['employeeId'];
+  constructor(
+    private _payrollService: PayrollService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private _bottomSheet: MatBottomSheet
+  ) {}
 
-  ngOnInit() {
-    this.dataSourceSocialTable = new MatTableDataSource(this.socialSecurityTable);
-    this.socialTableDisplayedColumns = Object.keys(
-      this.dataSourceSocialTable.data[0]
-    );
-  }
+  ngOnInit() {}
 
   populateTable(data) {
     this.dataSource = new MatTableDataSource(data);
+    this.dataSourceSocialTable = new MatTableDataSource(
+      this._payrollService.payroll.socialTable
+    );
+    this.socialTableDisplayedColumns = [
+      'earnings',
+      'employeeDeductions',
+      'employerDeductions',
+      'totalContributions'
+    ];
   }
   loadOtherPayrollInfo(payroll, from, to) {
-    let employeeIds = this.payroll.employees.map(i => i.employee);
+    const employeeIds = this._payrollService.payroll.employees.map(
+      i => i.employee
+    );
     this._payrollService
       .getOtherPayrollInfo(employeeIds, payroll, from, to)
       .subscribe((result: any[]) => {
-        let hours = result[0];
-        console.log(hours);
-        let overtime = result[1];
-        let bonus = result[2];
-        let deductions = result[3];
-        let otherpay = []; //TODO: FIX IN SERVERSIDE
+        const hours = result[0];
+        const overtime = result[1];
+        const bonus = result[2];
+        const deductions = result[3];
+        const otherpay = [4];
 
-        this.payroll.joinEmployee(hours, "hours");
-        this.payroll.joinEmployee(overtime, "overtime");
-        this.payroll.joinEmployee(bonus, "bonus");
-        this.payroll.joinEmployee(deductions, "deductions");
-        this.payroll.joinEmployee(otherpay, "otherpay");
+        this._payrollService.payroll.joinEmployee(hours, 'hours');
+        this._payrollService.payroll.joinEmployee(overtime, 'overtime');
+        this._payrollService.payroll.joinEmployee(bonus, 'bonus');
+        this._payrollService.payroll.joinEmployee(deductions, 'deductions');
+        this._payrollService.payroll.joinEmployee(otherpay, 'otherpay');
       });
   }
   loadPayrollType(payroll, from, to) {
     this._payrollService
       .getEmployeesByPayrollType(payroll, from, to)
       .subscribe((result: PayrollRow[]) => {
-        this.payroll = new Payroll(result, this.fromDate.value, this.toDate.value, this.holidays);
-        this.populateTable(this.payroll.employees);
+        this._payrollService.setPayroll(
+          result,
+          this.fromDate.value,
+          this.toDate.value,
+          this.payrollSettings[0],
+          this.payrollSettings[1],
+          this.payrollSettings[2],
+          this.payrollSettings[3],
+          this.payrollSettings[4],
+          this.payrollSettings[5]
+        );
+        this.populateTable(this._payrollService.payroll.employees);
       });
   }
+  loadSettings(from, to) {
+    this._payrollService.getPayrollSettings(from, to).subscribe(result => {
+      this.payrollSettings = result;
+    });
+  }
   onLoadBonus(e) {
-    let files = e.target.files,
+    const files = e.target.files,
       f = files[0];
-    let reader = new FileReader();
+    const reader = new FileReader();
     let jsonSheet;
     reader.onload = (e: any) => {
-      let data = new Uint8Array(e.target.result);
-      let workbook = XLSX.read(data, { type: "array" });
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
 
-      let first_sheet_name = workbook.SheetNames[0];
+      const first_sheet_name = workbook.SheetNames[0];
 
-      let worksheet = workbook.Sheets[first_sheet_name];
+      const worksheet = workbook.Sheets[first_sheet_name];
       jsonSheet = XLSX.utils.sheet_to_json(worksheet, {
         raw: true
       });
     };
     reader.readAsArrayBuffer(f);
     setTimeout(() => {
-      this.populateTable(this.payroll.joinEmployee(jsonSheet, 'bonus'));
+      this.populateTable(
+        this._payrollService.payroll.joinEmployee(jsonSheet, 'bonus')
+      );
     }, 500);
   }
 
   onLoadDeductions(e) {
-    let files = e.target.files,
+    const files = e.target.files,
       f = files[0];
-    let reader = new FileReader();
+    const reader = new FileReader();
     let jsonSheet;
     reader.onload = (e: any) => {
-      let data = new Uint8Array(e.target.result);
-      let workbook = XLSX.read(data, { type: "array" });
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
 
-      let first_sheet_name = workbook.SheetNames[0];
+      const first_sheet_name = workbook.SheetNames[0];
 
-      let worksheet = workbook.Sheets[first_sheet_name];
+      const worksheet = workbook.Sheets[first_sheet_name];
       jsonSheet = XLSX.utils.sheet_to_json(worksheet, {
         raw: true
       });
     };
     reader.readAsArrayBuffer(f);
     setTimeout(() => {
-      console.log(jsonSheet);
-      this.populateTable(this.payroll.joinEmployee(jsonSheet, 'deductions'));
+      this.populateTable(
+        this._payrollService.payroll.joinEmployee(jsonSheet, 'deductions')
+      );
     }, 500);
   }
 
   dateMinimum(date: moment.Moment): ValidatorFn {
-    const FORMAT_DATE = "DD/MM/YYYY";
+    const FORMAT_DATE = 'DD/MM/YYYY';
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value == null) return null;
 
@@ -186,8 +160,8 @@ export class MainComponent implements OnInit {
       return controlDate.isAfter(validationDate)
         ? null
         : {
-            "date-minimum": {
-              "date-minimum": validationDate.format(FORMAT_DATE),
+            'date-minimum': {
+              'date-minimum': validationDate.format(FORMAT_DATE),
               actual: controlDate.format(FORMAT_DATE)
             }
           };
@@ -195,7 +169,7 @@ export class MainComponent implements OnInit {
   }
 
   dateMaximum(date: string): ValidatorFn {
-    const FORMAT_DATE = "DD/MM/YYYY";
+    const FORMAT_DATE = 'DD/MM/YYYY';
     return (control: AbstractControl): ValidationErrors | null => {
       if (control.value == null) return null;
 
@@ -204,13 +178,13 @@ export class MainComponent implements OnInit {
 
       const validationDate = moment(this.fromDate.value, FORMAT_DATE).add(
         7,
-        "days"
+        'days'
       );
       return controlDate.isBefore(validationDate)
         ? null
         : {
-            "date-max": {
-              "date-max": validationDate.format(FORMAT_DATE),
+            'date-max': {
+              'date-max': validationDate.format(FORMAT_DATE),
               actual: controlDate.format(FORMAT_DATE)
             }
           };
@@ -218,57 +192,44 @@ export class MainComponent implements OnInit {
   }
 
   calculatePayroll() {
-    // for (let i = 0; i < this.employees.length; i++) {
-    //   const element = this.employees[i];
-    //   if(element.hours.length > 0) {
-    //     element.totalSystemHours = this.getTotalHours(element.hours);
-
-
-    //     element.grossWage = element.totalSystemHours.value * element.hourlyRate
-    //   }
-    //   if(i === this.employees.length - 1) {this.populateTable(this.employees)
-    //   console.log(this.employees);
-    //   };
-    // }
-    this.payroll.calculatePayroll();
+    this._payrollService.payroll.calculatePayroll();
   }
-  //migrated
-  // getTotalHours = arr => {
-  //   if (arr.length > 0) {
-  //     let totaled:any = {};
-  //     totaled.hh = arr.reduce((p, c) => p + c.systemHours.hh, 0);
-  //     totaled.mm = arr.reduce((p, c) => p + c.systemHours.mm, 0);
-  //     totaled.ss = arr.reduce((p, c) => p + c.systemHours.ss, 0);
 
-  //     let time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-  //     var hrs = ~~(time / 3600);
-  //     var mins = ~~((time % 3600) / 60);
-  //     var secs = ~~time % 60;
-  //     var ret = "";
+  saveToDatabase(payroll) {
+    this._payrollService.savePayroll().subscribe(result => {
+      this.snackBar.open('Payroll was saved correctly', 'thank you', {
+        duration: 2000
+      });
+    }, err => {
+      console.log('error saving payroll', err);
+      this.snackBar.open('There was an error saving payroll', 'I will notify IT', {
+        duration: 5000
+      });
+    });
+  }
 
-  //     if (hrs > 0) {
-  //       ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
-  //     }
+  clearTable() {
+    this.dataSource = null;
+    delete this.dataSource;
+    this._payrollService.deletePayroll();
+  }
+  openConceptsDialog(employee) {
+    const dialogRef = this.dialog.open(PayrollConceptsComponent, {
+      height: '1200px',
+      width: '1400px',
+      data: employee
+    });
 
-  //     ret += "" + mins + ":" + (secs < 10 ? "0" : "");
-  //     ret += "" + secs;
-  //     let correctedTotal = {
-  //       hh: hrs,
-  //       mm: mins,
-  //       ss: secs,
-  //       value: time / 3600,
-  //       valueString: ret
-  //     };
-  //     return correctedTotal;
-  //   } else {
-  //     let finished = {
-  //       hh: 0,
-  //       mm: 0,
-  //       ss: 0,
-  //       value: 0,
-  //       valueString: "00:00:00"
-  //     };
-  //     return finished;
-  //   }
-  // };
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(employee);
+      this._payrollService.payroll.recalculateOnConceptsChange(employee.employee);
+      this.snackBar.open('concepts were added succesfully', 'thank you', {
+          duration: 2000
+        });
+      });
+  }
+
+  openExportBottomSheet(){
+      this._bottomSheet.open(ExportBottomSheetComponent);
+  }
 }

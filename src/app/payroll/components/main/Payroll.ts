@@ -1,18 +1,39 @@
 import { PayrollRow } from "../main/PayrollRow";
 import * as moment from "moment";
 
-
 export class Payroll {
+
   private _employees: PayrollRow[] = [];
-  private _holidays:any[] = [];
+  private _holidayTable: any[] = [];
   private _fromDate;
   private _toDate;
-  constructor(employees: any[], fromDate: Date, toDate: Date, holidays: any) {
+  private _socialTable;
+  private _exceptionsTable;
+  private _otherpayTable;
+  private _deductionsTable;
+  private _incometaxTable;
+  private _isCalculating = false;
+  constructor(
+    employees: any[],
+    fromDate: Date,
+    toDate: Date,
+    socialTable: any[],
+    holidayTable: any,
+    exceptionsTable: any[],
+    otherpayTable: any[],
+    deductionsTable: any[],
+    incometaxTable: any[]
+  ) {
     this.fromDate = fromDate;
     this.toDate = toDate;
-    this.holidays = holidays;
-    this.employees = employees
+    this.employees = employees;
+    this.socialTable = socialTable;
+    this.holidayTable = holidayTable;
 
+    this.exceptionsTable = exceptionsTable;
+    this.otherpayTable = otherpayTable;
+    this.deductionsTable = deductionsTable;
+    this.incometaxTable = incometaxTable;
   }
 
   public set employees(employees: any[]) {
@@ -20,7 +41,7 @@ export class Payroll {
     employees.forEach(e => {
       e.fromDate = this.fromDate;
       e.toDate = this.toDate;
-      e.holidayList = this.holidays;
+      e.holidayList = this.holidayTable;
       let newEmployee = new PayrollRow(
         e.employeeId,
         e.employee,
@@ -39,61 +60,103 @@ export class Payroll {
         e.fromDate,
         e.toDate,
         e.holidayList
-      )
+      );
       allPayrollRows.push(newEmployee);
 
-      if(allPayrollRows.length === employees.length) {
+      if (allPayrollRows.length === employees.length) {
         this._employees = allPayrollRows;
       }
     });
-    console.log(this._employees);
   }
   public get employees() {
     return this._employees;
   }
 
-
-  public set fromDate(v : any) {
-    this._fromDate = moment(v).startOf('day').toDate();
+  public set fromDate(v: any) {
+    this._fromDate = moment(v)
+      .toDate();
   }
-  public get fromDate() : any {
+  public get fromDate(): any {
     return this._fromDate;
   }
 
-
-  public set toDate(v : any) {
-    this._toDate = moment(v).endOf('day').toDate();
+  public set toDate(v: any) {
+    this._toDate = moment(v)
+      .toDate();
   }
 
-  public get toDate() : any {
+  public get toDate(): any {
     return this._toDate;
   }
 
-
-  public set holidays(v : any[] ) {
-    this._holidays = v;
+  public set holidayTable(v: any[]) {
+    this._holidayTable = v;
   }
 
-  public get holidays() : any[] {
-    return this._holidays;
+  public get holidayTable(): any[] {
+    return this._holidayTable;
   }
 
+  public set socialTable(v: any[]) {
+    this._socialTable = v;
+  }
+  public get socialTable(): any[] {
+    return this._socialTable;
+  }
+
+  public set exceptionsTable(v: any[]) {
+    this._exceptionsTable = v;
+  }
+  public get exceptionsTable(): any[] {
+    return this._exceptionsTable;
+  }
+
+  public set otherpayTable(v: any[]) {
+    this._otherpayTable = v;
+  }
+  public get otherpayTable(): any[] {
+    return this._otherpayTable;
+  }
+
+  public set deductionsTable(v: any[]) {
+    this._deductionsTable = v;
+  }
+  public get deductionsTable(): any[] {
+    return this._deductionsTable;
+  }
+
+  public set incometaxTable(v: any[]) {
+    this._incometaxTable = v;
+  }
+  public get incometaxTable(): any[] {
+    return this._incometaxTable;
+  }
 
   calculatePayroll() {
-    for (let i = 0; i < this.employees.length; i++) {
-      const employee: PayrollRow= this.employees[i];
-      employee.calculatePayrollRow();
-      if(i === this.employees.length - 1){
-        console.log(this.employees);
+    if(!this._isCalculating) {
+      this._isCalculating = true;
+      for (let i = 0; i < this.employees.length; i++) {
+        const employee: PayrollRow = this.employees[i];
+        employee.calculatePayrollRow(this.socialTable, this.holidayTable, this.incometaxTable);
+        if (i === this.employees.length - 1) {
+          console.log(this);
+        }
       }
+    }else {
+      return;
     }
   }
 
-  getEmployeeIds(){
-
+  clearPayroll(){
+    this._isCalculating = false;
+  }
+  getEmployeeIds() {
+    return this._employees.map(employee => employee.employeeId);
   }
 
-
+  getEmployeeById(id){
+    return this._employees.find( employee => employee.employee === id);
+  }
   joinEmployee(table, param) {
     let arrayLength = this._employees.length;
     for (let i = 0; i < arrayLength; i++) {
@@ -106,5 +169,9 @@ export class Payroll {
         }
       }
     }
+  }
+  recalculateOnConceptsChange( employee: any) {
+    let foundEmployee = this.getEmployeeById(employee);
+    foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);
   }
 }

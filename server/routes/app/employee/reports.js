@@ -344,19 +344,20 @@ let personalMissing = () => {
       $and: [
         {
           $or: [
-            { "personal.maritalStatus": { $exists: false } },
-            { "personal.address": { $exists: false } },
-            { "personal.town": { $exists: false } },
-            { "personal.district": { $exists: false } },
-            { "personal.addressDate": { $exists: false } },
-            { "personal.celNumber": { $exists: false } },
-            { "personal.telNumber": { $exists: false } },
-            { "personal.birthDate": { $exists: false } },
-            { "personal.birthPlace": { $exists: false } },
-            { "personal.birthPlaceDis": { $exists: false } },
-            { "personal.birthPlaceTow": { $exists: false } },
-            { "personal.emailAddress": { $exists: false } },
-            { "personal.emailDate": { $exists: false } }
+            { "personal": { $exists: false }},
+            { "personal.maritalStatus": "" },
+            { "personal.address": "" },
+            { "personal.town": "" },
+            { "personal.district": "" },
+            { "personal.addressDate": null },
+            { "personal.celNumber": "" },
+            { "personal.telNumber": "" },
+            { "personal.birthDate": null },
+            { "personal.birthPlace":  "" },
+            { "personal.birthPlaceDis": "" },
+            { "personal.birthPlaceTow": "" },
+            { "personal.emailAddress": "" },
+            { "personal.emailDate": null }
           ]
         },
         { status: "active" }

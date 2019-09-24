@@ -28,12 +28,12 @@
         <div fxLayout="row" fxFlexAlign="center center" fxLayout.xs="column" fxLayoutGap="10px" style="width: 80%; margin-right: auto; margin-left: auto">
 
           <mat-form-field appearance='fill' style='width:25%'>
-            <input matInput placeholder="reason 1" value="Reason" [formControl]="reason">
+            <input matInput placeholder="reason 1"  [formControl]="reason">
           </mat-form-field>
           <mat-form-field appearance='fill'  style='width:25%'>
-              <input matInput placeholder="10" value="Amount" [formControl]="amount">
+              <input matInput placeholder="10" [formControl]="amount">
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="fill">
               <input matInput [matDatepicker]="pickerFrom" placeholder="Date (mm/dd/yyyy)" [formControl]="date">
               <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
               <mat-datepicker #pickerFrom></mat-datepicker>

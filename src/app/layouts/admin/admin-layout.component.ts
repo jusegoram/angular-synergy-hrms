@@ -56,7 +56,15 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.menuItems.getActiveMenus().subscribe((menu) => this.menus = menu);
+    this.menuItems.getActiveMenus().subscribe((menu) => {
+      this.menus = menu.map(item => {
+        if(item.type === 'link'){
+          item.state = decodeURI(item.state);
+          item.state = item.state.split('/');
+          item.state.unshift('/');        }
+        return item;
+      });
+    });
     this.url = this.router.url;
     this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
       document.querySelector('.app-inner > .mat-drawer-content > div').scrollTop = 0;

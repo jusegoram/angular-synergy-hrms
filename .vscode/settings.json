@@ -1,3 +1,4 @@
 {
     "git.ignoreLimitWarning": true,
+    "deepcode.review.results.hideInformationIssues": false,
   }

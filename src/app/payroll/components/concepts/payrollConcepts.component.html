@@ -1,14 +1,7 @@
-<mat-toolbar class="header" color="primary">
-  <mat-toolbar-row>
-    <span>{{title}}</span>
-    <span class="fill-remaining-space"></span>
-  </mat-toolbar-row>
-</mat-toolbar>
-<br />
-<div class="container">
-<mat-card style="background-color: rgba(0,0,0,0.1);">
+
+<mat-card style="background-color: rgba(0,0,0,0.1);" *ngIf="data && !error">
   <mat-card-header>
-    <mat-card-title>{{this.employee.employeeName}}</mat-card-title>
+    <mat-card-title>{{this.data.employeeName}}</mat-card-title>
     <mat-card-subtitle> Payroll Information</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -17,9 +10,8 @@
   <mat-card-actions>
     <button mat-button>GO TO EMPLOYEE PROFILE</button>
   </mat-card-actions>
-</mat-card>
-<payroll-concept conceptTitle="Other Payment" [concepts]="employee.otherpay" [employeeConcept]="employee"></payroll-concept>
-<payroll-concept conceptTitle="Bonus" [concepts]="employee.bonus" [employeeConcept]="employee"></payroll-concept>
-<payroll-concept conceptTitle="Deduction" [concepts]="employee.deductions" [employeeConcept]="employee"></payroll-concept>
 
-</div>
+<payroll-concept conceptTitle="Other Payment" [concepts]="data.otherpay" [employeeConcept]="data" *ngIf="data && !error"></payroll-concept>
+<payroll-concept conceptTitle="Bonus" [concepts]="data.bonus" [employeeConcept]="data" *ngIf="data && !error"></payroll-concept>
+<payroll-concept conceptTitle="Deductions" [concepts]="data.deductions" [employeeConcept]="data" *ngIf="data && !error"></payroll-concept>
+</mat-card>

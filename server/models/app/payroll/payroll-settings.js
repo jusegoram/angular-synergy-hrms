@@ -1,11 +1,6 @@
 let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
-let daysSchema = new Schema({
-  date: {type: Date},
-  name: {type: String},
-  rate: {type: Number},
-});
 
 let SocialSecurityContributionsSchema = new Schema({
   fromMonthly: {type: Number},
@@ -17,7 +12,9 @@ let SocialSecurityContributionsSchema = new Schema({
 
 let HolidaySchema = new Schema({
   year: {type: Number},
-  holidays: {type: [daysSchema]},
+  date: {type: Date},
+  name: {type: String},
+  rate: {type: Number},
 });
 
 let PayrollSettingsSchema = new Schema({

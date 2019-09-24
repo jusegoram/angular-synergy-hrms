@@ -18,7 +18,7 @@ export class ChildrenItems {
 
 export class Menu {
   constructor(
-  public state: string,
+  public state: any,
   public name: string,
   public type: string,
   public icon: string,

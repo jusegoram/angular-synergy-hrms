@@ -45,9 +45,8 @@ mongoose.connect(DB);
  app.set('dist', path.join(__dirname, '../dist'));
  app.engine('html', require('ejs').renderFile);
  app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb', type:'application/json'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 app.use(helmet());
 

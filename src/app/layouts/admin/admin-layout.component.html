@@ -44,7 +44,7 @@
       [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
       <mat-nav-list appAccordion class="navigation" (click)="updatePS()">
         <mat-list-item appAccordionLink *ngFor="let menuitem of menus" group="{{menuitem.state}}">
-          <a appAccordionToggle class="relative" [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'">
+          <a appAccordionToggle class="relative" [routerLink]="menuitem.state" *ngIf="menuitem.type === 'link'">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name }}</span>
             <span fxFlex></span>

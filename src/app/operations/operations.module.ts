@@ -26,6 +26,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
+import { TimesheetComponent } from './timesheet/timesheet.component';
+import { AttendanceComponent } from './attendance/attendance.component';
 
 // Pass the fusioncharts library and chart modules
 //FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
@@ -43,7 +45,7 @@ import { AuthenticationService } from '../authentication.service';
    // FusionChartsModule,
     ScrollingModule,
   ],
-  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent],
+  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent, TimesheetComponent, AttendanceComponent],
   providers: [
     OperationsService, TitleCasePipe, DatePipe, CdkColumnDef,
     {
