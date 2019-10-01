@@ -28,7 +28,7 @@ export class MainComponent implements OnInit {
     {type: 'BI-WEEKLY', view: 'Bi-Weekly Payroll'},
     {type: 'SEMIMONTHLY', view: 'Semi-Monthly Payroll'}
   ];
-  selectedType = {type: '', view: 'All'};
+  selectedType = '';
   auth: any;
 
   constructor(private _payrollService: PayrollService) {
@@ -57,8 +57,9 @@ export class MainComponent implements OnInit {
   }
 
   getData(id) {
+    console.log(this.selectedType);
     this._payrollService
-    .getPayroll(id, this.selectedType.type)
+    .getPayroll(id, this.selectedType)
     .subscribe(result => {
       this.populateTable(result);
     }, error => {

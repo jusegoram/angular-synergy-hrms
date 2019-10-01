@@ -92,9 +92,11 @@ router.get('/', (req, res) => {
   if(id === ''){
     //TODO: Use aggregate to calculate total amount of employees, and total payed, total Social, total Tax
     // Payroll.find().limit(52).select({incometaxTable: 0, employees: 0}).lean()
-   let or = {$or: [{"employees.payrollType": type}]};
+   let or;
    if(type === '') or = {$or: [{"employees.payrollType": 'BI-WEEKLY'}, {"employees.payrollType": 'SEMIMONTHLY'}]};
-    Payroll.aggregate([
+   else { or = {$or: [{"employees.payrollType": type}]};}
+    console.log(or);
+   Payroll.aggregate([
     { $unwind: "$employees" },
     { $match:  or },
     {$project: {

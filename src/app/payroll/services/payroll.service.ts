@@ -100,8 +100,7 @@ export class PayrollService {
   }
 
   getHours(from: any, to: any) {
-    const params = new HttpParams().set('gte', from);
-    params.set('lte', to);
+    const params = new HttpParams().set('gte', from).set('lte', to);
     return this.httpClient.get<any>('/api/v1/payroll/getHours', {
       params: params
     });
@@ -126,8 +125,7 @@ export class PayrollService {
   }
 
   getPayroll(id: any, type: any): Observable<Payroll> {
-    const params = new HttpParams().set('id', id);
-    params.set('type', type);
+    const params = new HttpParams().set('id', id).set('type', type);
     return this.httpClient.get<Payroll>('/api/v1/payroll', {params: params});
   }
 

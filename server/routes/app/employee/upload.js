@@ -247,15 +247,9 @@ router.post('/payroll', function (req, res) {
         })
         .on('end', function(){
             async.each(payroll, function(pay, callback){
-              EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-                        res.payroll = pay;
-                        pay.employee = res._id;
-                        res.save();
-                        callback();
-                    }
+              Employee.findByIdAndUpdate({'employeeId': payroll.employeeId}, {$set: {payroll: payroll}}, (err, doc) => {
+                if(err) callback(err);
+                else callback();
                 })
             }, function(err){
                 if(err){

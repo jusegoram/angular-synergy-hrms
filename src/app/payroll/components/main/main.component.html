@@ -33,7 +33,7 @@
 
       <ng-container matColumnDef="selected">
           <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <mat-checkbox #checked (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
+          <mat-cell *matCellDef="let element"> <mat-checkbox #checked (click)="onSelected($event.currentTarget.id)" [id]="element._id._id"></mat-checkbox> </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="fromDate">
@@ -76,7 +76,7 @@
       <ng-container matColumnDef="details">
         <mat-header-cell *matHeaderCellDef mat-sort-header> <button mat-raised-button>PAY SELECTED PAYROLLS</button></mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element._id}" mat-menu-item matTooltip="Go to details">
+          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element._id._id}" mat-menu-item matTooltip="Go to details">
             <span>Details </span>
             <mat-icon>arrow_forward</mat-icon>
           </a>
