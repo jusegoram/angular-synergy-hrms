@@ -1,0 +1,58 @@
+@import "../../../../assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 164px !default;
+$mat-toolbar-height-mobile-portrait: 156px !default;
+$mat-toolbar-height-mobile-landscape: 148px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+
+.container {
+  max-width: 1150px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+.viewport {
+  height: 500px;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+}
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.socialTable {
+padding: 5px;
+}
+tr {
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 48px;
+}
+
+button {
+  margin-right: 5px;
+}
+
+mat-expansion-panel {
+  margin: 5px;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}

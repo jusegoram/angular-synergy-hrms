@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { PayrollService } from '../../services/payroll.service';
 
 @Component({
   selector: 'app-deduction',
@@ -10,7 +11,7 @@ export class PayrollConceptsComponent implements OnInit {
   public title: string;
   employee: any;
   error: boolean;
-  constructor(public dialogRef: MatDialogRef<PayrollConceptsComponent>,
+  constructor(private _payrollService: PayrollService, public dialogRef: MatDialogRef<PayrollConceptsComponent>,
   @Inject(MAT_DIALOG_DATA) public data: any) {
   }
   ngOnInit() {
@@ -22,4 +23,9 @@ export class PayrollConceptsComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  getLastYearPayrolls(id) {
+    this._payrollService.getLastYearPayrolls(id).subscribe(result => {
+      console.log(result);
+    })
+  }
 }

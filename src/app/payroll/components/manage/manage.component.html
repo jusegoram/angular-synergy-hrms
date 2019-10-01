@@ -1,0 +1,264 @@
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Calculate Payroll</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<br />
+<div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+  <mat-form-field appearance="outline">
+    <mat-select placeholder="Type of Payroll" [formControl]="payrollType">
+      <!-- <mat-option *ngFor="let item of items" [value]="item.value">
+            {{item.viewValue}}
+          </mat-option> -->
+
+      <mat-option value="BI-WEEKLY">
+        Bi-Weekly Payroll
+      </mat-option>
+      <mat-option value="SEMIMONTHLY">
+        Semi-Monthly Payroll
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="fill-remaining-space"></div>
+  <mat-form-field appearance="outline">
+    <input matInput [matDatepicker]="pickerFrom" placeholder="Get from (mm/dd/yyyy)" [formControl]="fromDate">
+    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+    <mat-datepicker #pickerFrom></mat-datepicker>
+  </mat-form-field>
+  &nbsp;
+  <mat-form-field appearance="outline">
+    <input matInput [matDatepicker]="pickerTo" placeholder="To (mm/dd/yyyy)" [formControl]="toDate">
+    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+    <mat-datepicker #pickerTo></mat-datepicker>
+  </mat-form-field>
+</div>
+<div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+  <button mat-button (click)="fileInput.click()" *ngIf="dataSource">
+    <mat-icon>attach_money</mat-icon> LOAD BONUSES FROM FILE
+  </button>
+  <span
+    style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+    <input type="file" #fileInput (change)="onLoadBonus($event)" />
+  </span>
+  <button mat-button (click)="fileInput1.click()" *ngIf="dataSource">
+    <mat-icon>money_off</mat-icon> LOAD DEDUCTIONS FROM FILE
+  </button>
+  <span
+    style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
+    <input type="file" #fileInput1 (change)="onLoadDeductions($event)" />
+  </span>
+
+  <button mat-stroked-button color="primary"
+    (click)="loadSettings(this.fromDate.value, this.toDate.value);loadPayrollType(this.payrollType.value, this.fromDate.value, this.toDate.value)"
+    *ngIf="!dataSource">
+    1. LOAD EMPLOYEE DATABASE &nbsp;&nbsp;<mat-icon>assignment_ind</mat-icon>
+  </button>
+  <div class="fill-remaining-space"></div>
+  <button mat-stroked-button color="primary"
+    (click)="loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value)" *ngIf="dataSource">
+    2. LOAD PAYROLL &nbsp;&nbsp;<mat-icon>monetization_on</mat-icon>
+  </button>
+
+
+  <button mat-raised-button color="accent" (click)="this.calculatePayroll()" *ngIf="dataSource"
+    (click)="calculatePayroll()">
+    3. CALCULATE PAYROLL &nbsp;&nbsp;<mat-icon>assignment_turned_in</mat-icon>
+  </button>
+
+</div>
+<mat-accordion class="headers-align" *ngIf="dataSource">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        4. PAYROLL MODULE SETTINGS
+      </mat-panel-title>
+      <mat-panel-description>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <mat-icon>settings</mat-icon>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <table mat-table #table [dataSource]="dataSourceSocialTable" style="text-align:center;">
+      <ng-container matColumnDef="earnings">
+        <th mat-header-cell *matHeaderCellDef class="socialTable"> From earning </th>
+        <td mat-cell *matCellDef="let row"> {{row.earnings | currency:'BZD':'symbol-narrow':'1.2-2'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="employeeDeductions">
+        <th mat-header-cell *matHeaderCellDef class="socialTable"> Employee </th>
+        <td mat-cell *matCellDef="let row"> {{row.employeeDeductions | currency:'BZD':'symbol-narrow':'1.2-2'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="employerDeductions">
+        <th mat-header-cell *matHeaderCellDef class="socialTable"> Employeer </th>
+        <td mat-cell *matCellDef="let row"> {{row.employerDeductions | currency:'BZD':'symbol-narrow':'1.2-2'}} </td>
+      </ng-container>
+      <ng-container matColumnDef="totalContributions">
+        <th mat-header-cell *matHeaderCellDef class="socialTable"> Total Contribution </th>
+        <td mat-cell *matCellDef="let row"> {{row.totalContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="socialTableDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: socialTableDisplayedColumns;"></tr>
+    </table>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-card *ngIf="dataSource">
+  <mat-card-title fxLayout="row" fxLayoutAlign="start start" fxLayout="row" fxLayoutAlign="start start">PAYROLL TABLE
+    <span class="fill-remaining-space"></span>
+    <button mat-button color="warn" (click)="clearTable()">
+      <mat-icon>clear</mat-icon> CLEAR TABLE
+    </button>
+  </mat-card-title>
+  <mat-card-subtitle>{{payrollType.value}} QUICK VIEW</mat-card-subtitle>
+  <mat-card-content>
+
+    <cdk-virtual-scroll-viewport mat-table class="viewport" itemSize="48" minBufferPx="200" maxBufferPx="400">
+      <tr class="mat-header-row">
+        <th mat-header-cell>
+          Employee ID
+        </th>
+        <th mat-header-cell>
+          Name
+        </th>
+        <th mat-header-cell>
+          Client
+        </th>
+        <th mat-header-cell>
+          Campaign
+        </th>
+        <th mat-header-cell>
+          Base Wage
+        </th>
+        <th mat-header-cell>
+          Payable Hours
+        </th>
+        <th mat-header-cell>
+          Hourly Rate
+        </th>
+        <th mat-header-cell>
+          Overtime Hours
+        </th>
+        <th mat-header-cell>
+          Overtime Rate
+        </th>
+        <th mat-header-cell>
+          Other Payments
+        </th>
+        <th mat-header-cell>
+          Bonus
+        </th>
+        <th mat-header-cell>
+          Gross Salary
+        </th>
+        <th mat-header-cell>
+          Social Security
+        </th>
+        <th mat-header-cell>
+          Tax
+        </th>
+        <th mat-header-cell>
+          Other Deductions
+        </th>
+        <th mat-header-cell>
+          Net Salary
+        </th>
+        <th mat-header-cell>
+          Dates
+        </th>
+        <th mat-header-cell>
+          Action
+        </th>
+      </tr>
+      <ng-container *cdkVirtualFor="let n of dataSource">
+        <tr>
+          <td mat-cell width="90px">
+            <span>{{n.employeeId}}</span>
+          </td>
+          <td mat-cell width="200px">
+            <span>{{n.employeeName}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.employeeCompany.client}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.employeeCompany.campaign}}</span>
+          </td>
+          <td mat-cell width="80px">
+            <span>{{n.wage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.totalSystemHours?.valueString}}</span>
+          </td>
+          <td mat-cell width="50px">
+            <span>{{n.hourlyRate.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.totalOvertimeHoursPay?.valueString ? n.totalOvertimeHoursPay?.valueString : '00:00' }}</span>
+          </td>
+          <td mat-cell width="80px">
+            <span>{{n.overtimeRate?.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.totalOtherpay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.totalBonusPay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.grossWage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="60px">
+            <span>{{(n.socialSecurityEmployee + n.socialSecurityEmployer )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
+          </td>
+          <td mat-cell width="60px">
+            <span>{{(n.incomeTax )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
+          </td>
+          <td mat-cell width="70px">
+            <span>{{n.totalDeductions| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.netWage| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
+          </td>
+          <td mat-cell width="90px">
+            <span>{{n.fromDate.toDate() | date: '( MM/dd/yy )'}} - {{ n.toDate.toDate() | date: '( MM/dd/yy )'}}</span>
+          </td>
+          <td mat-cell>
+            <span> <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.employee}" mat-menu-item>
+                  <mat-icon>account_circle</mat-icon>
+                  <span>Go to agent</span>
+                </a>
+                <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.supervisor}" mat-menu-item>
+                  <mat-icon>supervised_user_circle</mat-icon>
+                  <span>Go to supervisor</span>
+                </a>
+                <a (click)="openConceptsDialog(n)" mat-menu-item>
+                  <mat-icon>supervised_user_circle</mat-icon>
+                  <span>Go to Payroll Concepts</span>
+                </a>
+
+              </mat-menu>
+            </span>
+          </td>
+        </tr>
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+    <mat-table style="visibility: hidden;">
+      <ng-container matColumnDef="employeeId">
+        <mat-header-cell *matHeaderCellDef> Employee ID </mat-header-cell>
+        <mat-cell *matCellDef="let element"></mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+    </mat-table>
+
+    <div>
+      <button mat-button (click)="saveToDatabase()">SAVE TO DATABASE</button>
+      <button mat-button (click)="openExportBottomSheet()"> EXPORT</button>
+    </div>
+  </mat-card-content>
+</mat-card>

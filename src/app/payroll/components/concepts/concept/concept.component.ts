@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { PayrollService } from '../../../services/payroll.service';
-import { PayrollRow } from '../../main/PayrollRow';
+import { PayrollRow } from '../../manage/PayrollRow';
 
 @Component({
   selector: 'payroll-concept',

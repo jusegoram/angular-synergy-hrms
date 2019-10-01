@@ -40,34 +40,7 @@ let OvertimeSchema = new Schema({
 });
 OvertimeSchema.index({ date: -1 });
 
-let PayrollStorage = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  employeeId: { type: String, required: true },
-  firstName: { type: String },
-  middleName: { type: String },
-  lastName: { type: String },
-  socialSecurity: { type: String },
-  status: { type: String },
-  payrollType: { type: String, required: true },
-  hours: { type: Object },
-  totalHours: { type: Object },
-  hourlyRate: { type: Number },
-  employeePosition: { type: Object },
-  employeePayroll: { type: Object },
-  employeeCompany: { type: Object },
-  employeeVacation: { type: Object }, //TODO: create object structure
-  overtime: { type: [OvertimeSchema] },
-  otherPayment: { type: [OtherPaySchema] },
-  bonus: { type: [BonusSchema] },
-  deduction: { type: [DeductionSchema] },
-  grossSalary: { type: Number, Required: true },
-  totalBonus: { type: Number, Required: true },
-  totalDeduction: { type: Number, Required: true },
-  totalSocialSecurity: { type: Number, required: true },
-  netSalary: { type: Number, Required: true },
-  dateFrom: { type: String, required: true },
-  dateTo: { type: String, required: true }
-});
+
 let employeeSchema = new Schema( {
   _id: mongoose.Schema.Types.ObjectId,
   regularHours: { type: Number },
@@ -178,9 +151,10 @@ let employeeSchema = new Schema( {
   overtimeRate: { type: Number }
 });
 
-let testSchema = new Schema({
+let PayrollSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employees: {type: [employeeSchema]},
+  payrollType: {type: String},
   socialTable: { type: [Object]},
   incometaxTable: { type: [Object]},
   deductionsTable: { type: [Object]},
@@ -193,9 +167,9 @@ let testSchema = new Schema({
 
 
 
-PayrollStorage.index({ dateFrom: -1 });
+PayrollSchema.index({ fromDate: -1 });
 
-const payrollStorage = mongoose.model("payroll", testSchema);
+const payrollStorage = mongoose.model("payroll", PayrollSchema);
 const bonus = mongoose.model("payroll-bonus", BonusSchema);
 const deduction = mongoose.model("payroll-deduction", DeductionSchema);
 const overtime = mongoose.model("payroll-overtime", OvertimeSchema);

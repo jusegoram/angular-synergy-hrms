@@ -1,8 +1,8 @@
+import { DetailResolver } from './components/detail/detail.resolver';
 import { NgModule } from '@angular/core';
 import {CommonModule, TitleCasePipe} from '@angular/common';
 
 import { PayrollRoutingModule } from './payroll-routing.module';
-import { MainComponent } from './components/main/main.component';
 import { UploadComponent } from './components/upload/upload.component';
 import { ExportComponent } from './components/export/export.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
@@ -17,7 +17,10 @@ import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { ConceptComponent } from './components/concepts/concept/concept.component';
-import { ExportBottomSheetComponent } from './components/main/export-bottom-sheet/export-bottom-sheet.component';
+import { ExportBottomSheetComponent } from './components/manage/export-bottom-sheet/export-bottom-sheet.component';
+import { ManageComponent } from './components/manage/manage.component';
+import { MainComponent } from './components/main/main.component';
+import { DetailComponent } from './components/detail/detail.component';
 
 @NgModule({
   imports: [
@@ -30,8 +33,8 @@ import { ExportBottomSheetComponent } from './components/main/export-bottom-shee
     NgxDatatableModule,
 
   ],
-  declarations: [MainComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent, ConceptComponent, ExportBottomSheetComponent],
-  providers: [ PayrollService, TitleCasePipe, CdkColumnDef,
+  declarations: [ManageComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent, ConceptComponent, ExportBottomSheetComponent, MainComponent, DetailComponent],
+  providers: [ PayrollService, DetailResolver, TitleCasePipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

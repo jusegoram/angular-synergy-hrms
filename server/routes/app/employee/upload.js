@@ -226,49 +226,47 @@ router.post('/position', function (req, res) {
 //   });
 // });
 
-// router.post('/payroll', function (req, res) {
-//     upload(req, res, function (err) {
-//       let payroll = [];
-//       let payrollFile = req.file;
-//         if (err) {
-//         // An error occurred when uploading
-//         console.log(err);
-//         return res.status(422).send("an Error occured");
-//         }
-//         if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
-//             return res.status(400).send("Sorry only CSV files can be processed for upload");
-//         }
-//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-//         .on('data', function(data){
-//             data['_id'] = new mongoose.Types.ObjectId();
-//             data['employee'] = null;
-//             payroll.push(data);
+router.post('/payroll', function (req, res) {
+    upload(req, res, function (err) {
+      let payroll = [];
+      let payrollFile = req.file;
+        if (err) {
+        // An error occurred when uploading
+        console.log(err);
+        return res.status(422).send("an Error occured");
+        }
+        if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
+            return res.status(400).send("Sorry only CSV files can be processed for upload");
+        }
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', function(data){
+            data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
+            payroll.push(data);
 
-//         })
-//         .on('end', function(){
-//             async.each(payroll, function(pay, callback){
-//               EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
-//                     if(err){
-//                         callback(err)
-//                     }else{
-//                         res.payroll = pay._id;
-//                         pay.employee = res._id;
-//                         res.save();
-//                         callback();
-//                     }
-//                 })
-//             }, function(err){
-//                 if(err){
-//                     console.log(err);
-//                 }else{
-//                     Payroll.EmployeePayroll.create(payroll);
-//                 }
-//             });
-//             console.log('upload finished');
-//             return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
-//         });
-//     });
-// });
+        })
+        .on('end', function(){
+            async.each(payroll, function(pay, callback){
+              EmployeeSchema.findOne({'employeeId': pay.employeeId}, function(err, res){
+                    if(err){
+                        callback(err)
+                    }else{
+                        res.payroll = pay;
+                        pay.employee = res._id;
+                        res.save();
+                        callback();
+                    }
+                })
+            }, function(err){
+                if(err){
+                    console.log(err);
+                }
+            });
+            console.log('upload finished');
+            return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
+        });
+    });
+});
 
 // router.post('/family', function (req, res) {
 //     upload(req, res, function (err) {

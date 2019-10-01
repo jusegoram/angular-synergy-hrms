@@ -8,7 +8,7 @@
 
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button>GO TO EMPLOYEE PROFILE</button>
+    <button mat-button (click)="getLastYearPayrolls(this.data.employee)">GET LAST PAYROLLS</button>
   </mat-card-actions>
 
 <payroll-concept conceptTitle="Other Payment" [concepts]="data.otherpay" [employeeConcept]="data" *ngIf="data && !error"></payroll-concept>
