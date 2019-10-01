@@ -95,7 +95,6 @@ router.get('/', (req, res) => {
    let or;
    if(type === '') or = {$or: [{"employees.payrollType": 'BI-WEEKLY'}, {"employees.payrollType": 'SEMIMONTHLY'}]};
    else { or = {$or: [{"employees.payrollType": type}]};}
-    console.log(or);
    Payroll.aggregate([
     { $unwind: "$employees" },
     { $match:  or },
