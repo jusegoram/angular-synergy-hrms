@@ -247,7 +247,7 @@ router.post('/payroll', function (req, res) {
         })
         .on('end', function(){
             async.each(payroll, function(pay, callback){
-              EmployeeSchema.update({'employeeId': payroll.employeeId}, {$set: {payroll: payroll}}, (err, doc) => {
+              EmployeeSchema.updateOne({'employeeId': payroll.employeeId}, {$set: {payroll: payroll}}, (err, doc) => {
                 if(err) callback(err);
                 else callback();
                 })
