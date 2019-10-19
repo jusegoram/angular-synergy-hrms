@@ -1,0 +1,14 @@
+.mat-column-isPayed {
+    max-width: 50px;
+  }
+
+.mat-column-payRun {
+    flex: 0 0 150;
+}
+  .mat-column-fromDate,
+  .mat-column-toDate {
+    flex: 0 0 100px;
+  }
+  .mat-column-select {
+    overflow: initial;
+  }

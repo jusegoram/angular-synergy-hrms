@@ -4,45 +4,72 @@ let Schema = mongoose.Schema;
 //TODO: PAYED LEAVES
 
 let BonusSchema = new Schema({
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
-  amount: { type: Number }
+  submittedDate: { type: Date },
+  amount: { type: Number },
+  creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
+  verified: {type: Boolean, default: false},
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 BonusSchema.index({ date: -1 });
 
 let DeductionSchema = new Schema({
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
-  amount: { type: Number }
+  submittedDate: { type: Date },
+  amount: { type: Number },
+  creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
+  verified: {type: Boolean, default: false},
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 DeductionSchema.index({ date: -1 });
 
 let OtherPaySchema = new Schema({
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
-  amount: { type: Number }
+  submittedDate: { type: Date },
+  amount: { type: Number },
+  creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
+  verified: {type: Boolean, default: false},
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 OtherPaySchema.index({ date: -1 });
 
 let OvertimeSchema = new Schema({
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: "Employee" },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
   employeeId: { type: String },
   overtimeHours: { type: Number },
   payedOvertimeHours: { type: Number },
   rate: { type: Number },
-  amount: { type: Number }
+  submittedDate: { type: Date },
+  amount: { type: Number },
+  creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
+  verified: {type: Boolean, default: false},
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 OvertimeSchema.index({ date: -1 });
 
 
 let employeeSchema = new Schema( {
-  _id: mongoose.Schema.Types.ObjectId,
   regularHours: { type: Number },
   wage: { type: Number },
   hours: { type: [Object]},
@@ -106,8 +133,9 @@ let employeeSchema = new Schema( {
   firstName: { type: String },
   middleName: { type: String },
   lastName: { type: String },
-  socialSecurity: { type: Date },
+  socialSecurity: { type: String },
   status: { type: String },
+  emailAddress: {type: String},
   payrollType: { type: String },
   hourlyRate: { type: Number },
   employeeName: { type: String },
@@ -115,7 +143,7 @@ let employeeSchema = new Schema( {
     employee: { type: String },
     reapplicantTimes: { type: Object },
     reapplicant: { type: Object },
-    terminationDate: { type: Object },
+    terminationDate: { type: Date },
     hireDate: { type: Date },
     trainingGroupNum: { type: Object },
     trainingGroupRef: { type: String },
@@ -123,7 +151,7 @@ let employeeSchema = new Schema( {
     supervisor: { type: String },
     campaign: { type: String },
     client: { type: String },
-    employeeId: { type: Date },
+    employeeId: { type: String },
     _id: { type: String},
     manager: { type: String }
   },
@@ -138,11 +166,11 @@ let employeeSchema = new Schema( {
     billable: { type: Boolean },
     bankAccount: { type: String },
     bankName: { type: String },
-    baseWage: { type: Date },
+    baseWage: { type: String },
     payrollType: { type: String },
     positionId: { type: String },
-    TIN: { type: Date },
-    employeeId: { type: Date},
+    TIN: { type: String },
+    employeeId: { type: String},
     _id: { type: String }
   },
   employeeShift: { type: Object },
@@ -152,9 +180,11 @@ let employeeSchema = new Schema( {
 });
 
 let PayrollSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employees: {type: [employeeSchema]},
   payrollType: {type: String},
+  isPayed: {type: Boolean, default: false},
+  payedDate: {type: Date},
+  payId:{type: String},
   socialTable: { type: [Object]},
   incometaxTable: { type: [Object]},
   deductionsTable: { type: [Object]},
@@ -163,13 +193,59 @@ let PayrollSchema = new Schema({
   holidayTable: { type: [Object] },
   fromDate: { type: Date },
   toDate: { type: Date },
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 
 
 
 PayrollSchema.index({ fromDate: -1 });
 
-const payrollStorage = mongoose.model("payroll", PayrollSchema);
+let PayedPayrollWeekSchema = new Schema({
+  payroll : { type: mongoose.Schema.Types.ObjectId, ref: "payroll" },
+  fromDate: { type: Date},
+  toDate: { type: Date },
+  updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
+});
+
+let PayedEmployeesSchema = new Schema(
+  {
+    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
+    payrolls: { type: [PayedPayrollWeekSchema] },
+    employeeId: {type: String },
+    firstName: { type: String },
+    middleName: { type: String },
+    lastName: { type: String },
+    client: {type: String },
+    campaign: { type: String },
+    billable: { type: Boolean },
+    bankAccount: { type: String },
+    bankName: { type: String },
+    payrollType: { type: String },
+    TIN: { type: String },
+    socialSecurity: { type: String },
+    totalIncomeTax: { type: Number },
+    totalCompanyContributions: { type: Number },
+    totalEmployeeContributions: { type: Number },
+    totalNetWage: { type: Number },
+    updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
+  }
+);
+let PayedPayrollSchema = new Schema({
+  payedEmployees: { type: [PayedEmployeesSchema]},
+  payedPayrolls: { type: [PayedPayrollWeekSchema]},
+});
+
+const payedPayroll = mongoose.model('payed-payroll', PayedPayrollSchema);
+const payroll = mongoose.model("payroll", PayrollSchema);
 const bonus = mongoose.model("payroll-bonus", BonusSchema);
 const deduction = mongoose.model("payroll-deduction", DeductionSchema);
 const overtime = mongoose.model("payroll-overtime", OvertimeSchema);
@@ -180,5 +256,6 @@ module.exports = {
   deduction,
   overtime,
   otherPay,
-  payrollStorage
+  payroll,
+  payedPayroll,
 };

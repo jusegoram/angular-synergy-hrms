@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { EmployeeService } from '../../employee.service';
 import { SessionService } from '../../../session/session.service';
@@ -22,7 +23,7 @@ export class PersonalComponent implements OnInit, OnChanges {
     { value: 'Single', name: 'Single' },
     { value: 'Married', name: 'Married/Remarried' },
     { value: 'Separated', name: 'Separated' },
-    { value: 'Commonlaw', name: 'Common Law' },
+    { value: 'Common law', name: 'Common Law' },
     { value: 'Divorced', name: 'Divorced' },
     { value: 'Widowed', name: 'Widowed' }];
 
@@ -55,14 +56,14 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'Gardenia Village', name: 'Gardenia Village'},
       { value: 'Guinea Grass Village', name: 'Guinea Grass Village' },
       { value: 'Hattieville', name: 'Hattieville' },
-      { value: 'independence', name: 'Independence' },
+      { value: 'Independence', name: 'Independence' },
       { value: 'Ladyville', name: 'Ladyville' },
       { value: 'Libertad Village', name: 'Libertad Village' },
       { value: 'Little belize', name: 'Little belize' },
       { value: 'Lords Bank', name: 'Lords Bank' },
       { value: 'Mahogany Heights', name: 'Mahogany Heights' },
       { value: 'Maskall Village', name: 'Maskall Village' },
-      { value: 'Northern HW', name: 'Northern HW' },
+      { value: 'Northern Highway', name: 'Northern Highway' },
       { value: 'Orange Walk', name: 'Orange Walk Town' },
       { value: 'Palmar Village', name: 'Palmar Village'},
       { value: 'Punta Gorda', name: 'Punta Gorda' },
@@ -74,16 +75,17 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'San Lazaro Village', name: 'San Lazaro Village'},
       { value: 'San Narciso Village', name: 'San Narciso Village' },
       { value: 'San Pablo Village', name: 'San Pablo Village' },
-      { value: 'san pedro', name: 'San Pedro' },
+      { value: 'San Pedro', name: 'San Pedro' },
       { value: 'Santa Elena', name: 'Santa Elena' },
       { value: 'Sandhill Village', name: 'Sandhill Village' },
       { value: 'Scotland Halfmoon Village', name: 'Scotland Halfmoon Village'},
       { value: 'Shipyard', name: 'Shipyard' },
       { value: 'Trial Farm', name: 'Trial Farm' },
       { value: 'Trinidad Village', name: 'Trinidad Village' },
-      { value: 'Western HW', name: 'Western HW' },
+      { value: 'Western Highway', name: 'Western Highway' },
       { value: 'Yo Creek Village', name: 'Yo Creek Village' },
       ];
+  children = [{id: 0}, {id: 1}, {id: 2}, {id: 3}, {id: 4}, {id: 5}, {id: 6}];
   myForm: FormGroup;
   hobbies: any[] = [];
   hobbiesForm: FormGroup;
@@ -94,9 +96,9 @@ export class PersonalComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
   }
 // TO DO: add town and district
-  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar, private fb: FormBuilder) {
+  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar, private fb: FormBuilder, private titlecasePipe:TitleCasePipe) {
     this.newPersonal = new EmployeePersonal(
-      '', '', '', '',
+      '', '', '', '', 0,
       '', '', '' , null ,
       '' , '', null, '',
       '', '', null, []);
@@ -137,12 +139,13 @@ export class PersonalComponent implements OnInit, OnChanges {
   buildForm(arg: any) {
     this.myForm = this.fb.group({
       birthDate: [arg.birthDate],
-      birthPlaceDis: [arg.birthPlaceDis],
-      birthPlaceTow: [arg.birthPlaceTow],
-      maritalStatus: [arg.maritalStatus],
-      address: [arg.address],
-      town: [arg.town],
-      district: [arg.district],
+      birthPlaceDis: [this.titlecasePipe.transform(arg.birthPlaceDis)],
+      birthPlaceTow: [this.titlecasePipe.transform(arg.birthPlaceTow)],
+      maritalStatus: [this.titlecasePipe.transform(arg.maritalStatus)],
+      amountOfChildren: [arg.amountOfChildren ? arg.amountOfChildren : 0],
+      address: [this.titlecasePipe.transform(arg.address)],
+      town: [this.titlecasePipe.transform(arg.town)],
+      district: [this.titlecasePipe.transform(arg.district)],
       addressDate: [arg.addressDate],
       celNumber: [arg.celNumber],
       telNumber: [arg.telNumber],
@@ -175,6 +178,7 @@ export class PersonalComponent implements OnInit, OnChanges {
       this.employee.employeeId + '',
       this.employee._id,
       this.myForm.value.maritalStatus, // added to form
+      this.myForm.value.amountOfChildren,
       this.myForm.value.address,
       this.myForm.value.town, // added to form
       this.myForm.value.district, // added to form

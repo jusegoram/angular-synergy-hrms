@@ -12,6 +12,7 @@ export class PayrollRow {
   status;
   payrollType;
   hourlyRate;
+  emailAddress;
   overtimeRate;
   employeeName;
   employeeCompany;
@@ -84,6 +85,7 @@ export class PayrollRow {
     lastName: string,
     socialSecurity: string,
     status: string,
+    emailAddress: string,
     payrollType: string,
     hourlyRate: number,
     employeeName: string,
@@ -102,6 +104,7 @@ export class PayrollRow {
     this.lastName = lastName;
     this.socialSecurity = socialSecurity;
     this.status = status;
+    this.emailAddress = emailAddress
     this.payrollType = payrollType;
     this.hourlyRate = hourlyRate;
     this.employeeName = employeeName;

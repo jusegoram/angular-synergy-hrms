@@ -11,6 +11,10 @@ let positionSchema = new Schema({
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false},
+    updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 // add training group (ref:num), and trainer
 

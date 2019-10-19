@@ -1,0 +1,75 @@
+    <div>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+                    <div fxFlex="65%"></div>
+
+                        <button mat-flat-button color='primary' (click)="sendPayslips()">
+                            SEND PAYSLIPS
+                          </button>
+                          <button mat-flat-button color='accent' (click)="export()">
+                            EXPORT
+                          </button>
+
+            </div>
+            <mat-table #table [dataSource]="dataSource" matSort>
+
+                    <ng-container matColumnDef="selected">
+                      <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                            <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? checkedRows.toggle(row) : null"
+                            [checked]="checkedRows.isSelected(row)"
+                            >
+                            </mat-checkbox>
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="payRun">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> Pay Run </mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element?.payedDate |  date:'EEE - LLL d - yyyy' }} </mat-cell>
+                          </ng-container>
+
+                    <ng-container matColumnDef="fromDate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element?.fromDate |  date:'EEE - LLL d - yyyy' }} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="toDate">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element.toDate | date:'EEE - LLL d - yyyy' }}
+                      </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="employeesAmount">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Employees Payed </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element?.employeesAmount}} </mat-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="totalPayed">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element?.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalCompanyContributions">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header>Company Social Contribution </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{element?.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalEmployeeContributions">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Social Contribution </mat-header-cell>
+                      <mat-cell *matCellDef="let element">
+                        {{element?.totalEmployeeContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="totalTaxes">
+                      <mat-header-cell *matHeaderCellDef mat-sort-header> Income Tax </mat-header-cell>
+                      <mat-cell *matCellDef="let element"> {{element?.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                  </mat-table>
+                  <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
+                  </mat-paginator>
+    </div>
+
+

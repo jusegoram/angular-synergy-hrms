@@ -32,6 +32,7 @@ export class UploadComponent {
     {value: '/api/v1/employee/upload/position', viewValue: 'Employee Position'},
     {value: '/api/v1/employee/upload/shift', viewValue: 'Employee Shift'},
     {value: '/api/v1/employee/upload/personal', viewValue: 'Employee Personal'},
+    {value: '/api/v1/employee/upload/personal/hobbies', viewValue: 'Employee Hobbies'},
     {value: '/api/v1/employee/upload/payroll', viewValue: 'Employee Payroll'},
     {value: '/api/v1/employee/upload/family', viewValue: 'Employee Family'},
     {value: '/api/v1/employee/upload/education', viewValue: 'Employee Education'}
@@ -40,6 +41,7 @@ export class UploadComponent {
   templates = [
     {text: 'Main Information', value: '/api/v1/employee/template'},
     {text: 'Personal Information', value: '/api/v1/employee/template/personal'},
+    {text: 'Hobbies Information', value: '/api/v1/employee/template/personal/hobbies'},
     {text: 'Company Information', value: '/api/v1/employee/template/company'},
     {text: 'Position Information', value: '/api/v1/employee/template/position'},
     {text: 'Shift Information', value: '/api/v1/employee/template/shift'},

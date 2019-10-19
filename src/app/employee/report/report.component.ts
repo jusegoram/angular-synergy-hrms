@@ -234,12 +234,27 @@ export class ReportComponent implements OnInit {
   exportPersonal(data){
     const promise = new Promise((res, rej) => {
       const personalInfo: any[] = [];
-      data.forEach(element => {
+      let hobbiesInfo: any[] = [];
+      let previous = []
+      data.forEach(async element => {
+        if(element.personal && element.personal.hobbies) {
+          let mapped = element.personal.hobbies.map(item => {
+            delete item._id
+            item.employeeId = element.personal.employeeId;
+            return item;
+          });
+          previous = JSON.parse(JSON.stringify(hobbiesInfo));
+          hobbiesInfo = previous.concat((typeof element.personal !== 'undefined' && element.personal !== null)
+          ? mapped : [] );
+        }
         (typeof element.personal !== 'undefined' && element.personal !== null)
       ? personalInfo.push(element.personal) : noop();
       });
+      console.log(hobbiesInfo);
       const personal: XLSX.WorkSheet = XLSX.utils.json_to_sheet(personalInfo);
+      const hobbies: XLSX.WorkSheet = XLSX.utils.json_to_sheet(hobbiesInfo);
       XLSX.utils.book_append_sheet(this.wb, personal, 'personal-info');
+      XLSX.utils.book_append_sheet(this.wb, hobbies, 'hobbies-info');
       res();
     });
     return promise;

@@ -11,9 +11,7 @@
 <div class="mat-card-top">
   <div class="example-container">
     <div class="example-header">
-      <!-- <mat-form-field appearance="outline">
-        <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter(filterValue)" placeholder="Filter">
-      </mat-form-field> -->
+
       <mat-form-field appearance="outline">
         <mat-select placeholder="PAYROLL TYPE" [(ngModel)]="selectedType" name="item">
           <mat-option *ngFor="let item of type" [value]="item.type">
@@ -22,61 +20,86 @@
         </mat-select>
       </mat-form-field>
       <div fxFlex="75%"></div>
-      <button mat-icon-button (click)="reloadData()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-      <div *ngIf="auth.create">
-          <button mat-raised-button [routerLink]="['/','payroll', 'manage']" [disabled]=checked >CALCULATE PAYROLL</button>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+          <button mat-button (click)="reloadData()">
+              REFRESH
+            </button>
+            <button mat-button (click)="onPayHistory()">
+                PAY HISTORY
+            </button>
+      </div>
+      <div *ngIf="auth.create" style="padding-left: 10px">
+        <button mat-raised-button color='primary' [routerLink]="['/','payroll', 'manage']" [disabled]='checkedRows?.selected?.length !== 0'>NEW PAYROLL</button>
       </div>
     </div>
     <mat-table #table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="selected">
-          <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <mat-checkbox #checked (click)="onSelected($event.currentTarget.id)" [id]="element._id._id"></mat-checkbox> </mat-cell>
+        <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <mat-checkbox #checked [id]="element?._id?._id" [disabled]='element?.isPayed' (click)="$event.stopPropagation()"
+            (change)="$event ? checkedRows.toggle(element) : null" [checked]="checkedRows.isSelected(element)">
+          </mat-checkbox>
+        </mat-cell>
       </ng-container>
+      <ng-container matColumnDef="isPayed">
+        <mat-header-cell *matHeaderCellDef> Payed </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element?.isPayed; else elseTemplate">
+            <mat-icon color='primary'>check_circle_outline</mat-icon>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <mat-icon color='accent'>panorama_fish_eye</mat-icon>
+          </ng-template>
 
+        </mat-cell>
+      </ng-container>
       <ng-container matColumnDef="fromDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element._id.fromDate |  date:'EEE - LLLL d - yyyy' }} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element?._id.fromDate |  date:'EEE - LLLL d - yyyy' }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="toDate">
         <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element._id.toDate | date:'EEE - LLLL d - yyyy' }}
+        <mat-cell *matCellDef="let element"> {{element?._id.toDate | date:'EEE - LLLL d - yyyy' }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="employeesAmount">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Employees Payed </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.employeesAmount}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element?.employeesAmount}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalPayed">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element?.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalCompanyContributions">
         <mat-header-cell *matHeaderCellDef mat-sort-header>Company Social Contribution </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element">
+          {{element?.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalEmployeeContributions">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Social Contribution  </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.totalEmployeeContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Social Contribution </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{element?.totalEmployeeContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalTaxes">
         <mat-header-cell *matHeaderCellDef mat-sort-header> Income Tax </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-cell *matCellDef="let element"> {{element?.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
 
       <ng-container matColumnDef="details">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> <button mat-raised-button>PAY SELECTED PAYROLLS</button></mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> <button mat-flat-button color='accent'
+            (click)='onPaySelectedPayrolls()' [disabled]='checkedRows?.selected?.length === 0'>PAY SELECTED PAYROLLS</button>
+        </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element._id._id}" mat-menu-item matTooltip="Go to details">
+          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element?._id._id}" mat-menu-item
+            matTooltip="Go to details">
             <span>Details </span>
             <mat-icon>arrow_forward</mat-icon>
           </a>
@@ -86,9 +109,6 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]"
-      showFirstLastButtons>
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
     </mat-paginator>
-  </div>
 </div>
-

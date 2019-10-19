@@ -54,6 +54,32 @@ export class PayrollService {
       incometaxTable
     );
   }
+
+  savePayedPayroll(data){
+    const body = {
+      'payedEmployees': data,
+      'payedPayrolls': data[0].payrolls,
+    };
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/payroll/pay', body, {
+      headers: headers
+    });
+  }
+
+  getPayedPayrolls(){
+    return this.httpClient.get<any>('/api/v1/payroll/pay');
+  }
+
+  sendPayslipts(payId){
+    const body = {
+      payId: payId
+    };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/payroll/payslips', body, {
+      headers: headers
+    });
+  }
   getReport(query: any): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -124,11 +150,19 @@ export class PayrollService {
     });
   }
 
-  getPayroll(id: any, type: any): Observable<Payroll> {
-    const params = new HttpParams().set('id', id).set('type', type);
-    return this.httpClient.get<Payroll>('/api/v1/payroll', {params: params});
+  getPayroll(id: any, type: any): Observable<any> {
+    let params
+    if(id.length === 2){
+       params = new HttpParams().set('id', id[0]).set('id2', id[1]).set('type', type);
+    }else{
+      params = new HttpParams().set('id', id).set('type', type);
+    }
+    return this.httpClient.get<any>('/api/v1/payroll', {params: params});
   }
 
+  getPayedHistory(){
+    return this.httpClient.get<any>('/api/v1/payroll/payed');
+  }
   deletePayroll() {
     this._payroll = null;
     delete this._payroll;

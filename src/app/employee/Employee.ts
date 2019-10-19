@@ -80,6 +80,7 @@ export class EmployeePersonal {
               public employeeId: string,
               public employee: string,
               public maritalStatus: string,
+              public amountOfChildren: number,
               public address: string,
               public town: string,
               public district: string,

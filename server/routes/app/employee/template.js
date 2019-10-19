@@ -42,6 +42,7 @@ router.get('/personal', function (req, res, next) {
     var fields = [
         'employeeId',
         'maritalStatus',
+        'amountOfChildren',
         'address',
         'town',
         'district',
@@ -49,9 +50,25 @@ router.get('/personal', function (req, res, next) {
         'celNumber',
         'telNumber',
         'birthDate',
-        'birthPlace',
+        'birthPlaceDis',
+        'birthPlaceTow',
         'emailAddress',
         'emailDate'
+    ];
+
+    var csv = json2csv({ data: '', fields: fields });
+
+    res.set("Content-Disposition", "attachment;filename=employee-personal-upload.csv");
+    res.set("Content-Type", "application/octet-stream");
+
+    res.send(csv);
+});
+
+router.get('/personal/hobbies', (req, res) => {
+    var fields = [
+        'employeeId',
+        'hobbyTitle',
+        'hobbyComment',
     ];
 
     var csv = json2csv({ data: '', fields: fields });
@@ -66,12 +83,11 @@ router.get('/payroll', function (req, res, next) {
     var fields = [
         'employeeId',
         'TIN',
-        'positionId',
         'payrollType',
-        'baseWage',
         'bankName',
         'bankAccount',
-        'billable'
+        'billable',
+        'paymentType'
     ];
 
     var csv = json2csv({ data: '', fields: fields });
@@ -86,11 +102,13 @@ router.get('/family', function (req, res, next) {
     var fields = [
         'employeeId',
         'referenceName',
+        'age',
         'relationship',
         'celNumber',
         'telNumber',
         'emailAddress',
         'address',
+        'comment',
     ];
 
     var csv = json2csv({ data: '', fields: fields });
@@ -105,6 +123,9 @@ router.get('/education', function (req, res, next) {
     var fields = [
         'employeeId',
         'institution',
+        'levelOfEducation',
+        'numberOfYears',
+        'mayor',
         'description',
         'startDate',
         'endDate'
@@ -125,12 +146,14 @@ router.get('/company', function (req, res, next) {
         'campaign',
         'hireDate',
         'supervisor',
+        'manager',
         'trainer',
         'trainingGroupRef',
         'trainingGroupNum',
         'terminationDate',
         'reapplicant',
-        'reapplicantTimes'
+        'reapplicantTimes',
+        'bilingual'
     ];
 
     var csv = json2csv({ data: '', fields: fields });

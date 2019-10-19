@@ -9,8 +9,10 @@
 //TODO: finish authentication function according to spec
 
 let jwt = require('jsonwebtoken');
+let _ = require('lodash');
 let fs = require('fs');
 let path = require('path');
+let Logs = require('../models/back-end/logs');
 const RSA_KEY = fs.readFileSync(path.join(__dirname, '../routes/pub.key'));
 
 
@@ -34,6 +36,7 @@ authentication = (req, res, next) => {
       message: 'unauthorized user'
     });
   } else {
+    // req._body : boolean, _startTime: Date, req.headers['x-real-ip'] original IP
     jwt.verify(token, RSA_KEY, {
       algorithm: 'RS256',
       expiresIn: 60 * 30
@@ -42,12 +45,36 @@ authentication = (req, res, next) => {
         message: 'unauthorized user'
       });
       else {
-        next();
+        if(typeof req._body !== typeof undefined){
+         saveLog(req, token)
       }
+      next();
+    }
+
     });
   }
 
 }
+
+let saveLog =  _.debounce((param, token) => {
+  console.log('executed');
+  let log = new Logs({
+    user: jwt.decode(token, RSA_KEY),
+    method: param.method,
+    apiPath: param.originalUrl,
+    query: param.body,
+    ip: param.headers['x-real-ip'],
+    date: Date.now()
+  })
+
+  log.save( err => {
+    if(err) console.log(err);
+    return
+  })
+
+}, 300, {
+  'leading': true,
+  'trailing': false })
 
 module.exports = {
   authentication

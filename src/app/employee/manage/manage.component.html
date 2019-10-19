@@ -15,13 +15,13 @@
         <input matInput [(ngModel)]="filterValue" (keyup)="applyFilter(filterValue)" placeholder="Filter">
       </mat-form-field>
       <div fxFlex="auto"></div>
-      <button mat-icon-button (click)="reload()">
-        <mat-icon>refresh</mat-icon>
-      </button>
-      <div *ngIf="auth.create">
-        <a [routerLink]="['/', 'employee', 'new' ]" mat-icon-button>
-          <mat-icon>person_add</mat-icon>
-        </a>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+            <button mat-button (click)="reload()">
+                REFRESH
+            </button>
+      </div>
+      <div *ngIf="auth.create" style="padding-left: 10px">
+        <button mat-raised-button color='primary' [routerLink]="['/','employee', 'new']">NEW EMPLOYEE</button>
       </div>
     </div>
     <mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sortData()">

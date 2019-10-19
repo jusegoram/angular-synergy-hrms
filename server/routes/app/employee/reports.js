@@ -351,7 +351,6 @@ let personalMissing = () => {
             { "personal.district": "" },
             { "personal.addressDate": null },
             { "personal.celNumber": "" },
-            { "personal.telNumber": "" },
             { "personal.birthDate": null },
             { "personal.birthPlace":  "" },
             { "personal.birthPlaceDis": "" },

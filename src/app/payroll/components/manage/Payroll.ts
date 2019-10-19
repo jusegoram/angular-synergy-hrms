@@ -13,6 +13,8 @@ export class Payroll {
   private _deductionsTable;
   private _incometaxTable;
   private _isCalculating = false;
+  private _isPayed = false;
+  private _payedDate = null;
   constructor(
     employees: any[],
     fromDate: Date,
@@ -22,7 +24,7 @@ export class Payroll {
     exceptionsTable: any[],
     otherpayTable: any[],
     deductionsTable: any[],
-    incometaxTable: any[]
+    incometaxTable: any[],
   ) {
     this.fromDate = fromDate;
     this.toDate = toDate;
@@ -50,6 +52,7 @@ export class Payroll {
         e.lastName,
         e.socialSecurity,
         e.status,
+        e.personal? (e.personal.emailAddress?e.personal.emailAddress: ''): '',
         e.payrollType,
         e.hourlyRate,
         e.employeeName,

@@ -1,3 +1,4 @@
+
 let jwt = require("jsonwebtoken");
 let express = require("express");
 let router = express.Router();
@@ -10,7 +11,10 @@ let Deduction = PayrollSchemas.deduction;
 let Bonus = PayrollSchemas.bonus;
 let Overtime = PayrollSchemas.overtime;
 let Otherpay = PayrollSchemas.otherPay;
-let Payroll = PayrollSchemas.payrollStorage;
+let Payroll = PayrollSchemas.payroll;
+let PayedPayroll = PayrollSchemas.payedPayroll;
+let sendEmail = require('../../../utils/sendEmail');
+let payslipTemplate = require('../../../static/payslipTemplate');
 let adminPayroll = require("../../../models/administration/administration-payroll");
 
 router.post("/", (req, res) => {
@@ -55,7 +59,6 @@ router.post("/", (req, res) => {
           .status(500)
           .json({ message: " error while creating payroll", err: err });
       else {
-        console.log(doc);
         if (doc.length > 0) {
           res.status(500).json({
             error: "The payroll you are trying to create already exists."
@@ -65,6 +68,8 @@ router.post("/", (req, res) => {
             _id: new mongoose.Types.ObjectId(),
             employees: req.body._employees,
             payrollType: req.body._employees[0].payrollType,
+            isPayed: req.body._isPayed,
+            payedDate: req.body._payedDate,
             socialTable: req.body_socialTable,
             incometaxTable: req.body._incometaxTable,
             deductionsTable: req.body._deductionsTable,
@@ -72,7 +77,7 @@ router.post("/", (req, res) => {
             exceptionsTable: req.body._exceptionsTable,
             holidayTable: req.body._holidayTable,
             fromDate: req.body._fromDate,
-            toDate: req.body._toDate
+            toDate: req.body._toDate,
           };
           Payroll.create(payroll, (err, doc) => {
             if (err)
@@ -88,7 +93,7 @@ router.post("/", (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  const {id, type} = req.query;
+  const {id,id2, type} = req.query;
   if(id === ''){
     //TODO: Use aggregate to calculate total amount of employees, and total payed, total Social, total Tax
     // Payroll.find().limit(52).select({incometaxTable: 0, employees: 0}).lean()
@@ -103,6 +108,8 @@ router.get('/', (req, res) => {
       'employees': 1,
       'fromDate': 1,
       'toDate': 1,
+      'isPayed': 1,
+      'payedDate': 1,
     }},
     { $group: {
       _id:{
@@ -111,6 +118,8 @@ router.get('/', (req, res) => {
         'toDate': '$toDate',
       },
       'employeesAmount': {$sum: 1},
+      'isPayed': { $first: '$isPayed'},
+      'payedDate': { $first: '$payedDate'},
       "netWages": { $push: "$employees.netWage" },
       "totalPayed" : {$sum: '$employees.netWage'},
       "incomeTaxes": {$push: "$employees.incomeTax"},
@@ -118,7 +127,7 @@ router.get('/', (req, res) => {
       "companyContributions": {$push: '$employees.socialSecurityEmployer'},
       'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
       "employeeContributions": {$push: '$employees.socialSecurityEmployee'},
-      'totalEmployeeContributions': {$sum:'socialSecurityEmployee'}
+      'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'}
     }},
     {$sort: {'_id.fromDate': -1}},
     { $limit: 53 }
@@ -126,14 +135,256 @@ router.get('/', (req, res) => {
     if (err) res.status(500).json(err);
     res.status(200).json(doc);
   });
+  }else if(id !== '' && id2){
+    Payroll.aggregate([
+      {$match: {$or: [{_id:mongoose.Types.ObjectId(id)},{_id: mongoose.Types.ObjectId(id2)}]}},
+      {$unwind: "$employees" },
+      {$sort:{'fromDate': -1}},
+      {$project:{
+        'socialTable': 0,
+        'incometaxTable': 0,
+        'deductionsTable': 0,
+        'otherpayTable': 0,
+        'exceptionsTable': 0,
+        'holidayTable': 0,
+      }},
+      {$group: {
+        _id:{employee:'$employees.employee'},
+        'payrolls': { $addToSet: {'_id':"$_id", 'fromDate':'$fromDate', 'toDate':'$toDate' }},
+        'employeeId': { $first: '$employees.employeeId'},
+        'firstName': { $first: "$employees.firstName" },
+        'middleName': { $first: "$employees.middleName" },
+        'lastName': { $first: "$employees.lastName" },
+        'client': { $first: "$employees.employeeCompany.client" },
+        'campaign': { $first: "$employees.employeeCompany.campaign" },
+        'billable': { $first: '$employees.employeePayroll.billable' },
+        'bankAccount': { $first: '$employees.employeePayroll.bankAccount' },
+        'bankName': { $first: '$employees.employeePayroll.bankName' },
+        'payrollType': { $first: '$employees.employeePayroll.payrollType' },
+        'TIN': { $first: '$employees.employeePayroll.TIN' },
+        'socialSecurity': { $first: "$employees.socialSecurity" },
+        'totalIncomeTax': {$sum:'$employees.incomeTax'},
+        'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
+        'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'},
+        'totalNetWage': {$sum: '$employees.netWage'},
+      }}
+
+    ])
+    .allowDiskUse(true)
+    .exec( (err, doc) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json(doc);
+    });
   }else{
-    Payroll.find({_id: id}, (err, doc) => {
-      if(err) res.status(500).json(err);
-      else { res.status(200).json(doc)}
-    })
+    Payroll.aggregate([
+      { $match:  {_id : mongoose.Types.ObjectId(id)} },
+      { $unwind: "$employees" },
+      {$project:{
+        'socialTable': 0,
+        'incometaxTable': 0,
+        'deductionsTable': 0,
+        'otherpayTable': 0,
+        'exceptionsTable': 0,
+        'holidayTable': 0,
+      }},
+      { $group: {
+        _id:{
+          'client': '$employees.employeeCompany.client',
+        },
+        'campaigns': { $addToSet: "$employees.employeeCompany.campaign" },
+        'employeesAmount': {$sum: 1},
+        "totalPayed" : {$sum: '$employees.netWage'},
+        'totalWeeklyWages': {$sum: '$employees.wage'},
+        'totalTaxes': {$sum:'$employees.incomeTax'},
+        'totalRegularHours':{$sum:'$employees.totalRegularHoursPay.hours'},
+        'totalRegularHoursPay':{$sum:'$employees.totalRegularHoursPay.totalPayed'},
+        'totalOvertimeHours': {$sum:'$employees.totalOvertimeHoursPay.hours'},
+        'totalOvertimeHoursPay': {$sum:'$employees.totalOvertimeHoursPay.totalPayed'},
+        'totalHolidayHoursX2': {$sum:'$employees.totalHolidayHoursPayX2.hours'},
+        'totalHolidayHoursX2Pay': {$sum:'$employees.totalHolidayHoursPayX2.totalPayed'},
+        'totalHolidayHoursX1': {$sum:'$employees.totalHolidayHoursPayX1.hours'},
+        'totalHolidayHoursX1Pay': {$sum:'$employees.totalHolidayHoursPayX1.totalPayed'},
+        'totalBonus' : {$sum: '$employees.totalBonusPay'},
+        'totalOtherpay': {$sum: '$employees.totalOtherpay'},
+        'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
+        'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'}
+      }},
+      {$sort: {'_id.client': 1, '_id.campaign': 1}}
+     ]).allowDiskUse(true).exec((err, doc) => {
+      if (err) res.status(500).json(err);
+      Payroll.find({_id: id}).lean().exec((e, d) => {
+        if(e) res.status(500).json(e);
+        res.status(200).json({
+          stats: doc,
+          payroll: d
+        });
+      })
+
+    });
   }
 });
 
+router.get('/pay', (req, res) => {
+  Payroll.aggregate([
+    {$match: {isPayed: true}},
+    {$sort: {fromDate: -1}},
+    {$limit: 24},
+    { $unwind: "$employees" },
+    {$project:{
+      'socialTable': 0,
+      'incometaxTable': 0,
+      'deductionsTable': 0,
+      'otherpayTable': 0,
+      'exceptionsTable': 0,
+      'holidayTable': 0,
+    }},
+    { $group: {
+      _id:{
+        'payId': '$payId',
+      },
+      'employees': { $addToSet: "$employees.employee" },
+      'fromDate': {$last: '$fromDate'},
+      'toDate': {$first: '$toDate'},
+      'payrolls': {$addToSet:'$_id'},
+      'payedDate': {$first: '$payedDate'},
+      "totalPayed" : {$sum: '$employees.netWage'},
+      'totalWeeklyWages': {$sum: '$employees.wage'},
+      'totalTaxes': {$sum:'$employees.incomeTax'},
+      'totalRegularHours':{$sum:'$employees.totalRegularHoursPay.hours'},
+      'totalRegularHoursPay':{$sum:'$employees.totalRegularHoursPay.totalPayed'},
+      'totalOvertimeHours': {$sum:'$employees.totalOvertimeHoursPay.hours'},
+      'totalOvertimeHoursPay': {$sum:'$employees.totalOvertimeHoursPay.totalPayed'},
+      'totalHolidayHoursX2': {$sum:'$employees.totalHolidayHoursPayX2.hours'},
+      'totalHolidayHoursX2Pay': {$sum:'$employees.totalHolidayHoursPayX2.totalPayed'},
+      'totalHolidayHoursX1': {$sum:'$employees.totalHolidayHoursPayX1.hours'},
+      'totalHolidayHoursX1Pay': {$sum:'$employees.totalHolidayHoursPayX1.totalPayed'},
+      'totalBonus' : {$sum: '$employees.totalBonusPay'},
+      'totalOtherpay': {$sum: '$employees.totalOtherpay'},
+      'totalDeductions': {$sum: '$employees.totalDeductions'},
+      'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
+      'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'},
+    }
+  },
+  {$addFields: {
+    'employeesAmount': {$size: '$employees'}
+  }}
+  ]).exec((err, doc) => {
+    if(err) res.status(500).json(err)
+    res.status(200).json(doc);
+  });
+});
+
+router.post('/pay', (req, res) => {
+  let item = req.body;
+  const date = new Date()
+  const payId = new mongoose.Types.ObjectId().toString()
+    Payroll.updateMany({$or: [
+      {_id: item.payedPayrolls[0].payroll},
+      {_id: item.payedPayrolls[1].payroll}
+    ]}, {$set: {isPayed: true, payedDate: date, payId: payId}} , (error, doc) => {
+      if(error) res.status(500).json(error);
+      else { res.status(200).json({message: 'saved!'}); }
+    } )
+});
+
+
+router.get('/payslips', (req, res) => {
+
+});
+
+router.post('/payslips', async (req, res) => {
+  const {payId} = req.body;
+
+  Payroll.aggregate([
+    {$match: {payId: payId}},
+    { $unwind: "$employees" },
+    {$project:{
+      'socialTable': 0,
+      'incometaxTable': 0,
+      'deductionsTable': 0,
+      'otherpayTable': 0,
+      'exceptionsTable': 0,
+      'holidayTable': 0,
+    }},
+    { $group: {
+      _id:{
+        'payId': '$payId',
+        'employee': '$employees.employee'
+      },
+      'employeeId' : {$first: '$employees.employeeId'},
+      'employeeName': {$first: '$employees.employeeName'},
+      'emailAddress': {$first: '$employees.emailAddress'},
+      'employeeCompany': {$first: '$employees.employeeCompany'},
+      'employeePosition' : {$first: '$employees.employeePosition'},
+      'employeePayroll': {$first: '$employees.employeePayroll'},
+      "totalPayed" : {$sum: '$employees.netWage'},
+      'totalWeeklyWages': {$sum: '$employees.wage'},
+      'totalTaxes': {$sum:'$employees.incomeTax'},
+      'totalRegularHours':{$sum:'$employees.totalRegularHoursPay.hours'},
+      'totalRegularHoursPay':{$sum:'$employees.totalRegularHoursPay.totalPayed'},
+      'totalOvertimeHours': {$sum:'$employees.totalOvertimeHoursPay.hours'},
+      'totalOvertimeHoursPay': {$sum:'$employees.totalOvertimeHoursPay.totalPayed'},
+      'totalHolidayHoursX2': {$sum:'$employees.totalHolidayHoursPayX2.hours'},
+      'totalHolidayHoursX2Pay': {$sum:'$employees.totalHolidayHoursPayX2.totalPayed'},
+      'totalHolidayHoursX1': {$sum:'$employees.totalHolidayHoursPayX1.hours'},
+      'totalHolidayHoursX1Pay': {$sum:'$employees.totalHolidayHoursPayX1.totalPayed'},
+      'totalBonus' : {$sum: '$employees.totalBonusPay'},
+      'totalOtherpay': {$sum: '$employees.totalOtherpay'},
+      'totalDeductions': {$sum: '$employees.totalDeductions'},
+      'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
+      'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'},
+      'allBonus': {$push: '$employees.bonus'},
+      'allOtherpay': {$push: '$employees.otherpay'},
+      'allDeductions': {$push: '$employees.deductions'},
+    }},
+    { $addFields: {
+      "allBonus": {
+        "$reduce": {
+          "input": "$allBonus",
+          "initialValue": [],
+          "in": { $concatArrays: [ "$$value", "$$this" ] }
+        }
+      },
+      "allOtherpay": {
+        "$reduce": {
+          "input": "$allOtherpay",
+          "initialValue": [],
+          "in": { $concatArrays: [ "$$value", "$$this" ] }
+        }
+      },
+      "allDeductions": {
+        "$reduce": {
+          "input": "$allDeductions",
+          "initialValue": [],
+          "in": { $concatArrays: [ "$$value", "$$this" ] }
+        }
+      }
+    }
+  }
+  ]).exec((err, doc) => {
+    if (err) res.status(500).json(err);
+    var itemsProcessed = 0;
+    doc.forEach(async (item) => {
+        itemsProcessed++
+        const html = payslipTemplate({employeePayslip: item})
+          const email =  sendEmail({
+            recipient: 'sgomez@rccbpo.com',
+            subject: 'test noreply email',
+            html: html,
+          })
+           await email;
+      if(itemsProcessed === doc.length) {
+        res.status(200).json({message: 'all emails sent'})
+      }
+    })
+  })
+
+
+
+
+
+
+});
 router.get("/employees", (req, res) => {
   let id = req.query.id;
   Payroll.aggregate([
@@ -190,13 +441,9 @@ router.get("/employees", (req, res) => {
       'baseWageList': {$push: '$employees.employeePosition.wage'},
       'totalPayed': {$sum: '$employees.netWage'},
       'yearlyCSL': {$push: '$employees.csl'},
-      'totalCSL': {$sum: '$employees.csl.amount'},
       'yearlyMaternity': {$push: '$employees.maternity'},
-      'totalCSL': {$sum: '$employees.maternity.amount'},
       'yearlyVacations': {$push: '$employees.vacations'},
-      'totalCSL': {$sum: '$employees.vacations.amount'},
       'yearlyDeductions':  {$push: '$employees.deductions'},
-      'totalDeductions': {$sum: '$employees.deductions.amount'},
       'totalCompanyContributions': {$sum:'$employees.socialSecurityEmployer'},
       'totalEmployeeContributions': {$sum:'$employees.socialSecurityEmployee'},
       'totalIncomeTax': {$sum:'$employees.incomeTax'},
@@ -271,7 +518,6 @@ router.get("/settings", (req, res) => {
   );
 });
 
-var joinEmployeesAndBonus = (employees, from, to) => {};
 var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
   let type = payrollType.toUpperCase();
   return new Promise((resolve, reject) => {
@@ -281,7 +527,7 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
         status: "active",
         "payroll.payrollType": type
       },
-      "_id employeeId firstName middleName lastName socialSecurity status company payroll position shift"
+      "_id employeeId firstName middleName lastName socialSecurity status personal.emailAddress company payroll position shift"
     )
       .populate({
         path: "Employee-Shift",
@@ -336,13 +582,6 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
   });
 };
 
-var getTotal = arr => {
-  if (arr.length > 0) {
-    let mapped = arr.map(i => i.amount);
-    let totaled = mapped.reduce((p, c) => p + c);
-    return totaled;
-  } else return 0;
-};
 
 var getDeductions = (employee, fromDate, toDate) => {
   // let mappedEmployees = employees.map(employee => employee.employee);

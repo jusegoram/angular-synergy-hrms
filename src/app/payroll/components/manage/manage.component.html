@@ -227,19 +227,18 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
+                  <a (click)="openConceptsDialog(n)" mat-menu-item>
+                      <mat-icon>monetization_on</mat-icon>
+                      <span>Payroll Concepts</span>
+                    </a>
                 <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.employee}" mat-menu-item>
                   <mat-icon>account_circle</mat-icon>
-                  <span>Go to agent</span>
+                  <span>Go to Profile</span>
                 </a>
                 <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.supervisor}" mat-menu-item>
                   <mat-icon>supervised_user_circle</mat-icon>
-                  <span>Go to supervisor</span>
+                  <span>Go to Supervisor</span>
                 </a>
-                <a (click)="openConceptsDialog(n)" mat-menu-item>
-                  <mat-icon>supervised_user_circle</mat-icon>
-                  <span>Go to Payroll Concepts</span>
-                </a>
-
               </mat-menu>
             </span>
           </td>

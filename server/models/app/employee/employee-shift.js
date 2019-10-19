@@ -25,7 +25,11 @@ let EmployeeShiftSchema = new Schema({
     createdDate: { type: Date, required: true },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: false },
-    shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Administration-Shift', required: true , autopopulate: true}
+    shift: { type: mongoose.Schema.Types.ObjectId, ref: 'Administration-Shift', required: true , autopopulate: true},
+    updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 
 EmployeeShiftSchema.plugin(mongooseAutopopulate);

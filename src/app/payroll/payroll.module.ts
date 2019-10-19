@@ -21,6 +21,19 @@ import { ExportBottomSheetComponent } from './components/manage/export-bottom-sh
 import { ManageComponent } from './components/manage/manage.component';
 import { MainComponent } from './components/main/main.component';
 import { DetailComponent } from './components/detail/detail.component';
+import { PayDialogComponent } from './components/main/pay/pay.component';
+import { FusionChartsModule } from 'angular-fusioncharts';
+import * as FusionCharts from 'fusioncharts';
+import * as ExcelExport from 'fusioncharts/fusioncharts.excelexport'
+import * as Charts from 'fusioncharts/fusioncharts.charts';
+// import * as Widgets from 'fusioncharts/fusioncharts.widgets';
+import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+// import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
+import { ExportAsModule } from 'ngx-export-as';
+
+
+FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
+
 
 @NgModule({
   imports: [
@@ -31,9 +44,20 @@ import { DetailComponent } from './components/detail/detail.component';
     FileUploadModule,
     FormsModule,
     NgxDatatableModule,
-
+    FusionChartsModule,
+    ExportAsModule,
   ],
-  declarations: [ManageComponent, UploadComponent, ExportComponent, PayslipsComponent, PayrollConceptsComponent, ConceptComponent, ExportBottomSheetComponent, MainComponent, DetailComponent],
+  declarations: [
+    ManageComponent,
+    UploadComponent,
+    ExportComponent,
+    PayslipsComponent,
+    PayrollConceptsComponent,
+    ConceptComponent,
+    ExportBottomSheetComponent,
+    MainComponent,
+    DetailComponent,
+    PayDialogComponent],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
@@ -47,7 +71,8 @@ import { DetailComponent } from './components/detail/detail.component';
     }],
     entryComponents: [
       PayrollConceptsComponent,
-      ExportBottomSheetComponent
+      ExportBottomSheetComponent,
+      PayDialogComponent
     ]
 })
 export class PayrollModule { }

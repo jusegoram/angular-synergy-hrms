@@ -40,34 +40,33 @@ router.post('/', function (req, res) {
               if(maxErr) console.log(maxErr);
               else {
                 maxEmployeeId = parseInt(max[0].employeeId, 10);
-              }
-            });
-            csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-            .on('data', (data) => {
-                data['_id'] = new mongoose.Types.ObjectId();
-                data['company'] = null;
-                data['payroll'] = null;
-                data['personal'] = null;
-                employees.push(data);
-            })
-            .on('end', (result) => {
-                let counter = 0;
-                let duplicate = 0;
-                async.each(employees, (employee, callback) => {
-                  maxEmployeeId++;
-                  if(employee.employeeId === '') employee.employeeId = maxEmployeeId;
-                   EmployeeSchema.create(employee, (err, created) =>{
-                    if(err) {
-                      duplicate++
-                      callback();
-                    }else{
-                      counter++;
-                      callback();
-                    }
-                  });
+                csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+                .on('data', (data) => {
+                    data['_id'] = new mongoose.Types.ObjectId();
+                    data['company'] = null;
+                    data['payroll'] = null;
+                    data['personal'] = null;
+                    employees.push(data);
+                })
+                .on('end', (result) => {
+                    let counter = 0;
+                    let duplicate = 0;
+                    async.each(employees, (employee, callback) => {
+                      maxEmployeeId++;
+                      if(employee.employeeId === '') employee.employeeId = maxEmployeeId;
+                       EmployeeSchema.create(employee, (err, created) =>{
+                        if(err) {
+                          duplicate++
+                          callback();
+                        }else{
+                          counter++;
+                          callback();
+                        }
+                      });
+                    });
+                    return res.sendStatus(200);
                 });
-                console.log('--EMPLOYEE CREATION-- Employees created: '+counter+' Duplicates found: '+duplicate);
-                return res.sendStatus(200);
+              }
             });
         });
 
@@ -129,49 +128,60 @@ router.post('/position', function (req, res) {
 
 });
 
-// router.post('/personal', function (req, res) {
-//     upload(req, res, function (err) {
-//       let personal = [];
-//       let personalFile = req.file;
-//         if (err) {
-//         // An error occurred when uploading
-//         console.log(err);
-//         return res.status(422).send("an Error occured");
-//         }
-//         if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv'){
-//             return res.status(400).send("Sorry only CSV files can be processed for upload");
-//         }
-//         csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-//         .on('data', function(data){
-//             data['_id'] = new mongoose.Types.ObjectId();
-//             data['employee'] = null;
-//             personal.push(data);
+router.post('/personal',  (req, res)  => {
+    upload(req, res,  (err) => {
+      let personal = [];
+      let personalFile = req.file;
+        if (err) res.status(422).send("an Error occured");
+        if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv')res.status(400).send("Sorry only CSV files can be processed for upload");
 
-//         })
-//         .on('end', function(){
-//             async.each(personal, function(per, callback){
-//               EmployeeSchema.findOne({'employeeId': per.employeeId}, function(err, res){
-//                     if(err){
-//                         callback(err)
-//                     }else{
-//                         res.personal = per._id;
-//                         per.employee = res._id;
-//                         res.save();
-//                         callback();
-//                     }
-//                 })
-//             }, function(err){
-//                 if(err){
-//                     console.log(err);
-//                 }else{
-//                     Personal.create(personal);
-//                 }
-//             });
-//             console.log('upload finished');
-//             return res.status(200).send( personal.lenght + ' Registries of personal information of employees was uploaded');
-//         });
-//     });
-// });
+        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+        .on('data', data => {
+            data['_id'] = new mongoose.Types.ObjectId();
+            data['employee'] = null;
+            personal.push(data);
+
+        })
+        .on('end', () => {
+            async.each(personal, (per, callback) => {
+              EmployeeSchema.updateOne({'employeeId': per.employeeId}, { $set: { personal: per }}, (err, res) => {
+                        callback();
+                })
+            }, (err) => {
+                if(err) console.log(err);
+            });
+            return res.status(200).send( personal.length + ' Registries of personal information of employees was uploaded');
+        });
+    });
+});
+
+
+router.post('/personal/hobbies',  (req, res)  => {
+  upload(req, res,  (err) => {
+    let hobbies = [];
+    let hobbiesFile = req.file;
+      if (err) res.status(422).send("an Error occured");
+      if(hobbiesFile.mimetype !== 'application/vnd.ms-excel' && hobbiesFile.mimetype !== 'text/csv')res.status(400).send("Sorry only CSV files can be processed for upload");
+
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', data => {
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          hobbies.push(data);
+
+      })
+      .on('end', () => {
+          async.each(hobbies, (hob, callback) => {
+            EmployeeSchema.updateOne({'employeeId': hob.employeeId}, { $push: { 'personal.hobbies': hob }}, (err, res) => {
+                      callback();
+              })
+          }, (err) => {
+              if(err) console.log(err);
+          });
+          return res.status(200).send( hobbies.length + ' Registries of hobbies information of employees was uploaded');
+      });
+  });
+});
 
 // router.post('/company', function (req, res) {
 //   upload(req, res, function (err) {

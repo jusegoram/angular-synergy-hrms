@@ -19,17 +19,26 @@ var companySchema = new Schema({
   reapplicantTimes: {type: Number, required: false},
   bilingual: {type: Boolean, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var hobbySchema = new Schema({
   hobbyTitle: {type: String, required: false},
-  hobbyComment: {type: String, required: false}
+  hobbyComment: {type: String, required: false},
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var personalSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true},
   maritalStatus:{ type: String, required: false },
+  amountOfChildren: {type: Number, required: false}, // NEW
   address: { type: String, required: false },
   town: { type: String, required: false },
   district: { type: String, required: false },
@@ -37,29 +46,33 @@ var personalSchema = new Schema({
   celNumber: { type: String, required: false },
   telNumber: { type: String, required: false },
   birthDate: {type: Date, required: false},
-  birthPlace: { type: String, required: false },
   birthPlaceDis: { type: String, required: false },
   birthPlaceTow: { type: String, required: false },
   emailAddress: { type: String, required: false },
   emailDate: {type: Date, required: false },
   hobbies: { type: [hobbySchema], required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 let payrollSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   TIN: {type: String, required: true },
-  positionId: { type: String, required: false },
   payrollType: {type: String, required: true },
-  baseWage: {type: String, required: false },
   bankName: {type: String, required: false },
   bankAccount: {type: String, required: false },
   billable: {type: Boolean, required: false},
+  paymentType: {type: String, required: false},
   lastVacation:{type: Object, required: false},
-  lastPayment: {type: Date, required: false},
-  lastPaymentAmount: {type: Number, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var commentsSchema = new Schema({
@@ -70,6 +83,10 @@ var commentsSchema = new Schema({
   commentDate: {type: Date, required: true},
   submittedBy: {type: Object, required: true},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var attritionSchema = new Schema({
@@ -81,29 +98,45 @@ var attritionSchema = new Schema({
   commentDate: {type: Date, required: true},
   submittedBy: {type: Object, required: true},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var familySchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: {type: String, required: true },
   referenceName: { type: String, required: true },
+  age: {type: Number, required: true },
   relationship: { type: String, required: true },
-  celNumber: { type: String, required: true },
+  celNumber: { type: String, required: false },
   telNumber: { type: String, required: false },
   emailAddress: { type: String, required: false },
   address: { type: String, required: false },
   comment: {type: String, required: false},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 var educationSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   institution: { type: String, required: true },
+  levelOfEducation: { type: String, required: true },
+  numberOfYears: { type: String, required: true },
+  mayor: { type: String, required: true },
   description: { type: String, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Main', required: false },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
 });
 
 let EmployeeSchema = new Schema({
@@ -148,6 +181,10 @@ let EmployeeSchema = new Schema({
     // TODO: THESE ARE THE ONLY ONES THAT NEED POPULATION DUE TO NORMALIZATION OF DOCUMENTS
     shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift', autopopulate: true},
     position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false, autopopulate: true},
+    updatedAt: {type: Date, required: false },
+    createdAt: {type: Date, required: false, default: Date.now},
+    createdBy: {type: Object, required: false},
+    updatedBy: {type: Object, required: false},
 });
 
 
