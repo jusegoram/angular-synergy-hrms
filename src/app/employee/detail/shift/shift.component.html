@@ -34,7 +34,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
-      <ng-container *ngIf="dataSource ===  undefined || dataSource && dataSource.data.length === 0">
+      <ng-container *ngIf="dataSource ===  undefined || dataSource && dataSource.data && dataSource.data.length === 0">
           <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
           No Shifts History Available
           </div>
