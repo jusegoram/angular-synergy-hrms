@@ -12,7 +12,8 @@ import {HttpClientModule} from '@angular/common/http';
     AccordionAnchorDirective,
     AccordionLinkDirective,
     AccordionDirective,
-    ToggleFullscreenDirective
+    ToggleFullscreenDirective,
+    MinuteSecondsPipe
   ],
   imports: [
     HttpClientModule,
