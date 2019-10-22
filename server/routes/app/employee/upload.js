@@ -257,6 +257,11 @@ router.post('/payroll', function (req, res) {
         })
         .on('end', function(){
             async.each(payroll, function(pay, callback){
+              if(pay.billable.toLowerCase() === 'true'){
+                pay.billable = true;
+              }else if(pay.billable.toLowerCase() === 'false') {
+                pay.billable = false;
+              }
               EmployeeSchema.updateOne({'employeeId': payroll.employeeId}, {$set: {payroll: pay}}, (err, doc) => {
                 if(err) callback(err);
                 else callback();

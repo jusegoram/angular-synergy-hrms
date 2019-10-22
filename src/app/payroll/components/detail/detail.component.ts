@@ -1,3 +1,4 @@
+import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { MatTableDataSource } from '@angular/material';
 import { ChartData, Datum } from './../../../shared/ChartData';
 import { Component, OnInit, NgZone } from '@angular/core';
@@ -26,7 +27,7 @@ export class DetailComponent implements OnInit {
   dataSource:any;
   filterItems: any;
   filterValue = '';
-  constructor(private route: ActivatedRoute, private zone: NgZone) { }
+  constructor(private route: ActivatedRoute, private zone: NgZone, private minutesecondsPipe: MinuteSecondsPipe) { }
 
   ngOnInit() {
     this.resolvedData = this.route.snapshot.data['payroll'];
@@ -129,7 +130,7 @@ export class DetailComponent implements OnInit {
   setClientTableData(client){
     const data = JSON.parse(JSON.stringify(this.stats.filter(item => item._id.client === client)[0]))
     delete data._id;
-    const mappedData = Object.keys(data).map( (key) => {
+    const mappedData = Object.keys(data).map( (key, index) => {
       const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
       if (key === 'campaigns') {
@@ -138,9 +139,12 @@ export class DetailComponent implements OnInit {
           value: data[key].length
         }
       } else {
+        const transform = this.minutesecondsPipe.transform(Math.round( data[key] * 100)/100)
+        const value = index === 5 || index === 7 || index === 9 || index === 11
+        ? transform : Math.round( data[key] * 100)/100;
         return {
           label: finalResult,
-          value:  Math.round( data[key] * 100)/100
+          value:  value
         }
       }
     });
@@ -167,7 +171,7 @@ export class DetailComponent implements OnInit {
       totalEmployeeContributions: 0,
     };
 
-    const returnedArr = Object.keys(calculatedTotal).map( (key) => {
+    const returnedArr = Object.keys(calculatedTotal).map( (key, index) => {
       const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
       if (key === 'campaigns') {
@@ -176,9 +180,14 @@ export class DetailComponent implements OnInit {
           value:  data.reduce((a, b) => {return {[key]: a[key].concat(b[key])}})[key].length
         }
       } else {
+        let value
+        if(index === 5 || index === 7 || index ===  9 || index === 11) {
+          const calc = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
+          value = this.minutesecondsPipe.transform(calc)
+        } else value = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
         return {
           label: finalResult,
-          value:  Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
+          value:  value
         }
       }
     });

@@ -395,7 +395,7 @@ export class PayrollRow {
 
   calculateTotalIncomeTax(incometaxTable: any[]) {
     return new Promise((res, rej) => {
-      const earnings = this.grossWage - this.totalOtherpay;
+      const earnings = this.grossWage - this.totalOtherpay - this.totalBonusPay;
       if (earnings > 500) {
         if(earnings > incometaxTable[incometaxTable.length - 1]) {
           this.incomeTax = incometaxTable[incometaxTable.length - 1].taxAmount;

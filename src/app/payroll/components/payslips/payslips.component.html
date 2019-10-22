@@ -1,3 +1,480 @@
-<p>
-  payslips works!
-</p>
+<mat-toolbar class="header"  color="primary">
+    <mat-toolbar-row>
+        <span>Payslips</span>
+        <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+    </mat-toolbar-row>
+    <mat-toolbar-row>
+      </mat-toolbar-row>
+  </mat-toolbar>
+<div class="mat-card-top">
+  <mat-card class="pa-1">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+        <div>
+            <mat-card-title><h4>PAY RUNS</h4></mat-card-title>
+            <mat-card-subtitle>Select a pay run, then you can choose a specific employee to get his payslip</mat-card-subtitle>
+        </div>
+        <div fxFlex="35%"></div>
+        <button mat-flat-button color='accent' [disabled]='checkedRows?.selected?.length === 0' (click)="getRecords()">
+            GET RECORDS FROM PAY RUN
+          </button>
+      </div>
+      <mat-card-content>
+        <div >
+
+            <!-- TODO: FIX THE PAYSLIP FEATURE -->
+            <!-- <button mat-flat-button color='primary' (click)="sendPayslips('')">
+                SEND PAYSLIPS
+              </button> -->
+
+
+        </div>
+        <mat-table #table [dataSource]="dataSource" matSort>
+
+          <ng-container matColumnDef="selected">
+            <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                  matTooltip='Select One Pay Run'
+                  (change)="$event ? checkedRows.toggle(element) : null"
+                  [checked]="checkedRows.isSelected(element)"
+                  >
+                  </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="payRun">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Pay Run </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element?.payedDate |  date:'EEE - LLL d - yyyy' }} </mat-cell>
+                </ng-container>
+
+          <ng-container matColumnDef="fromDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.fromDate |  date:'EEE - LLL d - yyyy' }} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="toDate">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.toDate | date:'EEE - LLL d - yyyy' }}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="employeesAmount">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Employees Payed </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.employeesAmount}} </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="totalPayed">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="totalCompanyContributions">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Company Social Contribution </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{element?.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="totalEmployeeContributions">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Social Contribution </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{element?.totalEmployeeContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="totalTaxes">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Income Tax </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element?.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="pa-1" *ngIf='records.length !== 0'>
+      <h4>SELECTED PAY RUN RECORDS</h4>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+          <mat-form-field appearance="outline" style="width: 40%">
+              <mat-select placeholder="employees" [(ngModel)]="selectedValue" name="employees">
+                  <mat-option *ngFor="let record of records" [value]="record">
+                    {{record.employeeId}} - {{record.firstName}} {{record.middleName}} {{record.lastName}}
+                  </mat-option>
+                </mat-select>
+          </mat-form-field>
+          <div fxFlex="100%" fxFlexFill>
+          </div>
+          <button mat-flat-button color="primary" (click)="getPayslip()">DOWNLOAD PAYSLIP</button>
+        </div>
+
+
+    </mat-card>
+
+    <mat-card *ngIf="employeePayslip" class="hidden template">
+      <style>
+        /* body {
+        background: #f0f0f0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+        height: 100%;
+        } */
+
+        /* @import url('https://fonts.googleapis.com/css?family=Roboto:200,300,400,600,700'); */
+
+        * .template{
+        font-family: 'Roboto', sans-serif;
+        font-size: 12px;
+        color: #444;
+        }
+
+        #payslip {
+        width: calc( 8.5in - 80px );
+        height: calc( 11in - 60px );
+        background: #fff;
+        padding: 30px 40px;
+        }
+
+        #title {
+        margin-bottom: 20px;
+        font-size: 38px;
+        font-weight: 600;
+        }
+
+        #scope {
+        border-top: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        padding: 7px 0 4px 0;
+        display: flex;
+        justify-content: space-around;
+        }
+
+        #scope > .scope-entry {
+        text-align: center;
+        }
+
+        #scope > .scope-entry > .value {
+        font-size: 14px;
+        font-weight: 700;
+        }
+
+        .content {
+        display: flex;
+        border-bottom: 1px solid #ccc;
+        height: 880px;
+        }
+
+        .content .left-panel {
+        border-right: 1px solid #ccc;
+        min-width: 200px;
+        padding: 20px 16px 0 0;
+        }
+
+        .content .right-panel {
+        width: 100%;
+        padding: 10px 0  0 16px;
+        }
+
+        #employee {
+        text-align: center;
+        margin-bottom: 20px;
+        }
+        #employee #name {
+        font-size: 15px;
+        font-weight: 700;
+        }
+
+        #employee #email {
+        font-size: 11px;
+        font-weight: 300;
+        }
+
+        .details, .contributions, .ytd, .gross {
+        margin-bottom: 20px;
+        }
+
+        .details .entry, .contributions .entry, .ytd .entry {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        }
+
+        .details .entry .value, .contributions .entry .value, .ytd .entry .value {
+        font-weight: 700;
+        max-width: 130px;
+        text-align: right;
+        }
+
+        .gross .entry .value {
+        font-weight: 700;
+        text-align: right;
+        font-size: 16px;
+        }
+
+        .contributions .title, .ytd .title, .gross .title {
+        font-size: 15px;
+        font-weight: 700;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 4px;
+        margin-bottom: 6px;
+        }
+
+        .content .right-panel .details {
+        width: 100%;
+        }
+
+        .content .right-panel .details .entry {
+        display: flex;
+        padding: 0 10px;
+        margin: 6px 0;
+        }
+
+        .content .right-panel .details .label {
+        font-weight: 700;
+        width: 120px;
+        }
+
+        .content .right-panel .details .detail {
+        font-weight: 600;
+        width: 130px;
+        }
+
+        .content .right-panel .details .rate {
+        font-weight: 400;
+        width: 80px;
+        font-style: italic;
+        letter-spacing: 1px;
+        }
+
+        .content .right-panel .details .amount {
+        text-align: right;
+        font-weight: 700;
+        width: 90px;
+        }
+
+        .content .right-panel .details .net_pay div, .content .right-panel .details .nti div {
+        font-weight: 600;
+        font-size: 12px;
+        }
+
+        .content .right-panel .details .net_pay, .content .right-panel .details .nti {
+        padding: 3px 0 2px 0;
+        margin-bottom: 10px;
+        background: rgba(0, 0, 0, 0.04);
+        }
+        </style>
+
+        <div id="payslip">
+        <div id="title">Payslip</div>
+        <div id="scope">
+        <div class="scope-entry">
+          <div class="title">PAY RUN</div>
+          <div class="value">{{checkedRows.selected[0].payedDate |  date:'LLL dd, yyyy' }}</div>
+        </div>
+        <div class="scope-entry">
+          <div class="title">PAY PERIOD</div>
+          <div class="value">{{checkedRows.selected[0].fromDate |  date:'LLL dd' }} - {{checkedRows.selected[0].toDate |  date:'LLL dd, yyyy' }}</div>
+        </div>
+        </div>
+        <div class="content">
+        <div class="left-panel">
+          <div id="employee">
+            <div id="name">
+              {{employeePayslip.employeeName}}
+            </div>
+            <div id="email">
+              sgomez@rccbpo.com
+            </div>
+          </div>
+          <div class="details">
+            <div class="entry">
+              <div class="label">Employee ID</div>
+              <div class="value">{{ employeePayslip?.employeeId }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Hourly Rate</div>
+              <div class="value">{{ employeePayslip?.hourlyRate | currency:'BZD':'symbol-narrow':'1.2-2' }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Company Name</div>
+              <div class="value">RCC BPO</div>
+            </div>
+            <div class="entry">
+              <div class="label">Date Hired</div>
+              <div class="value">{{ employeePayslip?.employeeCompany.hireDate |  date:'LLL dd, yyyy'  }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Position</div>
+              <div class="value">{{ employeePayslip?.employeePosition.name }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Payroll Cycle</div>
+              <div class="value">{{ employeePayslip?.payrollType }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Cost Center</div>
+              <div class="value">Employee Payroll</div>
+            </div>
+            <div class="entry">
+              <div class="label">TIN</div>
+              <div class="value">{{ employeePayslip?.employeePayroll.TIN }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">SSN</div>
+              <div class="value">{{ employeePayslip?.socialSecurity }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Prepared by</div>
+              <div class="value">Finance Department</div>
+            </div>
+          </div>
+          <div class="gross">
+            <div class="title">Gross Income</div>
+            <div class="entry">
+              <div class="label"></div>
+              <div class="value">{{ employeePayslip?.grossWage | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+            </div>
+          </div>
+          <div class="contributions">
+            <div class="title">Employer Contribution</div>
+            <div class="entry">
+              <div class="label">SSS</div>
+              <div class="value">{{ employeePayslip?.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+            </div>
+          </div>
+          <div class="ytd">
+          </div>
+        </div>
+        <div class="right-panel">
+          <div class="details">
+            <div class="basic-pay">
+              <div class="entry">
+                <div class="label">Basic Pay</div>
+                <div class="detail"></div>
+                <div class="rate">{{ employeePayslip?.basicWage *52 /26 | currency:'BZD':'symbol-narrow':'1.2-2'}}/Semi-Monthly</div>
+                <div class="amount">{{ employeePayslip?.basicWage *52 /26 | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="salary">
+              <div class="entry">
+                <div class="label">Salary</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Undertime</div>
+                <div class="rate">{{employeePayslip?.totalRegularHours | number: '1.2-2'}}hrs@{{ employeePayslip?.hourlyRate | currency:'BZD':'symbol-narrow':'1.2-2' }}/hr</div>
+                <div class="amount">({{employeePayslip?.totalRegularHoursPay | currency:'BZD':'symbol-narrow':'1.2-2'}})</div>
+              </div>
+              <!-- <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Unworked Holiday</div>
+                <div class="rate">16hrs@259.62/hr</div>
+                <div class="amount">4,153.92</div>
+              </div> -->
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Regular Holiday</div>
+                <div class="rate">{{ employeePayslip?.totalHolidayHoursX1 | number: '1.2-2' }}hrs@{{ employeePayslip?.hourlyRate * 1.5 | currency:'BZD':'symbol-narrow':'1.2-2' }}/hr</div>
+                <div class="amount">{{ employeePayslip?.totalHolidayHoursX1Pay | currency:'BZD':'symbol-narrow':'1.2-2' }}</div>
+              </div>
+
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Special Holiday</div>
+                <div class="rate">{{ employeePayslip?.totalHolidayHoursX2 | number: '1.2-2' }}hrs@{{ employeePayslip?.hourlyRate * 2 | currency:'BZD':'symbol-narrow':'1.2-2'}}/hr</div>
+                <div class="amount">{{ employeePayslip?.totalHolidayHoursX2Pay | currency:'BZD':'symbol-narrow':'1.2-2' }}</div>
+              </div>
+            </div>
+            <div class="leaves">
+              <div class="entry">
+                <div class="label">Other Payments</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry paid">
+                <div class="label"></div>
+                <div class="detail">Total Other Payments</div>
+                <div class="rate"></div>
+                <div class="amount">{{ employeePayslip?.totalOtherpay  | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="taxable_commission"></div>
+            <div class="contributions">
+              <div class="entry">
+                <div class="label">Contributions</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">SSS</div>
+                <div class="rate"></div>
+                <div class="amount">({{ employeePayslip?.totalEmployeeContributions  | currency:'BZD':'symbol-narrow':'1.2-2'}})</div>
+              </div>
+            </div>
+            <div class="nti">
+              <div class="entry">
+                <div class="label">TAXABLE INCOME</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">{{ employeePayslip?.grossWage - employeePayslip?.totalOtherPay - employeePayslip?.totalBonus | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="withholding_tax">
+              <div class="entry">
+                <div class="label">Income Tax</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">{{ employeePayslip.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="non_taxable_bonus">
+              <div class="entry">
+                <div class="label">Non-Taxable Bonus</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail"> Total Bonus</div>
+                <div class="rate"></div>
+                <div class="amount">{{ employeePayslip?.totalBonus | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+            <div class="deductions">
+              <div class="entry">
+                <div class="label">Total Deductions</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Deduction Amount</div>
+                <div class="rate"></div>
+                <div class="amount">({{ employeePayslip?.totalDeductions | currency:'BZD':'symbol-narrow':'1.2-2'}})</div>
+              </div>
+            </div>
+            <div class="net_pay">
+              <div class="entry">
+                <div class="label">NET PAY</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">{{ employeePayslip?.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        </div>
+    </mat-card>
+</div>

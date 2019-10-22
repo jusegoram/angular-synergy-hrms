@@ -1,3 +1,4 @@
+import { MinuteSecondsPipe } from './../shared/pipes/minute-seconds.pipe';
 import { DetailResolver } from './components/detail/detail.resolver';
 import { NgModule } from '@angular/core';
 import {CommonModule, TitleCasePipe} from '@angular/common';
@@ -58,7 +59,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     MainComponent,
     DetailComponent,
     PayDialogComponent],
-  providers: [ PayrollService, DetailResolver, TitleCasePipe, CdkColumnDef,
+  providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

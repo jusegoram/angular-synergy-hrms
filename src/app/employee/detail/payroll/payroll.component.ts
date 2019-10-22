@@ -29,15 +29,11 @@ export class PayrollComponent implements OnInit {
     private sessionService: SessionService,
     public snackBar: MatSnackBar,
     public fb: FormBuilder) {
-    this.newPayroll = new EmployeePayroll('', '', '', '', '', '', '', '', null);
+    this.newPayroll = new EmployeePayroll('', '', '', '', '', '', '', null, '');
     this.new = false;
   }
 
-//   ngOnChanges(changes: SimpleChanges) {
-//     if (this.employeeId !== "" && changes['employeeId']) {
-//       this.loadInfo();
-//     }
-//   }
+
   ngOnInit() {
     if (!this.payroll) {
       this.payroll = this.newPayroll;
@@ -45,11 +41,11 @@ export class PayrollComponent implements OnInit {
     }
     this.payrollForm = this.fb.group({
       TIN: [this.payroll.TIN],
-      positionId: [this.payroll.positionId ],
       payrollType: [this.payroll.payrollType] ,
       bankName: [this.payroll.bankName],
       bankAccount: [this.payroll.bankAccount],
-      billable: [this.payroll.billable]
+      billable: [this.payroll.billable],
+      paymentType: [this.payroll.paymentType]
     });
 
   }
@@ -60,11 +56,11 @@ export class PayrollComponent implements OnInit {
         this.employee.employeeId,
         this.employee._id,
         this.payrollForm.value.TIN,
-        this.payrollForm.value.positionId,
         this.payrollForm.value.payrollType,
         this.payrollForm.value.bankName,
         this.payrollForm.value.bankAccount,
-        this.payrollForm.value.billable);
+        this.payrollForm.value.billable,
+        this.payrollForm.value.paymentType);
       this.employeeService.savePayroll(post).subscribe(
         data => {
           this.snackBar.open('Employee information updated successfully', 'thank you', {
@@ -83,11 +79,11 @@ export class PayrollComponent implements OnInit {
         this.payroll.employeeId,
         this.payroll.employee,
         this.payrollForm.value.TIN,
-        this.payrollForm.value.positionId,
         this.payrollForm.value.payrollType,
         this.payrollForm.value.bankName,
         this.payrollForm.value.bankAccount,
-        this.payrollForm.value.billable);
+        this.payrollForm.value.billable,
+        this.payrollForm.value.paymentType);
       this.employeeService.updatePayroll(update).subscribe(
         data => {
           this.snackBar.open('Employee information updated successfully', 'thank you', {

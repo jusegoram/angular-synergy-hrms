@@ -10,69 +10,103 @@
     </mat-expansion-panel-header>
     <form class="form"
           [formGroup]="payrollForm"
-          id="payrollForm" fxLayout="row" fxLayout.xs="column" fxLayoutGap="15px" fxLayoutAlign="center center">
+          id="payrollForm" fxLayout.xs="column">
 
-      <mat-form-field appearance="outline">
-          <mat-label>TIN #</mat-label>
-          <input matInput formControlName="TIN"
-          placeholder="Tax Identification Number"
-          [readonly]="!this.authorization.edit">
-      </mat-form-field>
+      <table style="width: 100%">
+        <tr fxLayout.xs="column">
+          <td colspan=3>
+              <mat-form-field appearance="outline">
+                  <mat-label>TIN #</mat-label>
+                  <input matInput formControlName="TIN"
+                  placeholder="Tax Identification Number"
+                  [readonly]="!this.authorization.edit">
+              </mat-form-field>
+          </td>
+          <td colspan=3>
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+                  <mat-label>Payroll Type</mat-label>
+                  <mat-select placeholder="Payroll Type" formControlName="payrollType" >
+                      <mat-option value="">
+                          N/A
+                      </mat-option>
+                    <mat-option *ngFor="let payrollType of payrollTypes" [value]="payrollType.value">
+                        {{payrollType.name}}
+                    </mat-option>
+                  </mat-select>
+              </mat-form-field>
+          </td>
+        </tr>
+        <tr fxLayout.xs="column">
+          <td colspan=2>
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+                  <mat-label>Bank Name</mat-label>
+                  <mat-select placeholder="Bank Name" formControlName="bankName">
+                      <mat-option value="">
+                          N/A
+                      </mat-option>
+                      <mat-option value="Heritage Bank">
+                        Heritage Bank
+                    </mat-option>
+                    <mat-option value="Scotiabank">
+                        Scotiabank
+                    </mat-option>
+                    <mat-option value="Atlantic Bank">
+                        Atlantic Bank
+                    </mat-option>
+                    <mat-option value="Belize Bank">
+                        Belize Bank
+                    </mat-option>
+                    <mat-option value="SJCU">
+                      SJCU
+                  </mat-option>
+                  </mat-select>
+              </mat-form-field>
+          </td>
+          <td colspan=2>
+              <mat-form-field appearance="outline">
+                  <mat-label>Bank Account No.</mat-label>
+                  <input matInput formControlName="bankAccount"
+                  placeholder="1234567"
+                  [readonly]="!this.authorization.edit">
+              </mat-form-field>
 
-      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-          <mat-label>Payroll Type</mat-label>
-          <mat-select placeholder="Payroll Type" formControlName="payrollType" >
-              <mat-option value="">
-                  N/A
-              </mat-option>
-            <mat-option *ngFor="let payrollType of payrollTypes" [value]="payrollType.value">
-                {{payrollType.name}}
-            </mat-option>
-          </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-          <mat-label>Bank Name</mat-label>
-          <mat-select placeholder="Bank Name" formControlName="bankName">
-              <mat-option value="">
-                  N/A
-              </mat-option>
-            <mat-option value="Scotiabank">
-                Scotiabank
-            </mat-option>
-            <mat-option value="Atlantic Bank">
-                Atlantic Bank
-            </mat-option>
-            <mat-option value="Belize Bank">
-                Belize Bank
-            </mat-option>
-            <mat-option value="Belize Bank">
-              SJCU
-          </mat-option>
-          </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-          <mat-label>Bank Account No.</mat-label>
-          <input matInput formControlName="bankAccount"
-          placeholder="1234567"
-          [readonly]="!this.authorization.edit">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-          <mat-label>Billable</mat-label>
-        <mat-select placeholder="Billable" formControlName="billable">
-            <mat-option value=null>
-                N/A
-            </mat-option>
-          <mat-option [value]=true>
-             Yes
-          </mat-option>
-          <mat-option [value]=false>
-              No
-           </mat-option>
-        </mat-select>
-      </mat-form-field>
+          </td>
+          <td colspan=2>
+              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+                  <mat-label>Billable</mat-label>
+                <mat-select placeholder="Billable" formControlName="billable">
+                    <mat-option value=null>
+                        N/A
+                    </mat-option>
+                  <mat-option [value]=true>
+                     Yes
+                  </mat-option>
+                  <mat-option [value]=false>
+                      No
+                   </mat-option>
+                </mat-select>
+              </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+            <td colspan=6>
+                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
+                    <mat-label>Payment Type</mat-label>
+                  <mat-select placeholder="paymentType" formControlName="paymentType">
+                      <mat-option value=null>
+                          Select
+                      </mat-option>
+                    <mat-option value='Wire Transfer'>
+                       Wire Transfer
+                    </mat-option>
+                    <mat-option value='Cheque'>
+                        Cheque
+                     </mat-option>
+                  </mat-select>
+                </mat-form-field>
+            </td>
+        </tr>
+      </table>
     </form>
   <button mat-stroked-button color="primary" class="button" (click)="onSubmit()" *ngIf="this.authorization.edit"> <mat-icon>save</mat-icon>&nbsp; SAVE</button>
   </mat-expansion-panel>

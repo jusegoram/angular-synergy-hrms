@@ -65,32 +65,55 @@
         </mat-paginator>
         </div>
       <div class="pa-1" fxLayout="column">
-        <div fxLayout="row" fxLayout.xs="column" [formGroup]="familyForm">
-          <mat-form-field class="form" appearance="outline">
-            <mat-label>Contact's Name</mat-label>
-          <input matInput placeholder="Contact Name" formControlName="name">
-        </mat-form-field>
-        <mat-form-field class="form" appearance="outline">
-            <mat-label>Contact's Relationship</mat-label>
-          <input matInput placeholder="Father / Mother / Son ... etc" formControlName="relationship">
-        </mat-form-field>
-        <mat-form-field class="form" appearance="outline">
-          <mat-label>Contact's Phone Number (Cel)</mat-label>
-          <input matInput placeholder="600-0000" formControlName="celNumber" type="tel"  pattern="[0-9]{3}-[0-9]{4}">
-        </mat-form-field>
-        <mat-form-field class="form" appearance="outline">
-          <mat-label>Contat's Phone Number (Tel)</mat-label>
-          <input matInput placeholder="600-0000" formControlName="telNumber"  type="tel"  pattern="[0-9]{3}-[0-9]{4}">
-        </mat-form-field>
-        <mat-form-field class="form" appearance="outline">
-          <mat-label>Contact's Email Address</mat-label>
-          <input matInput placeholder="email@provider.com" formControlName="emailAddress">
-        </mat-form-field>
-        <mat-form-field class="form" appearance="outline">
-          <mat-label>Contact's Home Address</mat-label>
-          <input matInput placeholder="123 Example St. Belize City" formControlName="address">
-        </mat-form-field>
-
+        <div fxLayout.xs="column" [formGroup]="familyForm">
+          <table style="width: 100%">
+            <tr fxLayout.xs="column">
+              <td colspan=3 >
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contact's Name</mat-label>
+                    <input matInput placeholder="Contact Name" formControlName="name">
+                  </mat-form-field>
+              </td>
+              <td colspan=3>
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contact's Relationship</mat-label>
+                    <mat-select placeholder="Placeholder" formControlName="relationship" name="item">
+                      <mat-option *ngFor="let item of familyRelationships" [value]="item.value">
+                        {{item.viewValue}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+              </td>
+            </tr>
+            <tr fxLayout.xs="column">
+              <td colspan=2>
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contact's Phone Number (Cel)</mat-label>
+                      <input matInput placeholder="600-0000" formControlName="celNumber" type="tel"  pattern="[0-9]{3}-[0-9]{4}">
+                    </mat-form-field>
+              </td>
+              <td colspan=2>
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contat's Phone Number (Tel)</mat-label>
+                      <input matInput placeholder="600-0000" formControlName="telNumber"  type="tel"  pattern="[0-9]{3}-[0-9]{4}">
+                    </mat-form-field>
+              </td>
+              <td colspan=2>
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contact's Email Address</mat-label>
+                      <input matInput placeholder="email@provider.com" formControlName="emailAddress">
+                    </mat-form-field>
+              </td>
+            </tr>
+            <tr fxLayout.xs="column">
+              <td colspan=6>
+                  <mat-form-field class="form" appearance="outline">
+                      <mat-label>Contact's Home Address</mat-label>
+                      <input matInput placeholder="123 Example St. Belize City" formControlName="address">
+                    </mat-form-field>
+              </td>
+            </tr>
+          </table>
       </div>
       <div [formGroup]="familyForm" style="width: 100%">
           <mat-form-field appearance="fill" class="form">

@@ -80,6 +80,14 @@ export class PayrollService {
       headers: headers
     });
   }
+
+  getPayslip(employee, payId){
+    const params = new HttpParams().set('payId', payId)
+    return this.httpClient.get<any>(`/api/v1/payroll/payslips/${employee}`, {
+      params: params
+    });
+  }
+
   getReport(query: any): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

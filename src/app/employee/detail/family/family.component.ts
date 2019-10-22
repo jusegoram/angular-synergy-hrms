@@ -17,6 +17,34 @@ export class FamilyComponent implements OnInit {
   public familyForm: FormGroup;
   public isEdit = false;
   public expandedComment = false;
+
+  public familyRelationships = [
+    {value: 'Son', viewValue: 'Son'},
+    {value: 'Daughter', viewValue: 'Daughter'},
+    {value: 'Son-in-law', viewValue: 'Son-in-law'},
+    {value: 'Daughter-in-law', viewValue: 'Daughter-in-law'},
+    {value: 'Niece', viewValue: 'Niece'},
+    {value: 'Nephew', viewValue: 'Nephew'},
+    {value: 'Cousin', viewValue: 'Cousin'},
+    {value: 'Cousin’s husband', viewValue: 'Cousin’s husband'},
+    {value: 'Cousin’s wife', viewValue: 'Cousin’s wife'},
+    {value: 'Wife', viewValue: 'Wife'},
+    {value: 'Husband', viewValue: 'Husband'},
+    {value: 'Brother', viewValue: 'Brothe'},
+    {value: 'Sister', viewValue: 'Sister'},
+    {value: 'Brother-in-law', viewValue: 'Brother-in-law'},
+    {value: 'Sister-in-law', viewValue: 'Sister-in-law'},
+    {value: 'Father', viewValue: 'Father'},
+    {value: 'Mother', viewValue: 'Mother'},
+    {value: 'Uncle', viewValue: 'Uncle'},
+    {value: 'Aunt', viewValue: 'Aunt'},
+    {value: 'Great-uncle', viewValue: 'Great-uncle'},
+    {value: 'Great-aunt', viewValue: 'Great-aunt'},
+    {value: 'Grandmother', viewValue: 'Grandmother'},
+    {value: 'Grandfather', viewValue: 'Grandfather'},
+    {value: 'Friend', viewValue: 'Friend'},
+
+  ];
   displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address', 'comment', 'edit'];
   editReferenceId: string;
 

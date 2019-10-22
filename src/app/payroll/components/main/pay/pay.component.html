@@ -1,11 +1,11 @@
     <div>
             <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
                     <div fxFlex="65%"></div>
-
-                        <button mat-flat-button color='primary' (click)="sendPayslips('')">
+                        <!-- TODO: FIX THE PAYSLIP FEATURE -->
+                        <!-- <button mat-flat-button color='primary' (click)="sendPayslips('')">
                             SEND PAYSLIPS
-                          </button>
-                          <button mat-flat-button color='accent' (click)="export('')">
+                          </button> -->
+                          <button mat-flat-button color='accent' (click)="export('')" [disabled]='checkedRows?.selected?.length === 0'>
                             EXPORT
                           </button>
 
@@ -16,8 +16,8 @@
                       <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
                       <mat-cell *matCellDef="let element">
                             <mat-checkbox (click)="$event.stopPropagation()"
-                            (change)="$event ? checkedRows.toggle(row) : null"
-                            [checked]="checkedRows.isSelected(row)"
+                            (change)="$event ? checkedRows.toggle(element) : null"
+                            [checked]="checkedRows.isSelected(element)"
                             >
                             </mat-checkbox>
                       </mat-cell>

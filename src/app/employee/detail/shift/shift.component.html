@@ -34,6 +34,11 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>
+      <ng-container *ngIf="dataSource ===  undefined || dataSource && dataSource.data.length === 0">
+          <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
+          No Shifts History Available
+          </div>
+        </ng-container>
       <mat-paginator #paginator
       [pageSize]="3"
       [pageSizeOptions]="[3, 6, 9]">
@@ -86,6 +91,11 @@
             <mat-header-row *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"></mat-header-row>
             <mat-row *matRowDef="let row; columns: ['day', 'onShift', 'shift', 'nextDate'];"></mat-row>
           </mat-table>
+          <ng-container *ngIf="!currentShift">
+              <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
+                Assign a new Shift to see it here...
+              </div>
+            </ng-container>
         </div>
 
     </div>

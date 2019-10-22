@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSnackBar } from '@angular/material';
 import { PayrollService } from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
@@ -26,7 +26,7 @@ export class PayDialogComponent implements OnInit {
     'totalEmployeeContributions',
     'totalTaxes'];
   constructor( private _payrollService: PayrollService, public dialogRef: MatDialogRef<PayDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.wb = XLSX.utils.book_new();
@@ -44,15 +44,26 @@ export class PayDialogComponent implements OnInit {
     })
   }
 
-  export(payrolls){
-    this._payrollService.getPayroll(payrolls, '').subscribe(result =>{
-      const data = result.map(i => i);
-      const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.book_append_sheet(this.wb, main, 'sheet 1');
-    const date = moment().format('MM-DD-YYYY HH:mm:ss').toString();
-    XLSX.writeFile(this.wb, `payroll-${date}.xlsx`);
-    })
+  export(){
+    if(this.checkedRows.selected.length === 1) {
+      const {payrolls, payedDate, fromDate, toDate} = this.checkedRows.selected[0];
+      this._payrollService.getPayroll(payrolls, '').subscribe(result =>{
+        const data = result.map(i => {
+          delete i._id;
+          delete i.payrolls;
+          return Object.assign({
+            'payRun': moment(payedDate).format('MM/DD/YYYY').toString(),
+            'from': moment(fromDate).format('MM/DD/YYYY').toString(),
+            'to': moment(toDate).format('MM/DD/YYYY').toString(),
+          }, i)
+        });
+        const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(this.wb, main, 'sheet 1');
+      const date = moment().format('MM-DD-YYYY HH:mm:ss').toString();
+      XLSX.writeFile(this.wb, `payroll-${date}.xlsx`);
+      })
 
+    }else this.snackBar.open('Please export one Pay run at a time', 'I will, Thanks.', {duration: 5000})
   }
 
 }

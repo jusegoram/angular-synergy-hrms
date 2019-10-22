@@ -356,7 +356,8 @@ let personalMissing = () => {
             { "personal.birthPlaceDis": "" },
             { "personal.birthPlaceTow": "" },
             { "personal.emailAddress": "" },
-            { "personal.emailDate": null }
+            { "personal.emailDate": null },
+            { "personal.hobbies.0": {$exists: false} }
           ]
         },
         { status: "active" }

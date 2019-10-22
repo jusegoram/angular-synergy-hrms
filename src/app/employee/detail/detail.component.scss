@@ -1,27 +1,35 @@
 @import "../../../assets/styles/scss/material.variables";
 
-$mat-toolbar-height-desktop: 150px !default;
-$mat-toolbar-height-mobile-portrait: 142px !default;
-$mat-toolbar-height-mobile-landscape: 136px !default;
+$mat-toolbar-height-desktop: 20px !default;
+$mat-toolbar-height-mobile-portrait: 10px !default;
+$mat-toolbar-height-mobile-landscape: 0px !default;
+
+$mat-toolbar-width-desktop: 70% !default;
+$mat-toolbar-width-mobile-portrait: 90% !default;
+$mat-toolbar-width-mobile-landscape: 90% !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);
+  width: ($mat-toolbar-width-desktop);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media ($mat-xsmall) and (orientation: portrait) {
   .mat-card-top {
     margin-top: -($mat-toolbar-height-mobile-portrait);
+    width: ($mat-toolbar-width-mobile-portrait);
   }
 }
 
 @media ($mat-small) and (orientation: landscape) {
   .mat-card-top {
     margin-top: -($mat-toolbar-height-mobile-landscape);
+    width: ($mat-toolbar-width-mobile-landscape);
   }
 }
-
 mat-form-field {
-  width: 32%;
+  width: 100%;
 }
 .header {
   width: 100% !important;
@@ -61,5 +69,3 @@ mat-form-field {
   pointer-events: none !important;
   cursor: not-allowed !important;
 }
-
-

@@ -1,9 +1,10 @@
 
+
+const fs = require('fs')
 let jwt = require("jsonwebtoken");
 let express = require("express");
 let router = express.Router();
 let mongoose = require("mongoose");
-
 let Employee = require("../../../models/app/employee/employee-main");
 let Hours = require("../../../models/app/operations/operations-hour");
 let PayrollSchemas = require("../../../models/app/payroll/payroll");
@@ -158,6 +159,7 @@ router.get('/', (req, res) => {
         'client': { $first: "$employees.employeeCompany.client" },
         'campaign': { $first: "$employees.employeeCompany.campaign" },
         'billable': { $first: '$employees.employeePayroll.billable' },
+        'paymentType': { $first: '$employees.employeePayroll.paymentType' },
         'bankAccount': { $first: '$employees.employeePayroll.bankAccount' },
         'bankName': { $first: '$employees.employeePayroll.bankName' },
         'payrollType': { $first: '$employees.employeePayroll.payrollType' },
@@ -288,16 +290,13 @@ router.post('/pay', (req, res) => {
 });
 
 
-router.get('/payslips', (req, res) => {
-
-});
-
-router.post('/payslips', async (req, res) => {
+router.get('/payslips/:id', async (req, res) => {
   const {payId} = req.body;
-
+  const {id} = req.params;
   Payroll.aggregate([
     {$match: {payId: payId}},
     { $unwind: "$employees" },
+    {$match: {'employees.employee': id}},
     {$project:{
       'socialTable': 0,
       'incometaxTable': 0,
@@ -313,10 +312,15 @@ router.post('/payslips', async (req, res) => {
       },
       'employeeId' : {$first: '$employees.employeeId'},
       'employeeName': {$first: '$employees.employeeName'},
+      'socialSecurity': {$first: '$employees.socialSecurity'},
+      'hourlyRate': {$first: '$employees.hourlyRate'},
+      'payrollType': {$first: '$employees.payrollType'},
       'emailAddress': {$first: '$employees.emailAddress'},
       'employeeCompany': {$first: '$employees.employeeCompany'},
       'employeePosition' : {$first: '$employees.employeePosition'},
       'employeePayroll': {$first: '$employees.employeePayroll'},
+      "basicWage": {$first: '$employees.wage'},
+      "grossWage": {$sum: '$employees.grossWage'},
       "totalPayed" : {$sum: '$employees.netWage'},
       'totalWeeklyWages': {$sum: '$employees.wage'},
       'totalTaxes': {$sum:'$employees.incomeTax'},
@@ -364,19 +368,22 @@ router.post('/payslips', async (req, res) => {
   ]).exec((err, doc) => {
     if (err) res.status(500).json(err);
     var itemsProcessed = 0;
-    doc.forEach(async (item) => {
-        itemsProcessed++
-        const html = payslipTemplate({employeePayslip: item})
-          const email =  sendEmail({
-            recipient: 'sgomez@rccbpo.com',
-            subject: 'test noreply email',
-            html: html,
-          })
-           await email;
-      if(itemsProcessed === doc.length) {
-        res.status(200).json({message: 'all emails sent'})
-      }
-    })
+    employeePayslip = doc[0];
+    //const html = payslipTemplate({employeePayslip: employeePayslip})
+
+    res.status(200).json(employeePayslip);
+    //     itemsProcessed++
+    //     const html = payslipTemplate({employeePayslip: item})
+    //       const email =  sendEmail({
+    //         recipient: 'sgomez@rccbpo.com',
+    //         subject: 'test noreply email',
+    //         html: html,
+    //       })
+    //        await email;
+    //   if(itemsProcessed === doc.length) {
+    //     res.status(200).json({message: 'all emails sent'})
+    //   }
+    // })
   })
 
 

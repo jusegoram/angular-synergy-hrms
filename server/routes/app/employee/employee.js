@@ -48,21 +48,6 @@ router.put('/main', function (req, res, next) {
     }
     res.status(200).json(result);
   });
-  // Employee.findById(req.query.id, (err, result) => {
-  //   if (!result)
-  //     return next(new Error('Could not load Document'));
-  //   else {
-  //     result.status = req.body.status.toLowerCase();
-  //     result.save();
-  //     if (err) {
-  //       return res.status(500).json({
-  //         title: 'An error occurred',
-  //         error: err
-  //       });
-  //     }
-  //   }
-  //   res.status(200).json(result);
-  // });
 });
 
 router.put('/shift', function(req,res, next){
@@ -328,12 +313,12 @@ router.post('/payroll', (req, res) => {
     _id: id,
     employeeId: req.body.employeeId,
     TIN: req.body.TIN,
-    positionId: req.body.positionId,
     payrollType: req.body.payrollType,
     baseWage: req.body.baseWage,
     bankName: req.body.bankName,
     bankAccount: req.body.bankAccount,
     billable: req.body.billable,
+    paymentType: req.body.paymentType,
     employee: req.body.employee
   };
   Employee.findByIdAndUpdate(req.body.employee,{$set: {payroll: payroll}}, (err, employee) => {

@@ -138,11 +138,11 @@ export class EmployeePayroll {
               public employeeId: string,
               public employee: string,
               public TIN: string,
-              public positionId: string,
               public payrollType: string,
               public bankName: string,
               public bankAccount: string,
               public billable: boolean,
+              public paymentType: string,
   ) { }
 }
 
