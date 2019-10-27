@@ -14,11 +14,12 @@ let schema = new Schema({
   employeeName: {type: String, required: true},
   client: {type: String, required: true},
   campaign: {type: String, required: true},
-  dialerId: { type: String, required: true },
+  dialerId: { type: String, required: false },
   date: { type: Date, required: true },
-  systemHours: { type: hhmmssSchema, required: true },
-  tosHours: { type: hhmmssSchema, required: true },
-  timeIn:  { type: hhmmssSchema, required: true },
+  systemHours: { type: hhmmssSchema, required: false },
+  tosHours: { type: hhmmssSchema, required: false },
+  timeIn:  { type: hhmmssSchema, required: false },
+  attendance: {type: String, default: 'present'}, //present, absent, on-leave, on-vacation, unknown
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
 });
 

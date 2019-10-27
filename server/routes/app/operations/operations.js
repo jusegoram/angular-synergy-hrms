@@ -17,7 +17,7 @@ router.post('/hour', (req, res, next) => {
     delete query.date;
   }
   let AllHours = [];
-  const cursor = OperationHours.find(query).lean().cursor();
+  const cursor = OperationHours.find(query).sort({  date: -1, client: 1, campaign: 1 , employeeName: 1}).lean().cursor();
   cursor.on('data', item => AllHours.push(item));
   cursor.on('end', () => {
     if(!AllHours) {

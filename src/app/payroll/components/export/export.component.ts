@@ -115,8 +115,8 @@ export class ExportComponent implements OnInit {
       'company.campaign': queryParam.campaign.name,
       'company.supervisor': queryParam.supervisor,
       'company.manager': queryParam.manager,
-      'company.hireDate': { $gte: queryParam.hireDateFrom, $lt: queryParam.hireDateTo},
-      'company.terminationDate': {$gte: queryParam.terminationDateFrom, $lt: queryParam.terminationDateTo},
+      'company.hireDate': { $gte: queryParam.hireDateFrom, $lte: queryParam.hireDateTo},
+      'company.terminationDate': {$gte: queryParam.terminationDateFrom, $lte: queryParam.terminationDateTo},
       'company.trainingGroupRef': queryParam.trainingGroup,
       'company.trainingGroupNum': queryParam.trainingNo
     };

@@ -136,7 +136,7 @@ constructor(private _opsService: OperationsService, private fb: FormBuilder) {
     let query = {
       'client': queryParam.client,
       'campaign': queryParam.kpiCampaign,
-      'date': {$gte: queryParam.kpiFrom, $lt: queryParam.kpiTo},
+      'date': {$gte: queryParam.kpiFrom, $lte: queryParam.kpiTo},
       'kpiName': queryParam.kpiName,
       'teamId': queryParam.kpiTeamId,
     }

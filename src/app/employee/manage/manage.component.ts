@@ -80,7 +80,6 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           const index = this.selectedEmployees.indexOf(eventid);
           this.selectedEmployees.splice(index, 1);
         }
-        console.log(this.selectedEmployees);
       }
       reload() {
         this.employeeService.clearEmployees();

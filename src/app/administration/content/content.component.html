@@ -11,12 +11,14 @@
     <div class="mat-card-top">
       <mat-card class="container pa-1">
         <h2> Menus </h2>
+        <mat-form-field appearance="outline">
+            <mat-select color="primary" placeholder="Menu Items" [(ngModel)]="selectedMenu" name="item">
+                <mat-option *ngFor="let menu of menus" [value]="menu">
+                  {{menu.name}}
+                </mat-option>
+              </mat-select>
+        </mat-form-field>
 
-        <mat-select color="primary" placeholder="Menu Items" [(ngModel)]="selectedMenu" name="item">
-          <mat-option *ngFor="let menu of menus" [value]="menu">
-            {{menu.name}}
-          </mat-option>
-        </mat-select>
         <mat-card class="menuCard pa-1">
             <mat-form-field style="width:31%; margin: 2px">
                 <input matInput placeholder="Link State" [(ngModel)]="selectedMenu.state">
@@ -67,14 +69,13 @@
 
           </ng-template>
           <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <label>Current Role ID's:</label>
-            <label *ngFor="let item of selectedMenu.roles">&nbsp;{{item }},&nbsp;</label>
+            <label>Page ID:</label>
+            <label>&nbsp;{{selectedMenu.page }},&nbsp;</label>
           </div>
-          <mat-form-field>
-            <input matInput placeholder="Enter role ID" #role name="roleId">
+
+          <mat-form-field appearance="outline">
+            <input matInput placeholder="Enter Page ID" type="number" [(ngModel)]="this.selectedMenu.page">
           </mat-form-field>
-          <button mat-icon-button (click)="onAddRole(role.value); role.value = ''"><mat-icon>add</mat-icon></button>
-          <button mat-icon-button  (click)="onRemoveRole(role.value); role.value = ''"><mat-icon>delete</mat-icon></button>
           <div class="fill-remaining-space"></div>
           <mat-form-field>
             <input matInput placeholder="Enter Position value" type="number" [(ngModel)]="this.selectedMenu.position">

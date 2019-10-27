@@ -307,7 +307,6 @@ export class EmployeeService {
 
 
   deletePosition(position: any) {
-    console.log(position);
     let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`
     return this.httpClient.delete(url);
   }

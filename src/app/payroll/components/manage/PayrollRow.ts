@@ -480,7 +480,6 @@ export class PayrollRow {
         );
       }, Promise.resolve([]))
       .then(arrayOfResults => {
-        console.log('on PayrollRow Class',this);
       });
     }
 

@@ -142,7 +142,6 @@ export class Payroll {
         const employee: PayrollRow = this.employees[i];
         employee.calculatePayrollRow(this.socialTable, this.holidayTable, this.incometaxTable);
         if (i === this.employees.length - 1) {
-          console.log(this);
         }
       }
     }else {

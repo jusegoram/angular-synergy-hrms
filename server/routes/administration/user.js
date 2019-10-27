@@ -60,7 +60,7 @@ router.get('/usersInfoById', (req, res, next) => {
 
 router.get('/allUsers', (req, res, next) => {
   User.find()
-  .populate({path: 'employee', select: '-personal -company -payroll -comments -education -family -position -shift', model: 'employee-main'})
+  .populate({path: 'employee', select: '-personal -payroll -comments -education -family -position -shift', model: 'employee-main'})
   .exec((err, doc)=> {
     if(err){
       res.status(500).json(err);

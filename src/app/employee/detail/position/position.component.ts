@@ -159,13 +159,10 @@ export class PositionComponent implements OnInit {
   deletePosition(position: object){
     this.employeeService.deletePosition(position).subscribe((result:any) => {
      let i = this.dataSource.data.indexOf(position);
-     console.log(i);
     if(i > -1) {
       let newData = JSON.parse(JSON.stringify(this.dataSource.data));
       newData.splice(i, 1);
       this.dataSource = undefined;
-      console.log(this.dataSource);
-      console.log(newData);
       this.populateTable(newData);
     }
       this.snackBar.open('Employee information updated successfully', 'thank you', {

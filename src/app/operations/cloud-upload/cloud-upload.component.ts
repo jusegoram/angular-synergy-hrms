@@ -41,7 +41,7 @@ export class CloudUploadComponent {
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 5000,
+      duration: 10000,
     });
   }
 
@@ -58,8 +58,13 @@ export class CloudUploadComponent {
     this.uploader.onAfterAddingFile = (file) => this.refresh();
     this.uploader.onWhenAddingFileFailed = (item) => this.openSnackBar(`Sorry, we are unable to process any other file formats.
      Please upload only CSV files`, 'Ok');
-    this.uploader.onSuccessItem = (res) => {if (res) { this.refresh(); }};
-
+    this.uploader.onSuccessItem = (res) => {if (res) {
+      this.refresh();
+    this.openSnackBar('Great! the upload was successful', 'Thanks!');
+    }};
+    this.uploader.onErrorItem = (item, res) => {
+      this.openSnackBar(`Woops! Remember that all the fields in the template are REQUIRED AND There can't be any duplicates records for the same Date.`, "Ok, I'll try again");
+    }
     this.hoursUploader = new FileUploader({
       url: '/',
       isHTML5: true
@@ -67,7 +72,6 @@ export class CloudUploadComponent {
   }
 
   onSelectChange() {
-    console.log(this.selected.value);
     this.uploader = null;
     this.setUploader();
   }

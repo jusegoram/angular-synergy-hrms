@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material';
 import { MenuItems, ChildrenItems } from './../../shared/menu-items/menu-items';
 import { Menu } from './../../shared/menu-items/menu-items';
 import { Component, OnInit } from '@angular/core';
@@ -12,7 +13,7 @@ import { noop } from 'rxjs';
 export class ContentComponent implements OnInit {
   public menus: Menu[];
   public selectedMenu: Menu;
-  constructor(private menuItem: MenuItems ) {
+  constructor(private menuItem: MenuItems, private snackbar: MatSnackBar ) {
     this.createSelectedItems();
   }
   ngOnInit() {
@@ -20,7 +21,7 @@ export class ContentComponent implements OnInit {
 
   createSelectedItems() {
     const newMenu: Menu = {
-      _id: 'new', name: 'Add new', state: 'new', icon: '', type: '', children: [], roles: [], position: null
+      _id: 'new', name: 'Add new', state: 'new', icon: '', type: '', children: [], page: null, position: null
      };
      this.menuItem.getActiveMenus().subscribe((data: Menu[]) => {
        this.menus = data;
@@ -30,26 +31,11 @@ export class ContentComponent implements OnInit {
   }
   onSave() {
     this.menuItem.save(this.selectedMenu);
+    this.snackbar.open('New Menu Item was created', 'Great! Thanks.', {duration: 500})
     this.createSelectedItems();
   }
   onAdd() {
     this.menuItem.add(this.selectedMenu);
-  }
-  onAddRole(event) {
-    const role = parseInt(event, 10);
-    if (!this.selectedMenu.roles.includes(role)) {
-      this.selectedMenu.roles.push(role);
-      let roles = this.selectedMenu.roles;
-      this.selectedMenu.roles = roles;
-    }
-  }
-  onRemoveRole(event) {
-    const role = parseInt(event, 10);
-    if (this.selectedMenu.roles.includes(role)) {
-      const i = this.selectedMenu.roles.indexOf(role);
-      this.selectedMenu.roles.splice(i, 1);
-    }
-
   }
 
   onAddSubmenu(name, state) {

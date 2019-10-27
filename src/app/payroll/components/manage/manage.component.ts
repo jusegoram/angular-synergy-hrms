@@ -201,7 +201,6 @@ export class ManageComponent implements OnInit {
         duration: 2000
       });
     }, err => {
-      console.log('error saving payroll', err);
       this.snackBar.open('There was an error saving payroll', 'I will notify IT', {
         duration: 5000
       });
@@ -221,7 +220,6 @@ export class ManageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(employee);
       this._payrollService.payroll.recalculateOnConceptsChange(employee.employee);
       this.snackBar.open('concepts were added succesfully', 'thank you', {
           duration: 2000

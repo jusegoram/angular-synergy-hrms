@@ -37,6 +37,7 @@ router.post('/login', function(req, res, next) {
         userId: user._id.toString(),
         name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
         role: user.role,
+        pages: user.pages,
         rights: user.rights,
       }, RSA_KEY, {
         algorithm: 'RS256',

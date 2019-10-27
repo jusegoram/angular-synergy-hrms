@@ -19,7 +19,7 @@ var BadgeItem = new Schema ({
     icon: { type: String, required: true },
     badge: { type: BadgeItem, required: false },
     children: { type: [ChildrenItems], required: false },
-    roles: { type: [Number] , required: false },
+    page: { type: Number , required: false },
     position: {type: Number, required: false},
   });
 

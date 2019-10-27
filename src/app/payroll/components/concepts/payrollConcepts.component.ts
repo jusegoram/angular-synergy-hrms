@@ -25,7 +25,6 @@ export class PayrollConceptsComponent implements OnInit {
 
   getLastYearPayrolls(id) {
     this._payrollService.getLastYearPayrolls(id).subscribe(result => {
-      console.log(result);
     })
   }
 }

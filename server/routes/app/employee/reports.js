@@ -208,12 +208,13 @@ let companyMissing = () => {
       let employeesLength = employees.length;
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i].company;
-        let client =
-          element.client.length !== undefined && element.client !== null
+        if(element !== null && element !== undefined) {
+          let client =
+          element.client !== undefined && element.client !== null
             ? element.client.length
             : 0;
         let campaign =
-          element.campaign.length !== undefined && element.campaign !== null
+          element.campaign !== undefined && element.campaign !== null
             ? element.campaign.length
             : 0;
         let manager =
@@ -234,8 +235,8 @@ let companyMissing = () => {
         else if (supervisor < 4) checkedEmployees.push(employees[i]);
         else if (hireDate < 1) checkedEmployees.push(employees[i]);
 
+        }else{ checkedEmployees.push(employees[i])}
         if (i === employees.length - 1) {
-          console.log(checkedEmployees);
           resolve(checkedEmployees);
         }
       }

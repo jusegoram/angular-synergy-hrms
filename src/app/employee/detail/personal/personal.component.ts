@@ -196,7 +196,6 @@ export class PersonalComponent implements OnInit, OnChanges {
     if (this.isNew) {
       this.employeeService.savePersonal(employeePersonal).subscribe(
         data => {
-          console.log(data);
           this.snackBar.open('Employee information saved successfully', 'Thank you', {
             duration: 2000,
           });
@@ -210,7 +209,6 @@ export class PersonalComponent implements OnInit, OnChanges {
     } else {
       this.employeeService.updatePersonal(employeePersonal).subscribe(
         data => {
-          console.log(data);
           this.snackBar.open('Employee information updated successfully', 'Thank you', {
             duration: 2000,
           });

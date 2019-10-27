@@ -60,14 +60,12 @@ export class AccountComponent implements OnInit {
     );
   }
   openEditDialog(user){
-    console.log(user);
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       width: '500px',
       data: user,
     });
 
     dialogRef.afterClosed().subscribe( result => {
-      console.log(result);
       this.adminService.editUser(result).subscribe(resp => {
         this.reload();
         this.snackBar.open('User was edited succesfully', 'thank you', {

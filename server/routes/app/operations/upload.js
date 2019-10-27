@@ -46,24 +46,31 @@ router.post('/hours', (req, res) => {
           hour.systemHours = splitTimetoHours(hour.systemHours);
         });
           async.each(hours, (hour, callback) =>{
-            EmployeeSchema.findOne({'employeeId': hour.employeeId}, (error, res) => {
+            EmployeeSchema.findOne({'employeeId': hour.employeeId}, (error, emp) => {
                   if(error)  duplicate++
                   else{
                     counter++;
-                    if(res !== null){
-                      hour.employee = res._id;
-                      hour.employeeName = res.firstName + ' ' + res.lastName;
-                      hour.client = res.company.client;
-                      hour.campaign = res.company.campaign;
-                      callback();
+                    if(emp !== null){
+                      OperationsHours.findOne({employeeId: hour.employeeId, date: hour.date}, (error, doc) => {
+                        if(doc === null) {
+                        console.log('0')
+                        hour.employee = emp._id;
+                        hour.employeeName = emp.firstName + ' ' + emp.lastName;
+                        hour.client = emp.company.client;
+                        hour.campaign = emp.company.campaign;
+                        callback();
+                        }else{
+                          callback();
+                        }
+                      });
                     }else callback();
                   }
               });
           }, err => {
-              if(err) console.log(err);
-               OperationsHours.create(hours).then(res => {}).catch(err => console.log(err));
+               OperationsHours.create(hours).then(h => {
+                 res.status(200).json(h);
+               }).catch(err => res.status(400).json({error: err}));
           });
-          return res.status(200).send( counter + ' Registries of hours information of employees was uploaded and' + duplicate + 'were for some reason not uploaded');
       });
   });
 });

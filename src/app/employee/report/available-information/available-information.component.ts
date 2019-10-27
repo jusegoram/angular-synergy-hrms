@@ -18,16 +18,16 @@ export class AvailableInformationComponent implements OnInit {
   constructor(private _employeeService: EmployeeService) {
 
   }
-  onLoad(){
-    if(!this.isLoaded) {
-      this._employeeService.availableInformation(this.query).subscribe( result => {
+  onLoad() {
+    if (!this.isLoaded) {
+      this._employeeService.availableInformation(this.query).subscribe(result => {
         this.populateTable(result);
         this.isLoaded = true;
       }, error => {
         console.error(error);
       })
-    this.wb = XLSX.utils.book_new();
-  }
+      this.wb = XLSX.utils.book_new();
+    }
   }
 
 
@@ -46,42 +46,87 @@ export class AvailableInformationComponent implements OnInit {
     this.dataSource = new MatTableDataSource(data);
   }
 
-  onExport(){
+  onExport() {
     this.constructTableObj(this.dataSource.data).then((resolved: any[]) => {
       const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(resolved);
       XLSX.utils.book_append_sheet(this.wb, main, 'exported-info');
       XLSX.writeFile(this.wb, 'export-info.xlsx');
-    }, rejected => {})
+    }, rejected => { })
   }
 
-  onClear(){
+  onClear() {
     this.dataSource = null;
     this.isLoaded = false;
   }
+
+
   constructTableObj(arr: any[]) {
     return new Promise((resolve, reject) => {
-      let mapped = arr.map( item => {
+      let mapped = arr.map(item => {
+        let complementaryObject
+        switch (this.query.reportType) {
+          case 'avatar':
+            complementaryObject.avatar = false;
+            break;
+          case 'company':
+            if (item.company !== null && item.company !== undefined) {
+              delete item.company._id;
+              delete item.company.employee;
+              delete item.company.employeeId;
+              complementaryObject = item.company;
+              break;
+            } else break;
+          case 'shift':
+            if (item.shift !== null && item.shift !== undefined) {
+              complementaryObject['Amount Of Shifts'] = item.shift && item.shift.length;
+              break;
+            } else break;
+          case 'position':
+            if (item.position !== null && item.position !== undefined) {
+              complementaryObject['Amount Of Positions'] = item.position && item.position.length;
+              break;
+            } else break;
+          case 'payroll':
+            if (item.payroll !== null && item.payroll !== undefined) {
+              delete item.payroll._id;
+              delete item.payroll.employee;
+              delete item.payroll.employeeId;
+              complementaryObject = item.payroll;
+              break;
+            } else break;
+          case 'personal':
+            if (item.personal !== null && item.personal !== undefined) {
+              delete item.personal._id;
+              delete item.personal.employee;
+              delete item.personal.employeeId;
+              item.personal.hobbies = item.personal.hobbies !== null && item.personal.hobbies !== undefined ? item.personal.hobbies.length: 'MISSING HOBBIES';
+              complementaryObject = item.personal;
+              break;
+            } else break;
+          case 'family':
+            if (item.family !== null && item.family !== undefined) {
+              complementaryObject['Amount of Contacts'] = item.family && item.family.length;
+              break;
+            } else break;
+
+          default:
+            break;
+        }
         let mappeditem = {
-          employeeId: Number,
-          firstName: String,
-          middleName: String,
-          lastName: String,
-          client: String,
-          campaign: String,
+          employeeId: item.employeeId,
+          firstName: item.firstName,
+          middleName: item.middleName,
+          lastName: item.lastName,
+          socialSecurity: item.socialSecurity,
+          gender: item.gender,
+          status: item.status,
+          ...complementaryObject
         };
-
-        mappeditem.employeeId = item.employeeId;
-        mappeditem.firstName = item.firstName;
-        mappeditem.middleName = item.middleName;
-        mappeditem.lastName = item.lastName;
-        mappeditem.client = item.company.client;
-        mappeditem.campaign = item.company.campaign;
-
         return mappeditem;
       });
-    resolve(mapped);
+      resolve(mapped);
     })
-    }
+  }
 
 
 }

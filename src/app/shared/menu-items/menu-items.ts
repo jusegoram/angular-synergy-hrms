@@ -24,7 +24,7 @@ export class Menu {
   public icon: string,
   public badge?: BadgeItem[],
   public children?: ChildrenItems[],
-  public roles?: Number[],
+  public page?: number,
   public _id?: string,
   public position?: number) {}
 }

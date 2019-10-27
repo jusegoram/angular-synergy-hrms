@@ -81,9 +81,9 @@ export class ReportComponent implements OnInit {
   runQuery(){
     let queryParam = this.queryForm.value;
     let query = {
-      'client': queryParam.client,
+      'client': queryParam.Client.name,
       'campaign': queryParam.Campaign,
-      'date': {$gte: queryParam.From, $lt: queryParam.To},
+      'date': {$gte: queryParam.From, $lte: queryParam.To},
       'dialerId': queryParam.dialerId,
       }
     this.populateTable(query);

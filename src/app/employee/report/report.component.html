@@ -122,7 +122,7 @@
         Choose the information you want to export (default - only main information will be exported)
       </mat-card-subtitle>
     </mat-card-header>
-    <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="10px" fx>
+    <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1px" fx>
       <mat-button-toggle (click)="clickMain($event)" [checked]="mainInfoToggle"
         matTooltip="Information such as: names, social security...etc">
         Main Information
@@ -130,16 +130,22 @@
       <mat-button-toggle (click)="clickCompany($event)" matTooltip="Information such as: campaign, hire date...etc">
         Company Information
       </mat-button-toggle>
-      <mat-button-toggle (click)="clickPersonal($event)" matTooltip="Information such as: address, email, phone...etc">
-        Personal Information
-      </mat-button-toggle>
       <mat-button-toggle (click)="clickPosition($event)" matTooltip="Information such as: department, position, position dates...etc">
         Position Information
       </mat-button-toggle>
       <mat-button-toggle (click)="clickShift($event)" matTooltip="Information such as: shift...etc">
         Shift Information
       </mat-button-toggle>
-      <mat-button-toggle (click)="clickAttrition($event)" matTooltip="Information such as: comments, attrition...etc">
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1px">
+      <mat-button-toggle (click)="clickPersonal($event)" matTooltip="Information such as: address, email, phone...etc">
+        Personal Information
+      </mat-button-toggle>
+      <mat-button-toggle (click)="clickComments($event)" matTooltip="Information such as: comments ...etc">
+        Comments Information
+      </mat-button-toggle>
+      <mat-button-toggle (click)="clickAttrition($event)" matTooltip="Information such as: attrition...etc">
         Attrition Information
       </mat-button-toggle>
       <mat-button-toggle (click)="clickEmergency($event)" matTooltip="Information such as: emergency contact...etc">

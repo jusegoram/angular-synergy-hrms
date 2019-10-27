@@ -5,6 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { publishReplay, refCount, map } from 'rxjs/operators';
 import { Employee } from '../employee/Employee';
+import { Menu } from '../shared/menu-items/menu-items';
 
 @Injectable()
 export class AdminService {
@@ -24,7 +25,6 @@ export class AdminService {
     { value: 2, viewValue: "Training"},
     { value: 3, viewValue: "Administrator"},
     { value: 9999, viewValue: "Web Administrator" },
-    { value: 4, viewValue: "Web Administrator" }
   ];
   createDepartment(department: Department) {
     const body = JSON.stringify(department);
@@ -232,6 +232,10 @@ export class AdminService {
     return fixedShift;
   }
   TimeToMinutes(shift) {
+  }
+
+  getAllMenus() {
+    return this.httpClient.get<Array<Menu>>('/api/v1/admin/menu');
   }
 
 
