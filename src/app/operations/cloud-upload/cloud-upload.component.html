@@ -100,3 +100,42 @@
   </div>
 </mat-card-content>
 </mat-card>
+
+<mat-card *ngIf="errorDataSource">
+    <mat-card-title>
+      THERE&nbsp;WAS&nbsp;AN&nbsp;ERROR&nbsp;IN&nbsp;THE&nbsp;FOLLOWING&nbsp;UPLOAD
+      <button style='position: relative; float: right;' mat-flat-button color="warn" (click)="clearErrorTable()">CLEAR</button>
+    </mat-card-title>
+    <mat-card-subtitle>
+      This could be due to a duplicate record, or an incorrect Employee ID.
+      All the other records were uploaded succesfully.
+    </mat-card-subtitle>
+  <table mat-table #table [dataSource]="errorDataSource" style="width: 100%">
+    <ng-container matColumnDef="employeeId">
+      <th mat-header-cell *matHeaderCellDef> Employee ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.employeeId}} </td>
+    </ng-container>
+    <ng-container matColumnDef="dialerId">
+      <th mat-header-cell *matHeaderCellDef> Dialer ID </th>
+      <td mat-cell *matCellDef="let row"> {{row.dialerId}} </td>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Date </th>
+      <td mat-cell *matCellDef="let row"> {{row.date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="systemHours">
+      <th mat-header-cell *matHeaderCellDef> System Hours </th>
+      <td mat-cell *matCellDef="let row"> {{row.systemHours.value}} </td>
+    </ng-container>
+    <ng-container matColumnDef="tosHours">
+      <th mat-header-cell *matHeaderCellDef> TOS Hours </th>
+      <td mat-cell *matCellDef="let row"> {{row.tosHours.value}} </td>
+    </ng-container>
+    <ng-container matColumnDef="timeIn">
+      <th mat-header-cell *matHeaderCellDef> Time In</th>
+      <td mat-cell *matCellDef="let row"> {{row.timeIn.value}} </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="errorTableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: errorTableColumns;"></tr>
+  </table>
+</mat-card>

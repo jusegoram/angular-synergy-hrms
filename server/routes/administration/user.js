@@ -7,7 +7,7 @@ var mongoose = require('mongoose');
 const https = require('https');
 
 var User = require('../../models/administration/administration-user');
-
+let Logs = require('../../models/back-end/logs');
 
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
@@ -135,5 +135,26 @@ router.get('/weather', (req, res) => {
 }).on("error", (err) => {
     res.status(500).json(err)
 });
+});
+
+router.get('/logs/:id', (req, res) => {
+ const {id} = req.params;
+ const {page, limit} = req.query;
+
+ const options = {
+  page: page,
+  limit: limit,
+};
+ if(id !== undefined || id !== null || id !== '') {
+  Logs.paginate({_id: id}, options, (err, doc) => {
+    if(err) res.status(400).json(err);
+    else if(doc) res.status(200).json(doc);
+  })
+ }else {
+  Logs.paginate({}, options, (err, doc) => {
+    if(err) res.status(400).json(err);
+    else if(doc) res.status(200).json(doc);
+  })
+ }
 });
 module.exports = router;

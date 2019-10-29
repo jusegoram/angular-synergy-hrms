@@ -57,7 +57,6 @@ authentication = (req, res, next) => {
 }
 
 let saveLog =  _.debounce((param, token) => {
-  console.log('executed');
   let log = new Logs({
     user: jwt.decode(token, RSA_KEY),
     method: param.method,

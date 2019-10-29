@@ -13,10 +13,12 @@ export class CloudUploadComponent {
   uploader: FileUploader;
   hoursUploader: FileUploader;
   dataSource: any;
+  errorDataSource: any;
   hoursDataSource: any;
   hasBaseDropZoneOver: boolean;
   hasAnotherDropZoneOver: boolean;
   response: string;
+  errorTableColumns: string[] = ['employeeId', 'dialerId', 'date', 'systemHours', 'tosHours', 'timeIn']
   displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
   public selected = {value: '/api/v1/employee/upload/hours', viewValue: 'Employee Hours'};
   URL = environment.siteUri;
@@ -63,6 +65,10 @@ export class CloudUploadComponent {
     this.openSnackBar('Great! the upload was successful', 'Thanks!');
     }};
     this.uploader.onErrorItem = (item, res) => {
+      const {incorrectHours} = JSON.parse(res)
+      if(incorrectHours) {
+        this.errorDataSource = new MatTableDataSource(incorrectHours);
+      }
       this.openSnackBar(`Woops! Remember that all the fields in the template are REQUIRED AND There can't be any duplicates records for the same Date.`, "Ok, I'll try again");
     }
     this.hoursUploader = new FileUploader({
@@ -95,5 +101,9 @@ export class CloudUploadComponent {
       console.error(err);
       this.openSnackBar('Woops! Could not start download','Try again');
     })
+  }
+
+  clearErrorTable(){
+    this.errorDataSource = null;
   }
 }

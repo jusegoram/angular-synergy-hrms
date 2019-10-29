@@ -159,7 +159,7 @@ router.put("/update", (req, res) => {
       }
       if (doc) res.status(200).json(doc);
     }
-  );z
+  );
 });
 
 router.delete("/delete", (req, res) => {

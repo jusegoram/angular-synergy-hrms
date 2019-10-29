@@ -38,39 +38,46 @@ router.post('/hours', (req, res) => {
 
       })
       .on('end', () => {
-        let counter = 0;
-        let duplicate = 0;
         hours.map(hour => {
           hour.tosHours = splitTimetoHours(hour.tosHours);
           hour.timeIn = splitTimetoHours(hour.timeIn);
           hour.systemHours = splitTimetoHours(hour.systemHours);
         });
-          async.each(hours, (hour, callback) =>{
-            EmployeeSchema.findOne({'employeeId': hour.employeeId}, (error, emp) => {
-                  if(error)  duplicate++
-                  else{
-                    counter++;
-                    if(emp !== null){
+            let correctedHours = [];
+            let incorrectHours = [];
+              async.each(hours, (hour, cb) => {
+                EmployeeSchema.findOne({'employeeId': hour.employeeId}, (error, emp) => {
+                  if(error) console.log(error);
+                  if(emp !== null){
                       OperationsHours.findOne({employeeId: hour.employeeId, date: hour.date}, (error, doc) => {
+                        if(error) {
+                          console.log(error);
+                          cb();
+                        };
                         if(doc === null) {
-                        console.log('0')
                         hour.employee = emp._id;
                         hour.employeeName = emp.firstName + ' ' + emp.lastName;
                         hour.client = emp.company.client;
                         hour.campaign = emp.company.campaign;
-                        callback();
+                        correctedHours.push(hour);
+                        cb();
                         }else{
-                          callback();
+                          incorrectHours.push(hour);
+                          cb();
                         }
                       });
-                    }else callback();
-                  }
+                    }else {
+                    incorrectHours.push(hour)
+                      cb();
+                  };
               });
-          }, err => {
-               OperationsHours.create(hours).then(h => {
-                 res.status(200).json(h);
-               }).catch(err => res.status(400).json({error: err}));
-          });
+            },
+            (err) => {
+              if(correctedHours.length > 0 ) OperationsHours.create(correctedHours).then(h => {
+                res.status(200).json({uploaded: h, error: incorrectHours});
+              }).catch(err => res.status(400).json({error: err, incorrectHours: incorrectHours}));
+              if(correctedHours.length === 0) res.status(400).json({incorrectHours: incorrectHours})
+            })
       });
   });
 });
@@ -146,13 +153,24 @@ router.post('/kpi',  (req, res) => {
 
 
 function splitTimetoHours (item) {
-  let split = item.split(':');
-  let hhmmss = {
+  let hhmmss = {};
+  if(item !== undefined && item !== null && item !== '') {
+    let split = item.split(':');
+    hhmmss = {
       value: item,
       hh: parseInt(split[0], 10),
       mm: parseInt(split[1], 10),
       ss: parseInt(split[2], 10)
   }
+  }else {
+    hhmmss = {
+      value: '00:00:00',
+      hh: 0,
+      mm: 0,
+      ss: 0,
+    }
+  }
+
   return hhmmss;
 }
 module.exports = router;
