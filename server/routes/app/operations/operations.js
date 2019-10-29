@@ -6,7 +6,7 @@ let OperationHours = require('../../../models/app/operations/operations-hour')
 let OperationsKpi = require('../../../models/app/operations/operations-kpi')
 let EmployeeShifts = require('../../../models/app/employee/employee-shift')
 let Shifts = EmployeeShifts.shift;
-let moment = require(moment);
+let moment = require('moment');
 router.post('/hour', (req, res, next) => {
   let query = req.body;
   for (let propName in query) {
