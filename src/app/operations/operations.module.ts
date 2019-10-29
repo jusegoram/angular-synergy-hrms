@@ -27,7 +27,7 @@ import { CdkColumnDef } from '@angular/cdk/table';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { TimesheetComponent } from './timesheet/timesheet.component';
-import { AttendanceComponent } from './attendance/attendance.component';
+import { AttendanceComponent } from './timesheet/attendance/attendance.component';
 import { MatrixComponent } from './timesheet/matrix/matrix.component';
 
 // Pass the fusioncharts library and chart modules
