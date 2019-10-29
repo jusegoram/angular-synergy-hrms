@@ -1,4 +1,3 @@
-import { AttendanceComponent } from './attendance/attendance.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -16,7 +15,6 @@ const routes: Routes = [
          { path : 'reports', component : ReportComponent },
          { path : 'upload', component : CloudUploadComponent},
          { path : 'manage',   component: ManageComponent},
-         { path : 'attendance',   component: AttendanceComponent},
          { path : 'timesheet',   component: TimesheetComponent}
 
         ]
