@@ -26,6 +26,9 @@ public clients: any;
     return this.httpClient.post('/api/v1/operations/kpi', body, { headers: headers });
   }
 
+  getAttendance(query) {
+   return this.httpClient.get('/api/v1/operations/attendance');
+  }
   getClient(): Observable<any> {
     if (!this._clients) {
       this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client').pipe(

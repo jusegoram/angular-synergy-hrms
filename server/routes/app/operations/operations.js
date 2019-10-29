@@ -4,8 +4,9 @@ let mongoose = require('mongoose');
 var json2csv = require('json2csv');
 let OperationHours = require('../../../models/app/operations/operations-hour')
 let OperationsKpi = require('../../../models/app/operations/operations-kpi')
-
-
+let EmployeeShifts = require('../../../models/app/employee/employee-shift')
+let Shifts = EmployeeShifts.shift;
+let moment = require(moment);
 router.post('/hour', (req, res, next) => {
   let query = req.body;
   for (let propName in query) {
@@ -85,4 +86,16 @@ router.get('/kpiTemplate', function (req, res, next) {
 
   res.send(csv);
 });
+
+router.get('/attendance', (req, res) => {
+  const now = moment()
+  const currentDay = now.day();
+    Shifts.aggregate([
+      {$unwind: '$shift'}
+
+    ]).exec((err, doc) => {
+      if(err) res.status(400).json(err);
+      else res.status(200).json(doc)
+    })
+})
 module.exports = router;

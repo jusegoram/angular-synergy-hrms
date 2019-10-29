@@ -28,6 +28,7 @@ import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { TimesheetComponent } from './timesheet/timesheet.component';
 import { AttendanceComponent } from './attendance/attendance.component';
+import { MatrixComponent } from './timesheet/matrix/matrix.component';
 
 // Pass the fusioncharts library and chart modules
 //FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme);
@@ -45,7 +46,7 @@ import { AttendanceComponent } from './attendance/attendance.component';
    // FusionChartsModule,
     ScrollingModule,
   ],
-  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent, TimesheetComponent, AttendanceComponent],
+  declarations: [DashboardComponent, CloudUploadComponent, ManageComponent, ReportComponent, DetailComponent, KpiComponent, TimesheetComponent, AttendanceComponent, MatrixComponent, ],
   providers: [
     OperationsService, TitleCasePipe, DatePipe, CdkColumnDef,
     {

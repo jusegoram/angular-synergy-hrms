@@ -1,1 +1,17 @@
-<p>timesheet works!</p>
+<mat-toolbar class="header" color="primary">
+    <mat-toolbar-row>
+      <span>Timesheets</span>
+      <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+
+  </mat-toolbar>
+  <mat-tab-group backgroundColor="primary">
+    <mat-tab label="ATTENDANCE">
+        <app-attendance></app-attendance>
+    </mat-tab>
+    <mat-tab label="MATRIX">
+        <app-matrix></app-matrix>
+    </mat-tab>
+    <mat-tab label="PLANNING">
+    </mat-tab>
+  </mat-tab-group>
