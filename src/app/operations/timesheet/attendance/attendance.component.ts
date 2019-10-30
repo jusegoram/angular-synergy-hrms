@@ -11,11 +11,11 @@ export class AttendanceComponent implements OnInit {
   constructor(private _operationsService: OperationsService) { }
 
   ngOnInit() {
-    setInterval(() => this.getAttendance(), 10000);
 
   }
 
   getAttendance(){
+
     this._operationsService.getAttendance({}).subscribe(result => {
       console.log(result);
     })

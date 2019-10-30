@@ -161,30 +161,35 @@ employee.save(function(err, result) {
 });
 
 router.post('/shift', function (req, res) {
-  Employee.findById(req.body.employee, (err, employee) => {
-    let id = new mongoose.Types.ObjectId();
-    let current = new EmployeeShift.employeeShift({
-      _id: id,
-      employeeId: req.body.employeeId,
-      employee: req.body.employee,
-      createdDate: req.body.createdDate,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      shift: req.body.shift
-    });
-    current.save(function (err, result) {
-      if (err) {
-        return res.status(500).json({
-          title: 'An error occurred',
-          error: err
+    let shift = req.body
+    let startDate = shift.startDate;
+    let updateOptions = shift.current && !shift.first
+    Employee
+    .updateOne(
+      { _id: new mongoose.Types.ObjectId(req.body.employee) },
+      {
+        $set :{'currentShift':shift.shift},
+        $push: {shift:  { $each: [shift], $sort: {startDate: -1}}}
+      },
+      (err, raw) => {
+      if(err) res.status(400).json(err);
+      else if(updateOptions){
+        Employee
+        .updateOne(
+          { _id: new mongoose.Types.ObjectId(req.body.employee) },
+          {$set: {'shift.1.endDate': startDate, 'currentShift':shift.shift} },
+          (err, raw) => {
+          if(err) res.status(400).json(err);
+          else res.status(200).json(shift);
         });
       }
-      Employee.update({ _id: current.employee }, { $push: { shift: id } }, function (err, raw) {
-        res.status(200).json(result);
-      });
+      else {
+        res.status(200).json(shift);
+      }
     });
-  });
+
 });
+
 router.post('/company', function(req, res){
   let id = new mongoose.Types.ObjectId();
       let current = {

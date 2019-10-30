@@ -39,9 +39,20 @@ router.post('/hours', (req, res) => {
       })
       .on('end', () => {
         hours.map(hour => {
+          if(hour['employeeId;dialerId;date;systemHours;tosHours;timeIn']){
+            const valueArr = hour['employeeId;dialerId;date;systemHours;tosHours;timeIn'].split(';');
+            hour['employeeId'] = valueArr[0];
+            hour['dialerId'] = valueArr[1];
+            hour['date'] = valueArr[2];
+            hour['systemHours'] = valueArr[3];
+            hour['tosHours'] = valueArr[4];
+            hour['timeIn'] = valueArr[5];
+            delete hour['employeeId;dialerId;date;systemHours;tosHours;timeIn'];
+          }
           hour.tosHours = splitTimetoHours(hour.tosHours);
           hour.timeIn = splitTimetoHours(hour.timeIn);
           hour.systemHours = splitTimetoHours(hour.systemHours);
+          return hour;
         });
             let correctedHours = [];
             let incorrectHours = [];
@@ -68,6 +79,7 @@ router.post('/hours', (req, res) => {
                       });
                     }else {
                     incorrectHours.push(hour)
+                    console.log('its here')
                       cb();
                   };
               });

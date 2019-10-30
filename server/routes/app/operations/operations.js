@@ -5,6 +5,7 @@ var json2csv = require('json2csv');
 let OperationHours = require('../../../models/app/operations/operations-hour')
 let OperationsKpi = require('../../../models/app/operations/operations-kpi')
 let EmployeeShifts = require('../../../models/app/employee/employee-shift')
+let Employees = require('../../../models/app/employee/employee-main');
 let Shifts = EmployeeShifts.shift;
 let moment = require('moment');
 router.post('/hour', (req, res, next) => {
@@ -89,13 +90,38 @@ router.get('/kpiTemplate', function (req, res, next) {
 
 router.get('/attendance', (req, res) => {
   const now = moment()
-  const currentDay = now.day();
+  const currentDay = now.day() === 0 ? 6 : now.day() - 1;
     Shifts.aggregate([
-      {$unwind: '$shift'}
-
+      {$unwind: '$shift'},
+      {$match: {$and: [{'shift.day': currentDay}, {'shift.onShift': true}]}}
     ]).exec((err, doc) => {
       if(err) res.status(400).json(err);
-      else res.status(200).json(doc)
+      else {
+        let mapped = doc.map(i =>  { return i._id});
+        let converted = mapped.map(i => mongoose.Types.ObjectId(i));
+        const inVar = {$in: converted};
+        Employees.aggregate([
+          {$project: {_id: 1, employeeId: 1, firstName: 1, middleName: 1, lastName: 1, status: 1,company:1,shift: {$slice:["$shift", -1]} } },
+          {$unwind: '$shift'},
+          {$lookup: {
+            from:'employee-shifts',
+            localField:'shift',
+            foreignField: '_id',
+            as: 'currentShift'
+          }},
+          {$unwind:'$currentShift'},
+          {$match: {'currentShift.shift': inVar}},
+          {$lookup: {
+            from:'administration-shifts',
+            localField:'currentShift.shift',
+            foreignField: '_id',
+            as: 'shift'
+          }}
+        ]).exec((err, doc) => {
+
+          res.status(200).json(doc)
+        })
+      }
     })
 })
 module.exports = router;

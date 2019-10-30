@@ -438,16 +438,24 @@ router.post('/shift', (req, res) => {
     })
     .on('end', () => {
       async.each(shifts, (item, callback) => {
-        EmployeeSchema.findOneAndUpdate({employeeId: item.employeeId},{$push: {shift: item._id}},{new: true}, (err, employee) => {
-          if(err) callback(err);
+        EmployeeShift.shift.findOne({name: item.shiftName}, (err, shiftDoc) => {
+          if(err) {
+            console.log(err);
+            callback()
+          }
           else {
-            item.employee = employee._id;
-            EmployeeShift.shift.findOne({name: item.shiftName}, (err, shiftName) => {
-              if(err) console.log(err);
-              else {
+            item.shift = shiftDoc;
+            item.shift.shiftId = shiftDoc._id
+            delete item.shift._id;
+            delete item.shiftName;
 
-                item.shift = shiftName._id;
-                delete item.shiftName;
+
+            EmployeeSchema.findOneAndUpdate({employeeId: item.employeeId},{$push: {$each: [item], $sort: {startDate: -1}}},{new: true}, (err, employee) => {
+              if(err){
+                console.log(err);
+                callback()
+              }
+              else {
                 callback();
               }
             });
@@ -456,13 +464,9 @@ router.post('/shift', (req, res) => {
       }, (err) => {
         if(err) console.log(err);
         else {
-          EmployeeShift.employeeShift.create(shifts, (err, res) => {
-            console.log(shifts);
-            if(err) res.status(500).json(shifts);
-          });
+          res.status(200).json({addedShifts: shifts.length})
         }
       });
-    res.status(200).json({addedShifts: shifts.length})
     });
   });
 });

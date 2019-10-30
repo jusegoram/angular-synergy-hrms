@@ -49,7 +49,7 @@
           <mat-form-field appearance="outline">
               <mat-label>Work Pattern</mat-label>
              <mat-select placeholder="Work Patterns" name="item" formControlName="shift">
-               <mat-option *ngFor="let shift of shifts" [value]="shift._id">
+               <mat-option *ngFor="let shift of shifts" [value]="shift">
                  {{shift.name}}
                </mat-option>
              </mat-select>

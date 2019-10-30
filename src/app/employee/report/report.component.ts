@@ -277,7 +277,7 @@ export class ReportComponent implements OnInit {
   exportShift(element) {
       if(this.shiftInfoToggle){
         const workpatterns = element.shift;
-        const workpattern = workpatterns[workpatterns.length - 1];
+        const workpattern = workpatterns[0];
         const exportShift: any = {};
         if (workpattern) {
           const shift = workpattern.shift;

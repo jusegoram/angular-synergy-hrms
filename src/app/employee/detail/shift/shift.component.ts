@@ -81,29 +81,36 @@ export class ShiftComponent implements OnInit, OnChanges {
     this.dataSource.filter = filterValue;
   }
   onSave() {
+    let shift = JSON.parse(JSON.stringify(this.wpForm.value.shift));
+    shift.shiftId = shift._id;
+    delete shift._id;
+
+
     const employeeShift = {
-      _id: '',
       employeeId: this.employee.employeeId,
       employee: this.employee._id,
       createdDate: new Date(),
       startDate: this.wpForm.value.createdDate,
       endDate: null,
-      shift: this.wpForm.value.shift
+      shift: shift,
+      current: this.wpForm.value.createdDate > new Date(this.dataSource.data ? this.dataSource.data[0].startDate : '12/12/2999'),
+      first: !this.dataSource.data
     };
+
     this._employeeService.saveShift(employeeShift).subscribe((result: any) => {
-      let wp = this.shifts.filter(item => item._id === result.shift);
+      let wp = this.shifts.filter(item => item._id === result.shift.shiftId);
       result.shift = wp[0];
       this.populateTable(result);
-      this.populateTable1(result.shift.shift);
+      if(employeeShift.current || employeeShift.first )this.populateTable1(result.shift.shift);
       this.openSuccess();
     }, error => {
       this.openError()
     });
   }
   populateTable(event: any) {
-    if (this.dataSource.length !== 0) {
+    if (this.dataSource.data && this.dataSource.data.length >= 0 ) {
       const data = this.dataSource.data;
-      data.push(event);
+      data.unshift(event);
       this.dataSource.data = data;
     } else {
       this.dataSource = new MatTableDataSource(event);

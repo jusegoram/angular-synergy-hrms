@@ -41,6 +41,7 @@ const COLLECTION= '/mongo-blink';
 const DB = HOST + DB_PORT + COLLECTION;
 const URL = "http://localhost:3000";
 
+
 mongoose.connect(DB);
  app.set('dist', path.join(__dirname, '../dist'));
  app.engine('html', require('ejs').renderFile);
@@ -48,7 +49,7 @@ app.use(bodyParser.json({limit: '50mb', type:'application/json'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 app.use(helmet());
-
+app.use(logger('combined'));
 // Point static path to dist
 app.use(express.static(path.join(__dirname, '../dist')));
 

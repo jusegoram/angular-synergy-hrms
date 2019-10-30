@@ -139,6 +139,34 @@ var educationSchema = new Schema({
   updatedBy: {type: Object, required: false},
 });
 
+let daySchema = new Schema({
+  day: { type: Number },
+  onShift: { type: Boolean },
+  startTime: {type: Number},
+  endTime: { type: Number }
+});
+
+let shiftSchema = new Schema({
+  shiftId: {type: String},
+  name: {type: String},
+  totalHours: {type: Number },
+  daysonShift: {type: Number },
+  shift: { type: [daySchema] }
+});
+
+let EmployeeShiftSchema = new Schema({
+  employeeId: { type: String, required: true },
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false },
+  createdDate: { type: Date, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: false },
+  shift: { type: shiftSchema },
+  updatedAt: {type: Date, required: false },
+  createdAt: {type: Date, required: false, default: Date.now},
+  createdBy: {type: Object, required: false},
+  updatedBy: {type: Object, required: false},
+});
+
 let EmployeeSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     employeeId: { type: Number, required: true, unique: true},
@@ -149,7 +177,7 @@ let EmployeeSchema = new Schema({
     socialSecurity: { type: String, required: true },
     status: { type: String, required: true },
     currentPosition: {type: Object, required: false}, //only position name
-    currentShift: { type: Object, required: false}, //only shift name
+    currentShift: { type: shiftSchema, required: false}, //only shift name
     //company: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee-Company' , required: false, autopopulate: true},
     //companyNew: {type: companySchema, required: false},
     company: {type: companySchema, required: false},
@@ -179,7 +207,7 @@ let EmployeeSchema = new Schema({
     education: {type: [educationSchema], required: false},
 
     // TODO: THESE ARE THE ONLY ONES THAT NEED POPULATION DUE TO NORMALIZATION OF DOCUMENTS
-    shift: { type: [mongoose.Schema.Types.ObjectId], ref: 'Employee-Shift', autopopulate: true},
+    shift: { type: [EmployeeShiftSchema], required: false },
     position: { type: [mongoose.Schema.Types.ObjectId] , ref: 'Employee-Position' , required: false, autopopulate: true},
     updatedAt: {type: Date, required: false },
     createdAt: {type: Date, required: false, default: Date.now},
