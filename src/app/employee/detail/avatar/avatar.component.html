@@ -1,7 +1,7 @@
 <div class="image-card pa-1">
   <div fxLayout="column" fxFlexAlign="center">
-<div class="user-image-container">
-<img class="user-image radius-circle mat-elevation-z20" [src]="imageData"/>
+<div class="user-image-container" *ngIf="imageData">
+<img class="user-image radius-circle" [src]="imageData" />
 </div>
 
 <div fxLayout="row" fxFlexAlign="center">

@@ -13,7 +13,7 @@ import { SessionService } from '../../../session/session.service';
 export class AvatarComponent implements OnInit {
   @Input() id: string;
   @Input() authorization: any;
-  imageData: any;
+  imageData: any = '/assets/images/default-avatar.png';
   selected = '/api/v1/employee/upload/avatars';
   URL = environment.siteUri + this.selected;
   public uploader: FileUploader = new FileUploader({
@@ -24,12 +24,12 @@ export class AvatarComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.imageData
     this.loadAvatar(this.id);
     this.getPermission();
   }
   constructor(private employeeService: EmployeeService,
     private sanitizer: DomSanitizer, private sessionService: SessionService) {
-      this.imageData = '/assets/images/default-avatar.png'
     }
 
 
