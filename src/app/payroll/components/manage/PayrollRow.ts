@@ -441,26 +441,33 @@ export class PayrollRow {
   }
 
   calculatePayrollRow(socialTable, holidayTable, incometaxTable) {
-    const tasks = [
-      this.calculateHolidays(holidayTable),
-      this.calculateRegularHours(holidayTable),
-      this.calculateSystemHours(),
-      this.calculateOvertimeHours(),
-      this.calculateTotalBonuses(),
-      this.calculateTotalOtherpay(),
-      this.calculateGrossWage(),
-      this.calculateTotalDeductions(),
-      this.calculateTotalSocialSecurity(socialTable),
-      this.calculateTotalIncomeTax(incometaxTable),
-      this.calculateTotalPayment()
-    ];
-    return tasks
-      .reduce((promiseChain, currentTask) => {
-        return promiseChain.then((chainResults: any) =>
-          currentTask.then(currentResult => [...chainResults, currentResult])
-        );
-      }, Promise.resolve([]))
-      .then(arrayOfResults => {});
+    if(this.payrollType.toLowerCase() === 'bi-weekly'){
+      const tasks = [
+        this.calculateHolidays(holidayTable),
+        this.calculateRegularHours(holidayTable),
+        this.calculateSystemHours(),
+        this.calculateOvertimeHours(),
+        this.calculateTotalBonuses(),
+        this.calculateTotalOtherpay(),
+        this.calculateGrossWage(),
+        this.calculateTotalDeductions(),
+        this.calculateTotalSocialSecurity(socialTable),
+        this.calculateTotalIncomeTax(incometaxTable),
+        this.calculateTotalPayment()
+      ];
+      return tasks
+        .reduce((promiseChain, currentTask) => {
+          return promiseChain.then((chainResults: any) =>
+            currentTask.then(currentResult => [...chainResults, currentResult])
+          );
+        }, Promise.resolve([]))
+        .then(arrayOfResults => {});
+    }else if(this.payrollType.toLowerCase() === 'semimonthly') {
+      return null;
+    }else {
+      return null;
+    }
+
   }
 
     calculateConceptsGrossAndNet(socialTable, incometaxTable){
