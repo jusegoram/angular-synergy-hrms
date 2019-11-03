@@ -141,7 +141,7 @@ export class DetailComponent implements OnInit {
       } else {
         const transform = this.minutesecondsPipe.transform(Math.round( data[key] * 100)/100)
         const value = index === 5 || index === 7 || index === 9 || index === 11
-        ? transform : Math.round( data[key] * 100)/100;
+        ? transform : (Math.round( data[key] * 100)/100).toLocaleString('en-US', {minimumFractionDigits: 2});
         return {
           label: finalResult,
           value:  value
@@ -184,7 +184,10 @@ export class DetailComponent implements OnInit {
         if(index === 5 || index === 7 || index ===  9 || index === 11) {
           const calc = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
           value = this.minutesecondsPipe.transform(calc)
-        } else value = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
+        } else {
+          value = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
+          value = parseInt( value, 10).toLocaleString('en-US', {minimumFractionDigits: 2})
+          }
         return {
           label: finalResult,
           value:  value

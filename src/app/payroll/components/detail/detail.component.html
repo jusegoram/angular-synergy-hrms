@@ -111,7 +111,7 @@
             Base Wage
           </th>
           <th mat-header-cell>
-            Payable Hours
+            Regular Hours
           </th>
           <th mat-header-cell>
             Hourly Rate
@@ -168,13 +168,13 @@
               <span>{{n.wage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
             </td>
             <td mat-cell width="90px">
-              <span>{{n.totalSystemHours?.valueString}}</span>
+              <span>{{n.totalRegularHoursPay?.hours | minuteSeconds}}</span>
             </td>
             <td mat-cell width="50px">
               <span>{{n.hourlyRate.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
             </td>
             <td mat-cell width="90px">
-              <span>{{n.totalOvertimeHoursPay?.valueString ? n.totalOvertimeHoursPay?.valueString : '00:00' }}</span>
+              <span>{{n.totalOvertimeHoursPay?.hours | minuteSeconds }}</span>
             </td>
             <td mat-cell width="80px">
               <span>{{n.overtimeRate?.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
@@ -201,7 +201,7 @@
               <span>{{n.netWage| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
             </td>
             <td mat-cell width="90px">
-              <span>{{payroll.fromDate | date: '( MM/dd/yy )'}} - {{ payroll.toDate | date: '( MM/dd/yy )'}}</span>
+              <span>{{payroll.fromDate | date: 'MMM&nbsp;d'}} {{ payroll.toDate | date: 'MMM&nbsp;d'}}</span>
             </td>
             <td mat-cell>
               <span> <button mat-icon-button [matMenuTriggerFor]="menu">

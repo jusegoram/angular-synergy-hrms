@@ -1,4 +1,4 @@
-import { PayrollConceptsComponent } from '../concepts/payrollConcepts.component';
+import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { PayrollRow } from './PayrollRow';
 import { PayrollService } from '../../services/payroll.service';
 import {
@@ -8,7 +8,7 @@ import {
   ValidationErrors,
   ValidatorFn
 } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource, MatDialog, MatSnackBar, MatBottomSheet } from '@angular/material';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment';
@@ -18,7 +18,7 @@ import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss']
+  styleUrls: ['./manage.component.scss'],
 })
 export class ManageComponent implements OnInit {
   socialSecurityTable: any[];
@@ -27,24 +27,31 @@ export class ManageComponent implements OnInit {
   dataSource: any;
   payrollSettings: any[];
   payrollType = new FormControl('', [Validators.required]);
-  fromDate = new FormControl('', [this.dateMinimum(moment().add(-10, 'days'))]);
-  toDate = new FormControl('', [this.dateMaximum(this.fromDate.value)]);
+  fromDate = new FormControl('', [this.dateMinimum(moment().add(-10, 'days')), Validators.required]);
+  toDate = new FormControl('', [this.dateMaximum(this.fromDate.value), Validators.required]);
   holidays = [];
-
   lastPayrollSettings: any;
   currentPayrollSettings: any;
   dataSourceSocialTable: any;
   socialTableDisplayedColumns: string[] = [];
   displayedColumns = ['employeeId'];
+  calculating = false;
   constructor(
     private _payrollService: PayrollService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private _bottomSheet: MatBottomSheet
+    private _bottomSheet: MatBottomSheet,
+    private minuteSeconds : MinuteSecondsPipe,
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
 
+  }
+
+  isValid(){
+      console.log('executed')
+      return this.payrollType.valid && this.fromDate.valid && this.toDate.valid;
+  }
   populateTable(data) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSourceSocialTable = new MatTableDataSource(
@@ -58,24 +65,29 @@ export class ManageComponent implements OnInit {
     ];
   }
   loadOtherPayrollInfo(payroll, from, to) {
-    const employeeIds = this._payrollService.payroll.employees.map(
-      i => i.employee
-    );
-    this._payrollService
-      .getOtherPayrollInfo(employeeIds, payroll, from, to)
-      .subscribe((result: any[]) => {
-        const hours = result[0];
-        const overtime = result[1];
-        const bonus = result[2];
-        const deductions = result[3];
-        const otherpay = [4];
+    return new Promise((resolve, reject) => {
+      const employeeIds = this._payrollService.payroll.employees.map(
+        i => i.employee
+      );
+      this._payrollService
+        .getOtherPayrollInfo(employeeIds, payroll, from, to)
+        .subscribe((result: any[]) => {
+          const hours = result[0];
+          const overtime = result[1];
+          const bonus = result[2];
+          const deductions = result[3];
+          const otherpay = [4];
 
-        this._payrollService.payroll.joinEmployee(hours, 'hours');
-        this._payrollService.payroll.joinEmployee(overtime, 'overtime');
-        this._payrollService.payroll.joinEmployee(bonus, 'bonus');
-        this._payrollService.payroll.joinEmployee(deductions, 'deductions');
-        this._payrollService.payroll.joinEmployee(otherpay, 'otherpay');
-      });
+          this._payrollService.payroll.joinEmployee(hours, 'hours');
+          this._payrollService.payroll.joinEmployee(overtime, 'overtime');
+          this._payrollService.payroll.joinEmployee(bonus, 'bonus');
+          this._payrollService.payroll.joinEmployee(deductions, 'deductions');
+          this._payrollService.payroll.joinEmployee(otherpay, 'otherpay');
+          setTimeout(() => {
+            resolve();
+          }, 500)
+        });
+    })
   }
   loadPayrollType(payroll, from, to) {
     this._payrollService
@@ -192,7 +204,11 @@ export class ManageComponent implements OnInit {
   }
 
   calculatePayroll() {
-    this._payrollService.payroll.calculatePayroll();
+    this.loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value).then(finished => {
+      this._payrollService.payroll.calculatePayroll();
+      this.calculating = this._payrollService.payroll.onCalculating();
+    }).catch(err => {
+    })
   }
 
   saveToDatabase(payroll) {
@@ -200,6 +216,7 @@ export class ManageComponent implements OnInit {
       this.snackBar.open('Payroll was saved correctly', 'thank you', {
         duration: 2000
       });
+
     }, err => {
       this.snackBar.open('There was an error saving payroll', 'I will notify IT', {
         duration: 5000
@@ -211,20 +228,6 @@ export class ManageComponent implements OnInit {
     this.dataSource = null;
     delete this.dataSource;
     this._payrollService.deletePayroll();
-  }
-  openConceptsDialog(employee) {
-    const dialogRef = this.dialog.open(PayrollConceptsComponent, {
-      height: '1200px',
-      width: '1400px',
-      data: employee
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      this._payrollService.payroll.recalculateOnConceptsChange(employee.employee);
-      this.snackBar.open('concepts were added succesfully', 'thank you', {
-          duration: 2000
-        });
-      });
   }
 
   openExportBottomSheet(){

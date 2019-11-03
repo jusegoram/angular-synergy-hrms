@@ -12,10 +12,9 @@ let BonusSchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
-  updatedAt: {type: Date, required: false },
+  payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
 });
 BonusSchema.index({ date: -1 });
 
@@ -28,10 +27,9 @@ let DeductionSchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
-  updatedAt: {type: Date, required: false },
+  payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
 });
 DeductionSchema.index({ date: -1 });
 
@@ -44,29 +42,12 @@ let OtherPaySchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
-  updatedAt: {type: Date, required: false },
+  payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
 });
 OtherPaySchema.index({ date: -1 });
 
-let OvertimeSchema = new Schema({
-  employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
-  employeeId: { type: String },
-  overtimeHours: { type: Number },
-  payedOvertimeHours: { type: Number },
-  rate: { type: Number },
-  submittedDate: { type: Date },
-  amount: { type: Number },
-  creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
-  verified: {type: Boolean, default: false},
-  updatedAt: {type: Date, required: false },
-    createdAt: {type: Date, required: false, default: Date.now},
-    createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
-});
-OvertimeSchema.index({ date: -1 });
 
 
 let employeeSchema = new Schema( {
@@ -248,13 +229,11 @@ const payedPayroll = mongoose.model('payed-payroll', PayedPayrollSchema);
 const payroll = mongoose.model("payroll", PayrollSchema);
 const bonus = mongoose.model("payroll-bonus", BonusSchema);
 const deduction = mongoose.model("payroll-deduction", DeductionSchema);
-const overtime = mongoose.model("payroll-overtime", OvertimeSchema);
 const otherPay = mongoose.model("payroll-otherPay", OtherPaySchema);
 
 module.exports = {
   bonus,
   deduction,
-  overtime,
   otherPay,
   payroll,
   payedPayroll,

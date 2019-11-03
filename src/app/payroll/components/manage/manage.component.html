@@ -35,7 +35,7 @@
   </mat-form-field>
 </div>
 <div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-  <button mat-button (click)="fileInput.click()" *ngIf="dataSource">
+  <!-- <button mat-button (click)="fileInput.click()" *ngIf="dataSource">
     <mat-icon>attach_money</mat-icon> LOAD BONUSES FROM FILE
   </button>
   <span
@@ -48,23 +48,23 @@
   <span
     style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
     <input type="file" #fileInput1 (change)="onLoadDeductions($event)" />
-  </span>
+  </span> -->
 
-  <button mat-stroked-button color="primary"
+  <button mat-flat-button color="primary"
     (click)="loadSettings(this.fromDate.value, this.toDate.value);loadPayrollType(this.payrollType.value, this.fromDate.value, this.toDate.value)"
     *ngIf="!dataSource">
-    1. LOAD EMPLOYEE DATABASE &nbsp;&nbsp;<mat-icon>assignment_ind</mat-icon>
+    LOAD EMPLOYEE DATABASE
   </button>
   <div class="fill-remaining-space"></div>
-  <button mat-stroked-button color="primary"
+  <!-- <button mat-stroked-button color="primary"
     (click)="loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value)" *ngIf="dataSource">
     2. LOAD PAYROLL &nbsp;&nbsp;<mat-icon>monetization_on</mat-icon>
-  </button>
+  </button> -->
 
 
-  <button mat-raised-button color="accent" (click)="this.calculatePayroll()" *ngIf="dataSource"
-    (click)="calculatePayroll()">
-    3. CALCULATE PAYROLL &nbsp;&nbsp;<mat-icon>assignment_turned_in</mat-icon>
+  <button mat-flat-button color="accent" (click)="this.calculatePayroll()" *ngIf="dataSource"
+    (click)="calculatePayroll()" [disabled]=''>
+    RUN PAYROLL &nbsp; &nbsp; <mat-icon>directions_run</mat-icon>
   </button>
 
 </div>
@@ -105,9 +105,12 @@
 <mat-card *ngIf="dataSource">
   <mat-card-title fxLayout="row" fxLayoutAlign="start start" fxLayout="row" fxLayoutAlign="start start">PAYROLL TABLE
     <span class="fill-remaining-space"></span>
-    <button mat-button color="warn" (click)="clearTable()">
-      <mat-icon>clear</mat-icon> CLEAR TABLE
+    <button mat-stroked-button color="warn" (click)="clearTable()">
+       CLEAR TABLE
     </button>
+    <div>
+      <button mat-stroked-button (click)="saveToDatabase()" [routerLink]="['/', 'payroll', 'main' ]">SAVE TO DATABASE</button>
+    </div>
   </mat-card-title>
   <mat-card-subtitle>{{payrollType.value}} QUICK VIEW</mat-card-subtitle>
   <mat-card-content>
@@ -130,7 +133,7 @@
           Base Wage
         </th>
         <th mat-header-cell>
-          Payable Hours
+          Regular Hours
         </th>
         <th mat-header-cell>
           Hourly Rate
@@ -187,13 +190,13 @@
             <span>{{n.wage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
           </td>
           <td mat-cell width="90px">
-            <span>{{n.totalSystemHours?.valueString}}</span>
+            <span>{{n.totalRegularHoursPay?.hours | minuteSeconds}}</span>
           </td>
           <td mat-cell width="50px">
             <span>{{n.hourlyRate.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
           </td>
           <td mat-cell width="90px">
-            <span>{{n.totalOvertimeHoursPay?.valueString ? n.totalOvertimeHoursPay?.valueString : '00:00' }}</span>
+            <span>{{n.totalOvertimeHoursPay?.hours | minuteSeconds}}</span>
           </td>
           <td mat-cell width="80px">
             <span>{{n.overtimeRate?.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
@@ -220,17 +223,13 @@
             <span>{{n.netWage| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
           </td>
           <td mat-cell width="90px">
-            <span>{{n.fromDate.toDate() | date: '( MM/dd/yy )'}} - {{ n.toDate.toDate() | date: '( MM/dd/yy )'}}</span>
+            <span>{{n.fromDate.toDate() | date: 'MMM dd'}} - {{ n.toDate.toDate() | date: 'MMM dd'}}</span>
           </td>
           <td mat-cell>
             <span> <button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                  <a (click)="openConceptsDialog(n)" mat-menu-item>
-                      <mat-icon>monetization_on</mat-icon>
-                      <span>Payroll Concepts</span>
-                    </a>
                 <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.employee}" mat-menu-item>
                   <mat-icon>account_circle</mat-icon>
                   <span>Go to Profile</span>
@@ -255,9 +254,6 @@
       </mat-row>
     </mat-table>
 
-    <div>
-      <button mat-button (click)="saveToDatabase()">SAVE TO DATABASE</button>
-      <button mat-button (click)="openExportBottomSheet()"> EXPORT</button>
-    </div>
+
   </mat-card-content>
 </mat-card>

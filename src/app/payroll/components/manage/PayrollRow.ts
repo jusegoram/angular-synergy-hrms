@@ -160,7 +160,6 @@ export class PayrollRow {
   calculateHolidays(holidayList: any[]) {
     return new Promise((res, rej) => {
       if (this.hours.length > 0 && holidayList.length > 0) {
-        const list = [];
         for (let i = 0; i < this.hours.length; i++) {
           const hourDate = this.hours[i].date;
           const momentHourDate = moment(hourDate)
@@ -169,11 +168,10 @@ export class PayrollRow {
             if (moment(momentHourDate).isSame(moment(holidayDate), 'date')) {
               this.hours[i].holidayRate = holidayList[e].rate;
               this.holiday.push(this.hours[i]);
-              list.push(i);
             }
           }
           if (i === this.hours.length - 1) {
-            this.deleteHolidayRateHours(list);
+            this.deleteHolidayRateHours(this.holiday);
             this.calculateHolidayPayment().then(result => {
               res();
             });
@@ -185,8 +183,10 @@ export class PayrollRow {
   }
 
   deleteHolidayRateHours(list: any[]){
-    list.forEach(i => {
-      this.hours.splice(i, 1);
+    list.forEach(list => {
+      this.hours = this.hours.filter(i => {
+        return !moment(i.date).isSame(moment(list.date), 'date');
+      })
     });
   }
   checkForHoliday(date, holidayList) {
@@ -241,7 +241,7 @@ export class PayrollRow {
       for (let i = 0; i < dif; i++) {
         const localizedDate = this.fromDate;
         localizedDate.add(i, 'days').toDate();
-        const dayOfWeek = localizedDate.day();
+        const dayOfWeek = localizedDate.day() === 0 ? 6 : localizedDate.day() - 1 ;
 
         if (
           this.employeeShift !== null &&
@@ -261,6 +261,7 @@ export class PayrollRow {
   }
   calculateSystemHours() {
     return new Promise((res, rej) => {
+      if(this.hours.length > 7) rej(this);
       const totaled = this.calculateTotalHours(this.hours);
       this.totalSystemHours = totaled;
 
@@ -397,15 +398,18 @@ export class PayrollRow {
     return new Promise((res, rej) => {
       const earnings = this.grossWage - this.totalOtherpay - this.totalBonusPay;
       if (earnings > 500) {
-        if(earnings > incometaxTable[incometaxTable.length - 1]) {
-          this.incomeTax = incometaxTable[incometaxTable.length - 1].taxAmount;
-        }else{
-          const value = incometaxTable.find(tax => {
-            return earnings <= tax.toAmount;
-          });
+          let value;
+          for (let i = 0; i < incometaxTable.length; i++) {
+            const tax = incometaxTable[i];
+            const earn = Math.round(100*earnings)/100;
+            if(earn >= tax.fromAmount && earn < tax.toAmount + 0.1) {
+              value = tax;
+              break;
+            }
+          }
+          if(!value) console.log(value);
           this.incomeTax = value.taxAmount;
           res(value);
-        }
       }else {
         this.incomeTax = 0;
         res(0);
@@ -461,7 +465,8 @@ export class PayrollRow {
             currentTask.then(currentResult => [...chainResults, currentResult])
           );
         }, Promise.resolve([]))
-        .then(arrayOfResults => {});
+        .then(arrayOfResults => {
+        });
     }else if(this.payrollType.toLowerCase() === 'semimonthly') {
       return null;
     }else {

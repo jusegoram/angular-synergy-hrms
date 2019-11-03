@@ -67,7 +67,9 @@ export class Payroll {
       allPayrollRows.push(newEmployee);
 
       if (allPayrollRows.length === employees.length) {
-        this._employees = allPayrollRows;
+        this._employees = allPayrollRows.sort( (a, b) => {
+          return a.firstName.localeCompare(b.firstName)
+        });
       }
     });
   }
@@ -148,7 +150,11 @@ export class Payroll {
       return;
     }
   }
-
+  filterEmployeesError(){
+    return this.employees.filter(i => {
+      return
+    })
+  }
   clearPayroll(){
     this._isCalculating = false;
   }
@@ -167,7 +173,11 @@ export class Payroll {
       for (let e = 0; e < table.length; e++) {
         const item = table[e];
         if (employee.employee === item.employee) {
-          employee[param].push(item);
+          if(param === 'hours' && employee[param].length < 7) {
+            employee[param].push(item)
+          }else if( param !== 'hours') {
+            employee[param].push(item);
+          }
         }
       }
     }
@@ -175,5 +185,8 @@ export class Payroll {
   recalculateOnConceptsChange( employee: any) {
     let foundEmployee = this.getEmployeeById(employee);
     foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);
+  }
+  onCalculating(){
+    return this._isCalculating;
   }
 }

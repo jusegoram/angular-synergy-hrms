@@ -1,4 +1,3 @@
-import { MinuteSecondsPipe } from './pipes/minute-seconds.pipe';
 import { NgModule } from '@angular/core';
 
 import { MenuItems } from './menu-items/menu-items';
@@ -13,7 +12,6 @@ import {HttpClientModule} from '@angular/common/http';
     AccordionLinkDirective,
     AccordionDirective,
     ToggleFullscreenDirective,
-    MinuteSecondsPipe
   ],
   imports: [
     HttpClientModule,
@@ -23,7 +21,7 @@ import {HttpClientModule} from '@angular/common/http';
     AccordionLinkDirective,
     AccordionDirective,
     ToggleFullscreenDirective,
-    MinuteSecondsPipe
+
    ],
   providers: [ MenuItems ]
 })

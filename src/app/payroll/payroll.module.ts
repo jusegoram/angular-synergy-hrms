@@ -1,3 +1,4 @@
+import { PipeModule } from './../shared/pipes/pipe/pipe.module';
 import { MinuteSecondsPipe } from './../shared/pipes/minute-seconds.pipe';
 import { DetailResolver } from './components/detail/detail.resolver';
 import { NgModule } from '@angular/core';
@@ -7,7 +8,6 @@ import { PayrollRoutingModule } from './payroll-routing.module';
 import { UploadComponent } from './components/upload/upload.component';
 import { ExportComponent } from './components/export/export.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
-import { PayrollConceptsComponent } from './components/concepts/payrollConcepts.component';
 import {MaterialSharedModule} from '../shared/material.shared.module';
 import {FileUploadModule} from 'ng2-file-upload';
 import {FormsModule} from '@angular/forms';
@@ -17,7 +17,6 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { ConceptComponent } from './components/concepts/concept/concept.component';
 import { ExportBottomSheetComponent } from './components/manage/export-bottom-sheet/export-bottom-sheet.component';
 import { ManageComponent } from './components/manage/manage.component';
 import { MainComponent } from './components/main/main.component';
@@ -31,6 +30,7 @@ import * as Charts from 'fusioncharts/fusioncharts.charts';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 // import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 import { ExportAsModule } from 'ngx-export-as';
+import { ConceptsComponent } from './components/concepts/concepts.component';
 
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
@@ -47,18 +47,18 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     NgxDatatableModule,
     FusionChartsModule,
     ExportAsModule,
+    PipeModule.forRoot()
   ],
   declarations: [
     ManageComponent,
     UploadComponent,
     ExportComponent,
     PayslipsComponent,
-    PayrollConceptsComponent,
-    ConceptComponent,
     ExportBottomSheetComponent,
     MainComponent,
     DetailComponent,
-    PayDialogComponent],
+    PayDialogComponent,
+    ConceptsComponent],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,
@@ -71,7 +71,6 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
       multi: true
     }],
     entryComponents: [
-      PayrollConceptsComponent,
       ExportBottomSheetComponent,
       PayDialogComponent
     ]

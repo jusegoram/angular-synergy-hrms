@@ -65,9 +65,12 @@ router.post("/", (req, res) => {
             error: "The payroll you are trying to create already exists."
           });
         } else {
+          const employees = req.body._employees.sort((a,b) => {
+            return a.firstName.localeCompare(b.firstName)
+          })
           let payroll = {
             _id: new mongoose.Types.ObjectId(),
-            employees: req.body._employees,
+            employees: employees,
             payrollType: req.body._employees[0].payrollType,
             isPayed: req.body._isPayed,
             payedDate: req.body._payedDate,
