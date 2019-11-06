@@ -109,12 +109,12 @@ export class ManageComponent implements OnInit {
   debounce(func, wait, immediate) {
     var timeout;
 
-    return () => {
+    return function() {
       var context = this,
         args = arguments;
       var callNow = immediate && !timeout;
       clearTimeout(timeout);
-      timeout = setTimeout(() => {
+      timeout = setTimeout(function() {
         timeout = null;
         if (!immediate) {
           func.apply(context, args);
