@@ -70,6 +70,7 @@ router.post('/hours', (req, res) => {
                         hour.employeeName = emp.firstName + ' ' + emp.lastName;
                         hour.client = emp.company.client;
                         hour.campaign = emp.company.campaign;
+                        hour.billable = emp.payroll ? emp.payroll.billable : null;
                         correctedHours.push(hour);
                         cb();
                         }else{

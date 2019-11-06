@@ -12,6 +12,7 @@ let schema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   employeeName: {type: String, required: true},
+  billable: {type: Boolean},
   client: {type: String, required: true},
   campaign: {type: String, required: true},
   dialerId: { type: String, required: false },

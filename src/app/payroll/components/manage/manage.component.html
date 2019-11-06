@@ -63,7 +63,7 @@
 
 
   <button mat-flat-button color="accent" (click)="this.calculatePayroll()" *ngIf="dataSource"
-    (click)="calculatePayroll()" [disabled]=''>
+    (click)="calculatePayroll()" [disabled]='calculating'>
     RUN PAYROLL &nbsp; &nbsp; <mat-icon>directions_run</mat-icon>
   </button>
 

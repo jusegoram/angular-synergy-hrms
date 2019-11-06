@@ -4,22 +4,28 @@ let Schema = mongoose.Schema;
 //TODO: PAYED LEAVES
 
 let BonusSchema = new Schema({
+  type: {type: String},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
+  employeeName: {type: String},
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
   submittedDate: { type: Date },
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
+  verificationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
+  payroll: {type: String},
   payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
 });
-BonusSchema.index({ date: -1 });
+BonusSchema.index({ date: -1, employee: -1 });
 
 let DeductionSchema = new Schema({
+  type: {type: String},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
+  employeeName: {type: String},
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
@@ -27,6 +33,7 @@ let DeductionSchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
+  payroll: {type: String},
   payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
@@ -34,7 +41,9 @@ let DeductionSchema = new Schema({
 DeductionSchema.index({ date: -1 });
 
 let OtherPaySchema = new Schema({
+  type: {type: String},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
+  employeeName: {type: String},
   employeeId: { type: String },
   reason: { type: String },
   date: { type: Date },
@@ -42,6 +51,7 @@ let OtherPaySchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
+  payroll: {type: String},
   payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},

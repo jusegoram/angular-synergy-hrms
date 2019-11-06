@@ -9,33 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConceptsComponent implements OnInit {
 
-  bonuses: PayrollConcept[];
-  deductions: PayrollConcept[];
-  otherPayments: PayrollConcept[];
-  employees: any;
 
-  conceptTypeList = [{
-    type: 'Bonus',
-    concepts: [
-      { concept: 'One' }
-    ]
-  },
-  {
-    type: 'Deduction',
-    concepts: [
-      { concept: 'One' }
-    ]
-  },
-  {
-    type: 'Other Payments',
-    concepts: [
-      { concept: 'One' }
-    ]
-  }
-];
-
-  conceptFromGroup: FormGroup
-  constructor(public fb: FormBuilder) {
+  constructor() {
 
   }
 

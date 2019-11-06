@@ -1,3 +1,4 @@
+import { ConceptsComponent } from './components/concepts/concepts.component';
 import { MainComponent } from './components/main/main.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -13,6 +14,7 @@ export const routes: Routes = [
     path: '',
     children : [
       { path: 'main', component: MainComponent},
+      { path: 'concepts', component: ConceptsComponent},
       { path: 'detail', component: DetailComponent, resolve: { payroll: DetailResolver }},
       { path: 'manage', component: ManageComponent },
       { path: 'payslip', component: PayslipsComponent },

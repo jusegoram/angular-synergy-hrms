@@ -219,7 +219,7 @@ export class PayrollRow {
           if (parseInt(day.holidayRate, 10) === 2) {
             totalX2.hours = totalX2.hours + value;
             totalX2.totalPayed = totalX2.hours * totalX2.rate;
-          } else if (parseInt(day.holidayRate, 10) === 1.5) {
+          } else if (parseFloat(day.holidayRate) === 1.5) {
             totalX1.hours = totalX1.hours + value;
             totalX1.totalPayed = totalX1.hours * totalX1.rate;
           }

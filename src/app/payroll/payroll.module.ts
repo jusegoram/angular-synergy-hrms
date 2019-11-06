@@ -31,6 +31,9 @@ import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 // import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 import { ExportAsModule } from 'ngx-export-as';
 import { ConceptsComponent } from './components/concepts/concepts.component';
+import { TimeOffRequestsComponent } from './components/concepts/time-off-requests/time-off-requests.component';
+import { NewConceptComponent } from './components/concepts/new-concept/new-concept.component';
+import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
 
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
@@ -58,7 +61,10 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     MainComponent,
     DetailComponent,
     PayDialogComponent,
-    ConceptsComponent],
+    ConceptsComponent,
+    TimeOffRequestsComponent,
+    NewConceptComponent,
+    ConceptVerificationComponent],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,

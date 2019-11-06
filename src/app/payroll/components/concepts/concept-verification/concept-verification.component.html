@@ -1,0 +1,133 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>CONCEPT VERIFICATION</mat-card-title>
+        <mat-card-subtitle>Verify newly added concepts</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px" style='width: 100%'>
+            <mat-form-field appearance='outline'>
+                <mat-select placeholder="Placeholder" [(ngModel)]="selectedConceptForVerification" name="item">
+                    <mat-option *ngFor="let item of concepts" [value]="item.name" (click)='getUnverifiedConcepts()'>
+                        {{item.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color='accent' class='push-right' (click)="verifyConcepts()" [disabled]='selection.selected.length === 0'>VERIFY SELECTED</button>
+        </div>
+        <table mat-table [dataSource]="verificationTable" style='width: 100%'>
+
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="employee">
+                <th mat-header-cell *matHeaderCellDef> Employee </th>
+                <td mat-cell *matCellDef="let element"> {{element.employeeName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef> Concept </th>
+                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="concept">
+                <th mat-header-cell *matHeaderCellDef> Reason </th>
+                <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Amount </th>
+                <td mat-cell *matCellDef="let element"> {{element.amount | currency:'BZD':'symbol-narrow':'2.2-2'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Effective Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date: 'MMM&nbsp;d, yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef style='text-align: center;'> Action </th>
+                <td mat-cell *matCellDef="let element" style='text-align: center;'>
+                    <button mat-button color="primary" (click)="verifyConcepts(element)">VERIFY</button>
+                    <button mat-button color='warn' (click)="deleteConcept(element)">DELETE</button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+            </tr>
+        </table>
+        <span fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px"
+            *ngIf="verificationTable.data.length === 0">
+            <span></span>
+            <span>
+                No Records Where Found
+            </span>
+            <span></span>
+        </span>
+    </mat-card-content>
+    <mat-card-header>
+        <mat-card-title>VERIFIED CONCEPTS</mat-card-title>
+        <mat-card-subtitle>All the verified concepts that have not been payed</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field appearance='outline'>
+            <mat-select placeholder="Placeholder" [(ngModel)]="selectedconceptForVerified" name="item">
+                <mat-option *ngFor="let item of concepts" [value]="item.name" (click)='getVerifiedConcepts()'>
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <table mat-table #table [dataSource]="verifiedTable" style='width: 100%'>
+            <ng-container matColumnDef="employee">
+                <th mat-header-cell *matHeaderCellDef> Employee </th>
+                <td mat-cell *matCellDef="let element"> {{element.employeeName}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th mat-header-cell *matHeaderCellDef> Concept </th>
+                <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="concept">
+                <th mat-header-cell *matHeaderCellDef> Reason </th>
+                <td mat-cell *matCellDef="let element"> {{element.reason}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef> Amount </th>
+                <td mat-cell *matCellDef="let element"> {{element.amount | currency:'BZD':'symbol-narrow':'2.2-2'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Effective Date </th>
+                <td mat-cell *matCellDef="let element"> {{element.date | date: 'MMM&nbsp;d, yyyy'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="verified">
+                <th mat-header-cell *matHeaderCellDef> Payed </th>
+                <td mat-cell *matCellDef="let element"> <mat-icon color='warn'>cancel</mat-icon> </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="verfiedTableColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: verfiedTableColumns;"></tr>
+        </table>
+        <span fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="50px"
+            *ngIf="verifiedTable.data.length === 0">
+            <span></span>
+            <span>
+                No Records Where Found
+            </span>
+            <span></span>
+        </span>
+    </mat-card-content>
+</mat-card>

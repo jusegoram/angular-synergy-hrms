@@ -36,6 +36,12 @@ export class ManageComponent implements OnInit {
   socialTableDisplayedColumns: string[] = [];
   displayedColumns = ['employeeId'];
   calculating = false;
+  hours: any[];
+  overtime: any[];
+  bonus: any[];
+  deductions: any[];
+  otherpay: any[];
+
   constructor(
     private _payrollService: PayrollService,
     private dialog: MatDialog,
@@ -72,22 +78,50 @@ export class ManageComponent implements OnInit {
       this._payrollService
         .getOtherPayrollInfo(employeeIds, payroll, from, to)
         .subscribe((result: any[]) => {
-          const hours = result[0];
-          const overtime = result[1];
-          const bonus = result[2];
-          const deductions = result[3];
-          const otherpay = [4];
-
-          this._payrollService.payroll.joinEmployee(hours, 'hours');
-          this._payrollService.payroll.joinEmployee(overtime, 'overtime');
-          this._payrollService.payroll.joinEmployee(bonus, 'bonus');
-          this._payrollService.payroll.joinEmployee(deductions, 'deductions');
-          this._payrollService.payroll.joinEmployee(otherpay, 'otherpay');
+          this.hours = result[0];
+          this.bonus = result[1];
+          this.deductions = result[2];
+          this.otherpay = result[3];
+          let debouncedHours = this.debounce( () => {
+            this._payrollService.payroll.joinEmployee(this.hours, 'hours')
+          }, 100, true);
+          let debouncedBonus = this.debounce( () => {
+            this._payrollService.payroll.joinEmployee(this.bonus, 'bonus')
+          },100,true);
+          let debouncedDeductions = this.debounce( () => {
+            this._payrollService.payroll.joinEmployee(this.deductions, 'deductions')
+          },100,true);
+          let debouncedOtherpay = this.debounce( () => {
+            this._payrollService.payroll.joinEmployee(this.otherpay, 'otherpay')
+          },100,true);
+          debouncedHours();
+          debouncedBonus();
+          debouncedDeductions();
+          debouncedOtherpay();
           setTimeout(() => {
             resolve();
           }, 500)
         });
     })
+  }
+
+
+  debounce(func, wait, immediate) {
+    var timeout;
+
+    return () => {
+      var context = this,
+        args = arguments;
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        timeout = null;
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      }, wait);
+      if (callNow) func.apply(context, args);
+    }
   }
   loadPayrollType(payroll, from, to) {
     this._payrollService
@@ -204,15 +238,25 @@ export class ManageComponent implements OnInit {
   }
 
   calculatePayroll() {
-    this.loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value).then(finished => {
-      this._payrollService.payroll.calculatePayroll();
-      this.calculating = this._payrollService.payroll.onCalculating();
-    }).catch(err => {
-    })
+    if(!this.calculating){
+      console.log('invoked');
+      this.calculating = true;
+      this.loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value).then(finished => {
+        this._payrollService.payroll.calculatePayroll();
+        this.calculating = this._payrollService.payroll.onCalculating();
+      }).catch(err => {
+      })
+    }else {
+      return null;
+    }
   }
 
   saveToDatabase(payroll) {
-    this._payrollService.savePayroll().subscribe(result => {
+    let otherpay = this.otherpay.map(i => i._id);
+    let deduction = this.deductions.map(i => i._id);
+    let bonus = this.bonus.map(i => i._id);
+
+    this._payrollService.savePayroll(otherpay,deduction, bonus).subscribe(result => {
       this.snackBar.open('Payroll was saved correctly', 'thank you', {
         duration: 2000
       });
@@ -224,7 +268,32 @@ export class ManageComponent implements OnInit {
     });
   }
 
+  // saveConcepts(){
+  //   if(this.otherpay.length > 0){
+  //     let id = this.otherpay.map(i => i._id);
+  //     let opts = {
+  //       type: 'otherpayments',
+  //       id: id,
+  //       query: {
+  //         payed: true
+  //       }
+  //     }
+  //     this._payrollService.updateConcept(opts).subscribe(res => {});
+  //   }
+  //   if(this.deductions.length > 0){
+  //     let id = this.deductions.map(i => i._id);
+  //     let opts = {
+  //       type: 'deduction',
+  //       id: id,
+  //       query: {
+  //         payed: true
+  //       }
+  //     }
+  //     this._payrollService.updateConcept(opts).subscribe(res => {});
+  //   }
+  // }
   clearTable() {
+    this.calculating = false;
     this.dataSource = null;
     delete this.dataSource;
     this._payrollService.deletePayroll();

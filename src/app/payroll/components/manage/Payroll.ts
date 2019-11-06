@@ -182,6 +182,7 @@ export class Payroll {
       }
     }
   }
+
   recalculateOnConceptsChange( employee: any) {
     let foundEmployee = this.getEmployeeById(employee);
     foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);

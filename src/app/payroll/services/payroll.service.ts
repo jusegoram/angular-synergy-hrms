@@ -20,6 +20,8 @@ export class PayrollService {
   ];
   _clients: Observable<any> = null;
   _payroll: Payroll;
+  _employees: Observable<any> = null;
+
   constructor(private httpClient: HttpClient, private _sessionService: SessionService) {}
 
   getAuth(): any {
@@ -150,8 +152,13 @@ export class PayrollService {
       params: params
     });
   }
-  savePayroll(){
-    const body = this.payroll;
+  savePayroll(otherpay, deductions, bonus){
+    const body = {
+      payroll: this.payroll,
+      otherpay: otherpay,
+      deduction: deductions,
+      bonus: bonus,
+    };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post('/api/v1/payroll/', body, {
       headers: headers
@@ -174,5 +181,50 @@ export class PayrollService {
   deletePayroll() {
     this._payroll = null;
     delete this._payroll;
+
+
   }
+
+  getConcepts({type, id, verified, payed}){
+    // if id === 'all' then all employees are fetched
+    const params = new HttpParams().set('verified', verified).set('payed', payed);
+    return this.httpClient.get<any>(`/api/v1/payroll/concepts/${type}/${id}`, {
+      params: params
+    });
+  }
+
+  saveConcept(concept){
+    const {type, employee} = concept
+    const body = concept;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(`/api/v1/payroll/concepts/${type}/${employee}`, body, {
+      headers: headers
+    });
+  }
+  updateConcept({type, id, query}){
+    const body = {id, query};
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put(`/api/v1/payroll/concepts/${type}`, body, {headers: headers})
+  }
+  deleteConcept({type, id}){
+    const params = new HttpParams().set('id', id)
+    return this.httpClient.delete(`/api/v1/payroll/concepts/${type}`, {params: params})
+  }
+  getEmployees() {
+    if (!this._employees) {
+      this._employees = this.httpClient.get<any>('/api/v1/admin/employee/employee').pipe(
+        map((data) => {
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
+    }
+    return this._employees;
+  }
+  refreshEmployees() {
+    this._employees = null;
+  }
+
+
 }

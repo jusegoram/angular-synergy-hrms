@@ -19,6 +19,8 @@ let payslipTemplate = require('../../../static/payslipTemplate');
 let adminPayroll = require("../../../models/administration/administration-payroll");
 
 router.post("/", (req, res) => {
+  const {payroll, otherpay, deduction, bonus} = req.body
+
   Payroll.find(
     {
       $or: [
@@ -26,30 +28,30 @@ router.post("/", (req, res) => {
           $and: [
             {
               fromDate: {
-                $lte: req.body._fromDate
+                $lte: payroll._fromDate
               },
               toDate: {
-                $gte: req.body._fromDate
+                $gte: payroll._fromDate
               }
             },
             {
               fromDate: {
-                $lte: req.body._toDate
+                $lte: payroll._toDate
               },
               toDate: {
-                $gte: req.body._toDate
+                $gte: payroll._toDate
               }
             }
           ]
         },
         {
           fromDate: {
-            $gte: req.body._fromDate,
-            $lte: req.body._toDate
+            $gte: payroll._fromDate,
+            $lte: payroll._toDate
           },
           toDate: {
-            $lte: req.body._fromDate,
-            $lte: req.body._toDate
+            $lte: payroll._fromDate,
+            $lte: payroll._toDate
           }
         }
       ]
@@ -65,25 +67,34 @@ router.post("/", (req, res) => {
             error: "The payroll you are trying to create already exists."
           });
         } else {
-          const employees = req.body._employees.sort((a,b) => {
+          const employees = payroll._employees.sort((a,b) => {
             return a.firstName.localeCompare(b.firstName)
           })
-          let payroll = {
-            _id: new mongoose.Types.ObjectId(),
+
+
+          let id = new mongoose.Types.ObjectId()
+          if(otherpay.length > 0 ){
+            Otherpay.updateMany({_id: {$in: otherpay}}, {$set: {payroll: id}}, (err, raw) => {});
+          }
+          if(deduction.length > 0){
+            Deduction.updateMany({_id: {$in: deduction}}, {$set: {payroll: id}}, (err, raw) => {});
+          }
+          let newPayroll = {
+            _id: id,
             employees: employees,
-            payrollType: req.body._employees[0].payrollType,
-            isPayed: req.body._isPayed,
-            payedDate: req.body._payedDate,
-            socialTable: req.body_socialTable,
-            incometaxTable: req.body._incometaxTable,
-            deductionsTable: req.body._deductionsTable,
-            otherpayTable: req.body._otherpayTable,
-            exceptionsTable: req.body._exceptionsTable,
-            holidayTable: req.body._holidayTable,
-            fromDate: req.body._fromDate,
-            toDate: req.body._toDate,
+            payrollType: payroll._employees[0].payrollType,
+            isPayed: payroll._isPayed,
+            payedDate: payroll._payedDate,
+            socialTable: payroll._socialTable,
+            incometaxTable: payroll._incometaxTable,
+            deductionsTable: payroll._deductionsTable,
+            otherpayTable: payroll._otherpayTable,
+            exceptionsTable: payroll._exceptionsTable,
+            holidayTable: payroll._holidayTable,
+            fromDate: payroll._fromDate,
+            toDate: payroll._toDate,
           };
-          Payroll.create(payroll, (err, doc) => {
+          Payroll.create(newPayroll, (err, doc) => {
             if (err)
               res
                 .status(500)
@@ -283,6 +294,9 @@ router.post('/pay', (req, res) => {
   let item = req.body;
   const date = new Date()
   const payId = new mongoose.Types.ObjectId().toString()
+  let mappedPayrollsId= item.payedPayrolls.map(i => i.payroll);
+    Otherpay.updateMany({payroll: {$in: mappedPayrollsId}}, {$set: {payed: true}}, (err, raw) => {});
+    Deduction.updateMany({payroll: {$in: mappedPayrollsId}}, {$set: {payed: true}}, (err, raw) => {});
     Payroll.updateMany({$or: [
       {_id: item.payedPayrolls[0].payroll},
       {_id: item.payedPayrolls[1].payroll}
@@ -480,13 +494,170 @@ router.get("/getPayroll", (req, res) => {
   );
 });
 
+router.get("/concepts/:type/:id", (req, res) => {
+  const {type ,id} = req.params;
+  const {verified, payed} = req.query;
+  let query = {};
+    if(id !== 'all') query.employee = id;
+    if(verified !== undefined && verified !== 'null') query.verified = verified;
+    if(payed !== undefined && payed !== 'null') query.payed = payed;
+
+  let deductions = () => {
+    Deduction.find(query).lean().exec((err, doc) => {
+      if(err) res.status(400).json(err);
+      else {
+        res.status(200).json(doc);
+      }
+    });
+  };
+
+  let otherpays = () => {
+    Otherpay.find(query).lean().exec((err, doc) => {
+      if(err) res.status(400).json(err);
+      else {
+        res.status(200).json(doc);
+      }
+    });
+  };
+
+  switch (type.toLowerCase().replace(/\s+/g, '')) {
+    case 'deduction':
+      deductions();
+      break;
+    case 'otherpayments':
+      otherpays();
+      break;
+
+    default:
+      res.status(400).json({error: type.toLowerCase().replace(/\s+/g, '') + ' is not a valid concept'})
+      break;
+  }
+
+
+});
+
+router.post("/concepts/:type/:id", (req, res) => {
+  const {id, type} = req.params;
+  const concept = req.body;
+
+  let deductions = () => {
+    let find = {
+      employee: concept.employee,
+      reason: concept.reason,
+      date: concept.date,
+    }
+    Deduction.find(find, (err,doc) => {
+      if(err) console.log(err);
+      else if(doc.length > 0){
+        res.status(400).json({error: 'duplicate'});
+      }else {
+        Deduction.create(concept, (err, small) => {
+          if(err) res.status(500).json(err);
+          else res.status(200).json(concept);
+        })
+      }
+    })
+
+  }
+  let otherpays = () => {
+    let find = {
+      employee: concept.employee,
+      reason: concept.reason,
+      date: concept.date,
+    }
+    Otherpay.find(find, (err,doc) => {
+      if(err) console.log(err);
+      else if(doc.length > 0){
+        res.status(400).json({error: 'duplicate'});
+      }else {
+        Otherpay.create(concept, (err, small) => {
+          if(err) res.status(500).json(err);
+          else res.status(200).json(concept);
+        })
+      }
+    })
+
+  }
+  switch (type.toLowerCase().replace(/\s+/g, '')) {
+    case 'deduction':
+      deductions();
+      break;
+    case 'otherpayments':
+      otherpays();
+      break;
+
+    default:
+      res.status(400).json({error: type.toLowerCase().replace(/\s+/g, '') + ' is not a valid concept'})
+      break;
+  }
+})
+
+router.put("/concepts/:type", (req, res) => {
+  const {type} = req.params;
+  const {id, query} = req.body;
+  let update = {_id: {$in: id}};
+  deductions = () => {
+    Deduction.updateMany(update, {$set: query}, (err, small) => {
+      if(err) res.status(400).json(err);
+      else res.status(200).json(small);
+    });
+  };
+  otherpays = () => {
+    Otherpay.updateMany(update, {$set: query}, (err, small) => {
+      if(err) res.status(400).json(err);
+      else res.status(200).json(small);
+  });
+  }
+  switch (type.toLowerCase().replace(/\s+/g, '')) {
+    case 'deduction':
+      deductions();
+      break;
+    case 'otherpayments':
+      otherpays();
+      break;
+
+    default:
+      res.status(400).json({error: type.toLowerCase().replace(/\s+/g, '') + ' is not a valid concept'})
+      break;
+  }
+});
+
+router.delete('/concepts/:type', (req, res) => {
+  const {type} = req.params;
+  const {id} = req.query;
+  let toDelete = {_id: id};
+  deductions = () => {
+    Deduction.deleteOne(toDelete, (err, small) => {
+      if(err) res.status(400).json(err);
+      else res.status(200).json(small);
+    });
+  };
+  otherpays = () => {
+    Otherpay.deleteOne(toDelete, (err, small) => {
+      if(err) res.status(400).json(err);
+      else res.status(200).json(small);
+  });
+  }
+  switch (type.toLowerCase().replace(/\s+/g, '')) {
+    case 'deduction':
+      deductions();
+      break;
+    case 'otherpayments':
+      otherpays();
+      break;
+
+    default:
+      res.status(400).json({error: type.toLowerCase().replace(/\s+/g, '') + ' is not a valid concept'})
+      break;
+  }
+});
+
 router.post("/getOtherPayrollInfo", (req, res) => {
   let employeeIds;
   let from = req.body.from;
   let to = req.body.to;
   Promise.all([
     getHours(employeeIds, from, to),
-    getOvertime(employeeIds, from, to),
     getBonus(employeeIds, from, to),
     getDeductions(employeeIds, from, to),
     getOtherpay(employeeIds, from, to)
@@ -497,22 +668,6 @@ router.post("/getOtherPayrollInfo", (req, res) => {
     .catch(err => {
       console.log(err);
     });
-});
-
-router.post("/setDeduction", (req, res) => {
-  let deductions = req.body;
-  Deduction.insertMany(deductions, err => {
-    if (err) res.status(500).json(err);
-    else res.status(200).json({ message: "saved correctly" });
-  });
-});
-
-router.post("/setBonus", (req, res) => {
-  let bonus = req.body;
-  Bonus.insertMany(bonus, err => {
-    if (err) res.status(500).json(err);
-    else res.status(200).json({ message: "saved correctly" });
-  });
 });
 
 router.get("/settings", (req, res) => {
@@ -600,7 +755,10 @@ var getDeductions = (employee, fromDate, toDate) => {
       date: {
         $gte: fromDate,
         $lte: toDate
-      }
+      },
+      payed: false,
+      verified: true,
+      payroll: { $exists: false },
     })
       .sort({ employee: -1 })
       .lean()
@@ -618,7 +776,10 @@ var getBonus = (employees, fromDate, toDate) => {
       date: {
         $gte: fromDate,
         $lte: toDate
-      }
+      },
+      payed: false,
+      verified: true,
+      payroll: { $exists: false },
     })
       .sort({ employee: -1 })
       .lean()
@@ -636,7 +797,10 @@ var getOtherpay = (employees, fromDate, toDate) => {
       date: {
         $gte: fromDate,
         $lte: toDate
-      }
+      },
+      payed: false,
+      verified: true,
+      payroll: { $exists: false },
     })
       .sort({ employee: -1 })
       .lean()
@@ -670,22 +834,7 @@ var getHours = (employees, fromDate, toDate) => {
   });
 };
 
-var getOvertime = (employees, fromDate, toDate) => {
-  return new Promise((resolve, reject) => {
-    Overtime.find({
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      }
-    })
-      .sort({ employee: -1 })
-      .lean()
-      .exec((err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      });
-  });
-};
+
 
 var getSettingsTaskArray = (fromDate, toDate) => {
   let tasks = [
@@ -744,7 +893,6 @@ var getPayrollSettings = (fromDate, toDate) => {
   });
 };
 
-var setPayrollHistory = new Promise((resolve, reject) => {});
 
 function calculateHourlyRate(employeeWage) {
   if (employeeWage !== null) {

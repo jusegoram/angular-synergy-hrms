@@ -15,10 +15,12 @@
             <mat-card-title><h4>PAY RUNS</h4></mat-card-title>
             <mat-card-subtitle>Select a pay run, then you can choose a specific employee to get his payslip</mat-card-subtitle>
         </div>
-        <div fxFlex="35%"></div>
-        <button mat-flat-button color='accent' [disabled]='checkedRows?.selected?.length === 0' (click)="getRecords()">
+        <div class="push-right">
+          <button mat-flat-button color='accent' [disabled]='checkedRows?.selected?.length === 0' (click)="getRecords()">
             GET RECORDS FROM PAY RUN
           </button>
+        </div>
+
       </div>
       <mat-card-content>
         <div >
