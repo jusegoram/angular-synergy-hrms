@@ -23,13 +23,13 @@ export class PersonalComponent implements OnInit, OnChanges {
     { value: 'Single', name: 'Single' },
     { value: 'Married', name: 'Married/Remarried' },
     { value: 'Separated', name: 'Separated' },
-    { value: 'Common law', name: 'Common Law' },
+    { value: 'Common Law', name: 'Common Law' },
     { value: 'Divorced', name: 'Divorced' },
     { value: 'Widowed', name: 'Widowed' }];
 
     districts = [
       { value: 'Corozal', name: 'Corozal' },
-      { value: 'Orange walk', name: 'Orange Walk' },
+      { value: 'Orange Walk', name: 'Orange Walk' },
       { value: 'Belize', name: 'Belize' },
       { value: 'Belmopan', name: 'Belmopan' },
       { value: 'Cayo', name: 'Cayo' },
@@ -64,7 +64,7 @@ export class PersonalComponent implements OnInit, OnChanges {
       { value: 'Mahogany Heights', name: 'Mahogany Heights' },
       { value: 'Maskall Village', name: 'Maskall Village' },
       { value: 'Northern Highway', name: 'Northern Highway' },
-      { value: 'Orange Walk', name: 'Orange Walk Town' },
+      { value: 'Orange Walk Town', name: 'Orange Walk Town' },
       { value: 'Palmar Village', name: 'Palmar Village'},
       { value: 'Punta Gorda', name: 'Punta Gorda' },
       { value: 'Ranchito Village', name: 'Ranchito Village'},
