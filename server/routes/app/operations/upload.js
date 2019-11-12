@@ -1,4 +1,5 @@
 let express = require('express');
+let jwt = require('jsonwebtoken');
 
 let fs = require('fs');
 let async = require('async');
@@ -9,10 +10,12 @@ let multer = require('multer');
 let mongoose = require('mongoose');
 let csv = require('fast-csv');
 let path = require('path')
-
 let OperationsHours = require('../../../models/app/operations/operations-hour')
+let FileUploads = require('../../../models/back-end/file-upload');
 let OperationsKpi = require('../../../models/app/operations/operations-kpi')
 let EmployeeSchema = require('../../../models/app/employee/employee-main');
+const RSA_KEY = fs.readFileSync(path.join(__dirname, '../../pub.key'));
+
 //define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
 let storage = multer.diskStorage({
     destination:'uploads/kpiFiles',
@@ -25,8 +28,24 @@ let upload = multer({storage: storage}).single('file');
 
 router.post('/hours', (req, res) => {
   upload(req, res, (err) => {
+    const header = req.headers.authorization;
+  let token;
+  if (header) {
+    token = header.split(' ');
+    token = token[1];
+  }
+
     let hours = [];
     let hoursFile = req.file;
+    let fileId = mongoose.Types.ObjectId();
+    let file = new FileUploads({
+      user: jwt.decode(token, RSA_KEY),
+      apiPath: req.url,
+      fileName: hoursFile.filename,
+      fileId: fileId,
+      date: new Date(),
+    })
+    file.save().then(res => {});
       if (err) res.status(422).send("an Error occured");
       if(hoursFile.mimetype !== 'application/vnd.ms-excel' && hoursFile.mimetype !== 'text/csv') res.status(400).send("Sorry only CSV files can be processed for upload");
 
@@ -49,6 +68,7 @@ router.post('/hours', (req, res) => {
             hour['timeIn'] = valueArr[5];
             delete hour['employeeId;dialerId;date;systemHours;tosHours;timeIn'];
           }
+          hour.fileId = fileId;
           hour.tosHours = splitTimetoHours(hour.tosHours);
           hour.timeIn = splitTimetoHours(hour.timeIn);
           hour.systemHours = splitTimetoHours(hour.systemHours);

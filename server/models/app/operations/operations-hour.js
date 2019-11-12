@@ -22,6 +22,7 @@ let schema = new Schema({
   timeIn:  { type: hhmmssSchema, required: false },
   attendance: {type: String, default: 'present'}, //present, absent, on-leave, on-vacation, unknown
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
+  fileId: { type: mongoose.Schema.Types.ObjectId},
 });
 
 schema.index({client: 1 ,campaign: 1, date: -1});
