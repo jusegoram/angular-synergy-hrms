@@ -442,5 +442,16 @@ router.delete('/position', (req, res) => {
   });
 });
 
+router.delete('/shift', (req, res) => {
+  id = req.query.id;
+  employee = req.query.employee;
+
+
+  Employee.findByIdAndUpdate(employee, {$pull : {'shift': {_id: id}}}, {new: true}, (err, doc) => {
+    if(err) res.status(500).json(err);
+    else res.status(200).json(doc);
+  });
+});
+
 
 module.exports = router;

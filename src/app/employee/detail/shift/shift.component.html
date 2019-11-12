@@ -31,6 +31,16 @@
           <mat-cell *matCellDef="let element"> {{element.createdDate | date:'MM/dd/yyyy hh:mm:ss a':'-0600'}}</mat-cell>
         </ng-container>
 
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+          <mat-cell *matCellDef="let element"> <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="deleteShift(element)"><mat-icon color="warn">delete</mat-icon> Delete</button>
+          </mat-menu>
+          </mat-cell>
+        </ng-container>
+
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
       </mat-table>

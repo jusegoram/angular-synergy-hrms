@@ -19,7 +19,10 @@ export class ShiftComponent implements OnInit, OnChanges {
   today = Date.now();
   wpForm: FormGroup;
   displayedColumns = ['shiftName', 'startDate', 'endDate', 'createdDate'];
-  constructor(private _employeeService: EmployeeService, private fb: FormBuilder, private snackbar: MatSnackBar) { }
+  constructor(
+    private _employeeService: EmployeeService,
+    private fb: FormBuilder,
+    private snackbar: MatSnackBar) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     const employee: SimpleChange = changes.employee;
@@ -34,7 +37,13 @@ export class ShiftComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this._employeeService.getShift().subscribe(result => { this.shifts = result; });
+    this.addActionColumn()
     this.buildForm();
+  }
+  addActionColumn(){
+    if(this.authorization.role === 9999){
+      this.displayedColumns.push('action')
+    }
   }
   buildForm() {
     this.wpForm = this.fb.group({
@@ -93,7 +102,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       startDate: this.wpForm.value.createdDate,
       endDate: null,
       shift: shift,
-      current: this.wpForm.value.createdDate > new Date(this.dataSource.data ? this.dataSource.data[0].startDate : '12/12/2999'),
+      current: this.wpForm.value.createdDate > new Date(this.dataSource && this.dataSource.data && this.dataSource.data.length > 0 ? this.dataSource.data[0].startDate : '12/12/2999'),
       first: !this.dataSource.data
     };
 
@@ -108,7 +117,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     });
   }
   populateTable(event: any) {
-    if (this.dataSource.data && this.dataSource.data.length >= 0 ) {
+    if (this.dataSource && this.dataSource.data && this.dataSource.data.length >= 0 ) {
       const data = this.dataSource.data;
       data.unshift(event);
       this.dataSource.data = data;
@@ -147,5 +156,19 @@ export class ShiftComponent implements OnInit, OnChanges {
       this.snackbar.open(message, action, {
       duration: 5000,
       });
+    }
+
+    deleteShift(shift: object){
+      this._employeeService.deleteShift(shift).subscribe((result:any) => {
+        this.dataSource = undefined;
+        this.populateTable(result.shift);
+        this.snackbar.open('Employee information updated successfully', 'thank you', {
+          duration: 2000,
+        });
+      }, error => {
+        this.snackbar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+          duration: 2000,
+        });
+      })
     }
 }

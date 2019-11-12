@@ -310,6 +310,10 @@ export class EmployeeService {
     let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`
     return this.httpClient.delete(url);
   }
+  deleteShift(shift: any) {
+    let url = `/api/v1/employee/shift?id=${shift._id}&employee=${shift.employee}`
+    return this.httpClient.delete(url);
+  }
 
   availableInformation(query: any) {
     const body = JSON.stringify(query);
