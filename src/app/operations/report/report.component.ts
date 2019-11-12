@@ -4,6 +4,7 @@ import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { EmployeeHours } from '../../employee/Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import moment from 'moment';
 
 @Component({
   selector: 'app-report',
@@ -65,6 +66,10 @@ export class ReportComponent implements OnInit {
     let exportData = JSON.parse(JSON.stringify(this.dataSource.data));
 
     let mappedData = exportData.map(item => {
+      delete item._id;
+      delete item.__v
+      delete item.employee;
+      item.date = moment(item.date).format('MM/DD/YYYY').toString();
       item.systemHours = item.systemHours.value;
       item.tosHours = item.tosHours.value;
       item.timeIn = item.timeIn.value;
@@ -74,16 +79,18 @@ export class ReportComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'hours-info');
     XLSX.writeFile(wb, 'export-hours.xlsx');
+    console.log(exportData.length === this.dataSource.data.length);
   }
   setCampaigns(event: any) {
+    this.queryForm.value.Campaign = '';
     this.campaigns = event.campaigns;
   }
   runQuery(){
     let queryParam = this.queryForm.value;
     let query = {
-      'client': queryParam.Client.name,
+      'client': queryParam.Client && queryParam.Client.name,
       'campaign': queryParam.Campaign,
-      'date': {$gte: queryParam.From, $lte: queryParam.To},
+      'date': {$gte: moment(queryParam.From).startOf('day').toDate(), $lte: moment(queryParam.To).endOf('day').toDate()},
       'dialerId': queryParam.dialerId,
       }
     this.populateTable(query);

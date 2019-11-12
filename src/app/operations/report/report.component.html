@@ -29,14 +29,15 @@
             </mat-form-field>
             <div class="fill-remaining-space"></div>
             <mat-form-field appearance="outline">
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                <mat-label>Search</mat-label>
+                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
               </mat-form-field>
           </div>
           <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" [formGroup]="queryForm">
             <mat-form-field appearance="outline">
               <mat-label>Client</mat-label>
               <mat-select placeholder="Client Filter" formControlName="Client" (selectionChange)="setCampaigns($event.value)">
-                <mat-option>-- None --</mat-option>
+                <mat-option [value]="{campaigns: []}">-- ALL --</mat-option>
                 <mat-option *ngFor="let item of clients" [value]="item">
                   {{item.name}}
                 </mat-option>
@@ -45,7 +46,7 @@
             <mat-form-field appearance="outline">
               <mat-label>Campaign</mat-label>
               <mat-select placeholder="Campaign Filter" formControlName="Campaign">
-                <mat-option>-- None --</mat-option>
+                <mat-option value=''>-- ALL --</mat-option>
                 <mat-option *ngFor="let item of campaigns" [value]="item.name">
                   {{item.name}}
                 </mat-option>
@@ -76,12 +77,15 @@
         </mat-card>
 
         <mat-card *ngIf="dataSource && !notfound" class="pa-1">
-            <button mat-icon-button matTooltip="Export to Excel File" (click)="export()">
-              <mat-icon>cloud_download</mat-icon>
-            </button>
-            <button mat-icon-button matTooltip="Clear filter" (click)="reload()">
-              <mat-icon>clear</mat-icon>
-            </button>
+
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
+              <button mat-stroked-button color="primary" matTooltip="Export to Excel File" (click)="export()">
+                EXPORT
+              </button>
+              <button mat-stroked-button color="warn" matTooltip="Clear filter" (click)="reload()">
+                CLEAR
+              </button>
+            </div>
           <mat-card-content>
             <cdk-virtual-scroll-viewport mat-table class="container" itemSize="48" minBufferPx="200" maxBufferPx="400">
               <tr class="mat-header-row">

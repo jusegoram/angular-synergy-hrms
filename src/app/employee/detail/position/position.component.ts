@@ -54,7 +54,7 @@ export class PositionComponent implements OnInit {
   ngOnInit() {
     this.employeeService.getClient().subscribe(data => this.clients = data);
     this.employeeService.getDepartment().subscribe(data => this.departments = data);
-    this.isSuperAdmin = this.authorization.role === 4 ? true : false;
+    this.isSuperAdmin = this.authorization.role === 9999;
     this.addActionColumn(this.isSuperAdmin);
     this.employeePositions = this.employee.position;
     this.populateTable(this.employeePositions);

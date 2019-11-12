@@ -30,7 +30,7 @@ export class FamilyComponent implements OnInit {
     {value: 'Cousin’s wife', viewValue: 'Cousin’s wife'},
     {value: 'Wife', viewValue: 'Wife'},
     {value: 'Husband', viewValue: 'Husband'},
-    {value: 'Brother', viewValue: 'Brothe'},
+    {value: 'Brother', viewValue: 'Brother'},
     {value: 'Sister', viewValue: 'Sister'},
     {value: 'Brother-in-law', viewValue: 'Brother-in-law'},
     {value: 'Sister-in-law', viewValue: 'Sister-in-law'},
