@@ -82,7 +82,7 @@ export class AdminService {
 
   getUsers(): Observable<any> {
     if (!this._users) {
-      this._users = this.httpClient.get<any>('/api/v1/allUsers').pipe(
+      this._users = this.httpClient.get<any>('/api/v1/users').pipe(
         map((data) => {
           return data;
         }),
@@ -93,15 +93,14 @@ export class AdminService {
     return this._users;
   }
   editUser(param): any {
-    const body = JSON.stringify(param);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put('/api/v1/user', body, { headers: headers });
+    if(param) {
+      const body = JSON.stringify(param);
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+      return this.httpClient.put('/api/v1/users/' + param._id, body, { headers: headers });
+    } throw new Error("Failed to get the model...");
   }
   deleteUser(param: any): any {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    const params = new HttpParams()
-      .set('_id', param);
-    return this.httpClient.delete('/api/v1/user', { headers: headers, params: params });
+    return this.httpClient.delete('/api/v1/users/' + param);
   }
   clearUsers() {
     this._users = null;
@@ -237,6 +236,18 @@ export class AdminService {
   getAllMenus() {
     return this.httpClient.get<Array<Menu>>('/api/v1/admin/menu');
   }
+  getLogs(query) {
+    const {_id, page, limit} = query;
+    const params = new HttpParams().set('page', page).set('limit', limit);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.get(`/api/v1/logs/${_id}`, {headers: headers, params: params});
+  }
 
+  getUploads(query) {
+    const {_id, page, limit} = query;
+    const params = new HttpParams().set('page', page).set('limit', limit);    const body = JSON.stringify(query);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.get(`/api/v1/uploads/${_id}`, {headers: headers, params: params});
+  }
 
 }

@@ -1,0 +1,87 @@
+<div style='margin-top: 25px'>
+    <mat-card-header>
+        <mat-card-title>
+            RECENT LOGS
+        </mat-card-title>
+    </mat-card-header>
+</div>
+<mat-table #table [dataSource]="logsDatasource" >
+
+  <ng-container matColumnDef="user">
+    <mat-header-cell *matHeaderCellDef > USER </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.user.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="method">
+    <mat-header-cell *matHeaderCellDef > METHOD </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element?.method}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="apiPath">
+    <mat-header-cell *matHeaderCellDef > URL </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element?.apiPath}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="ip">
+      <mat-header-cell *matHeaderCellDef > IP Address </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element?.ip}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef > DATE </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.date | date: 'M/d/yy, h:mm a'}} </mat-cell>
+      </ng-container>
+
+  <mat-header-row *matHeaderRowDef="logsTableColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: logsTableColumns;"></mat-row>
+</mat-table>
+<mat-paginator #paginator
+[length]="logsLength"
+[pageSize]="logsLimit"
+[pageSizeOptions]="logsPageSizeOptions"
+(page)="onLogsPageEvent($event)"
+>
+</mat-paginator>
+
+<div style='margin-top: 25px'>
+  <mat-card-header>
+      <mat-card-title>
+          RECENT UPLOAD
+      </mat-card-title>
+  </mat-card-header>
+</div>
+<mat-table #table2 [dataSource]="uploadsDatasource">
+
+  <ng-container matColumnDef="user">
+    <mat-header-cell *matHeaderCellDef > USER </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.user.name}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="apiPath">
+    <mat-header-cell *matHeaderCellDef > URL </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element?.apiPath}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="fileName">
+      <mat-header-cell *matHeaderCellDef > FILE NAME </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element?.fileName}} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fileId">
+      <mat-header-cell *matHeaderCellDef > FILE ID </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element?.fileId}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+        <mat-header-cell *matHeaderCellDef > DATE </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.date | date: 'M/d/yy, h:mm a'}} </mat-cell>
+      </ng-container>
+
+  <mat-header-row *matHeaderRowDef="uploadsTableColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: uploadsTableColumns;"></mat-row>
+</mat-table>
+<mat-paginator #paginator2
+[length]="uploadsLength"
+[pageSize]="uploadsLimit"
+[pageSizeOptions]="uploadsPageSizeOptions"
+(page)="onUploadsPageEvent($event)"
+>

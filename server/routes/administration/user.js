@@ -8,6 +8,8 @@ const https = require('https');
 
 var User = require('../../models/administration/administration-user');
 let Logs = require('../../models/back-end/logs');
+let FileUploads = require('../../models/back-end/file-upload');
+
 
 router.get('/role', function(req, res, next) {
     var token = jwt.decode(req.query.token);
@@ -58,7 +60,7 @@ router.get('/usersInfoById', (req, res, next) => {
   });
 });
 
-router.get('/allUsers', (req, res, next) => {
+router.get('/users', (req, res, next) => {
   User.find()
   .populate({path: 'employee', select: '-personal -payroll -comments -education -family -position -shift', model: 'employee-main'})
   .exec((err, doc)=> {
@@ -70,8 +72,8 @@ router.get('/allUsers', (req, res, next) => {
   });
 });
 
-router.put('/user', (req, res, next) => {
-  let _id = req.body._id;
+router.put('/users/:id', (req, res, next) => {
+  let _id = req.params.id;
   let query = req.body;
   for (let propName in query) {
     if (query[propName] === null || query[propName] === undefined || query[propName] === '') {
@@ -82,7 +84,6 @@ router.put('/user', (req, res, next) => {
   if('password' in query) {
     query.password = bcrypt.hashSync(query.password, 10);
   }
-console.log(_id);
   User.findOneAndUpdate({_id: _id}, {$set: query}, {new: true}, (err, doc) => {
     if(err){
       res.status(500).json(err);
@@ -92,8 +93,8 @@ console.log(_id);
   });
 });
 
-router.delete('/user', (req, res, next) => {
-  let id = req.query._id;
+router.delete('/users/:id', (req, res, next) => {
+  let id = req.params.id;
   User.remove({_id: id}, (err, doc) => {
     if(err){
       res.status(500).json(err);
@@ -144,8 +145,9 @@ router.get('/logs/:id', (req, res) => {
  const options = {
   page: page,
   limit: limit,
+   sort: {date: -1},
 };
- if(id !== undefined || id !== null || id !== '') {
+ if(id !== 'all') {
   Logs.paginate({_id: id}, options, (err, doc) => {
     if(err) res.status(400).json(err);
     else if(doc) res.status(200).json(doc);
@@ -157,4 +159,26 @@ router.get('/logs/:id', (req, res) => {
   })
  }
 });
+
+router.get('/uploads/:id', (req, res) => {
+  const {id} = req.params;
+ const {page, limit} = req.query;
+
+ const options = {
+  page: page,
+   limit: limit,
+   sort: {date: -1},
+};
+ if(id !== 'all') {
+  FileUploads.paginate({_id: id}, options, (err, doc) => {
+    if(err) res.status(400).json(err);
+    else if(doc) res.status(200).json(doc);
+  })
+ }else {
+  FileUploads.paginate({}, options, (err, doc) => {
+    if(err) res.status(400).json(err);
+    else if(doc) res.status(200).json(doc);
+  })
+ }
+})
 module.exports = router;

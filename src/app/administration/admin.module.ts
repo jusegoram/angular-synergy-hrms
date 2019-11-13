@@ -20,6 +20,7 @@ import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { EditUserDialogComponent } from './account/edit-user-dialog/edit-user-dialog.component';
 import { CreateUserComponent } from './account/create-user/create-user.component';
+import { RecentActivitiesComponent } from './account/recent-activities/recent-activities.component';
 
 
 @NgModule({
@@ -44,6 +45,7 @@ import { CreateUserComponent } from './account/create-user/create-user.component
     CreateDepartmentDialogComponent,
     EditUserDialogComponent,
     CreateUserComponent,
+    RecentActivitiesComponent,
   ],
   providers: [AdminService,
     {
