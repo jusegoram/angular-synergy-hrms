@@ -519,6 +519,29 @@ router.post("/shift", (req, res) => {
       })
       .on("end", () => {
         shifts.map(i => {
+          if(i['employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate']) {
+            const valueArr = i[
+              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+            ].split(";");
+            i["employeeId"] = valueArr[0];
+            i["shiftName"] = valueArr[1];
+            i["monday-in"] = valueArr[2];
+            i["monday-out"] = valueArr[3];
+            i["tuesday-in"] = valueArr[4];
+            i["tuesday-out"] = valueArr[5];
+            i["wednesday-in"] = valueArr[6];
+            i["wednesday-out"] = valueArr[7];
+            i["thursday-in"] = valueArr[8];
+            i["thursday-out"] = valueArr[9];
+            i["friday-in"] = valueArr[10];
+            i["friday-out"] = valueArr[11];
+            i["saturday-in"] = valueArr[12];
+            i["saturday-out"] = valueArr[13];
+            i["sunday-in"] = valueArr[14];
+            i["sunday-out"] = valueArr[15];
+            i["startDate"] = valueArr[16];
+            delete i["employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"];
+          }
           i.shift = {
             name: i["shiftName"],
             shift: [
