@@ -169,6 +169,20 @@ router.get('/shift', function (req, res, next) {
   var fields = [
       'employeeId',
       'shiftName',
+      'monday-in',
+      'monday-out',
+      'tuesday-in',
+      'tuesday-out',
+      'wednesday-in',
+      'wednesday-out',
+      'thursday-in',
+      'thursday-out',
+      'friday-in',
+      'friday-out',
+      'saturday-in',
+      'saturday-out',
+      'sunday-in',
+      'sunday-out',
       'startDate',
   ];
 

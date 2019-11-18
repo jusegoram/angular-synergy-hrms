@@ -1,184 +1,245 @@
-let express = require('express');
-let fs = require('fs');
-let async = require('async');
+let express = require("express");
+let fs = require("fs");
+let async = require("async");
 //require the express router
 let router = express.Router();
 //require multer for the file uploads & fast-csv for parsing csv
-let multer = require('multer');
-let mongoose = require('mongoose');
-let csv = require('fast-csv');
-let Department = require('../../../models/administration/administration-department');
-let EmployeeSchema = require ('../../../models/app/employee/employee-main');
-let Position = require ('../../../models/app/employee/employee-position');
-let EmployeeShift = require('../../../models/app/employee/employee-shift');
+let multer = require("multer");
+let mongoose = require("mongoose");
+let csv = require("fast-csv");
+let Department = require("../../../models/administration/administration-department");
+let EmployeeSchema = require("../../../models/app/employee/employee-main");
+let Position = require("../../../models/app/employee/employee-position");
+let EmployeeShift = require("../../../models/app/employee/employee-shift");
 // set the directory for the uploads to the uploaded to
-let DIR = 'uploads/employeeFiles';
+let DIR = "uploads/employeeFiles";
 
-let path = require('path')
+let path = require("path");
 //define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
 let storage = multer.diskStorage({
-    destination:'uploads/employeeFiles',
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
-    }
-  });
-let upload = multer({storage: storage}).single('file');
-
-
+  destination: "uploads/employeeFiles",
+  filename: function(req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  }
+});
+let upload = multer({ storage: storage }).single("file");
 
 //our file upload function.
-router.post('/', function (req, res) {
-        upload(req, res, function (err) {
-          let employees = [];
-          let employeeFile = req.file;
-          let maxEmployeeId = null;
-            if (err)  res.status(422).send("an Error occured");
-            if( employeeFile.mimetype !== 'application/vnd.ms-excel' && employeeFile.mimetype !== 'text/csv'){
-              res.status(400).send("Sorry only CSV files can be processed for upload");
-            }
-            EmployeeSchema.findMax((maxErr, max) => {
-              if(maxErr) console.log(maxErr);
-              else {
-                maxEmployeeId = parseInt(max[0].employeeId, 10);
-                csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-                .on('data', (data) => {
-                    data['_id'] = new mongoose.Types.ObjectId();
-                    data['company'] = null;
-                    data['payroll'] = null;
-                    data['personal'] = null;
-                    employees.push(data);
-                })
-                .on('end', (result) => {
-                    let counter = 0;
-                    let duplicate = 0;
-                    async.each(employees, (employee, callback) => {
-                      maxEmployeeId++;
-                      if(employee.employeeId === '') employee.employeeId = maxEmployeeId;
-                       EmployeeSchema.create(employee, (err, created) =>{
-                        if(err) {
-                          duplicate++
-                          callback();
-                        }else{
-                          counter++;
-                          callback();
-                        }
-                      });
-                    });
-                    return res.sendStatus(200);
-                });
-              }
-            });
-        });
-
-});
-
-router.post('/position', function (req, res) {
-    upload(req, res, function (err) {
-      let position = [];
-      let positionFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(positionFile.mimetype !== 'application/vnd.ms-excel' && positionFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            position.push(data);
-        })
-        .on('end', function(){
-            async.each(position, function(pos, callback){
-              EmployeeSchema.findOne({'employeeId': pos.employeeId}, function(err, res){
-                    if(err){
-                        callback(err)
-                    }else{
-
-                        pos.employee = res._id;
-                        res.save();
-                      Department.position.findOne({'positionId': pos.position}, function(err, result){
-                        if(err) console.log(err);
-                        else {
-                          pos.position = result._id;
-                          callback();
-                        }
-                      });
-                    }
-                    EmployeeSchema.update({_id: pos.employee},{
-                      $push: { position: pos._id}}, function(err, raw){
-                        console.log(raw||err);
-                      });
-                });
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }else{
-                    Position.create(position, function (err, res){
-                    });
+router.post("/", function(req, res) {
+  upload(req, res, function(err) {
+    let employees = [];
+    let employeeFile = req.file;
+    let maxEmployeeId = null;
+    if (err) res.status(422).send("an Error occured");
+    if (
+      employeeFile.mimetype !== "application/vnd.ms-excel" &&
+      employeeFile.mimetype !== "text/csv"
+    ) {
+      res.status(400).send("Sorry only CSV files can be processed for upload");
+    }
+    EmployeeSchema.findMax((maxErr, max) => {
+      if (maxErr) console.log(maxErr);
+      else {
+        maxEmployeeId = parseInt(max[0].employeeId, 10);
+        csv
+          .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+          .on("data", data => {
+            data["_id"] = new mongoose.Types.ObjectId();
+            data["company"] = null;
+            data["payroll"] = null;
+            data["personal"] = null;
+            employees.push(data);
+          })
+          .on("end", result => {
+            let counter = 0;
+            let duplicate = 0;
+            async.each(employees, (employee, callback) => {
+              maxEmployeeId++;
+              if (employee.employeeId === "")
+                employee.employeeId = maxEmployeeId;
+              EmployeeSchema.create(employee, (err, created) => {
+                if (err) {
+                  duplicate++;
+                  callback();
+                } else {
+                  counter++;
+                  callback();
                 }
+              });
             });
-
-            console.log('upload finished');
-            return res.status(200).send(position.length + ' lines of position information for employees was uploaded');
-        });
+            return res.sendStatus(200);
+          });
+      }
     });
-
+  });
 });
 
-router.post('/personal',  (req, res)  => {
-    upload(req, res,  (err) => {
-      let personal = [];
-      let personalFile = req.file;
-        if (err) res.status(422).send("an Error occured");
-        if(personalFile.mimetype !== 'application/vnd.ms-excel' && personalFile.mimetype !== 'text/csv')res.status(400).send("Sorry only CSV files can be processed for upload");
-
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', data => {
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            personal.push(data);
-
-        })
-        .on('end', () => {
-            async.each(personal, (per, callback) => {
-              EmployeeSchema.updateOne({'employeeId': per.employeeId}, { $set: { personal: per }}, (err, res) => {
-                        callback();
-                })
-            }, (err) => {
-                if(err) console.log(err);
+router.post("/position", function(req, res) {
+  upload(req, res, function(err) {
+    let position = [];
+    let positionFile = req.file;
+    if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+    }
+    if (
+      positionFile.mimetype !== "application/vnd.ms-excel" &&
+      positionFile.mimetype !== "text/csv"
+    ) {
+      return res
+        .status(400)
+        .send("Sorry only CSV files can be processed for upload");
+    }
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", function(data) {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        position.push(data);
+      })
+      .on("end", function() {
+        async.each(
+          position,
+          function(pos, callback) {
+            EmployeeSchema.findOne({ employeeId: pos.employeeId }, function(
+              err,
+              res
+            ) {
+              if (err) {
+                callback(err);
+              } else {
+                pos.employee = res._id;
+                res.save();
+                Department.position.findOne(
+                  { positionId: pos.position },
+                  function(err, result) {
+                    if (err) console.log(err);
+                    else {
+                      pos.position = result._id;
+                      callback();
+                    }
+                  }
+                );
+              }
+              EmployeeSchema.update(
+                { _id: pos.employee },
+                {
+                  $push: { position: pos._id }
+                },
+                function(err, raw) {
+                  console.log(raw || err);
+                }
+              );
             });
-            return res.status(200).send( personal.length + ' Registries of personal information of employees was uploaded');
-        });
-    });
+          },
+          function(err) {
+            if (err) {
+              console.log(err);
+            } else {
+              Position.create(position, function(err, res) {});
+            }
+          }
+        );
+
+        console.log("upload finished");
+        return res
+          .status(200)
+          .send(
+            position.length +
+              " lines of position information for employees was uploaded"
+          );
+      });
+  });
 });
 
+router.post("/personal", (req, res) => {
+  upload(req, res, err => {
+    let personal = [];
+    let personalFile = req.file;
+    if (err) res.status(422).send("an Error occured");
+    if (
+      personalFile.mimetype !== "application/vnd.ms-excel" &&
+      personalFile.mimetype !== "text/csv"
+    )
+      res.status(400).send("Sorry only CSV files can be processed for upload");
 
-router.post('/personal/hobbies',  (req, res)  => {
-  upload(req, res,  (err) => {
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", data => {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        personal.push(data);
+      })
+      .on("end", () => {
+        async.each(
+          personal,
+          (per, callback) => {
+            EmployeeSchema.updateOne(
+              { employeeId: per.employeeId },
+              { $set: { personal: per } },
+              (err, res) => {
+                callback();
+              }
+            );
+          },
+          err => {
+            if (err) console.log(err);
+          }
+        );
+        return res
+          .status(200)
+          .send(
+            personal.length +
+              " Registries of personal information of employees was uploaded"
+          );
+      });
+  });
+});
+
+router.post("/personal/hobbies", (req, res) => {
+  upload(req, res, err => {
     let hobbies = [];
     let hobbiesFile = req.file;
-      if (err) res.status(422).send("an Error occured");
-      if(hobbiesFile.mimetype !== 'application/vnd.ms-excel' && hobbiesFile.mimetype !== 'text/csv')res.status(400).send("Sorry only CSV files can be processed for upload");
+    if (err) res.status(422).send("an Error occured");
+    if (
+      hobbiesFile.mimetype !== "application/vnd.ms-excel" &&
+      hobbiesFile.mimetype !== "text/csv"
+    )
+      res.status(400).send("Sorry only CSV files can be processed for upload");
 
-      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-      .on('data', data => {
-          data['_id'] = new mongoose.Types.ObjectId();
-          data['employee'] = null;
-          hobbies.push(data);
-
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", data => {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        hobbies.push(data);
       })
-      .on('end', () => {
-          async.each(hobbies, (hob, callback) => {
-            EmployeeSchema.updateOne({'employeeId': hob.employeeId}, { $push: { 'personal.hobbies': hob }}, (err, res) => {
-                      callback();
-              })
-          }, (err) => {
-              if(err) console.log(err);
-          });
-          return res.status(200).send( hobbies.length + ' Registries of hobbies information of employees was uploaded');
+      .on("end", () => {
+        async.each(
+          hobbies,
+          (hob, callback) => {
+            EmployeeSchema.updateOne(
+              { employeeId: hob.employeeId },
+              { $push: { "personal.hobbies": hob } },
+              (err, res) => {
+                callback();
+              }
+            );
+          },
+          err => {
+            if (err) console.log(err);
+          }
+        );
+        return res
+          .status(200)
+          .send(
+            hobbies.length +
+              " Registries of hobbies information of employees was uploaded"
+          );
       });
   });
 });
@@ -236,45 +297,63 @@ router.post('/personal/hobbies',  (req, res)  => {
 //   });
 // });
 
-router.post('/payroll', function (req, res) {
-    upload(req, res, function (err) {
-      let payroll = [];
-      let payrollFile = req.file;
-        if (err) {
-        // An error occurred when uploading
-        console.log(err);
-        return res.status(422).send("an Error occured");
-        }
-        if(payrollFile.mimetype !== 'application/vnd.ms-excel' && payrollFile.mimetype !== 'text/csv'){
-            return res.status(400).send("Sorry only CSV files can be processed for upload");
-        }
-        csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-        .on('data', function(data){
-            data['_id'] = new mongoose.Types.ObjectId();
-            data['employee'] = null;
-            payroll.push(data);
-
-        })
-        .on('end', function(){
-            async.each(payroll, function(pay, callback){
-              if(pay.billable.toLowerCase() === 'true'){
-                pay.billable = true;
-              }else if(pay.billable.toLowerCase() === 'false') {
-                pay.billable = false;
-              }
-              EmployeeSchema.updateOne({'employeeId': payroll.employeeId}, {$set: {payroll: pay}}, (err, doc) => {
-                if(err) callback(err);
+router.post("/payroll", function(req, res) {
+  upload(req, res, function(err) {
+    let payroll = [];
+    let payrollFile = req.file;
+    if (err) {
+      // An error occurred when uploading
+      console.log(err);
+      return res.status(422).send("an Error occured");
+    }
+    if (
+      payrollFile.mimetype !== "application/vnd.ms-excel" &&
+      payrollFile.mimetype !== "text/csv"
+    ) {
+      return res
+        .status(400)
+        .send("Sorry only CSV files can be processed for upload");
+    }
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", function(data) {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        payroll.push(data);
+      })
+      .on("end", function() {
+        async.each(
+          payroll,
+          function(pay, callback) {
+            if (pay.billable.toLowerCase() === "true") {
+              pay.billable = true;
+            } else if (pay.billable.toLowerCase() === "false") {
+              pay.billable = false;
+            }
+            EmployeeSchema.updateOne(
+              { employeeId: payroll.employeeId },
+              { $set: { payroll: pay } },
+              (err, doc) => {
+                if (err) callback(err);
                 else callback();
-                })
-            }, function(err){
-                if(err){
-                    console.log(err);
-                }
-            });
-            console.log('upload finished');
-            return res.status(200).send( payroll.lenght + ' Registries of payroll information of employees was uploaded');
-        });
-    });
+              }
+            );
+          },
+          function(err) {
+            if (err) {
+              console.log(err);
+            }
+          }
+        );
+        console.log("upload finished");
+        return res
+          .status(200)
+          .send(
+            payroll.lenght +
+              " Registries of payroll information of employees was uploaded"
+          );
+      });
+  });
 });
 
 // router.post('/family', function (req, res) {
@@ -420,88 +499,393 @@ router.post('/payroll', function (req, res) {
 
 // });
 
-
-
-
-router.post('/shift', (req, res) => {
+router.post("/shift", (req, res) => {
   let shifts = [];
-  upload(req, res, (err) => {
+  upload(req, res, err => {
     if (err) res.status(422).send("an Error occured");
-    if (req.file.mimetype !== 'application/vnd.ms-excel' && req.file.mimetype !== 'text/csv') res.sendStatus(400);
-    csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-    .on('data', (data) => {
-      data['_id'] = new mongoose.Types.ObjectId();
-      data['employee'] = null;
-      data['createdDate'] = new Date();
-      data['shift'] = null;
-      shifts.push(data);
-    })
-    .on('end', () => {
-      async.each(shifts, (item, callback) => {
-        EmployeeShift.shift.findOne({name: item.shiftName}, (err, shiftDoc) => {
-          if(err) {
-            console.log(err);
-            callback()
-          }
-          else {
-            item.shift = shiftDoc;
-            item.shift.shiftId = shiftDoc._id
-            delete item.shift._id;
-            delete item.shiftName;
-
-
-            EmployeeSchema.findOneAndUpdate({employeeId: item.employeeId},{$push: {$each: [item], $sort: {startDate: -1}}},{new: true}, (err, employee) => {
-              if(err){
-                console.log(err);
-                callback()
+    if (
+      req.file.mimetype !== "application/vnd.ms-excel" &&
+      req.file.mimetype !== "text/csv"
+    )
+      res.sendStatus(400);
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", data => {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        data["createdDate"] = new Date();
+        data["shift"] = null;
+        shifts.push(data);
+      })
+      .on("end", () => {
+        shifts.map(i => {
+          i.shift = {
+            name: i["shiftName"],
+            shift: [
+              {
+                day: 0,
+                onShift:
+                  i["monday-in"] !== null &&
+                  i["monday-in"] !== undefined &&
+                  i["monday-in"] !== "",
+                startTime: timeToMinutes(i["monday-in"]),
+                endTime: timeToMinutes(i["monday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["monday-in"]),
+                  timeToMinutes(i["monday-out"])
+                )
+              },
+              {
+                day: 1,
+                onShift:
+                  i["tuesday-in"] !== null &&
+                  i["tuesday-in"] !== undefined &&
+                  i["tuesday-in"] !== "",
+                startTime: timeToMinutes(i["tuesday-in"]),
+                endTime: timeToMinutes(i["tuesday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["tuesday-in"]),
+                  timeToMinutes(i["tuesday-out"])
+                )
+              },
+              {
+                day: 2,
+                onShift:
+                  i["wednesday-in"] !== null &&
+                  i["wednesday-in"] !== undefined &&
+                  i["wednesday-in"] !== "",
+                startTime: timeToMinutes(i["wednesday-in"]),
+                endTime: timeToMinutes(i["wednesday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["wednesday-in"]),
+                  timeToMinutes(i["wednesday-out"])
+                )
+              },
+              {
+                day: 3,
+                onShift:
+                  i["thursday-in"] !== null &&
+                  i["thursday-in"] !== undefined &&
+                  i["thursday-in"] !== "",
+                startTime: timeToMinutes(i["thursday-in"]),
+                endTime: timeToMinutes(i["thursday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["thursday-in"]),
+                  timeToMinutes(i["thursday-out"])
+                )
+              },
+              {
+                day: 4,
+                onShift:
+                  i["friday-in"] !== null &&
+                  i["friday-in"] !== undefined &&
+                  i["friday-in"] !== "",
+                startTime: timeToMinutes(i["friday-in"]),
+                endTime: timeToMinutes(i["friday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["friday-in"]),
+                  timeToMinutes(i["friday-out"])
+                )
+              },
+              {
+                day: 5,
+                onShift:
+                  i["saturday-in"] !== null &&
+                  i["saturday-in"] !== undefined &&
+                  i["saturday-in"] !== "",
+                startTime: timeToMinutes(i["saturday-in"]),
+                endTime: timeToMinutes(i["saturday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["saturday-in"]),
+                  timeToMinutes(i["saturday-out"])
+                )
+              },
+              {
+                day: 6,
+                onShift:
+                  i["sunday-in"] !== null &&
+                  i["sunday-in"] !== undefined &&
+                  i["sunday-in"] !== "",
+                startTime: timeToMinutes(i["sunday-in"]),
+                endTime: timeToMinutes(i["sunday-out"]),
+                scheduledHours: calculateTimeDifference(
+                  timeToMinutes(i["sunday-in"]),
+                  timeToMinutes(i["sunday-out"])
+                )
               }
-              else {
-                callback();
-              }
-            });
-          }
+            ]
+          };
+          i.shift.daysonShift = i.shift.shift.filter(
+            item => item.onShift
+          ).length;
+          i.shift.totalHours = i.shift.shift
+            .map(e => e.scheduledHours)
+            .reduce((a, b) => a + b);
+          return i.shift;
         });
-      }, (err) => {
-        if(err) console.log(err);
-        else {
-          res.status(200).json({addedShifts: shifts.length})
-        }
+        async.each(
+          shifts,
+          (item, callback) => {
+            let extractedShift = item.shift.shift;
+            EmployeeShift.shift.findOne(
+              {
+                "shift.0.startTime":
+                  typeof extractedShift[0].startTime === "NaN"
+                    ? null
+                    : extractedShift[0].startTime,
+                "shift.0.endTime":
+                  typeof extractedShift[0].endTime === "NaN"
+                    ? null
+                    : extractedShift[0].endTime,
+                "shift.1.startTime":
+                  typeof extractedShift[1].startTime === "NaN"
+                    ? null
+                    : extractedShift[1].startTime,
+                "shift.1.endTime":
+                  typeof extractedShift[1].endTime === "NaN"
+                    ? null
+                    : extractedShift[1].endTime,
+                "shift.2.startTime":
+                  typeof extractedShift[2].startTime === "NaN"
+                    ? null
+                    : extractedShift[2].startTime,
+                "shift.2.endTime":
+                  typeof extractedShift[2].endTime === "NaN"
+                    ? null
+                    : extractedShift[2].endTime,
+                "shift.3.startTime":
+                  typeof extractedShift[3].startTime === "NaN"
+                    ? null
+                    : extractedShift[3].startTime,
+                "shift.3.endTime":
+                  typeof extractedShift[3].endTime === "NaN"
+                    ? null
+                    : extractedShift[3].endTime,
+                "shift.4.startTime":
+                  typeof extractedShift[4].startTime === "NaN"
+                    ? null
+                    : extractedShift[4].startTime,
+                "shift.4.endTime":
+                  typeof extractedShift[4].endTime === "NaN"
+                    ? null
+                    : extractedShift[4].endTime,
+                "shift.5.startTime":
+                  typeof extractedShift[5].startTime === "NaN"
+                    ? null
+                    : extractedShift[5].startTime,
+                "shift.5.endTime":
+                  typeof extractedShift[5].endTime === "NaN"
+                    ? null
+                    : extractedShift[5].endTime,
+                "shift.6.startTime":
+                  typeof extractedShift[6].startTime === "NaN"
+                    ? null
+                    : extractedShift[6].startTime,
+                "shift.6.endTime":
+                  typeof extractedShift[6].endTime === "NaN"
+                    ? null
+                    : extractedShift[6].endTime
+              },
+              (err, shiftDoc) => {
+                if (err) {
+                  callback();
+                } else if (shiftDoc !== null) {
+                  shiftDoc.shift.map(day => {
+                    day.scheduledHours = calculateTimeDifference(
+                      day.startTime,
+                      day.endTime
+                    );
+                    return day;
+                  });
+                  shiftDoc.daysonShift = shiftDoc.shift.filter(
+                    item => item.onShift
+                  ).length;
+                  shiftDoc.totalHours = shiftDoc.shift
+                    .map(e => e.scheduledHours)
+                    .reduce((a, b) => a + b);
+                  item.shift = shiftDoc;
+                  item.shift.shiftId = shiftDoc._id;
+                  delete item.shift._id;
+                  delete item.shiftName;
+                  delete item["monday-in"];
+                  delete item["monday-out"];
+                  delete item["tuesday-in"];
+                  delete item["tuesday-out"];
+                  delete item["wednesday-in"];
+                  delete item["wednesday-out"];
+                  delete item["thursday-in"];
+                  delete item["thursday-out"];
+                  delete item["friday-in"];
+                  delete item["friday-out"];
+                  delete item["saturday-in"];
+                  delete item["saturday-out"];
+                  delete item["sunday-in"];
+                  delete item["sunday-out"];
+                  shiftDoc.save().then(result => {
+                    EmployeeSchema.updateOne(
+                      { employeeId: item.employeeId },
+
+                      {
+                        $push: {
+                          shift: { $each: [item] },
+                          $sort: { startDate: -1 }
+                        }
+                      },
+                      (err, employee) => {
+                        if (err) {
+                          console.log(err);
+                          callback();
+                        } else {
+                          console.log(employee);
+                          callback();
+                          // console.log(employee.shift.length);
+                          // EmployeeSchema
+                          //   .updateOne(
+                          //     { employeeId: item.employeeId },
+                          //     { $set: { currentShift: currentShift(employee.shift) } },
+                          //     (err, raw) => {
+                          //       if (err) {
+                          //         console.log(err);
+                          //         callback();
+                          //       } else {
+                          //         callback();
+                          //       }
+                          //     })
+                        }
+                      }
+                    );
+                  });
+                } else {
+                  let nonExistentShift = item.shift;
+                  nonExistentShift._id = new mongoose.Types.ObjectId();
+                  let newShift = new EmployeeShift.shift(nonExistentShift);
+                  newShift.save((err, doc) => {
+                    if (err) {
+                      console.log(err);
+                      callback();
+                    } else {
+                      item.shift = doc;
+                      item.shift.shiftId = doc._id;
+                      delete item.shift._id;
+                      delete item.shiftName;
+                      EmployeeSchema.updateOne(
+                        { employeeId: item.employeeId },
+
+                        {
+                          $push: {
+                            shift: { $each: [item] },
+                            $sort: { startDate: -1 }
+                          }
+                        },
+                        (err, employee) => {
+                          if (err) {
+                            console.log(err);
+                            callback();
+                          } else {
+                            console.log(employee);
+                            callback();
+                            // EmployeeSchema
+                            // .updateOne(
+                            //   { employeeId: employeeId },
+                            //   { $set: { currentShift: currentShift(employee.shift) } },
+                            //   (err, raw) => {
+                            //     if (err) {
+                            //       console.log(err);
+                            //       callback();
+                            //     } else {
+                            //       callback();
+                            //     }
+                            //   })
+                          }
+                        }
+                      );
+                    }
+                  });
+                }
+              }
+            );
+          },
+          err => {
+            if (err) console.log(err);
+            else {
+              res.status(200).json({ addedShifts: shifts.length });
+            }
+          }
+        );
       });
-    });
   });
 });
 
-router.post('/avatars', function(req, res){
+function timeToMinutes(time) {
+  const str = time + "";
+  const strArray = str.split(":");
+  const hoursStr = parseInt(strArray[0], 10) * 60;
+  const minutesStr = parseInt(strArray[1], 10);
+  const result = hoursStr + minutesStr;
+  if (isNaN(result)) {
+    return null;
+  } else return result;
+}
+function calculateTimeDifference(startTime, endTime) {
+  if (
+    startTime === null &&
+    startTime === undefined &&
+    startTime === "" &&
+    startTime === "OFF"
+  )
+    return 0;
+  if (startTime < endTime) return endTime - startTime;
+  if (startTime > endTime) return 1440 - startTime + endTime;
+  return 0;
+}
+
+function currentShift(shifts) {
+  if (shifts.length === 0) return null;
+  let current;
+  var sortedShifts = shifts.sort((a, b) => a.startDate < b.startDate);
+  sortedShifts.forEach((i, index) => {
+    if (i.startDate > new Date())
+      current =
+        sortedShifts[index === sortedShifts.length - 1 ? index : index + 1];
+  });
+  return current;
+}
+
+router.post("/avatars", function(req, res) {
   let avatarStorage = multer.diskStorage({
-        destination:'uploads/avatars',
-        filename: function (req, file, cb) {
-          cb(null,req.query.id + '.jpg');
-        }
-      });
-  let avatarUpload = multer({storage: avatarStorage}).single('file');
+    destination: "uploads/avatars",
+    filename: function(req, file, cb) {
+      cb(null, req.query.id + ".jpg");
+    }
+  });
+  let avatarUpload = multer({ storage: avatarStorage }).single("file");
 
-      avatarUpload(req, res, function (err) {
-        if(err){
-            res.status(400).send("error in the upload");
-        }
-        if(req.file.mimetype != "image/jpeg"){
-            res.status(400).send("only jpeg is allowed");
-        }
-        fs.readFile('uploads/avatars/' + req.query.id + '.jpg', function(err, content){
-          if (err) {
-            fs.readFile('uploads/avatars/default-avatar.jpg' , function (err, content){
-              res.writeHead(200,{'Content-type':'image/jpg'});
-              res.end(content);
-            });
-          } else {
-            //specify the content type in the response will be an image
-            res.writeHead(200,{'Content-type':'image/jpg'});
-            res.end(content);
-          }
+  avatarUpload(req, res, function(err) {
+    if (err) {
+      res.status(400).send("error in the upload");
+    }
+    if (req.file.mimetype != "image/jpeg") {
+      res.status(400).send("only jpeg is allowed");
+    }
+    fs.readFile("uploads/avatars/" + req.query.id + ".jpg", function(
+      err,
+      content
+    ) {
+      if (err) {
+        fs.readFile("uploads/avatars/default-avatar.jpg", function(
+          err,
+          content
+        ) {
+          res.writeHead(200, { "Content-type": "image/jpg" });
+          res.end(content);
         });
-      });
+      } else {
+        //specify the content type in the response will be an image
+        res.writeHead(200, { "Content-type": "image/jpg" });
+        res.end(content);
+      }
+    });
+  });
 });
-
-
 
 module.exports = router;

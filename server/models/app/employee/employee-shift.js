@@ -6,7 +6,8 @@ let daySchema = new Schema({
   day: { type: Number },
   onShift: { type: Boolean },
   startTime: {type: Number},
-  endTime: { type: Number }
+  endTime: { type: Number },
+  scheduledHours: {type: Number},
 });
 
 let shiftSchema = new Schema({
