@@ -550,7 +550,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["monday-in"] !== null &&
                   i["monday-in"] !== undefined &&
-                  i["monday-in"] !== "",
+                  !i["monday-in"].includes(':'),
                 startTime: timeToMinutes(i["monday-in"]),
                 endTime: timeToMinutes(i["monday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -563,7 +563,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["tuesday-in"] !== null &&
                   i["tuesday-in"] !== undefined &&
-                  i["tuesday-in"] !== "",
+                  !i["tuesday-in"].includes(':'),
                 startTime: timeToMinutes(i["tuesday-in"]),
                 endTime: timeToMinutes(i["tuesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -576,7 +576,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["wednesday-in"] !== null &&
                   i["wednesday-in"] !== undefined &&
-                  i["wednesday-in"] !== "",
+                  !i["wednesday-in"].includes(':'),
                 startTime: timeToMinutes(i["wednesday-in"]),
                 endTime: timeToMinutes(i["wednesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -589,7 +589,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["thursday-in"] !== null &&
                   i["thursday-in"] !== undefined &&
-                  i["thursday-in"] !== "",
+                  !i["thursday-in"].includes(':'),
                 startTime: timeToMinutes(i["thursday-in"]),
                 endTime: timeToMinutes(i["thursday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -602,7 +602,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["friday-in"] !== null &&
                   i["friday-in"] !== undefined &&
-                  i["friday-in"] !== "",
+                  !i["friday-in"].includes(':'),
                 startTime: timeToMinutes(i["friday-in"]),
                 endTime: timeToMinutes(i["friday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -615,7 +615,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["saturday-in"] !== null &&
                   i["saturday-in"] !== undefined &&
-                  i["saturday-in"] !== "",
+                  !i["saturday-in"].includes(':'),
                 startTime: timeToMinutes(i["saturday-in"]),
                 endTime: timeToMinutes(i["saturday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -628,7 +628,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["sunday-in"] !== null &&
                   i["sunday-in"] !== undefined &&
-                  i["sunday-in"] !== "",
+                  !i["sunday-in"].includes(':'),
                 startTime: timeToMinutes(i["sunday-in"]),
                 endTime: timeToMinutes(i["sunday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -653,61 +653,33 @@ router.post("/shift", (req, res) => {
             EmployeeShift.shift.findOne(
               {
                 "shift.0.startTime":
-                  typeof extractedShift[0].startTime === "NaN"
-                    ? null
-                    : extractedShift[0].startTime,
+                  typeof extractedShift[0].startTime,
                 "shift.0.endTime":
-                  typeof extractedShift[0].endTime === "NaN"
-                    ? null
-                    : extractedShift[0].endTime,
+                  typeof extractedShift[0].endTime,
                 "shift.1.startTime":
-                  typeof extractedShift[1].startTime === "NaN"
-                    ? null
-                    : extractedShift[1].startTime,
+                  typeof extractedShift[1].startTime,
                 "shift.1.endTime":
-                  typeof extractedShift[1].endTime === "NaN"
-                    ? null
-                    : extractedShift[1].endTime,
+                  typeof extractedShift[1].endTime,
                 "shift.2.startTime":
-                  typeof extractedShift[2].startTime === "NaN"
-                    ? null
-                    : extractedShift[2].startTime,
+                  typeof extractedShift[2].startTime,
                 "shift.2.endTime":
-                  typeof extractedShift[2].endTime === "NaN"
-                    ? null
-                    : extractedShift[2].endTime,
+                  typeof extractedShift[2].endTime,
                 "shift.3.startTime":
-                  typeof extractedShift[3].startTime === "NaN"
-                    ? null
-                    : extractedShift[3].startTime,
+                  typeof extractedShift[3].startTime,
                 "shift.3.endTime":
-                  typeof extractedShift[3].endTime === "NaN"
-                    ? null
-                    : extractedShift[3].endTime,
+                  typeof extractedShift[3].endTime,
                 "shift.4.startTime":
-                  typeof extractedShift[4].startTime === "NaN"
-                    ? null
-                    : extractedShift[4].startTime,
+                  typeof extractedShift[4].startTime,
                 "shift.4.endTime":
-                  typeof extractedShift[4].endTime === "NaN"
-                    ? null
-                    : extractedShift[4].endTime,
+                  typeof extractedShift[4].endTime,
                 "shift.5.startTime":
-                  typeof extractedShift[5].startTime === "NaN"
-                    ? null
-                    : extractedShift[5].startTime,
+                  typeof extractedShift[5].startTime,
                 "shift.5.endTime":
-                  typeof extractedShift[5].endTime === "NaN"
-                    ? null
-                    : extractedShift[5].endTime,
+                  typeof extractedShift[5].endTime,
                 "shift.6.startTime":
-                  typeof extractedShift[6].startTime === "NaN"
-                    ? null
-                    : extractedShift[6].startTime,
+                  typeof extractedShift[6].startTime,
                 "shift.6.endTime":
-                  typeof extractedShift[6].endTime === "NaN"
-                    ? null
-                    : extractedShift[6].endTime
+                  typeof extractedShift[6].endTime
               },
               (err, shiftDoc) => {
                 if (err) {
@@ -840,23 +812,21 @@ router.post("/shift", (req, res) => {
 });
 
 function timeToMinutes(time) {
-  const str = time + "";
-  const strArray = str.split(":");
-  const hoursStr = parseInt(strArray[0], 10) * 60;
-  const minutesStr = parseInt(strArray[1], 10);
-  const result = hoursStr + minutesStr;
-  if (isNaN(result)) {
-    return null;
-  } else return result;
+  if (time.includes(':')) {
+    const str = time + "";
+    const strArray = str.split(":");
+    const hoursStr = parseInt(strArray[0], 10) * 60;
+    const minutesStr = parseInt(strArray[1], 10);
+    const result = hoursStr + minutesStr;
+    return result
+  } else return null;
 }
 function calculateTimeDifference(startTime, endTime) {
   if (
     startTime === null &&
     startTime === undefined &&
-    startTime === "" &&
-    startTime === "OFF"
-  )
-    return 0;
+    !startTime.includes(':')
+  )return 0;
   if (startTime < endTime) return endTime - startTime;
   if (startTime > endTime) return 1440 - startTime + endTime;
   return 0;

@@ -286,23 +286,23 @@ export class ReportComponent implements OnInit {
             exportShift._id = workpattern._id;
             exportShift.employeeId = workpattern.employeeId;
             exportShift.name = shift.name;
-          exportShift.monday = ( week[0].onShift) ?
-          this.transformTime(week[0].startTime) + ' - ' + this.transformTime(week[0].endTime) : 'DAY OFF';
-          exportShift.tuesday = ( week[1].onShift) ?
-          this.transformTime(week[1].startTime) + ' - ' + this.transformTime(week[1].endTime) : 'DAY OFF';
-          exportShift.wednesday = ( week[2].onShift) ?
-          this.transformTime(week[2].startTime) + ' - ' + this.transformTime(week[2].endTime) : 'DAY OFF';
-          exportShift.thursday = ( week[3].onShift) ?
-          this.transformTime(week[3].startTime) + ' - ' + this.transformTime(week[3].endTime) : 'DAY OFF';
-          exportShift.friday = ( week[4].onShift) ?
-          this.transformTime(week[4].startTime) + ' - ' + this.transformTime(week[4].endTime) : 'DAY OFF';
-          exportShift.saturday = ( week[5].onShift) ?
-          this.transformTime(week[5].startTime) + ' - ' + this.transformTime(week[5].endTime) : 'DAY OFF';
-          exportShift.sunday = ( week[6].onShift) ?
-          this.transformTime(week[6].startTime) + ' - ' + this.transformTime(week[6].endTime) : 'DAY OFF';
+            exportShift['monday-in'] = (week[0].onShift) ? this.transformTime(week[0].startTime) : '00:00:00';
+            exportShift['monday-out'] = (week[0].onShift) ? this.transformTime(week[0].endTime) : '00:00:00';
+            exportShift['tuesday-in'] = (week[1].onShift) ? this.transformTime(week[1].startTime) : '00:00:00';
+            exportShift['tuesday-out'] = (week[1].onShift) ?this.transformTime(week[1].endTime): '00:00:00';
+            exportShift['wednesday-in'] = (week[2].onShift) ? this.transformTime(week[2].startTime) : '00:00:00';
+            exportShift['wednesday-out'] = (week[2].onShift) ? this.transformTime(week[2].endTime) : '00:00:00';
+            exportShift['thursday-in'] = (week[3].onShift) ? this.transformTime(week[3].startTime) : '00:00:00';
+            exportShift['thursday-out'] = (week[3].onShift) ?this.transformTime(week[3].endTime) : '00:00:00';
+            exportShift['friday-in'] = (week[4].onShift) ? this.transformTime(week[4].startTime) : '00:00:00';
+            exportShift['friday-out'] = (week[4].onShift) ? this.transformTime(week[4].endTime) : '00:00:00';
+            exportShift['saturday-in'] = ( week[5].onShift) ? this.transformTime(week[5].startTime) : '00:00:00';
+            exportShift['saturday-out'] = ( week[5].onShift) ?this.transformTime(week[5].endTime) : '00:00:00';
+            exportShift['sunday-in'] = ( week[6].onShift) ? this.transformTime(week[6].startTime) : '00:00:00';
+            exportShift['sunday-out'] = (week[6].onShift) ? this.transformTime(week[6].endTime) : '00:00:00';
           }
         }
-        return (typeof exportShift._id !== 'undefined' && exportShift !== null)
+        return (exportShift !== null && exportShift !== undefined)
         ? exportShift : {};
       }else return {}
   }
@@ -357,15 +357,15 @@ export class ReportComponent implements OnInit {
     this.campaigns = event.campaigns;
   }
   transformTime(param): string {
-    let result = 'N/A';
+    let result = '00:00:00';
         if (param !== null) {
         const stored = parseInt(param, 10);
         const hours = Math.floor(stored / 60);
         const minutes = stored - ( hours * 60 );
         const fixedMin = (minutes === 0) ? '00' : minutes;
-        result = hours + ':' + fixedMin;
-        }
-        return result;
+          result = hours + ':' + fixedMin;
+          return result;
+        }else return result;
   }
 
   buildTable(event: any) {

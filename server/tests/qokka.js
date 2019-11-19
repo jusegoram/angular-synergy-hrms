@@ -39,6 +39,7 @@ var result = sortedShifts.forEach((i, index) => {
 
 
 
+let stringTest = 'Day Off'
+console.log(stringTest.includes(':'));
 
-console.log(test !== null && test !== undefined && test !== '');
 console.log(item);

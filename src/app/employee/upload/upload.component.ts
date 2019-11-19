@@ -1,3 +1,4 @@
+import { SessionService } from './../../session/session.service';
 import { EmployeeService } from './../employee.service';
 ///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
 import { Component } from '@angular/core';
@@ -55,8 +56,10 @@ export class UploadComponent {
   //   url: this.URL,
   //   isHTML5: true
   // });
+  auth: any;
   constructor (public snackBar: MatSnackBar, private _employeeService: EmployeeService) {
     this.setUploader();
+    this.auth = this._employeeService.getAuth();
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
