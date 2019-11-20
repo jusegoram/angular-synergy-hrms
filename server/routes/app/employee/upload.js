@@ -265,7 +265,9 @@ router.post('/company',  (req, res) => {
       .on('end', () => {
         let counter = 0;
         let duplicate = 0;
-          async.each(company, (comp, callback) => {
+        async.each(company, (comp, callback) => {
+          comp.reapplicant = comp.reapplicant.toLowerCase() === 'true' ? true : false;
+          comp.bilingual = comp.bilingual.toLowerCase() === 'true' ? true : false;
             EmployeeSchema.updateOne({ employeeId: comp.employeeId }, { $set: { company: comp } }, (err, raw) => {
               if (err) {
                 console.log(err);
