@@ -26,12 +26,18 @@
 
          <mat-card class="container">
            <mat-card-header>
-             <mat-card-title>{{this.currentwp ? this.currentwp?.name : 'Please Select a Work Pattern'}}</mat-card-title>
+
+             <mat-card-title *ngIf="!edit;else editNameTemplate">{{this.currentwp ? this.currentwp?.name : 'Please Select a Work Pattern'}}</mat-card-title>
+             <ng-template #editNameTemplate>
+              <mat-form-field appearance='outline'>
+                <input matInput [(ngModel)]='this.currentwp.name'>
+              </mat-form-field>
+             </ng-template>
              <span class="fill-remaining-space"></span>
              <span *ngIf="currentwp">
                 <button mat-icon-button [matMenuTriggerFor]="currWpMenu"><mat-icon>more_horiz</mat-icon></button>
                 <mat-menu #currWpMenu="matMenu">
-                  <button mat-menu-item><mat-icon>create</mat-icon> Edit Work Pattern name</button>
+                  <button mat-menu-item (click)='editName()'><mat-icon>create</mat-icon> Edit Work Pattern name</button>
                   <button mat-menu-item (click)="deleteWorkPattern()"><mat-icon color="warn">delete</mat-icon> Delete Work Pattern</button>
                   </mat-menu>
               </span>

@@ -16,6 +16,7 @@ export class WorkpatternComponent implements OnInit {
   public selectedshift: Workpattern;
   public editDialog;
   public newDialog;
+  edit: boolean = false;
   constructor(private _admService: AdminService, private snackBar: MatSnackBar, public dialog: MatDialog) {
 
   }
@@ -195,5 +196,8 @@ export class WorkpatternComponent implements OnInit {
       this.openError();
       console.log(error);
     });
-   }
+  }
+  editName() {
+    this.edit = !this.edit;
+  }
 }

@@ -236,13 +236,6 @@ router.post("/shift", function(req, res) {
   );
 });
 
-function calculateTimeDifference(startTime, endTime) {
-  if (startTime === null && startTime === undefined && startTime === "")
-    return 0;
-  if (startTime < endTime) return endTime - startTime;
-  if (startTime > endTime) return 1440 - startTime + endTime;
-}
-
 function currentShift(shifts) {
   let current;
   var sortedShifts = shifts.sort((a, b) => a.startDate < b.startDate);
@@ -253,6 +246,30 @@ function currentShift(shifts) {
   });
   return current;
 }
+
+function calculateTimeDifference(startTime, endTime) {
+  if (
+    startTime === null &&
+    startTime === undefined &&
+    !startTime.includes(':')
+  )return 0;
+  if (startTime < endTime) return endTime - startTime;
+  if (startTime > endTime) return 1440 - startTime + endTime;
+  return 0;
+}
+
+function currentShift(shifts) {
+  if (shifts.length === 0) return null;
+  let current;
+  var sortedShifts = shifts.sort((a, b) => a.startDate < b.startDate);
+  sortedShifts.forEach((i, index) => {
+    if (i.startDate > new Date())
+      current =
+        sortedShifts[index === sortedShifts.length - 1 ? index : index + 1];
+  });
+  return current;
+}
+
 
 router.post("/company", function(req, res) {
   let id = new mongoose.Types.ObjectId();
