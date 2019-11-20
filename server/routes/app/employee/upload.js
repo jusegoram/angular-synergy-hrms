@@ -244,58 +244,46 @@ router.post("/personal/hobbies", (req, res) => {
   });
 });
 
-// router.post('/company', function (req, res) {
-//   upload(req, res, function (err) {
-//     let company = [];
-//     let companyFile = req.file;
-//       if (err) {
-//       // An error occurred when uploading
-//       console.log(err);
-//       return res.status(422).send("an Error occured");
-//       }
-//       if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
-//           return res.status(400).send("Sorry only CSV files can be processed for upload");
-//       }
-//       csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-//       .on('data', function(data){
-//           data['_id'] = new mongoose.Types.ObjectId();
-//           data['employee'] = null;
-//           company.push(data);
+router.post('/company',  (req, res) => {
+  upload(req, res,  (err) => {
+    let company = [];
+    let companyFile = req.file;
+      if (err) {
+      console.log(err);
+      return res.status(422).send("an Error occured");
+      }
+      if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
+          return res.status(400).send("Sorry only CSV files can be processed for upload");
+      }
+      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+      .on('data', function(data){
+          data['_id'] = new mongoose.Types.ObjectId();
+          data['employee'] = null;
+          company.push(data);
 
-//       })
-//       .on('end', function(){
-//         let counter = 0;
-//         let duplicate = 0;
-//           async.each(company, function(comp, callback){
-//             EmployeeSchema.findOne({'employeeId': comp.employeeId}, function(err, res){
-//                   if(err){
-//                     console.log(err);
-//                       duplicate++
-//                   }else{
-//                     counter++;
-//                     if(res !== null){
-//                       res.company = comp._id;
-//                       comp.employee = res._id;
-//                       res.save();
-//                       callback();
-//                     }else{
-//                       console.log('not found id: '+ comp.employeeId);
-//                       callback();
-//                     }
-//                   }
-//               })
-//           }, function(err){
-//               if(err){
-//                   console.log(err);
-//               }else{
-//                   Company.create(company);
-//               }
-//           });
-//           console.log('upload finished');
-//           return res.status(200).send( counter + ' Registries of company information of employees was uploaded');
-//       });
-//   });
-// });
+      })
+      .on('end', () => {
+        let counter = 0;
+        let duplicate = 0;
+          async.each(company, (comp, callback) => {
+            EmployeeSchema.updateOne({ employeeId: comp.employeeId }, { $set: { company: comp } }, (err, raw) => {
+              if (err) {
+                console.log(err);
+                callback();
+              } else {
+                callback();
+              }
+            })
+          }, (err) => {
+              if(err){
+                  console.log(err);
+              } else {
+                 res.status(200).send('OK');
+\              }
+          });
+      });
+  });
+});
 
 router.post("/payroll", function(req, res) {
   upload(req, res, function(err) {

@@ -219,8 +219,10 @@ export class ReportComponent implements OnInit {
       ? element.company.supervisor : '',
       trainer: (typeof element.company !== 'undefined' && element.company !== null)
       ? element.company.trainer : '',
-      trainingGroup: (typeof element.company !== 'undefined' && element.company !== null)
-      ? element.company.trainingGroup : '',
+      trainingGroupRef: (typeof element.company !== 'undefined' && element.company !== null)
+        ? element.company.trainingGroupRef : '',
+      trainingGroupNum: (typeof element.company !== 'undefined' && element.company !== null)
+      ? element.company.trainingGroupNum : '',
       hireDate: (typeof element.company !== 'undefined' && element.company !== null)
       ? element.company.hireDate : '',
       terminationDate: (typeof element.company !== 'undefined' && element.company !== null)
