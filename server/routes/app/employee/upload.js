@@ -279,7 +279,7 @@ router.post('/company',  (req, res) => {
                   console.log(err);
               } else {
                  res.status(200).send('OK');
-\              }
+              }
           });
       });
   });
