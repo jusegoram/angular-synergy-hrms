@@ -514,7 +514,7 @@ router.post("/shift", (req, res) => {
     )
       res.sendStatus(400);
     csv
-      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true , strictColumnHandling: true})
       .on("data", data => {
         data["_id"] = new mongoose.Types.ObjectId();
         data["employee"] = null;
