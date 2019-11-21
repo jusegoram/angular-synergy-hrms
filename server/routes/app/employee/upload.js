@@ -821,9 +821,7 @@ function timeToMinutes(time) {
 function calculateTimeDifference(startTime, endTime) {
   if (
     startTime !== null &&
-    startTime !== undefined &&
-    startTime.includes(":")
-  ) {
+    startTime !== undefined) {
     if (startTime < endTime) return endTime - startTime;
     if (startTime > endTime) return 1440 - startTime + endTime;
   } else return 0;
