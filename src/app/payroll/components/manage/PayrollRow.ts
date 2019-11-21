@@ -505,6 +505,9 @@ export class PayrollRow {
       totaled.hh = arr.reduce((p, c) => p + c.systemHours.hh, 0);
       totaled.mm = arr.reduce((p, c) => p + c.systemHours.mm, 0);
       totaled.ss = arr.reduce((p, c) => p + c.systemHours.ss, 0);
+      totaled.hh = totaled.hh + arr.reduce((p, c) => p + c.tosHours.hh, 0);
+      totaled.mm = totaled.mm + arr.reduce((p, c) => p + c.tosHours.mm, 0);
+      totaled.ss = totaled.ss + arr.reduce((p, c) => p + c.tosHours.ss, 0);
       const time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
       let hrs = ~~(time / 3600);
       let mins = ~~((time % 3600) / 60);

@@ -26,20 +26,20 @@ export class AccountComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
   ngOnInit() {
-    this.adminService.getUsers().subscribe(data => {
-      this.dataSource = new MatTableDataSource(data);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    this.getUsers();
   }
 
   getRoleName(param) {
-    let roles = this.adminService.userTypes;
-    let role = roles.filter(item => item.value === parseInt(param, 10));
+    const roles = this.adminService.userTypes;
+    const role = roles.filter(item => item.value === parseInt(param, 10));
     return role[0].viewValue;
   }
   reload() {
     this.adminService.clearUsers();
+    this.getUsers();
+  }
+
+  getUsers() {
     this.adminService.getUsers().subscribe(data => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
@@ -59,7 +59,8 @@ export class AccountComponent implements OnInit {
       }
     );
   }
-  openEditDialog(user){
+
+  openEditDialog(user) {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
       width: '500px',
       data: user,
@@ -68,7 +69,7 @@ export class AccountComponent implements OnInit {
     dialogRef.afterClosed().subscribe( result => {
       this.adminService.editUser(result).subscribe(resp => {
         this.reload();
-        this.snackBar.open('User was edited succesfully', 'thank you', {
+        this.snackBar.open('User was edited successfully', 'thank you', {
           duration: 2000
         });
       });

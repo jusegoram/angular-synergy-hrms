@@ -19,6 +19,8 @@ export class ShiftComponent implements OnInit, OnChanges {
   today = Date.now();
   wpForm: FormGroup;
   displayedColumns = ['shiftName', 'startDate', 'endDate', 'createdDate'];
+  weekStart: Date;
+  weekEnd: Date;
   constructor(
     private _employeeService: EmployeeService,
     private fb: FormBuilder,
@@ -39,6 +41,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     this._employeeService.getShift().subscribe(result => { this.shifts = result; });
     this.addActionColumn()
     this.buildForm();
+    [this.weekStart, this.weekEnd] = this.getWeekDates();
   }
   addActionColumn(){
     if(this.authorization.role === 9999){
@@ -126,15 +129,15 @@ export class ShiftComponent implements OnInit, OnChanges {
       this.dataSource.paginator = this.paginator;}
   }
   transformTime(param): string {
-    let result = 'N/A';
+    let result = '00:00';
         if (param !== null) {
         const stored = parseInt(param, 10);
         const hours = Math.floor(stored / 60);
         const minutes = stored - ( hours * 60 );
         const fixedMin = (minutes === 0) ? '00' : minutes;
-        result = hours + ':' + fixedMin;
-        }
-        return result;
+          result = hours + ':' + fixedMin;
+          return result;
+        }else return result;
   }
   populateTable1(event: any) {
     event.forEach(element => {
@@ -170,5 +173,22 @@ export class ShiftComponent implements OnInit, OnChanges {
           duration: 2000,
         });
       })
+    }
+     getWeekDates() {
+
+      let now = new Date();
+      let dayOfWeek = now.getDay(); //0-6
+      let numDay = now.getDate();
+
+      let start = new Date(now); //copy
+      start.setDate(numDay - dayOfWeek);
+      start.setHours(0, 0, 0, 0);
+
+
+      let end = new Date(now); //copy
+      end.setDate(numDay + (7 - dayOfWeek));
+      end.setHours(0, 0, 0, 0);
+
+      return [start, end];
     }
 }

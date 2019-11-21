@@ -41,33 +41,23 @@ export class RecentActivitiesComponent implements OnInit {
     this.uploadsPageSizeOptions = setPageSizeOptionsInput.split(',').map(str => +str);
   }
 
-  populateUploads(){
+  populateUploads() {
     const opts = {
       _id: 'all',
       page: this.uploadsPage + 1,
       limit: this.uploadsLimit,
-    }
+    };
 
-    this._adminService.getUploads(opts).subscribe((result: any) => {
-      this.uploadsPage = result.page;
-      this.uploadsLimit = result.limit;
-      this.uploadsLength = result.totalDocs;
-      this.uploadsDatasource = new MatTableDataSource(result.docs);
-    })
+    this.getUploads(opts);
   }
 
-  populateLogs(){
+  populateLogs() {
     const opts = {
       _id: 'all',
-      page: this.logsPage +1 ,
+      page: this.logsPage + 1 ,
       limit: this.logsLimit,
-    }
-    this._adminService.getLogs(opts).subscribe((result: any) => {
-      this.logsPage = result.page;
-      this.logsLimit = result.limit;
-      this.logsLength = result.totalDocs;
-      this.logsDatasource = new MatTableDataSource(result.docs);
-    })
+    };
+    this.getLogs(opts);
   }
 
 
@@ -77,13 +67,17 @@ export class RecentActivitiesComponent implements OnInit {
       _id: 'all',
       page: e.pageIndex + 1,
       limit: e.pageSize,
-    }
+    };
+    this.getLogs(opts);
+  }
+
+  getLogs(opts) {
     this._adminService.getLogs(opts).subscribe((result: any) => {
       this.logsPage = result.page;
       this.logsLimit = result.limit;
       this.logsLength = result.totalDocs;
       this.logsDatasource = new MatTableDataSource(result.docs);
-    })
+    });
   }
 
 
@@ -92,20 +86,22 @@ export class RecentActivitiesComponent implements OnInit {
       _id: 'all',
       page: e.pageIndex + 1,
       limit: e.pageSize,
-    }
+    };
+    this.getUploads(opts);
+  }
+  getUploads(opts) {
     this._adminService.getUploads(opts).subscribe((result: any) => {
       this.uploadsPage = result.page;
       this.uploadsLimit = result.limit;
       this.uploadsLength = result.totalDocs;
       this.uploadsDatasource = new MatTableDataSource(result.docs);
-    })
+    });
+  }
+  rollbackUpload() {
+
   }
 
-  rollbackUpload(){
-
-  }
-
-  logsDetail(){
+  logsDetail() {
 
   }
 }

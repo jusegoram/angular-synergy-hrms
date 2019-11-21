@@ -244,45 +244,60 @@ router.post("/personal/hobbies", (req, res) => {
   });
 });
 
-router.post('/company',  (req, res) => {
-  upload(req, res,  (err) => {
+router.post("/company", (req, res) => {
+  upload(req, res, err => {
     let company = [];
     let companyFile = req.file;
-      if (err) {
+    if (err) {
       console.log(err);
       return res.status(422).send("an Error occured");
-      }
-      if(companyFile.mimetype !== 'application/vnd.ms-excel' && companyFile.mimetype !== 'text/csv'){
-          return res.status(400).send("Sorry only CSV files can be processed for upload");
-      }
-      csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
-      .on('data', function(data){
-          data['_id'] = new mongoose.Types.ObjectId();
-          data['employee'] = null;
-          company.push(data);
-
+    }
+    if (
+      companyFile.mimetype !== "application/vnd.ms-excel" &&
+      companyFile.mimetype !== "text/csv"
+    ) {
+      return res
+        .status(400)
+        .send("Sorry only CSV files can be processed for upload");
+    }
+    csv
+      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .on("data", function(data) {
+        data["_id"] = new mongoose.Types.ObjectId();
+        data["employee"] = null;
+        company.push(data);
       })
-      .on('end', () => {
+      .on("end", () => {
         let counter = 0;
         let duplicate = 0;
-        async.each(company, (comp, callback) => {
-          comp.reapplicant = comp.reapplicant.toLowerCase() === 'true' ? true : false;
-          comp.bilingual = comp.bilingual.toLowerCase() === 'true' ? true : false;
-            EmployeeSchema.updateOne({ employeeId: comp.employeeId }, { $set: { company: comp } }, (err, raw) => {
-              if (err) {
-                console.log(err);
-                callback();
-              } else {
-                callback();
-              }
-            })
-          }, (err) => {
-              if(err){
+        async.each(
+          company,
+          (comp, callback) => {
+            comp.reapplicant =
+              comp.reapplicant.toLowerCase() === "true" ? true : false;
+            comp.bilingual =
+              comp.bilingual.toLowerCase() === "true" ? true : false;
+            EmployeeSchema.updateOne(
+              { employeeId: comp.employeeId },
+              { $set: { company: comp } },
+              (err, raw) => {
+                if (err) {
                   console.log(err);
-              } else {
-                 res.status(200).send('OK');
+                  callback();
+                } else {
+                  callback();
+                }
               }
-          });
+            );
+          },
+          err => {
+            if (err) {
+              console.log(err);
+            } else {
+              res.status(200).send("OK");
+            }
+          }
+        );
       });
   });
 });
@@ -509,7 +524,11 @@ router.post("/shift", (req, res) => {
       })
       .on("end", () => {
         shifts.map(i => {
-          if(i['employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate']) {
+          if (
+            i[
+              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+            ]
+          ) {
             const valueArr = i[
               "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
             ].split(";");
@@ -530,7 +549,9 @@ router.post("/shift", (req, res) => {
             i["sunday-in"] = valueArr[14];
             i["sunday-out"] = valueArr[15];
             i["startDate"] = valueArr[16];
-            delete i["employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"];
+            delete i[
+              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+            ];
           }
           i.shift = {
             name: i["shiftName"],
@@ -540,7 +561,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["monday-in"] !== null &&
                   i["monday-in"] !== undefined &&
-                  !i["monday-in"].includes(':'),
+                  !i["monday-in"].includes(":"),
                 startTime: timeToMinutes(i["monday-in"]),
                 endTime: timeToMinutes(i["monday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -553,7 +574,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["tuesday-in"] !== null &&
                   i["tuesday-in"] !== undefined &&
-                  !i["tuesday-in"].includes(':'),
+                  !i["tuesday-in"].includes(":"),
                 startTime: timeToMinutes(i["tuesday-in"]),
                 endTime: timeToMinutes(i["tuesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -566,7 +587,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["wednesday-in"] !== null &&
                   i["wednesday-in"] !== undefined &&
-                  !i["wednesday-in"].includes(':'),
+                  !i["wednesday-in"].includes(":"),
                 startTime: timeToMinutes(i["wednesday-in"]),
                 endTime: timeToMinutes(i["wednesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -579,7 +600,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["thursday-in"] !== null &&
                   i["thursday-in"] !== undefined &&
-                  !i["thursday-in"].includes(':'),
+                  !i["thursday-in"].includes(":"),
                 startTime: timeToMinutes(i["thursday-in"]),
                 endTime: timeToMinutes(i["thursday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -592,7 +613,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["friday-in"] !== null &&
                   i["friday-in"] !== undefined &&
-                  !i["friday-in"].includes(':'),
+                  !i["friday-in"].includes(":"),
                 startTime: timeToMinutes(i["friday-in"]),
                 endTime: timeToMinutes(i["friday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -605,7 +626,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["saturday-in"] !== null &&
                   i["saturday-in"] !== undefined &&
-                  !i["saturday-in"].includes(':'),
+                  !i["saturday-in"].includes(":"),
                 startTime: timeToMinutes(i["saturday-in"]),
                 endTime: timeToMinutes(i["saturday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -618,7 +639,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["sunday-in"] !== null &&
                   i["sunday-in"] !== undefined &&
-                  !i["sunday-in"].includes(':'),
+                  !i["sunday-in"].includes(":"),
                 startTime: timeToMinutes(i["sunday-in"]),
                 endTime: timeToMinutes(i["sunday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -642,34 +663,20 @@ router.post("/shift", (req, res) => {
             let extractedShift = item.shift.shift;
             EmployeeShift.shift.findOne(
               {
-                "shift.0.startTime":
-                  typeof extractedShift[0].startTime,
-                "shift.0.endTime":
-                  typeof extractedShift[0].endTime,
-                "shift.1.startTime":
-                  typeof extractedShift[1].startTime,
-                "shift.1.endTime":
-                  typeof extractedShift[1].endTime,
-                "shift.2.startTime":
-                  typeof extractedShift[2].startTime,
-                "shift.2.endTime":
-                  typeof extractedShift[2].endTime,
-                "shift.3.startTime":
-                  typeof extractedShift[3].startTime,
-                "shift.3.endTime":
-                  typeof extractedShift[3].endTime,
-                "shift.4.startTime":
-                  typeof extractedShift[4].startTime,
-                "shift.4.endTime":
-                  typeof extractedShift[4].endTime,
-                "shift.5.startTime":
-                  typeof extractedShift[5].startTime,
-                "shift.5.endTime":
-                  typeof extractedShift[5].endTime,
-                "shift.6.startTime":
-                  typeof extractedShift[6].startTime,
-                "shift.6.endTime":
-                  typeof extractedShift[6].endTime
+                "shift.0.startTime":  extractedShift[0].startTime,
+                "shift.0.endTime":  extractedShift[0].endTime,
+                "shift.1.startTime":  extractedShift[1].startTime,
+                "shift.1.endTime":  extractedShift[1].endTime,
+                "shift.2.startTime":  extractedShift[2].startTime,
+                "shift.2.endTime":  extractedShift[2].endTime,
+                "shift.3.startTime":  extractedShift[3].startTime,
+                "shift.3.endTime":  extractedShift[3].endTime,
+                "shift.4.startTime":  extractedShift[4].startTime,
+                "shift.4.endTime":  extractedShift[4].endTime,
+                "shift.5.startTime":  extractedShift[5].startTime,
+                "shift.5.endTime":  extractedShift[5].endTime,
+                "shift.6.startTime":  extractedShift[6].startTime,
+                "shift.6.endTime":  extractedShift[6].endTime
               },
               (err, shiftDoc) => {
                 if (err) {
@@ -802,24 +809,24 @@ router.post("/shift", (req, res) => {
 });
 
 function timeToMinutes(time) {
-  if (time.includes(':')) {
+  if (time !== null && time !== undefined && time.includes(":")) {
     const str = time + "";
     const strArray = str.split(":");
     const hoursStr = parseInt(strArray[0], 10) * 60;
     const minutesStr = parseInt(strArray[1], 10);
     const result = hoursStr + minutesStr;
-    return result
+    return result;
   } else return null;
 }
 function calculateTimeDifference(startTime, endTime) {
   if (
-    startTime === null &&
-    startTime === undefined &&
-    !startTime.includes(':')
-  )return 0;
-  if (startTime < endTime) return endTime - startTime;
-  if (startTime > endTime) return 1440 - startTime + endTime;
-  return 0;
+    startTime !== null &&
+    startTime !== undefined &&
+    startTime.includes(":")
+  ) {
+    if (startTime < endTime) return endTime - startTime;
+    if (startTime > endTime) return 1440 - startTime + endTime;
+  } else return 0;
 }
 
 function currentShift(shifts) {
