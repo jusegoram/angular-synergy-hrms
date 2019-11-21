@@ -561,7 +561,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["monday-in"] !== null &&
                   i["monday-in"] !== undefined &&
-                  !i["monday-in"].includes(":"),
+                  i["monday-in"].includes(":"),
                 startTime: timeToMinutes(i["monday-in"]),
                 endTime: timeToMinutes(i["monday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -574,7 +574,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["tuesday-in"] !== null &&
                   i["tuesday-in"] !== undefined &&
-                  !i["tuesday-in"].includes(":"),
+                  i["tuesday-in"].includes(":"),
                 startTime: timeToMinutes(i["tuesday-in"]),
                 endTime: timeToMinutes(i["tuesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -587,7 +587,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["wednesday-in"] !== null &&
                   i["wednesday-in"] !== undefined &&
-                  !i["wednesday-in"].includes(":"),
+                  i["wednesday-in"].includes(":"),
                 startTime: timeToMinutes(i["wednesday-in"]),
                 endTime: timeToMinutes(i["wednesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -600,7 +600,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["thursday-in"] !== null &&
                   i["thursday-in"] !== undefined &&
-                  !i["thursday-in"].includes(":"),
+                  i["thursday-in"].includes(":"),
                 startTime: timeToMinutes(i["thursday-in"]),
                 endTime: timeToMinutes(i["thursday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -613,7 +613,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["friday-in"] !== null &&
                   i["friday-in"] !== undefined &&
-                  !i["friday-in"].includes(":"),
+                  i["friday-in"].includes(":"),
                 startTime: timeToMinutes(i["friday-in"]),
                 endTime: timeToMinutes(i["friday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -626,7 +626,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["saturday-in"] !== null &&
                   i["saturday-in"] !== undefined &&
-                  !i["saturday-in"].includes(":"),
+                  i["saturday-in"].includes(":"),
                 startTime: timeToMinutes(i["saturday-in"]),
                 endTime: timeToMinutes(i["saturday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -639,7 +639,7 @@ router.post("/shift", (req, res) => {
                 onShift:
                   i["sunday-in"] !== null &&
                   i["sunday-in"] !== undefined &&
-                  !i["sunday-in"].includes(":"),
+                  i["sunday-in"].includes(":"),
                 startTime: timeToMinutes(i["sunday-in"]),
                 endTime: timeToMinutes(i["sunday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -682,6 +682,7 @@ router.post("/shift", (req, res) => {
                 if (err) {
                   callback();
                 } else if (shiftDoc !== null) {
+                  console.log(shiftDoc);
                   shiftDoc.shift.map(day => {
                     day.scheduledHours = calculateTimeDifference(
                       day.startTime,
