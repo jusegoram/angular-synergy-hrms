@@ -264,7 +264,7 @@ export class ReportComponent implements OnInit {
                 position.name = position.position.name;
                 position.positionId = position.position.positionId;
                 const exportPosition = {
-                  client: position.client,
+                  positionClient: position.client,
                   department: position.department,
                   positionId: position.positionId,
                   positionName: position.name,
