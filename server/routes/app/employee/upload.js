@@ -562,7 +562,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["monday-in"]),
                   timeToMinutes(i["monday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["monday-in"]),
                 endTime: timeToMinutes(i["monday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -576,7 +576,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["tuesday-in"]),
                   timeToMinutes(i["tuesday-out"])
-                )!== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["tuesday-in"]),
                 endTime: timeToMinutes(i["tuesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -590,7 +590,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["wednesday-in"]),
                   timeToMinutes(i["wednesday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["wednesday-in"]),
                 endTime: timeToMinutes(i["wednesday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -604,7 +604,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["thursday-in"]),
                   timeToMinutes(i["thursday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["thursday-in"]),
                 endTime: timeToMinutes(i["thursday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -618,7 +618,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["friday-in"]),
                   timeToMinutes(i["friday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["friday-in"]),
                 endTime: timeToMinutes(i["friday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -632,7 +632,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["saturday-in"]),
                   timeToMinutes(i["saturday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["saturday-in"]),
                 endTime: timeToMinutes(i["saturday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -646,7 +646,7 @@ router.post("/shift", (req, res) => {
                 calculateTimeDifference(
                   timeToMinutes(i["sunday-in"]),
                   timeToMinutes(i["sunday-out"])
-                ) !== 0,
+                ) > 0,
                 startTime: timeToMinutes(i["sunday-in"]),
                 endTime: timeToMinutes(i["sunday-out"]),
                 scheduledHours: calculateTimeDifference(
@@ -668,43 +668,43 @@ router.post("/shift", (req, res) => {
           shifts,
           (item, callback) => {
             let extractedShift = item.shift.shift;
-            EmployeeShift.shift.findOne(
+            EmployeeShift.shift.find(
               {
-                "shift.0.startTime":  extractedShift[0].startTime,
-                "shift.0.endTime":  extractedShift[0].endTime,
-                "shift.1.startTime":  extractedShift[1].startTime,
-                "shift.1.endTime":  extractedShift[1].endTime,
-                "shift.2.startTime":  extractedShift[2].startTime,
-                "shift.2.endTime":  extractedShift[2].endTime,
-                "shift.3.startTime":  extractedShift[3].startTime,
-                "shift.3.endTime":  extractedShift[3].endTime,
-                "shift.4.startTime":  extractedShift[4].startTime,
-                "shift.4.endTime":  extractedShift[4].endTime,
-                "shift.5.startTime":  extractedShift[5].startTime,
-                "shift.5.endTime":  extractedShift[5].endTime,
-                "shift.6.startTime":  extractedShift[6].startTime,
-                "shift.6.endTime":  extractedShift[6].endTime
+                "shift.0.startTime":  extractedShift.filter(j => j.day === 0)[0].startTime,
+                "shift.0.endTime":  extractedShift.filter(j => j.day === 0)[0].endTime,
+                "shift.1.startTime":  extractedShift.filter(j => j.day === 1)[0].startTime,
+                "shift.1.endTime":  extractedShift.filter(j => j.day === 1)[0].endTime,
+                "shift.2.startTime":  extractedShift.filter(j => j.day === 2)[0].startTime,
+                "shift.2.endTime":  extractedShift.filter(j => j.day === 2)[0].endTime,
+                "shift.3.startTime":  extractedShift.filter(j => j.day === 3)[0].startTime,
+                "shift.3.endTime":  extractedShift.filter(j => j.day === 3)[0].endTime,
+                "shift.4.startTime":  extractedShift.filter(j => j.day === 4)[0].startTime,
+                "shift.4.endTime":  extractedShift.filter(j => j.day === 4)[0].endTime,
+                "shift.5.startTime":  extractedShift.filter(j => j.day === 5)[0].startTime,
+                "shift.5.endTime":  extractedShift.filter(j => j.day === 5)[0].endTime,
+                "shift.6.startTime":  extractedShift.filter(j => j.day === 6)[0].startTime,
+                "shift.6.endTime":  extractedShift.filter(j => j.day === 6)[0].endTime
               },
               (err, shiftDoc) => {
                 if (err) {
+                  console.log(err);
                   callback();
-                } else if (shiftDoc !== null) {
-                  console.log(shiftDoc);
-                  shiftDoc.shift.map(day => {
+                } else if ( shiftDoc.length === 1) {
+                  shiftDoc[0].shift.map(day => {
                     day.scheduledHours = calculateTimeDifference(
                       day.startTime,
                       day.endTime
                     );
                     return day;
                   });
-                  shiftDoc.daysonShift = shiftDoc.shift.filter(
+                  shiftDoc[0].daysonShift = shiftDoc[0].shift.filter(
                     item => item.onShift
                   ).length;
-                  shiftDoc.totalHours = shiftDoc.shift
+                  shiftDoc[0].totalHours = shiftDoc[0].shift
                     .map(e => e.scheduledHours)
                     .reduce((a, b) => a + b);
-                  item.shift = shiftDoc;
-                  item.shift.shiftId = shiftDoc._id;
+                  item.shift = shiftDoc[0];
+                  item.shift.shiftId = shiftDoc[0]._id;
                   delete item.shift._id;
                   delete item.shiftName;
                   delete item["monday-in"];
@@ -721,7 +721,7 @@ router.post("/shift", (req, res) => {
                   delete item["saturday-out"];
                   delete item["sunday-in"];
                   delete item["sunday-out"];
-                  shiftDoc.save().then(result => {
+                  shiftDoc[0].save().then(result => {
                     EmployeeSchema.updateOne(
                       { employeeId: item.employeeId },
 
@@ -736,7 +736,6 @@ router.post("/shift", (req, res) => {
                           console.log(err);
                           callback();
                         } else {
-                          console.log(employee);
                           callback();
                           // console.log(employee.shift.length);
                           // EmployeeSchema
@@ -782,7 +781,6 @@ router.post("/shift", (req, res) => {
                             console.log(err);
                             callback();
                           } else {
-                            console.log(employee);
                             callback();
                             // EmployeeSchema
                             // .updateOne(
