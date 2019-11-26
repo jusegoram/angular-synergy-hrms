@@ -379,13 +379,15 @@ export class ReportComponent implements OnInit {
           exportShift['sunday-out'] = week[6].onShift
             ? this.transformTime(week[6].endTime)
             : '00:00:00';
-          exportShift['shiftStartDate'] = shift.startDate;
+          exportShift['shiftStartDate'] = workpattern.startDate;
         }
       }
       return exportShift !== null && exportShift !== undefined
         ? exportShift
         : {};
-    } else return {};
+    } else {
+      return {};
+    }
   }
 
   exportComments(element) {
@@ -407,8 +409,12 @@ export class ReportComponent implements OnInit {
               : '';
         });
         return returnItem;
-      } else return {};
-    } else return {};
+      } else {
+        return {};
+      }
+    } else {
+      return {};
+    }
   }
 
   exportAttrition(element) {
@@ -435,8 +441,12 @@ export class ReportComponent implements OnInit {
             : '';
         });
         return returnItem;
-      } else return {};
-    } else return {};
+      } else{
+        return {};
+      }
+    } else {
+      return {};
+    }
   }
   exportEmergency(element) {
     if (this.familyInfoToggle) {
@@ -456,7 +466,9 @@ export class ReportComponent implements OnInit {
           returnItem['Contact Home Address.' + index] = item.address;
         });
         return returnItem;
-      } else return {};
+      } else{
+        return {};
+      }
     }
     return {};
   }
@@ -472,7 +484,9 @@ export class ReportComponent implements OnInit {
       const fixedMin = minutes === 0 ? '00' : minutes;
       result = hours + ':' + fixedMin;
       return result;
-    } else return result;
+    } else {
+      return result;
+    }
   }
 
   buildTable(event: any) {
