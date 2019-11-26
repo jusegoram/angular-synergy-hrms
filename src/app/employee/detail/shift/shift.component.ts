@@ -77,7 +77,7 @@ export class ShiftComponent implements OnInit, OnChanges {
   getNextDate(param: number): Date {
     const day = param + 1;
     const d = new Date();
-    d.setDate(d.getDate() );
+    d.setDate(d.getDate() - d.getDay() + day);
     return d;
   }
 
