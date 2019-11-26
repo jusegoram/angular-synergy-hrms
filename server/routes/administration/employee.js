@@ -72,6 +72,7 @@ router.get("/shift", function(req, res, next) {
   let shifts = [];
   const cursor = Shift.shift
     .find()
+    .sort({name: 1})
     .lean()
     .cursor();
   cursor.on("data", item => shifts.push(item));
