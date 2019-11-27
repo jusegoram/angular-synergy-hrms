@@ -30,12 +30,50 @@ router.post("/", function(req, res, next) {
   ) {
     delete query["company.terminationDate"];
   }
-  let employees = [];
-  let cursor = Employee.find(query).select('-position.position.baseWage').cursor();
-  cursor.on("data", item => employees.push(item));
-  cursor.on("end", () => res.status(200).json(employees));
-});
+  const [fromDate, toDate] = getWeekDates();
+  Employee.aggregate([
+    {$match: query},
+    {$lookup: { from: 'employee-positions', localField: 'position', foreignField: '_id', as: 'position'}},
+    {$lookup: { 
+      from: 'employee-shift-updates',
+      let: {
+        employee_employeeId: '$employeeId'
+      }, pipeline: [
+        {$match: {
+          $expr: { $eq: ['$employeeId','$$employee_employeeId']},
+          effectiveDate: {
+            $gte: fromDate,$lte: toDate 
+          }
+        }}
+    ], as: 'shiftUpdates'}},
+  ]).exec((err, doc) => {
+    console.log(err);
+    res.status(200).json(doc);
+  })
 
+  // syn and payrol
+  // employee first last client campaign manager supervisor hiring Date, position Date, position, wage, 
+
+  //let employees = [];
+  // let cursor = Employee.find(query).select('-position.position.baseWage').cursor();
+  // cursor.on("data", item => employees.push(item));
+  // cursor.on("end", () => res.status(200).json(employees));
+});
+function getWeekDates() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); //0-6
+  const numDay = now.getDate();
+
+  const start = new Date(now); //copy
+  start.setDate(numDay - dayOfWeek);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(now); //copy
+  end.setDate(numDay + (7 - dayOfWeek));
+  end.setHours(0, 0, 0, 0);
+
+  return [start, end];
+}
 router.post("/information", (req, res) => {
   switch (req.body.reportType) {
     case "avatar":

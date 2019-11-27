@@ -6,7 +6,6 @@ var Shift = require("../../models/app/employee/employee-shift");
 var Employee = require("../../models/app/employee/employee-main");
 let EmployeePosition = require("../../models/app/employee/employee-position");
 
-
 router.post("/client", function(req, res, next) {
   let campaigns = req.body.campaigns;
   for (let i = 0; i < campaigns.length; i++) {
@@ -72,7 +71,7 @@ router.get("/shift", function(req, res, next) {
   let shifts = [];
   const cursor = Shift.shift
     .find()
-    .sort({name: 1})
+    .sort({ name: 1 })
     .lean()
     .cursor();
   cursor.on("data", item => shifts.push(item));
@@ -108,6 +107,9 @@ router.delete("/shift", (req, res, next) => {
     }
   );
 });
+
+
+
 
 router.get("/employee", function(req, res, next) {
   Employee.find({
@@ -166,29 +168,26 @@ router.put("/update", (req, res) => {
 router.delete("/delete", (req, res) => {
   let employeeId = req.query.employeeId + "";
   Shift.employeeShift.deleteMany({ employeeId: employeeId }, (err, resp) => {
-      if (err) {
-        res.status(500);
-      } else {
-        EmployeePosition.deleteMany({ employeeId: employeeId},(err, resp) => {
+    if (err) {
+      res.status(500);
+    } else {
+      EmployeePosition.deleteMany({ employeeId: employeeId }, (err, resp) => {
+        if (err) {
+          res.status(500);
+        } else {
+          Employee.deleteOne({ _id: req.query._id }, (err, resp) => {
             if (err) {
               res.status(500);
             } else {
-              Employee.deleteOne({_id: req.query._id},(err, resp) => {
-                  if (err) {
-                    res.status(500);
-                  } else {
-                    res.status(200).json({
-                      res: resp
-                    });
-                  }
-                }
-              );
+              res.status(200).json({
+                res: resp
+              });
             }
-          }
-        );
-      }
+          });
+        }
+      });
     }
-  );
+  });
 });
 
 module.exports = router;

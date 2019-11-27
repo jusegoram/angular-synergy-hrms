@@ -180,7 +180,9 @@ export class ReportComponent implements OnInit {
     if (this.attritionInfoToggle) {
       promiseArray.push(this.exportAttrition(data));
     }
-    if (this.familyInfoToggle) promiseArray.push(this.exportEmergency(data));
+    if (this.familyInfoToggle) {
+      promiseArray.push(this.exportEmergency(data));
+    }
     /* generate worksheet */
     Promise.all(promiseArray)
       .then(result => {
@@ -303,7 +305,9 @@ export class ReportComponent implements OnInit {
       } else {
         return personal;
       }
-    } else return {};
+    } else {
+      return {};
+    }
   }
 
   exportPosition(element) {
@@ -322,7 +326,9 @@ export class ReportComponent implements OnInit {
         };
         return exportPosition;
       }
-    } else return {};
+    } else {
+      return {};
+    }
   }
 
   exportShift(element) {
@@ -337,48 +343,58 @@ export class ReportComponent implements OnInit {
           exportShift._id = workpattern._id;
           exportShift.employeeId = workpattern.employeeId;
           exportShift.name = shift.name;
+          if (element.shiftUpdates.length > 0) {
+            for (let i = 0; i < element.shiftUpdates.length; i++) {
+              const update = element.shiftUpdates[i];
+              let day = new Date(update.effectiveDate).getDay();
+              day = day === 0 ? 6 : day - 1;
+              week[day].startTime = update.timeIn;
+              week[day].endTime = update.timeOut;
+              week[day].onShift = update.timeIn.includes(':');
+            }
+          }
           exportShift['monday-in'] = week[0].onShift
             ? this.transformTime(week[0].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['monday-out'] = week[0].onShift
             ? this.transformTime(week[0].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['tuesday-in'] = week[1].onShift
             ? this.transformTime(week[1].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['tuesday-out'] = week[1].onShift
             ? this.transformTime(week[1].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['wednesday-in'] = week[2].onShift
             ? this.transformTime(week[2].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['wednesday-out'] = week[2].onShift
             ? this.transformTime(week[2].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['thursday-in'] = week[3].onShift
             ? this.transformTime(week[3].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['thursday-out'] = week[3].onShift
             ? this.transformTime(week[3].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['friday-in'] = week[4].onShift
             ? this.transformTime(week[4].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['friday-out'] = week[4].onShift
             ? this.transformTime(week[4].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['saturday-in'] = week[5].onShift
             ? this.transformTime(week[5].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['saturday-out'] = week[5].onShift
             ? this.transformTime(week[5].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['sunday-in'] = week[6].onShift
             ? this.transformTime(week[6].startTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['sunday-out'] = week[6].onShift
             ? this.transformTime(week[6].endTime)
-            : '00:00:00';
+            : '00:00';
           exportShift['shiftStartDate'] = workpattern.startDate;
         }
       }
@@ -420,7 +436,6 @@ export class ReportComponent implements OnInit {
   exportAttrition(element) {
     if (this.attritionInfoToggle) {
       const returnItem: any = {};
-      console.log(element.attrition);
       if (
         element.attrition !== undefined &&
         element.attrition !== null &&
@@ -441,7 +456,7 @@ export class ReportComponent implements OnInit {
             : '';
         });
         return returnItem;
-      } else{
+      } else {
         return {};
       }
     } else {
@@ -466,7 +481,7 @@ export class ReportComponent implements OnInit {
           returnItem['Contact Home Address.' + index] = item.address;
         });
         return returnItem;
-      } else{
+      } else {
         return {};
       }
     }
@@ -475,9 +490,12 @@ export class ReportComponent implements OnInit {
   setCampaigns(event: any) {
     this.campaigns = event.campaigns;
   }
-  transformTime(param): string {
-    let result = '00:00:00';
+  transformTime(param: any): string {
+    let result = '00:00';
     if (param !== null) {
+      if (param.toString().includes(':')) {
+        return param;
+      }
       const stored = parseInt(param, 10);
       const hours = Math.floor(stored / 60);
       const minutes = stored - hours * 60;

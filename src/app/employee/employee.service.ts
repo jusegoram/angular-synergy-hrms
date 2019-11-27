@@ -307,11 +307,11 @@ export class EmployeeService {
 
 
   deletePosition(position: any) {
-    let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`
+    let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`;
     return this.httpClient.delete(url);
   }
   deleteShift(shift: any) {
-    let url = `/api/v1/employee/shift?id=${shift._id}&employee=${shift.employee}`
+    let url = `/api/v1/employee/shift?id=${shift._id}&employee=${shift.employee}`;
     return this.httpClient.delete(url);
   }
 
@@ -319,6 +319,21 @@ export class EmployeeService {
     const body = JSON.stringify(query);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post('/api/v1/employee/report/information', body, { headers: headers });
+  }
+
+  getApprovedShiftUpdates(employeeId, fromDate, toDate){
+    const params = new HttpParams()
+    .set('fromDate', fromDate)
+    .set('toDate', toDate)
+    .set('employeeId', employeeId);
+
+    return this.httpClient.get('/api/v1/employee/shift/updates', {params: params});
+  }
+  
+  saveApprovedShiftUpdates(query) {
+    const body = query;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post('/api/v1/employee/shift/updates', body, {headers: headers});
   }
 }
 

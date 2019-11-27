@@ -2,118 +2,267 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
-          SHIFT INFORMATION
+        SHIFT INFORMATION
       </mat-panel-title>
       <mat-panel-description>
-          EXPAND
+        EXPAND
       </mat-panel-description>
     </mat-expansion-panel-header>
 
     <div class="example-container">
       <mat-table #table [dataSource]="dataSource">
+        <ng-container matColumnDef="shiftName">
+          <mat-header-cell *matHeaderCellDef>Shift Name</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.shift.name }}
+          </mat-cell>
+        </ng-container>
 
-          <ng-container matColumnDef="shiftName">
-              <mat-header-cell *matHeaderCellDef>Shift Name</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.shift.name}} </mat-cell>
-            </ng-container>
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.startDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
+        </ng-container>
 
-          <ng-container matColumnDef="startDate">
-              <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}}  </mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="endDate">
-            <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
-          </ng-container>
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.endDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
+        </ng-container>
 
         <ng-container matColumnDef="createdDate">
           <mat-header-cell *matHeaderCellDef>Created On</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.createdDate | date:'MM/dd/yyyy hh:mm:ss a':'-0600'}}</mat-cell>
+          <mat-cell *matCellDef="let element">
+            {{
+              element.createdDate | date: "MM/dd/yyyy hh:mm:ss a":"-0600"
+            }}</mat-cell
+          >
         </ng-container>
-
 
         <ng-container matColumnDef="action">
           <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="deleteShift(element)"><mat-icon color="warn">delete</mat-icon> Delete</button>
-          </mat-menu>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="deleteShift(element)">
+                <mat-icon color="warn">delete</mat-icon> Delete
+              </button>
+            </mat-menu>
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
-      <ng-container *ngIf="dataSource ===  undefined || dataSource && dataSource.data && dataSource.data.length === 0">
-          <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
+      <ng-container
+        *ngIf="
+          dataSource === undefined ||
+          (dataSource && dataSource.data && dataSource.data.length === 0)
+        "
+      >
+        <div
+          style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px"
+        >
           No Shifts History Available
-          </div>
-        </ng-container>
-      <mat-paginator #paginator
-      [pageSize]="3"
-      [pageSizeOptions]="[3, 6, 9]">
+        </div>
+      </ng-container>
+      <mat-paginator #paginator [pageSize]="3" [pageSizeOptions]="[3, 6, 9]">
       </mat-paginator>
     </div>
     <div class="example-container">
       <div class="example-header" [formGroup]="wpForm">
-          <mat-form-field appearance="outline">
-              <mat-label>Work Pattern</mat-label>
-             <mat-select placeholder="Work Patterns" name="item" formControlName="shift">
-               <mat-option *ngFor="let shift of shifts" [value]="shift">
-                 {{shift.name}}
-               </mat-option>
-             </mat-select>
-          </mat-form-field>
-          &nbsp;
-          <mat-form-field appearance="outline">
-              <mat-label>Active Since</mat-label>
-            <input matInput [matDatepicker]="shiftPicker" placeholder="Active Date" formControlName="createdDate">
-            <mat-datepicker-toggle matSuffix [for]="shiftPicker"></mat-datepicker-toggle>
-            <mat-datepicker #shiftPicker></mat-datepicker>
-          </mat-form-field>
-          &nbsp;
-          &nbsp;
-          <button mat-button color="primary" (click)="onSave()"><mat-icon>add</mat-icon>&nbsp; ADD SHIFT</button>
+        <mat-form-field appearance="outline">
+          <mat-label>Work Pattern</mat-label>
+          <mat-select
+            placeholder="Work Patterns"
+            name="item"
+            formControlName="shift"
+          >
+            <mat-option *ngFor="let shift of shifts" [value]="shift">
+              {{ shift.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        &nbsp;
+        <mat-form-field appearance="outline">
+          <mat-label>Active Since</mat-label>
+          <input
+            matInput
+            [matDatepicker]="shiftPicker"
+            placeholder="Active Date"
+            formControlName="createdDate"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="shiftPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #shiftPicker></mat-datepicker>
+        </mat-form-field>
+        &nbsp; &nbsp;
+        <button mat-button color="primary" (click)="onSave()">
+          <mat-icon>add</mat-icon>&nbsp; ADD SHIFT
+        </button>
       </div>
       <div class="table1">
-          <mat-table #table [dataSource]="currentShift" matSort>
+        <mat-table #table [dataSource]="currentShift" matSort>
+          <ng-container matColumnDef="day">
+            <mat-header-cell *matHeaderCellDef>Day</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button
+                mat-flat-button
+                [className]="
+                  compareDate(element.nextDate)
+                    ? 'today mat-flat-button'
+                    : 'not-today mat-flat-button'
+                "
+                disableRipple="true"
+              >
+                {{ element.dayName }}
+              </button></mat-cell
+            >
+          </ng-container>
 
-              <ng-container matColumnDef="day">
-                  <mat-header-cell *matHeaderCellDef>Day</mat-header-cell>
-                  <mat-cell *matCellDef="let element"> <button mat-flat-button [className]=" compareDate(element.nextDate)? 'today mat-flat-button': 'not-today mat-flat-button'"  disableRipple="true">{{element.dayName}} </button></mat-cell>
-                </ng-container>
+          <ng-container matColumnDef="onShift">
+            <mat-header-cell *matHeaderCellDef>On shift</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <button
+                mat-flat-button
+                [className]="
+                  element.onShift
+                    ? 'onshift mat-flat-button'
+                    : 'dayoff mat-flat-button'
+                "
+                disableRipple="true"
+              >
+                {{ element.onShift ? "ON SHIFT" : "DAY OFF" }}
+              </button></mat-cell
+            >
+          </ng-container>
 
-                <ng-container matColumnDef="onShift">
-                  <mat-header-cell *matHeaderCellDef>On shift</mat-header-cell>
-                  <mat-cell *matCellDef="let element"> <button mat-flat-button [className]="element.onShift ? 'onshift mat-flat-button': 'dayoff mat-flat-button'"  disableRipple="true">{{(element.onShift)? "ON SHIFT" : "DAY OFF"}}</button></mat-cell>
-                </ng-container>
+          <ng-container matColumnDef="shift">
+            <mat-header-cell *matHeaderCellDef>Shift</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.startTimeString + " - " + element.endTimeString }}
+            </mat-cell>
+          </ng-container>
 
-                <ng-container matColumnDef="shift">
-                  <mat-header-cell *matHeaderCellDef>Shift</mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.startTimeString + " - " + element.endTimeString}} </mat-cell>
-                </ng-container>
+          <ng-container matColumnDef="nextDate">
+            <mat-header-cell *matHeaderCellDef>Next date</mat-header-cell>
+            <mat-cell *matCellDef="let element"
+              ><button
+                mat-flat-button
+                [className]="
+                  compareDate(element.nextDate)
+                    ? 'today mat-flat-button'
+                    : 'not-today mat-flat-button'
+                "
+                disableRipple="true"
+              >
+                {{ element.nextDate | date: "MM/dd/yyyy" }}
+              </button></mat-cell
+            >
+          </ng-container>
 
-                <ng-container matColumnDef="nextDate">
-                  <mat-header-cell *matHeaderCellDef>Next date</mat-header-cell>
-                  <mat-cell *matCellDef="let element"><button mat-flat-button [className]=" compareDate(element.nextDate)? 'today mat-flat-button': 'not-today mat-flat-button'" disableRipple="true"> {{element.nextDate | date: 'MM/dd/yyyy'}}</button></mat-cell>
-                </ng-container>
-
-            <mat-header-row *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: ['day', 'onShift', 'shift', 'nextDate'];"></mat-row>
-          </mat-table>
-          <ng-container *ngIf="!currentShift">
-              <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
-                Assign a new Shift to see it here...
-              </div>
-            </ng-container>
-        </div>
+          <mat-header-row
+            *matHeaderRowDef="['day', 'onShift', 'shift', 'nextDate']"
+          ></mat-header-row>
+          <mat-row
+            *matRowDef="
+              let row;
+              columns: ['day', 'onShift', 'shift', 'nextDate']
+            "
+          ></mat-row>
+        </mat-table>
+        <ng-container *ngIf="!currentShift">
+          <div
+            style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px"
+          >
+            Assign a new Shift to see it here...
+          </div>
+        </ng-container>
+      </div>
     </div>
-    <mat-divider style="margin-top:50px; margin-bottom:30px" inset="false"></mat-divider>
+    <mat-divider
+      style="margin-top:50px; margin-bottom:30px"
+      inset="false"
+    ></mat-divider>
     <mat-card-subtitle>
-          <span fxFlex="auto" fxFlexFill></span>
-          <span stype="white-space: nowrap;">APPROVED&nbsp;SHIFT&nbsp;UPDATES</span>
-          <span fxFlex="auto" fxFlexFill></span>
+      <span fxFlex="auto" fxFlexFill></span>
+      <span stype="white-space: nowrap;">APPROVED&nbsp;SHIFT&nbsp;UPDATES</span>
+      <span fxFlex="auto" fxFlexFill></span>
     </mat-card-subtitle>
-</mat-expansion-panel>
+
+    <table mat-table #table [dataSource]="approvedUpdatesDataSource" style="width: 100%">
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef>Reason</th>
+        <td mat-cell *matCellDef="let row">{{ row.reason }}</td>
+      </ng-container>
+      <ng-container matColumnDef="shift">
+        <th mat-header-cell *matHeaderCellDef>Shift</th>
+        <td mat-cell *matCellDef="let row">{{ row.timeIn + '-' + row.timeOut }}</td>
+      </ng-container>
+      <ng-container matColumnDef="effectiveDate">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let row">{{ row.effectiveDate | date: "MM/dd/yyyy"}}</td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+      <tr
+        mat-header-row
+        *matHeaderRowDef="approvedUpdatesDisplayedColumns"
+      ></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: approvedUpdatesDisplayedColumns"
+      ></tr>
+    </table>
+
+    <div
+      fxLayout="row"
+      fxLayout.xs="col"
+      fxLayoutAlign="center center"
+      fxLayoutGap="10px"
+      [formGroup]="approvedUpdatesForm"
+    >
+      <mat-form-field appearance="outline">
+        <mat-label>Reason</mat-label>
+        <input matInput placeholder="Reason..." formControlName='reason' />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Time In
+        </mat-label>
+        <input matInput placeholder="HH:MM" formControlName='timeIn'/>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>
+          Time Out
+        </mat-label>
+        <input matInput placeholder="HH:MM" formControlName='timeOut'/>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Effective Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="approvedUpdatesPicker"
+          placeholder="MM/DD/YYYY"
+          formControlName="effectiveDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="approvedUpdatesPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #approvedUpdatesPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <button mat-button color="primary" style="margin:auto" (click)="saveApprovedUpdate()">ADD UPDATE</button>
+    </div>
+  </mat-expansion-panel>
 </mat-accordion>

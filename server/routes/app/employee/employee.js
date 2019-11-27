@@ -545,8 +545,8 @@ router.post("/new", function(req, res, next) {
 });
 
 router.delete("/position", (req, res) => {
-  id = req.query.id;
-  employee = req.query.employee;
+  let id = req.query.id;
+  let employee = req.query.employee;
 
   Employee.findByIdAndUpdate(
     employee,
@@ -565,7 +565,7 @@ router.delete("/position", (req, res) => {
 });
 
 router.delete("/shift", (req, res) => {
-  id = req.query.id;
+  let id = req.query.id;
   employee = req.query.employee;
 
   Employee.findByIdAndUpdate(
@@ -578,5 +578,56 @@ router.delete("/shift", (req, res) => {
     }
   );
 });
+
+router.get("/shift/updates", (req, res) => {
+  const { employeeId, fromDate, toDate } = req.query;
+  EmployeeShift.approvedShiftUpdates
+  .find({
+    employeeId: employeeId,
+    effectiveDate: { $gte: fromDate, $lte: toDate }
+  })
+  .lean()
+  .exec((err, doc) => {
+    if(err) res.status(400).json(err);
+    else res.status(200).json(doc);
+  });
+  
+});
+
+router.post("/shift/updates", (req, res) => {
+    let update = req.body;
+    EmployeeShift.approvedShiftUpdates.update({employeeId: update.employeeId, effectiveDate: update.effectiveDate}, { $set : update }, { upsert: true}, (err, doc) => {
+      if(err) res.status(400).json(err);
+      else {
+        let {employeeId} = update;
+        let [fromDate, toDate] = getWeekDates();
+        EmployeeShift.approvedShiftUpdates.find({
+          employeeId: employeeId,
+          effectiveDate: { $gte: fromDate, $lte: toDate }
+        })
+        .lean()
+        .exec((err, doc) => {
+          if(err) res.status(400).json(err);
+          else res.status(200).json(doc);
+        });
+      }
+    })
+});
+
+function getWeekDates() {
+  const now = new Date();
+  const dayOfWeek = now.getDay(); //0-6
+  const numDay = now.getDate();
+
+  const start = new Date(now); //copy
+  start.setDate(numDay - dayOfWeek);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(now); //copy
+  end.setDate(numDay + (7 - dayOfWeek));
+  end.setHours(0, 0, 0, 0);
+
+  return [start, end];
+}
 
 module.exports = router;

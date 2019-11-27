@@ -29,6 +29,9 @@ export class ShiftComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   dataSource: any = [];
+  approvedUpdatesDataSource: any = [];
+  approvedUpdatesDisplayedColumns = ['reason', 'shift', 'effectiveDate', 'action'];
+  approvedUpdatesForm: FormGroup;
   currentShift: any;
   shifts: any = [];
   today = Date.now();
@@ -48,7 +51,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       this.populateTable(employee.currentValue.shift);
       const employeeShifts: any = employee.currentValue.shift;
       const employeeShift: any[] =
-        employeeShifts[employeeShifts.length - 1].shift;
+        employeeShifts[0].shift;
       const shift = employeeShift.shift;
       this.populateTable1(shift);
     }
@@ -60,7 +63,11 @@ export class ShiftComponent implements OnInit, OnChanges {
     });
     this.addActionColumn();
     this.buildForm();
+    this.buildApprovedUpdatesForm();
     [this.weekStart, this.weekEnd] = this.getWeekDates();
+    this._employeeService.getApprovedShiftUpdates(this.employee.employeeId, this.weekStart, this.weekEnd).subscribe(res => {
+      this.populateApprovedUpdates(res);
+    });
   }
   addActionColumn() {
     if (this.authorization.role === 9999) {
@@ -83,8 +90,12 @@ export class ShiftComponent implements OnInit, OnChanges {
 
   compareDate(date: Date): boolean {
     const datenow = new Date();
-    if (datenow.getDay() === date.getDay()) return true;
-    else return false;
+    if (datenow.getDay() === date.getDay()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
   getDayName(param: number): string {
     let name = 'Monday';
@@ -204,7 +215,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       duration: 5000
     });
   }
-
+// FIXME: The delete shift function needs to be updated to the new database structure.
   deleteShift(shift: object) {
     this._employeeService.deleteShift(shift).subscribe(
       (result: any) => {
@@ -243,5 +254,52 @@ export class ShiftComponent implements OnInit, OnChanges {
     end.setHours(0, 0, 0, 0);
 
     return [start, end];
+  }
+
+  buildApprovedUpdatesForm() {
+    this.approvedUpdatesForm = this.fb.group({
+      reason: [],
+      timeIn: [],
+      timeOut: [],
+      effectiveDate: [],
+    })
+  }
+  saveApprovedUpdate(){
+    let query = this.approvedUpdatesForm.value;
+    query.employeeId = this.employee.employeeId;
+    this._employeeService.saveApprovedShiftUpdates(query).subscribe(res => {
+        this.approvedUpdatesDataSource = undefined;
+        this.populateApprovedUpdates(res);
+      this.approvedUpdatesForm.reset();
+    })
+  }
+  deleteApprovedUpdate() {
+  }
+  populateApprovedUpdates(data) {
+    if (this.approvedUpdatesDataSource && this.approvedUpdatesDataSource.data && this.approvedUpdatesDataSource.data.length > 0) {
+      this.approvedUpdatesDataSource.data.push(data);
+      this.joinUpdatesAndCurrentShift();
+
+    } else {
+      this.approvedUpdatesDataSource = new MatTableDataSource(data);
+      this.joinUpdatesAndCurrentShift();
+    }
+  }
+
+// 0 1 2 3 4 5 6
+// s m t w t f s
+
+// 0 1 2 3 4 5 6
+// m t w t f s s
+  joinUpdatesAndCurrentShift(){
+    this.approvedUpdatesDataSource.data.forEach(update => {
+        let day = new Date(update.effectiveDate).getDay();
+        day = day === 0 ? 6 : day - 1;
+
+        console.log(day, update);
+        this.currentShift.data[day].startTimeString = update.timeIn;
+        this.currentShift.data[day].endTimeString = update.timeOut;
+        this.currentShift.data[day].onShift = update.timeIn.includes(':');
+    });
   }
 }
