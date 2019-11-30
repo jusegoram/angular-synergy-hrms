@@ -689,8 +689,13 @@ var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
     let employees = [];
     let cursor = Employee.find(
       {
-        status: "active",
-        "payroll.payrollType": type
+        $or: [
+          {status: "active",
+          "payroll.payrollType": type},
+          {onFinalPayment: true,
+          "payroll.payrollType": type},
+        ]
+        
       },
       "_id employeeId firstName middleName lastName socialSecurity status personal.emailAddress company payroll position shift"
     )

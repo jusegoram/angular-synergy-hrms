@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../employee.service';
 import * as XLSX from 'xlsx';
-import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material';
-import { noop } from 'rxjs';
-import { EmployeeShift } from '../Employee';
-import { Workpattern } from '../../administration/employee/models/positions-models';
+import moment from 'moment';
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -148,12 +146,12 @@ export class ReportComponent implements OnInit {
       'company.supervisor': queryParam.supervisor,
       'company.manager': queryParam.manager,
       'company.hireDate': {
-        $gte: queryParam.hireDateFrom,
-        $lt: queryParam.hireDateTo
+        $gte: moment(queryParam.hireDateFrom).format('MM/DD/YYYY').toString(),
+        $lte: moment(queryParam.hireDateTo).format('MM/DD/YYYY').toString()
       },
       'company.terminationDate': {
-        $gte: queryParam.terminationDateFrom,
-        $lt: queryParam.terminationDateTo
+        $gte: moment(queryParam.terminationDateFrom).format('MM/DD/YYYY').toString(),
+        $lte: moment(queryParam.terminationDateTo).format('MM/DD/YYYY').toString()
       },
       'company.trainingGroupRef': queryParam.trainingGroup,
       'company.trainingGroupNum': queryParam.trainingNo

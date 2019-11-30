@@ -19,21 +19,40 @@ router.post("/", function(req, res, next) {
   if (
     query["company.hireDate"].$gte === null ||
     query["company.hireDate"].$gte === undefined ||
-    query["company.hireDate"].$gte === ""
+    !query["company.hireDate"].$gte.includes('/')
   ) {
     delete query["company.hireDate"];
+  }else{
+    query["company.hireDate"].$gte = new Date(query["company.hireDate"].$gte)
+    query["company.hireDate"].$lte = new Date(query["company.hireDate"].$lte)
   }
   if (
     query["company.terminationDate"].$gte === null ||
     query["company.terminationDate"].$gte === undefined ||
-    query["company.terminationDate"].$gte === ""
+    !query["company.terminationDate"].$gte.includes('/')
   ) {
     delete query["company.terminationDate"];
+  }else {
+    query["company.terminationDate"].$gte = new Date(query["company.terminationDate"].$gte);
+    query["company.terminationDate"].$lte = new Date(query["company.terminationDate"].$lte)
   }
   const [fromDate, toDate] = getWeekDates();
+  console.log(query);
   Employee.aggregate([
     {$match: query},
-    {$lookup: { from: 'employee-positions', localField: 'position', foreignField: '_id', as: 'position'}},
+    {$lookup: { 
+      from: 'employee-positions',
+      let: {
+        employee_id: '$_id'
+      }, pipeline: [
+        {$match: {
+          $expr: { $eq: ['$employee','$$employee_id']},
+        }},
+        {$lookup: { from: 'administration-positions',localField: 'position', foreignField: '_id', as: 'position'}},
+        {$unwind: '$position'},
+        {$sort: {'startDate': 1}},  
+      ]
+        , as: 'position'}},
     {$lookup: { 
       from: 'employee-shift-updates',
       let: {
@@ -47,7 +66,7 @@ router.post("/", function(req, res, next) {
         }}
     ], as: 'shiftUpdates'}},
   ]).exec((err, doc) => {
-    console.log(err);
+   console.log(err);
     res.status(200).json(doc);
   })
 

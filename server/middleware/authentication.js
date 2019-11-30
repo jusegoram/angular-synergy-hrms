@@ -61,7 +61,7 @@ let saveLog =  _.debounce((param, token) => {
     user: jwt.decode(token, RSA_KEY),
     method: param.method,
     apiPath: param.originalUrl,
-    query: param.body,
+    query: JSON.stringify(param.body),
     ip: param.headers['x-real-ip'],
     date: Date.now()
   })
