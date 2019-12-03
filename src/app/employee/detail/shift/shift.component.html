@@ -251,6 +251,7 @@
         <input
           matInput
           [matDatepicker]="approvedUpdatesPicker"
+          [matDatepickerFilter]="myFilter"
           placeholder="MM/DD/YYYY"
           formControlName="effectiveDate"
         />
@@ -262,7 +263,8 @@
       </mat-form-field>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-        <button mat-button color="primary" style="margin:auto" (click)="saveApprovedUpdate()">ADD UPDATE</button>
+        <mat-error *ngIf="this.approvedUpdatesForm.invalid && this.approvedUpdatesForm.touched">Please complete the shift update form to add an update.</mat-error>
+        <button mat-button color="primary" style="margin:auto" (click)="saveApprovedUpdate()" [disabled]='this.approvedUpdatesForm.invalid'>ADD UPDATE</button>
     </div>
   </mat-expansion-panel>
 </mat-accordion>

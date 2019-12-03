@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./employee.component.scss']
 })
 export class EmployeeComponent implements OnInit {
-  employeeCtrl= new FormControl();
+  employeeCtrl = new FormControl();
   employees: any[];
   selectedEmployee: Employee;
   filteredEmployees: Observable<Employee[]>;
@@ -18,26 +18,35 @@ export class EmployeeComponent implements OnInit {
   constructor(private adminService: AdminService) {
     this.adminService.refreshEmployees();
     this.selectedEmployee = new Employee('', null, '', '', '', '', '', '');
-   }
+  }
 
   ngOnInit() {
-    this.adminService.getEmployees().subscribe((data) => {
-      data.map((item) => {
-        item.fullSearchName = '(' + item.employeeId + ') ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
+    this.adminService.getEmployees().subscribe(data => {
+      data.map(item => {
+        item.fullSearchName =
+          '(' +
+          item.employeeId +
+          ') ' +
+          item.firstName +
+          ' ' +
+          item.middleName +
+          ' ' +
+          item.lastName;
       });
       this.employees = data;
     });
-    this.filteredEmployees = this.employeeCtrl.valueChanges
-    .pipe(
+    this.filteredEmployees = this.employeeCtrl.valueChanges.pipe(
       startWith(''),
       map(value => {
         return this.employees ? this._filterEmployees(value) : this.employees;
-       })
+      })
     );
   }
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
-    return this.employees.filter(employee => employee['fullSearchName'].toLowerCase().includes(filterValue));
+    return this.employees.filter(employee =>
+      employee['fullSearchName'].toLowerCase().includes(filterValue)
+    );
   }
   setEmployee(employee: Employee) {
     this.selectedEmployee = employee;
@@ -47,14 +56,12 @@ export class EmployeeComponent implements OnInit {
   }
   onUpdateEmployee() {
     this.adminService
-    .updateEmployee(this.selectedEmployee)
-    .subscribe((response) => {
-    });
+      .updateEmployee(this.selectedEmployee)
+      .subscribe(response => {});
   }
   onDeleteEmployee() {
     this.adminService
-    .deleteEmployee(this.selectedEmployee)
-    .subscribe((response) => {
-    });
+      .deleteEmployee(this.selectedEmployee)
+      .subscribe(response => {});
   }
 }

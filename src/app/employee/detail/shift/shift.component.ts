@@ -10,7 +10,8 @@ import {
 import { EmployeeService } from '../../employee.service';
 import {
   FormGroup,
-  FormBuilder
+  FormBuilder,
+  Validators
 } from '../../../../../node_modules/@angular/forms';
 import {
   MatTableDataSource,
@@ -80,7 +81,10 @@ export class ShiftComponent implements OnInit, OnChanges {
       createdDate: []
     });
   }
-
+  myFilter = (d: Date): boolean => {
+    const [from, to] = this.getWeekDates();
+    return d >= from &&  d <= to;
+  }
   getNextDate(param: number): Date {
     const day = param + 1;
     const d = new Date();
@@ -92,8 +96,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     const datenow = new Date();
     if (datenow.getDay() === date.getDay()) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
@@ -258,11 +261,11 @@ export class ShiftComponent implements OnInit, OnChanges {
 
   buildApprovedUpdatesForm() {
     this.approvedUpdatesForm = this.fb.group({
-      reason: [],
-      timeIn: [],
-      timeOut: [],
-      effectiveDate: [],
-    })
+      reason: ['', Validators.required],
+      timeIn: ['', Validators.required],
+      timeOut: ['', Validators.required],
+      effectiveDate: ['', Validators.required],
+    });
   }
   saveApprovedUpdate(){
     let query = this.approvedUpdatesForm.value;
