@@ -727,9 +727,9 @@ router.post("/shift", (req, res) => {
 
                       {
                         $push: {
-                          shift: { 
+                          shift: {
                             $each: [item],
-                            $sort: { startDate: -1 }
+                            $sort: { createdDate: -1 }
                           },
                         }
                       },
@@ -774,9 +774,9 @@ router.post("/shift", (req, res) => {
 
                         {
                           $push: {
-                            shift: { 
+                            shift: {
                               $each: [item],
-                              $sort: { startDate: -1 }
+                              $sort: { createdDate: -1 }
                             },
                           }
                         },
