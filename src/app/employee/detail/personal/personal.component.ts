@@ -4,7 +4,8 @@ import { EmployeeService } from '../../employee.service';
 import { SessionService } from '../../../session/session.service';
 import {Employee, EmployeePersonal} from '../../Employee';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { Params, ActivatedRoute } from '@angular/router';
 
 @Component({

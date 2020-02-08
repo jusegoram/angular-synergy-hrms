@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {Employee, EmployeeFamily} from '../../Employee';
-import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '../../employee.service';
 

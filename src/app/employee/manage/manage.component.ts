@@ -1,6 +1,8 @@
 import { Employee } from '../Employee';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import {MatTableDataSource, MatSort, MatPaginator, SortDirection} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeService } from '../employee.service';
 import { ActivatedRoute } from '@angular/router';
 

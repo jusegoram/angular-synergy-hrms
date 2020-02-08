@@ -1,6 +1,6 @@
 import { PayrollService } from './../../services/payroll.service';
 import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, Datum } from './../../../shared/ChartData';
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';

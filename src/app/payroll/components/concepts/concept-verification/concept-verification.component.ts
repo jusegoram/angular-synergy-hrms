@@ -1,6 +1,7 @@
 import { SessionService } from './../../../../session/session.service';
 import { PayrollService } from './../../../services/payroll.service';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
 

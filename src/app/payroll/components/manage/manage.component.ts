@@ -9,12 +9,10 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import {
-  MatTableDataSource,
-  MatDialog,
-  MatSnackBar,
-  MatBottomSheet
-} from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 import { Payroll } from './Payroll';

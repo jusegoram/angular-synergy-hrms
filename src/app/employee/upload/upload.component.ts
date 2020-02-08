@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 // const URL = '/api/';
 import { environment } from '../../../environments/environment';
-import { MatTableDataSource } from '@angular/material';
-import {MatSnackBar} from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 

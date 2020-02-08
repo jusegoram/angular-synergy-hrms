@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EmployeePosition } from '../../Employee';
 import { EmployeeService } from '../../employee.service';
-import { MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { DialogComponent } from './dialog/dialog.component';
 import { Department, Client } from '../../../administration/employee/models/positions-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

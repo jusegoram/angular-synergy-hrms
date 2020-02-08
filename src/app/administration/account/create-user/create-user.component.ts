@@ -1,5 +1,7 @@
 import { AdminService } from '../../admin.service';
-import { MatSnackBar, MatDialog, TooltipComponent} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TooltipComponent } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { SessionService } from '../../../session/session.service';
 import { Employee } from './../../../employee/Employee';

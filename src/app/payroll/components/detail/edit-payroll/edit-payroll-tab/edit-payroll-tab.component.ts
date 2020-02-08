@@ -2,7 +2,9 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, Output, 
 import { SelectionModel } from '@angular/cdk/collections';
 import { PayrollService } from '../../../../services/payroll.service';
 import { SessionService } from '../../../../../session/session.service';
-import { MatTableDataSource, MatSnackBar, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-edit-payroll-tab',

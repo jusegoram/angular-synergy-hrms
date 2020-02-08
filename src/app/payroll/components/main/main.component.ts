@@ -1,5 +1,10 @@
 import { PayDialogComponent } from './pay/pay.component';
-import { MatTableDataSource, MatSort, MatPaginator, MatSnackBar, MatDialog, MatBottomSheet } from '@angular/material';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from './../../services/payroll.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {SelectionModel} from '@angular/cdk/collections';

@@ -1,9 +1,7 @@
 import { EmployeeService } from './../../employee.service';
-import {
-  MatTableDataSource,
-  MatPaginator,
-  MatSnackBar
-} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
   Component,

@@ -2,7 +2,8 @@ import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { PayrollService } from './../../services/payroll.service';
 import { Component, OnInit } from '@angular/core';
 import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({

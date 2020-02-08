@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Workpattern, Day } from '../models/positions-models';
 import { AdminService } from '../../admin.service';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
 

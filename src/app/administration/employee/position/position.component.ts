@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Department, Position } from '../models/positions-models';
 import { AdminService } from '../../admin.service';
-import { MatSnackBar, MatDialog, MatTableDataSource } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { CreateDepartmentDialogComponent } from './create-department-dialog/create-department-dialog.component';
 import { EditPositionDialogComponent } from './edit-position-dialog/edit-position-dialog.component';
 

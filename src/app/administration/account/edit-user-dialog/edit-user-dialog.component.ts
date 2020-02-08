@@ -2,14 +2,10 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AdminService } from '../../admin.service';
 import { OnInit, ViewChild, ElementRef, ɵConsole } from '@angular/core';
 import { Component, Inject } from '@angular/core';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  getMatIconFailedToSanitizeUrlError,
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-  MatChipInputEvent
-} from '@angular/material';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { getMatIconFailedToSanitizeUrlError } from '@angular/material/icon';
 import {
   FormBuilder,
   FormGroup,

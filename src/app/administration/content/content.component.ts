@@ -1,4 +1,4 @@
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MenuItems, ChildrenItems } from './../../shared/menu-items/menu-items';
 import { Menu } from './../../shared/menu-items/menu-items';
 import { Component, OnInit } from '@angular/core';

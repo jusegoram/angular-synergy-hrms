@@ -2,7 +2,7 @@ import { SessionService } from '../session.service';
 import { Injectable } from '@angular/core';
 import { CanActivateChild, CanLoad, CanActivate, ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import {MatDialog, MatDialogConfig} from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { GuardDialogComponent } from './guard-dialog/guard-dialog.component';
 @Injectable()
 export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {

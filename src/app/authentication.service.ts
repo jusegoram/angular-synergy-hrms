@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {tap} from 'rxjs/operators';
 import { SessionService } from './session/session.service';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
 @Injectable({
   providedIn: 'root'

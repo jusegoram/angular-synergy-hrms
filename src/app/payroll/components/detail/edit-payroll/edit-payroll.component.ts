@@ -1,5 +1,5 @@
 import { PayrollService } from './../../../services/payroll.service';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { PayrollRow } from './../../manage/PayrollRow';
 import { Payroll } from './../../manage/Payroll';
 import {

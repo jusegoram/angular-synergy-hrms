@@ -1,4 +1,5 @@
-import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from './../../../services/payroll.service';
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 

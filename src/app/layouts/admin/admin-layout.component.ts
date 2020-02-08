@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
 import { SessionService } from '../../session/session.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material';
+import { MatIconRegistry } from '@angular/material/icon';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 

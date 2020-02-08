@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Employee, EmployeeComment} from '../../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatSnackBar, MatTableDataSource } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeService } from '../../employee.service';
 import { SessionService } from '../../../session/session.service';
 

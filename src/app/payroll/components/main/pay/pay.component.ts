@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';

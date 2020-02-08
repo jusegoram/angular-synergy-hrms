@@ -3,7 +3,7 @@ import { PayrollService } from '../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { noop } from 'rxjs';
 import { calcPossibleSecurityContexts } from '@angular/compiler/src/template_parser/binding_parser';
 

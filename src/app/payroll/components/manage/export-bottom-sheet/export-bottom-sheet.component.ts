@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 
