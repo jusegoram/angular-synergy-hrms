@@ -78,23 +78,24 @@
     "socket.io-client": "^2.3.0",
     "sweetalert2": "^8.19.0",
     "terser": "^4.6.3",
+    "tslib": "^1.10.0",
     "webpack": "^4.41.5",
     "xlsx": "^0.15.5",
-    "zone.js": "^0.10.2"
+    "zone.js": "~0.10.2"
   },
   "engines": {
     "node": "~8.9.1",
     "npm": "~5.5.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.802.2",
-    "@angular-devkit/core": "^8.3.25",
-    "@angular/cli": "^8.3.25",
+    "@angular-devkit/build-angular": "~0.900.1",
+    "@angular-devkit/core": "^9.0.1",
+    "@angular/cli": "^9.0.1",
     "@angular/language-service": "9.0.0",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "^6.14.9",
-    "codelyzer": "^5.2.1",
+    "@types/node": "^12.11.1",
+    "codelyzer": "^5.1.2",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
