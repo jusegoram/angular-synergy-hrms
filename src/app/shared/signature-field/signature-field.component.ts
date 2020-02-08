@@ -20,7 +20,7 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
   ],
 })
 export class SignatureFieldComponent implements ControlValueAccessor {
-  @ViewChild(SignaturePad, {static: false}) public signaturePad: SignaturePad;
+  @ViewChild(SignaturePad) public signaturePad: SignaturePad;
 
   public options: Object = {
     'backgroundColor': 'rgb(245, 245, 245)',
