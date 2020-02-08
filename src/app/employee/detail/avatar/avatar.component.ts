@@ -1,9 +1,9 @@
 import { Component, OnInit, Input} from '@angular/core';
-import { FileUploader } from 'ng2-file-upload/ng2-file-upload';
 import { environment } from '../../../../environments/environment';
 import { EmployeeService } from '../../employee.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { SessionService } from '../../../session/session.service';
+import { FileUploader } from 'ng2-file-upload';
 
 @Component({
   selector: 'avatar-detail',
