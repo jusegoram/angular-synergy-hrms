@@ -1,0 +1,44 @@
+import { MatTableDataSource, MatPaginator } from '@angular/material';
+import { PayrollService } from './../../../services/payroll.service';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+
+@Component({
+  selector: 'app-finalized-payrolls',
+  templateUrl: './finalized-payrolls.component.html',
+  styleUrls: ['./finalized-payrolls.component.scss']
+})
+export class FinalizedPayrollsComponent implements OnInit, OnChanges {
+  @Input() type: string;
+  @Input() refresh: any;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  dataSource: any;
+  displayedColumns = [
+    'fromDate',
+    'toDate',
+    'employeesAmount',
+    'totalPayed',
+    'totalCompanyContributions',
+    'totalEmployeeContributions',
+    'totalTaxes',
+    'details'];
+  constructor(private _payrollService: PayrollService) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.refresh){
+      this.getData('');
+    }
+  }
+  ngOnInit() {
+    this._payrollService.getPayroll('', this.type, true);
+  }
+
+  getData = (param) => {
+    this._payrollService.getPayroll('', this.type, true).subscribe(res => {
+      this.populateTable(res);
+    });
+  }
+  populateTable = (data) => {
+    this.dataSource = new MatTableDataSource(data);
+    this.dataSource.paginator = this.paginator;
+  }
+}

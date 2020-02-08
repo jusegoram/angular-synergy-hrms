@@ -13,23 +13,23 @@
         <mat-table #table [dataSource]="dataSource">
             <ng-container matColumnDef="reason">
                 <mat-header-cell *matHeaderCellDef> Primary Reason </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.reason1}} </mat-cell>
+                <mat-cell *matCellDef="let row"> {{row?.reason1}} </mat-cell>
             </ng-container>
             <ng-container matColumnDef="secondaryReason">
                 <mat-header-cell *matHeaderCellDef> Secondary Reason </mat-header-cell>
-                <mat-cell *matCellDef="let row"> {{row.reason2}} </mat-cell>
+                <mat-cell *matCellDef="let row"> {{row?.reason2}} </mat-cell>
               </ng-container>
           <ng-container matColumnDef="comment">
             <mat-header-cell *matHeaderCellDef> Comment </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.comment}} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{row?.comment}} </mat-cell>
           </ng-container>
           <ng-container matColumnDef="by">
             <mat-header-cell *matHeaderCellDef fxFlex="200px"> By </mat-header-cell>
-            <mat-cell *matCellDef="let row" fxFlex="200px"> {{row.submittedBy?.firstName + ' ' + row.submittedBy?.lastName}} </mat-cell>
+            <mat-cell *matCellDef="let row" fxFlex="200px"> {{row?.submittedBy?.firstName + ' ' + row?.submittedBy?.lastName}} </mat-cell>
           </ng-container>
           <ng-container matColumnDef="date">
             <mat-header-cell *matHeaderCellDef fxFlex="200px"> Date </mat-header-cell>
-            <mat-cell *matCellDef="let row" fxFlex="200px"> {{row.commentDate | date: 'MM/dd/yyyy h:mm a' }} </mat-cell>
+            <mat-cell *matCellDef="let row" fxFlex="200px"> {{row?.commentDate | date: 'MM/dd/yyyy h:mm a' }} </mat-cell>
           </ng-container>
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

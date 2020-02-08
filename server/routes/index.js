@@ -38,10 +38,11 @@ router.post('/login', function(req, res, next) {
         name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
         role: user.role,
         pages: user.pages,
+        clients: user.clients,
         rights: user.rights,
       }, RSA_KEY, {
         algorithm: 'RS256',
-        expiresIn: 60*20
+        expiresIn: '1h',
       });
       res.status(200).json({
           idToken: token,

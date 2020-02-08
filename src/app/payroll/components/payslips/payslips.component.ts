@@ -49,7 +49,7 @@ export class PayslipsComponent implements OnInit {
   getRecords(){
     if(this.checkedRows.selected.length === 1) {
       const {payrolls} = this.checkedRows.selected[0];
-      this._payrollService.getPayroll(payrolls, '').subscribe(result => {
+      this._payrollService.getPayroll(payrolls, '', true).subscribe(result => {
           this.records = result.sort((a, b) => { return a.firstName.localeCompare(b.firstName)});
       })
     }

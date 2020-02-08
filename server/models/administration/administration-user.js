@@ -25,6 +25,7 @@ var schema = new Schema({
     email: {type: String, required: false},
     role: {type: Number, required: true},
     pages: {type: [Number], required: true},
+    clients: {type: [String], required: false},
     rights: {type: rightsSchema, required: false},
     creationDate : {type: Date, required: true },
     employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main', required: false, unique: true},

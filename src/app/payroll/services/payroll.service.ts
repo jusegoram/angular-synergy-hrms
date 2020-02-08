@@ -164,13 +164,19 @@ export class PayrollService {
       headers: headers
     });
   }
+  updatePayroll(payroll, element, type) {
+    const body = element;
+    const params = new HttpParams().set('conceptType', type);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put('/api/v1/payroll/' + payroll, body, {headers: headers, params: params});
+  }
 
-  getPayroll(id: any, type: any): Observable<any> {
+  getPayroll(id: any, type: any, finalized: any): Observable<any> {
     let params
     if(id.length === 2){
-       params = new HttpParams().set('id', id[0]).set('id2', id[1]).set('type', type);
+       params = new HttpParams().set('id', id[0]).set('id2', id[1]).set('type', type).set('finalized', finalized);
     }else{
-      params = new HttpParams().set('id', id).set('type', type);
+      params = new HttpParams().set('id', id).set('type', type).set('finalized', finalized);
     }
     return this.httpClient.get<any>('/api/v1/payroll', {params: params});
   }
@@ -185,9 +191,13 @@ export class PayrollService {
 
   }
 
-  getConcepts({type, id, verified, payed}){
+  getConcepts(type, id, verified, payed, maternity?, csl?){
     // if id === 'all' then all employees are fetched
-    const params = new HttpParams().set('verified', verified).set('payed', payed);
+    const params = new HttpParams()
+    .set('verified', verified)
+    .set('payed', payed)
+    .set('maternity', maternity)
+    .set('csl', csl);
     return this.httpClient.get<any>(`/api/v1/payroll/concepts/${type}/${id}`, {
       params: params
     });

@@ -1,0 +1,19 @@
+<mat-card>
+    <mat-tab-group backgroundColor="primary" (selectedIndexChange)="selectedTab($event)">
+      <mat-tab label="SICK LEAVE">
+        <app-edit-payroll-tab [data]='CSLDatasource' (apply)='applyCSL($event)'></app-edit-payroll-tab>
+      </mat-tab>
+      <mat-tab label="MATERNITY">
+        <app-edit-payroll-tab [data]='MATDatasource'></app-edit-payroll-tab>
+      </mat-tab>
+      <mat-tab label="VACATIONS">
+        <app-edit-payroll-tab></app-edit-payroll-tab>
+      </mat-tab>
+      <mat-tab label="FINAL PAYMENTS">
+        <app-edit-payroll-tab></app-edit-payroll-tab>
+      </mat-tab>
+      <mat-tab label="HOUR ADJUSTMENTS">
+
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>

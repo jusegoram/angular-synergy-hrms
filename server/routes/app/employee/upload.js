@@ -1,5 +1,11 @@
 let express = require("express");
+let moment = require("moment");
+let jwt = require("jsonwebtoken");
 let fs = require("fs");
+let path = require("path");
+let crypto = require("crypto");
+const RSA_KEY = fs.readFileSync(path.join(__dirname, "../../pub.key"));
+
 let async = require("async");
 //require the express router
 let router = express.Router();
@@ -7,6 +13,8 @@ let router = express.Router();
 let multer = require("multer");
 let mongoose = require("mongoose");
 let csv = require("fast-csv");
+let OperationsHours = require("../../../models/app/operations/operations-hour");
+let FileUploads = require("../../../models/back-end/file-upload");
 let Department = require("../../../models/administration/administration-department");
 let EmployeeSchema = require("../../../models/app/employee/employee-main");
 let Position = require("../../../models/app/employee/employee-position");
@@ -14,7 +22,6 @@ let EmployeeShift = require("../../../models/app/employee/employee-shift");
 // set the directory for the uploads to the uploaded to
 let DIR = "uploads/employeeFiles";
 
-let path = require("path");
 //define the type of upload multer would be doing and pass in its destination, in our case, its a single file with the name photo
 let storage = multer.diskStorage({
   destination: "uploads/employeeFiles",
@@ -504,9 +511,341 @@ router.post("/payroll", function(req, res) {
 
 // });
 
+// router.post("/shift", (req, res) => {
+//   let shifts = [];
+//   upload(req, res, err => {
+//     if (err) res.status(422).send("an Error occured");
+//     if (
+//       req.file.mimetype !== "application/vnd.ms-excel" &&
+//       req.file.mimetype !== "text/csv"
+//     )
+//       res.sendStatus(400);
+//     csv
+//       .fromPath(req.file.path, { headers: true, ignoreEmpty: true , strictColumnHandling: true})
+//       .on("data", data => {
+//         data["_id"] = new mongoose.Types.ObjectId();
+//         data["employee"] = null;
+//         data["createdDate"] = new Date();
+//         data["shift"] = null;
+//         shifts.push(data);
+//       })
+//       .on("end", () => {
+//         shifts.map(i => {
+//           if (
+//             i[
+//               "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+//             ]
+//           ) {
+//             const valueArr = i[
+//               "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+//             ].split(";");
+//             i["employeeId"] = valueArr[0];
+//             i["shiftName"] = valueArr[1];
+//             i["monday-in"] = valueArr[2];
+//             i["monday-out"] = valueArr[3];
+//             i["tuesday-in"] = valueArr[4];
+//             i["tuesday-out"] = valueArr[5];
+//             i["wednesday-in"] = valueArr[6];
+//             i["wednesday-out"] = valueArr[7];
+//             i["thursday-in"] = valueArr[8];
+//             i["thursday-out"] = valueArr[9];
+//             i["friday-in"] = valueArr[10];
+//             i["friday-out"] = valueArr[11];
+//             i["saturday-in"] = valueArr[12];
+//             i["saturday-out"] = valueArr[13];
+//             i["sunday-in"] = valueArr[14];
+//             i["sunday-out"] = valueArr[15];
+//             i["startDate"] = valueArr[16];
+//             delete i[
+//               "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
+//             ];
+//           }
+//           i.shift = {
+//             name: i["shiftName"],
+//             shift: [
+//               {
+//                 day: 0,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["monday-in"]),
+//                   timeToMinutes(i["monday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["monday-in"]),
+//                 endTime: timeToMinutes(i["monday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["monday-in"]),
+//                   timeToMinutes(i["monday-out"])
+//                 )
+//               },
+//               {
+//                 day: 1,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["tuesday-in"]),
+//                   timeToMinutes(i["tuesday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["tuesday-in"]),
+//                 endTime: timeToMinutes(i["tuesday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["tuesday-in"]),
+//                   timeToMinutes(i["tuesday-out"])
+//                 )
+//               },
+//               {
+//                 day: 2,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["wednesday-in"]),
+//                   timeToMinutes(i["wednesday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["wednesday-in"]),
+//                 endTime: timeToMinutes(i["wednesday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["wednesday-in"]),
+//                   timeToMinutes(i["wednesday-out"])
+//                 )
+//               },
+//               {
+//                 day: 3,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["thursday-in"]),
+//                   timeToMinutes(i["thursday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["thursday-in"]),
+//                 endTime: timeToMinutes(i["thursday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["thursday-in"]),
+//                   timeToMinutes(i["thursday-out"])
+//                 )
+//               },
+//               {
+//                 day: 4,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["friday-in"]),
+//                   timeToMinutes(i["friday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["friday-in"]),
+//                 endTime: timeToMinutes(i["friday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["friday-in"]),
+//                   timeToMinutes(i["friday-out"])
+//                 )
+//               },
+//               {
+//                 day: 5,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["saturday-in"]),
+//                   timeToMinutes(i["saturday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["saturday-in"]),
+//                 endTime: timeToMinutes(i["saturday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["saturday-in"]),
+//                   timeToMinutes(i["saturday-out"])
+//                 )
+//               },
+//               {
+//                 day: 6,
+//                 onShift:
+//                 calculateTimeDifference(
+//                   timeToMinutes(i["sunday-in"]),
+//                   timeToMinutes(i["sunday-out"])
+//                 ) > 0,
+//                 startTime: timeToMinutes(i["sunday-in"]),
+//                 endTime: timeToMinutes(i["sunday-out"]),
+//                 scheduledHours: calculateTimeDifference(
+//                   timeToMinutes(i["sunday-in"]),
+//                   timeToMinutes(i["sunday-out"])
+//                 )
+//               }
+//             ]
+//           };
+//           i.shift.daysonShift = i.shift.shift.filter(
+//             item => item.onShift
+//           ).length;
+//           i.shift.totalHours = i.shift.shift
+//             .map(e => e.scheduledHours)
+//             .reduce((a, b) => a + b);
+//           return i.shift;
+//         });
+//         async.each(
+//           shifts,
+//           (item, callback) => {
+//             let extractedShift = item.shift.shift;
+//             EmployeeShift.shift.find(
+//               {
+//                 "shift.0.startTime":  extractedShift.filter(j => j.day === 0)[0].startTime,
+//                 "shift.0.endTime":  extractedShift.filter(j => j.day === 0)[0].endTime,
+//                 "shift.1.startTime":  extractedShift.filter(j => j.day === 1)[0].startTime,
+//                 "shift.1.endTime":  extractedShift.filter(j => j.day === 1)[0].endTime,
+//                 "shift.2.startTime":  extractedShift.filter(j => j.day === 2)[0].startTime,
+//                 "shift.2.endTime":  extractedShift.filter(j => j.day === 2)[0].endTime,
+//                 "shift.3.startTime":  extractedShift.filter(j => j.day === 3)[0].startTime,
+//                 "shift.3.endTime":  extractedShift.filter(j => j.day === 3)[0].endTime,
+//                 "shift.4.startTime":  extractedShift.filter(j => j.day === 4)[0].startTime,
+//                 "shift.4.endTime":  extractedShift.filter(j => j.day === 4)[0].endTime,
+//                 "shift.5.startTime":  extractedShift.filter(j => j.day === 5)[0].startTime,
+//                 "shift.5.endTime":  extractedShift.filter(j => j.day === 5)[0].endTime,
+//                 "shift.6.startTime":  extractedShift.filter(j => j.day === 6)[0].startTime,
+//                 "shift.6.endTime":  extractedShift.filter(j => j.day === 6)[0].endTime
+//               },
+//               (err, shiftDoc) => {
+//                 if (err) {
+//                   console.log(err);
+//                   callback();
+//                 } else if ( shiftDoc.length === 1) {
+//                   shiftDoc[0].shift.map(day => {
+//                     day.scheduledHours = calculateTimeDifference(
+//                       day.startTime,
+//                       day.endTime
+//                     );
+//                     return day;
+//                   });
+//                   shiftDoc[0].daysonShift = shiftDoc[0].shift.filter(
+//                     item => item.onShift
+//                   ).length;
+//                   shiftDoc[0].totalHours = shiftDoc[0].shift
+//                     .map(e => e.scheduledHours)
+//                     .reduce((a, b) => a + b);
+//                   item.shift = shiftDoc[0];
+//                   item.shift.shiftId = shiftDoc[0]._id;
+//                   delete item.shift._id;
+//                   delete item.shiftName;
+//                   delete item["monday-in"];
+//                   delete item["monday-out"];
+//                   delete item["tuesday-in"];
+//                   delete item["tuesday-out"];
+//                   delete item["wednesday-in"];
+//                   delete item["wednesday-out"];
+//                   delete item["thursday-in"];
+//                   delete item["thursday-out"];
+//                   delete item["friday-in"];
+//                   delete item["friday-out"];
+//                   delete item["saturday-in"];
+//                   delete item["saturday-out"];
+//                   delete item["sunday-in"];
+//                   delete item["sunday-out"];
+//                   shiftDoc[0].save().then(result => {
+//                     EmployeeSchema.updateOne(
+//                       { employeeId: item.employeeId },
+
+//                       {
+//                         $push: {
+//                           shift: {
+//                             $each: [item],
+//                             $sort: { createdDate: -1 }
+//                           },
+//                         }
+//                       },
+//                       (err, employee) => {
+//                         if (err) {
+//                           console.log(err);
+//                           callback();
+//                         } else {
+//                           callback();
+//                           // console.log(employee.shift.length);
+//                           // EmployeeSchema
+//                           //   .updateOne(
+//                           //     { employeeId: item.employeeId },
+//                           //     { $set: { currentShift: currentShift(employee.shift) } },
+//                           //     (err, raw) => {
+//                           //       if (err) {
+//                           //         console.log(err);
+//                           //         callback();
+//                           //       } else {
+//                           //         callback();
+//                           //       }
+//                           //     })
+//                         }
+//                       }
+//                     );
+//                   });
+//                 } else {
+//                   let nonExistentShift = item.shift;
+//                   nonExistentShift._id = new mongoose.Types.ObjectId();
+//                   let newShift = new EmployeeShift.shift(nonExistentShift);
+//                   newShift.save((err, doc) => {
+//                     if (err) {
+//                       console.log(err);
+//                       callback();
+//                     } else {
+//                       item.shift = doc;
+//                       item.shift.shiftId = doc._id;
+//                       delete item.shift._id;
+//                       delete item.shiftName;
+//                       EmployeeSchema.updateOne(
+//                         { employeeId: item.employeeId },
+
+//                         {
+//                           $push: {
+//                             shift: {
+//                               $each: [item],
+//                               $sort: { createdDate: -1 }
+//                             },
+//                           }
+//                         },
+//                         (err, employee) => {
+//                           if (err) {
+//                             console.log(err);
+//                             callback();
+//                           } else {
+//                             callback();
+//                             // EmployeeSchema
+//                             // .updateOne(
+//                             //   { employeeId: employeeId },
+//                             //   { $set: { currentShift: currentShift(employee.shift) } },
+//                             //   (err, raw) => {
+//                             //     if (err) {
+//                             //       console.log(err);
+//                             //       callback();
+//                             //     } else {
+//                             //       callback();
+//                             //     }
+//                             //   })
+//                           }
+//                         }
+//                       );
+//                     }
+//                   });
+//                 }
+//               }
+//             );
+//           },
+//           err => {
+//             if (err) console.log(err);
+//             else {
+//               res.status(200).json({ addedShifts: shifts.length });
+//             }
+//           }
+//         );
+//       });
+//   });
+// });
+
 router.post("/shift", (req, res) => {
   let shifts = [];
   upload(req, res, err => {
+    const header = req.headers.authorization;
+    let token;
+    if (header) {
+      token = header.split(" ");
+      token = token[1];
+    }
+
+    let hours = [];
+    let hoursFile = req.file;
+    let fileId = mongoose.Types.ObjectId();
+    let file = new FileUploads({
+      user: jwt.decode(token, RSA_KEY),
+      apiPath: req.url,
+      fileName: hoursFile.filename,
+      fileId: fileId,
+      date: new Date()
+    });
+    file.save().then(res => {});
     if (err) res.status(422).send("an Error occured");
     if (
       req.file.mimetype !== "application/vnd.ms-excel" &&
@@ -514,310 +853,122 @@ router.post("/shift", (req, res) => {
     )
       res.sendStatus(400);
     csv
-      .fromPath(req.file.path, { headers: true, ignoreEmpty: true , strictColumnHandling: true})
+      .fromPath(req.file.path, {
+        headers: true,
+        ignoreEmpty: true,
+        strictColumnHandling: true
+      })
       .on("data", data => {
-        data["_id"] = new mongoose.Types.ObjectId();
-        data["employee"] = null;
-        data["createdDate"] = new Date();
-        data["shift"] = null;
         shifts.push(data);
       })
       .on("end", () => {
-        shifts.map(i => {
-          if (
-            i[
-              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
-            ]
-          ) {
-            const valueArr = i[
-              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
-            ].split(";");
-            i["employeeId"] = valueArr[0];
-            i["shiftName"] = valueArr[1];
-            i["monday-in"] = valueArr[2];
-            i["monday-out"] = valueArr[3];
-            i["tuesday-in"] = valueArr[4];
-            i["tuesday-out"] = valueArr[5];
-            i["wednesday-in"] = valueArr[6];
-            i["wednesday-out"] = valueArr[7];
-            i["thursday-in"] = valueArr[8];
-            i["thursday-out"] = valueArr[9];
-            i["friday-in"] = valueArr[10];
-            i["friday-out"] = valueArr[11];
-            i["saturday-in"] = valueArr[12];
-            i["saturday-out"] = valueArr[13];
-            i["sunday-in"] = valueArr[14];
-            i["sunday-out"] = valueArr[15];
-            i["startDate"] = valueArr[16];
-            delete i[
-              "employeeId;shiftName;monday-in;monday-out;tuesday-in;tuesday-out;wednesday-in;wednesday-out;thursday-in;thursday-out;friday-in;friday-out;saturday-in;saturday-out;sunday-in;sunday-out;startDate"
-            ];
-          }
-          i.shift = {
-            name: i["shiftName"],
-            shift: [
-              {
-                day: 0,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["monday-in"]),
-                  timeToMinutes(i["monday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["monday-in"]),
-                endTime: timeToMinutes(i["monday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["monday-in"]),
-                  timeToMinutes(i["monday-out"])
-                )
-              },
-              {
-                day: 1,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["tuesday-in"]),
-                  timeToMinutes(i["tuesday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["tuesday-in"]),
-                endTime: timeToMinutes(i["tuesday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["tuesday-in"]),
-                  timeToMinutes(i["tuesday-out"])
-                )
-              },
-              {
-                day: 2,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["wednesday-in"]),
-                  timeToMinutes(i["wednesday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["wednesday-in"]),
-                endTime: timeToMinutes(i["wednesday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["wednesday-in"]),
-                  timeToMinutes(i["wednesday-out"])
-                )
-              },
-              {
-                day: 3,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["thursday-in"]),
-                  timeToMinutes(i["thursday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["thursday-in"]),
-                endTime: timeToMinutes(i["thursday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["thursday-in"]),
-                  timeToMinutes(i["thursday-out"])
-                )
-              },
-              {
-                day: 4,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["friday-in"]),
-                  timeToMinutes(i["friday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["friday-in"]),
-                endTime: timeToMinutes(i["friday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["friday-in"]),
-                  timeToMinutes(i["friday-out"])
-                )
-              },
-              {
-                day: 5,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["saturday-in"]),
-                  timeToMinutes(i["saturday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["saturday-in"]),
-                endTime: timeToMinutes(i["saturday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["saturday-in"]),
-                  timeToMinutes(i["saturday-out"])
-                )
-              },
-              {
-                day: 6,
-                onShift:
-                calculateTimeDifference(
-                  timeToMinutes(i["sunday-in"]),
-                  timeToMinutes(i["sunday-out"])
-                ) > 0,
-                startTime: timeToMinutes(i["sunday-in"]),
-                endTime: timeToMinutes(i["sunday-out"]),
-                scheduledHours: calculateTimeDifference(
-                  timeToMinutes(i["sunday-in"]),
-                  timeToMinutes(i["sunday-out"])
-                )
-              }
-            ]
-          };
-          i.shift.daysonShift = i.shift.shift.filter(
-            item => item.onShift
-          ).length;
-          i.shift.totalHours = i.shift.shift
-            .map(e => e.scheduledHours)
-            .reduce((a, b) => a + b);
-          return i.shift;
-        });
         async.each(
           shifts,
           (item, callback) => {
-            let extractedShift = item.shift.shift;
-            EmployeeShift.shift.find(
-              {
-                "shift.0.startTime":  extractedShift.filter(j => j.day === 0)[0].startTime,
-                "shift.0.endTime":  extractedShift.filter(j => j.day === 0)[0].endTime,
-                "shift.1.startTime":  extractedShift.filter(j => j.day === 1)[0].startTime,
-                "shift.1.endTime":  extractedShift.filter(j => j.day === 1)[0].endTime,
-                "shift.2.startTime":  extractedShift.filter(j => j.day === 2)[0].startTime,
-                "shift.2.endTime":  extractedShift.filter(j => j.day === 2)[0].endTime,
-                "shift.3.startTime":  extractedShift.filter(j => j.day === 3)[0].startTime,
-                "shift.3.endTime":  extractedShift.filter(j => j.day === 3)[0].endTime,
-                "shift.4.startTime":  extractedShift.filter(j => j.day === 4)[0].startTime,
-                "shift.4.endTime":  extractedShift.filter(j => j.day === 4)[0].endTime,
-                "shift.5.startTime":  extractedShift.filter(j => j.day === 5)[0].startTime,
-                "shift.5.endTime":  extractedShift.filter(j => j.day === 5)[0].endTime,
-                "shift.6.startTime":  extractedShift.filter(j => j.day === 6)[0].startTime,
-                "shift.6.endTime":  extractedShift.filter(j => j.day === 6)[0].endTime
-              },
-              (err, shiftDoc) => {
-                if (err) {
-                  console.log(err);
-                  callback();
-                } else if ( shiftDoc.length === 1) {
-                  shiftDoc[0].shift.map(day => {
-                    day.scheduledHours = calculateTimeDifference(
-                      day.startTime,
-                      day.endTime
-                    );
-                    return day;
-                  });
-                  shiftDoc[0].daysonShift = shiftDoc[0].shift.filter(
-                    item => item.onShift
-                  ).length;
-                  shiftDoc[0].totalHours = shiftDoc[0].shift
-                    .map(e => e.scheduledHours)
-                    .reduce((a, b) => a + b);
-                  item.shift = shiftDoc[0];
-                  item.shift.shiftId = shiftDoc[0]._id;
-                  delete item.shift._id;
-                  delete item.shiftName;
-                  delete item["monday-in"];
-                  delete item["monday-out"];
-                  delete item["tuesday-in"];
-                  delete item["tuesday-out"];
-                  delete item["wednesday-in"];
-                  delete item["wednesday-out"];
-                  delete item["thursday-in"];
-                  delete item["thursday-out"];
-                  delete item["friday-in"];
-                  delete item["friday-out"];
-                  delete item["saturday-in"];
-                  delete item["saturday-out"];
-                  delete item["sunday-in"];
-                  delete item["sunday-out"];
-                  shiftDoc[0].save().then(result => {
-                    EmployeeSchema.updateOne(
-                      { employeeId: item.employeeId },
-
-                      {
-                        $push: {
-                          shift: {
-                            $each: [item],
-                            $sort: { createdDate: -1 }
-                          },
-                        }
-                      },
-                      (err, employee) => {
-                        if (err) {
-                          console.log(err);
-                          callback();
-                        } else {
-                          callback();
-                          // console.log(employee.shift.length);
-                          // EmployeeSchema
-                          //   .updateOne(
-                          //     { employeeId: item.employeeId },
-                          //     { $set: { currentShift: currentShift(employee.shift) } },
-                          //     (err, raw) => {
-                          //       if (err) {
-                          //         console.log(err);
-                          //         callback();
-                          //       } else {
-                          //         callback();
-                          //       }
-                          //     })
-                        }
-                      }
-                    );
-                  });
-                } else {
-                  let nonExistentShift = item.shift;
-                  nonExistentShift._id = new mongoose.Types.ObjectId();
-                  let newShift = new EmployeeShift.shift(nonExistentShift);
-                  newShift.save((err, doc) => {
-                    if (err) {
-                      console.log(err);
-                      callback();
-                    } else {
-                      item.shift = doc;
-                      item.shift.shiftId = doc._id;
-                      delete item.shift._id;
-                      delete item.shiftName;
-                      EmployeeSchema.updateOne(
-                        { employeeId: item.employeeId },
-
-                        {
-                          $push: {
-                            shift: {
-                              $each: [item],
-                              $sort: { createdDate: -1 }
-                            },
-                          }
-                        },
-                        (err, employee) => {
-                          if (err) {
-                            console.log(err);
-                            callback();
-                          } else {
-                            callback();
-                            // EmployeeSchema
-                            // .updateOne(
-                            //   { employeeId: employeeId },
-                            //   { $set: { currentShift: currentShift(employee.shift) } },
-                            //   (err, raw) => {
-                            //     if (err) {
-                            //       console.log(err);
-                            //       callback();
-                            //     } else {
-                            //       callback();
-                            //     }
-                            //   })
-                          }
-                        }
-                      );
-                    }
-                  });
-                }
-              }
-            );
+            parseShift(item)
+              .then(parsed => {
+                OperationsHours.insertMany(parsed, (error, docs) => {
+                  if (error)
+                    callback({
+                      message:
+                        "There is a valid shift entered for one of the employees"
+                    });
+                  else {
+                    callback();
+                  }
+                });
+              })
+              .catch(err => {
+                callback(err);
+              });
           },
           err => {
-            if (err) console.log(err);
-            else {
-              res.status(200).json({ addedShifts: shifts.length });
-            }
+            if (err) res.status(400).json(err);
+            else
+              res
+                .status(200)
+                .json({ message: "Upload Completed without errors" });
           }
         );
       });
   });
 });
 
+function parseShift(shift) {
+  return new Promise((resolve, reject) => {
+    let returnShift = [];
+    if (shift["employeeId;startDate;1;2;3;4;5;6;7"]) {
+      const valueArr = i[
+        "employeeId;startDate;1;2;3;4;5;6;7;breakAndLunchTime"
+      ].split(";");
+      i["startDate"] = valueArr[0];
+      i["shiftName"] = valueArr[1];
+      i["1"] = valueArr[2];
+      i["2"] = valueArr[3];
+      i["3"] = valueArr[4];
+      i["4"] = valueArr[5];
+      i["5"] = valueArr[6];
+      i["6"] = valueArr[7];
+      i["7"] = valueArr[8];
+      i["breakAndLunchTime"] = valueArr[9];
+      delete i["employeeId;startDate;1;2;3;4;5;6;7;breakAndLunchTime"];
+    }
+    let shiftDate, start, end;
+    shiftDate = moment(shift.startDate);
+    start = moment()
+      .startOf("week")
+      .add(-1, "day");
+    end = moment()
+      .endOf("week")
+      .add(1, "day");
+    if (start.isBefore(shiftDate, "day") && end.isAfter(shiftDate, "day")) {
+      for (let i = 1; i < 8; i++) {
+        const date = moment(shift.startDate).add(i - 1, "day");
+        const newEmployeeHour = {};
+        newEmployeeHour.hasShift = true;
+        newEmployeeHour.shiftDay = date.day();
+        newEmployeeHour.date = date.format();
+
+        const shiftDay = shift[i].replace(/\s+/g, "");
+        if (/[offOFF]/.test(shiftDay)) {
+          newEmployeeHour.uniqueId = crypto
+            .createHash("sha256")
+            .update(shift.employeeId + "-" + newEmployeeHour.date)
+            .digest("hex");
+          newEmployeeHour.employeeId = shift.employeeId;
+          newEmployeeHour.onShift = false;
+          newEmployeeHour.shiftStartTime = null;
+          newEmployeeHour.shiftEndTime = null;
+          newEmployeeHour.shiftScheduledBreakAndLunch = null;
+          newEmployeeHour.shiftScheduledHours = 0;
+        } else {
+          let [startTime, endTime] = shiftDay.split("-");
+          newEmployeeHour.uniqueId = crypto
+            .createHash("sha256")
+            .update(shift.employeeId + "-" + newEmployeeHour.date)
+            .digest("hex");
+          newEmployeeHour.employeeId = shift.employeeId;
+          newEmployeeHour.onShift = true;
+          newEmployeeHour.shiftStartTime = timeToMinutes(startTime);
+          newEmployeeHour.shiftEndTime = timeToMinutes(endTime);
+          newEmployeeHour.shiftScheduledHours = calculateTimeDifference(
+            newEmployeeHour.shiftStartTime,
+            newEmployeeHour.shiftEndTime
+          );
+          newEmployeeHour.shiftScheduledBreakAndLunch = timeToMinutes(
+            shift.breakAndLunchTime
+          );
+        }
+        returnShift.push(newEmployeeHour);
+      }
+      resolve(returnShift);
+    } else {
+      reject({
+        message: "the shift start date must be within the current week"
+      });
+    }
+  });
+}
 function timeToMinutes(time) {
   if (time !== null && time !== undefined && time.includes(":")) {
     const str = time + "";
@@ -829,9 +980,7 @@ function timeToMinutes(time) {
   } else return null;
 }
 function calculateTimeDifference(startTime, endTime) {
-  if (
-    startTime !== null &&
-    startTime !== undefined) {
+  if (startTime !== null && startTime !== undefined) {
     if (startTime < endTime) return endTime - startTime;
     if (startTime > endTime) return 1440 - startTime + endTime;
   } else return 0;

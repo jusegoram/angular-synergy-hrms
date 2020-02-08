@@ -62,6 +62,36 @@
         </td>
       </tr>
       <tr>
+        <td colspan=2>
+            <mat-form-field appearance="outline">
+                <mat-chip-list #chipList2 aria-label="Fruit selection">
+                  <mat-chip
+                    *ngFor="let client of clients"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="removeClient(client)">
+                    {{client}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="New Client..."
+                    #clientInput
+                    [formControl]="clientsCtrl"
+                    [matAutocomplete]="clientAuto"
+                    [matChipInputFor]="chipList2"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    [matChipInputAddOnBlur]="addOnBlur"
+                    (matChipInputTokenEnd)="addClient($event)">
+                </mat-chip-list>
+                <mat-autocomplete #clientAuto="matAutocomplete" (optionSelected)="selectedClient($event)">
+                  <mat-option *ngFor="let client of filteredClients | async" [value]="client.name">
+                    {{client.name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+        </td>
+      </tr>
+      <tr>
         <td>
             <mat-form-field appearance="outline">
                 <input matInput placeholder="Enter New password" [type]="hide ? 'password' : 'text'" formControlName="password">

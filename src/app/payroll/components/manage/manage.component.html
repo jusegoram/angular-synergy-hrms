@@ -8,10 +8,6 @@
 <div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
   <mat-form-field appearance="outline">
     <mat-select placeholder="Type of Payroll" [formControl]="payrollType">
-      <!-- <mat-option *ngFor="let item of items" [value]="item.value">
-            {{item.viewValue}}
-          </mat-option> -->
-
       <mat-option value="BI-WEEKLY">
         Bi-Weekly Payroll
       </mat-option>
@@ -23,13 +19,15 @@
 
   <div class="fill-remaining-space"></div>
   <mat-form-field appearance="outline">
-    <input matInput [matDatepicker]="pickerFrom" placeholder="Get from (mm/dd/yyyy)" [formControl]="fromDate">
+    <mat-error>Please select a date that is less than 15 days old.</mat-error>
+    <input matInput [matDatepicker]="pickerFrom" [matDatepickerFilter]="dateFilterFrom" placeholder="Get from (mm/dd/yyyy)" [formControl]="fromDate">
     <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
     <mat-datepicker #pickerFrom></mat-datepicker>
   </mat-form-field>
   &nbsp;
   <mat-form-field appearance="outline">
-    <input matInput [matDatepicker]="pickerTo" placeholder="To (mm/dd/yyyy)" [formControl]="toDate">
+    <mat-error>Please select a date range that doesn't exceed 7 days.</mat-error>
+    <input matInput [matDatepicker]="pickerTo" [matDatepickerFilter]="dateFilterTo" placeholder="To (mm/dd/yyyy)" [formControl]="toDate">
     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
     <mat-datepicker #pickerTo></mat-datepicker>
   </mat-form-field>

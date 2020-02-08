@@ -1,3 +1,5 @@
+import { EditPayrollTabComponent } from './components/detail/edit-payroll/edit-payroll-tab/edit-payroll-tab.component';
+import { EditPayrollComponent } from './components/detail/edit-payroll/edit-payroll.component';
 import { PipeModule } from './../shared/pipes/pipe/pipe.module';
 import { MinuteSecondsPipe } from './../shared/pipes/minute-seconds.pipe';
 import { DetailResolver } from './components/detail/detail.resolver';
@@ -34,6 +36,7 @@ import { ConceptsComponent } from './components/concepts/concepts.component';
 import { TimeOffRequestsComponent } from './components/concepts/time-off-requests/time-off-requests.component';
 import { NewConceptComponent } from './components/concepts/new-concept/new-concept.component';
 import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
+import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls/finalized-payrolls.component';
 
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
@@ -64,7 +67,10 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     ConceptsComponent,
     TimeOffRequestsComponent,
     NewConceptComponent,
-    ConceptVerificationComponent],
+    FinalizedPayrollsComponent,
+    ConceptVerificationComponent,
+    EditPayrollComponent,
+    EditPayrollTabComponent],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef,
     {
       provide: HTTP_INTERCEPTORS,

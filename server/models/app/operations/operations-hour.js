@@ -1,4 +1,6 @@
 let mongoose = require('mongoose');
+let mongooseUniqueValidator = require('mongoose-unique-validator');
+
 let Schema = mongoose.Schema;
 
 let hhmmssSchema = new Schema({
@@ -10,20 +12,34 @@ let hhmmssSchema = new Schema({
 
 let schema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
+  uniqueId: { type: String, unique: true},
   employeeId: { type: String, required: true },
-  employeeName: {type: String, required: true},
+  hasHours: {type: Boolean, default: false},
+  hasShift: {type: Boolean, default: false},
+  employeeName: {type: String},
   billable: {type: Boolean},
-  client: {type: String, required: true},
-  campaign: {type: String, required: true},
+  client: {type: String},
+  campaign: {type: String },
+  shiftDay: { type: Number }, //new
+  onShift: { type: Boolean }, //new
+  shiftStartTime: {type: Number}, //new
+  shiftEndTime: { type: Number }, //new
+  shiftScheduledHours: {type: Number}, //new
+  shiftScheduledBreakAndLunch: {type: Number},
   dialerId: { type: String, required: false },
   date: { type: Date, required: true },
   systemHours: { type: hhmmssSchema, required: false },
-  tosHours: { type: hhmmssSchema, required: false },
+  breakHours: { type: hhmmssSchema, required: false }, //new
+  lunchHours:{ type: hhmmssSchema, required: false }, //new
+  trainingHours:{ type: hhmmssSchema, required: false }, //new
+  tosHours: { type: hhmmssSchema, required: false }, //new
   timeIn:  { type: hhmmssSchema, required: false },
-  attendance: {type: String, default: 'present'}, //present, absent, on-leave, on-vacation, unknown
+  attendance: {type: String, default: 'N/A'}, //present, absent, on-leave, on-vacation, unknown
   employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
   fileId: { type: mongoose.Schema.Types.ObjectId},
+  createdDate: { type: Date, default: Date.now},
 });
 
-schema.index({client: 1 ,campaign: 1, date: -1});
+schema.plugin(mongooseUniqueValidator);
+schema.index({employeeId: -1, client: 1 ,campaign: 1, date: -1});
 module.exports = mongoose.model('operations-hour', schema);

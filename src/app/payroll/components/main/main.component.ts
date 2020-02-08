@@ -32,6 +32,7 @@ export class MainComponent implements OnInit {
     {type: 'BI-WEEKLY', view: 'Bi-Weekly Payroll'},
     {type: 'SEMIMONTHLY', view: 'Semi-Monthly Payroll'}
   ];
+  refreshEvent: any;
   selectedType = '';
   auth: any;
   checkedRows: any;
@@ -60,7 +61,7 @@ export class MainComponent implements OnInit {
       ];
       let botomSheetRef;
       let instance;
-      this._payrollService.getPayroll(ids, '').subscribe(result => {
+      this._payrollService.getPayroll(ids, '', false).subscribe(result => {
         const employees = result;
         botomSheetRef = this._bottomSheet.open(ExportBottomSheetComponent, {
           data: {employees: employees},
@@ -69,7 +70,7 @@ export class MainComponent implements OnInit {
         botomSheetRef.afterDismissed().subscribe(e => {
           if(e !== undefined) {
             this._payrollService.savePayedPayroll(e.employees).subscribe(res => {
-              this.reloadData();
+              this.reloadData(e);
               this.openSnackBar(`Your download will start and this payed payroll will also be stored in our Database.`, 'Great, Thanks!');
             })
           }
@@ -113,15 +114,16 @@ export class MainComponent implements OnInit {
 
   getData(id) {
     this._payrollService
-    .getPayroll(id, this.selectedType)
+    .getPayroll(id, this.selectedType, false)
     .subscribe((result: any[]) => {
       this.populateTable(result);
     }, error => {
       console.log(error);
     });
   }
-  reloadData() {
-    this.populateTable(this.getData(''));
+  reloadData(e) {
+    this.refreshEvent = e;
+    this.getData('');
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {

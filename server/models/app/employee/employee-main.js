@@ -171,6 +171,7 @@ let EmployeeShiftSchema = new Schema({
 let EmployeeSchema = new Schema({
     _id: mongoose.Schema.Types.ObjectId,
     onFinalPayment: { type: Boolean, default: false},
+    payedFinalPayment: { type: Boolean, default: false},
     onVacations: { type: Boolean, default: false},
     onMaternity: { type: Boolean, default: false},
     onCSL: { type: Boolean, default: false},

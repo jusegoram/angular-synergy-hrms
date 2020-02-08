@@ -9,7 +9,12 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MatTableDataSource, MatDialog, MatSnackBar, MatBottomSheet } from '@angular/material';
+import {
+  MatTableDataSource,
+  MatDialog,
+  MatSnackBar,
+  MatBottomSheet
+} from '@angular/material';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 import { Payroll } from './Payroll';
@@ -18,7 +23,7 @@ import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-
 @Component({
   selector: 'app-manage',
   templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss'],
+  styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit {
   socialSecurityTable: any[];
@@ -27,8 +32,14 @@ export class ManageComponent implements OnInit {
   dataSource: any;
   payrollSettings: any[];
   payrollType = new FormControl('', [Validators.required]);
-  fromDate = new FormControl('', [this.dateMinimum(moment().add(-10, 'days')), Validators.required]);
-  toDate = new FormControl('', [this.dateMaximum(this.fromDate.value), Validators.required]);
+  fromDate = new FormControl('', [
+    this.dateMinimum(moment().add(-15, 'days')),
+    Validators.required
+  ]);
+  toDate = new FormControl('', [
+    this.dateMaximum(this.fromDate.value),
+    Validators.required
+  ]);
   holidays = [];
   lastPayrollSettings: any;
   currentPayrollSettings: any;
@@ -47,16 +58,50 @@ export class ManageComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet,
-    private minuteSeconds : MinuteSecondsPipe,
+    private minuteSeconds: MinuteSecondsPipe
   ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
 
+  dateFilterFrom = (d: Date): boolean => {
+    let statement = true;
+    switch (this.payrollType.value) {
+      case 'BI-WEEKLY':
+        const day = d.getDay();
+          // Prevent Saturday and Sunday from being selected.
+        statement = day === 1;
+        break;
+      case 'SEMIMONTHLY':
+        statement = true;
+        break;
+      default:
+        statement = false;
+        break;
+    }
+    return statement;
   }
 
-  isValid(){
-      console.log('executed')
-      return this.payrollType.valid && this.fromDate.valid && this.toDate.valid;
+  dateFilterTo = (d: Date): boolean => {
+    let statement = true;
+    switch (this.payrollType.value) {
+      case 'BI-WEEKLY':
+        const day = d.getDay();
+          // Prevent Saturday and Sunday from being selected.
+        statement = day === 0;
+        break;
+      case 'SEMIMONTHLY':
+        statement = true;
+        break;
+      default:
+        statement = false;
+        break;
+    }
+    return statement;
+  }
+
+  isValid() {
+    console.log('executed');
+    return this.payrollType.valid && this.fromDate.valid && this.toDate.valid;
   }
   populateTable(data) {
     this.dataSource = new MatTableDataSource(data);
@@ -82,37 +127,58 @@ export class ManageComponent implements OnInit {
           this.bonus = result[1];
           this.deductions = result[2];
           this.otherpay = result[3];
-          let debouncedHours = this.debounce( () => {
-            this._payrollService.payroll.joinEmployee(this.hours, 'hours')
-          }, 100, true);
-          let debouncedBonus = this.debounce( () => {
-            this._payrollService.payroll.joinEmployee(this.bonus, 'bonus')
-          },100,true);
-          let debouncedDeductions = this.debounce( () => {
-            this._payrollService.payroll.joinEmployee(this.deductions, 'deductions')
-          },100,true);
-          let debouncedOtherpay = this.debounce( () => {
-            this._payrollService.payroll.joinEmployee(this.otherpay, 'otherpay')
-          },100,true);
+          const debouncedHours = this.debounce(
+            () => {
+              this._payrollService.payroll.joinEmployee(this.hours, 'hours');
+            },
+            100,
+            true
+          );
+          const debouncedBonus = this.debounce(
+            () => {
+              this._payrollService.payroll.joinEmployee(this.bonus, 'bonus');
+            },
+            100,
+            true
+          );
+          const debouncedDeductions = this.debounce(
+            () => {
+              this._payrollService.payroll.joinEmployee(
+                this.deductions,
+                'deductions'
+              );
+            },
+            100,
+            true
+          );
+          const debouncedOtherpay = this.debounce(
+            () => {
+              this._payrollService.payroll.joinEmployee(
+                this.otherpay,
+                'otherpay'
+              );
+            },
+            100,
+            true
+          );
           debouncedHours();
           debouncedBonus();
           debouncedDeductions();
           debouncedOtherpay();
           setTimeout(() => {
             resolve();
-          }, 500)
+          }, 500);
         });
-    })
+    });
   }
 
-
   debounce(func, wait, immediate) {
-    var timeout;
+    let timeout;
 
     return function() {
-      var context = this,
+      let context = this,
         args = arguments;
-      var callNow = immediate && !timeout;
+      let callNow = immediate && !timeout;
       clearTimeout(timeout);
       timeout = setTimeout(function() {
         timeout = null;
@@ -121,7 +187,7 @@ export class ManageComponent implements OnInit {
         }
       }, wait);
       if (callNow) func.apply(context, args);
-    }
+    };
   }
   loadPayrollType(payroll, from, to) {
     this._payrollService
@@ -238,34 +304,45 @@ export class ManageComponent implements OnInit {
   }
 
   calculatePayroll() {
-    if(!this.calculating){
+    if (!this.calculating) {
       console.log('invoked');
       this.calculating = true;
-      this.loadOtherPayrollInfo(this.payrollType.value, this.fromDate.value, this.toDate.value).then(finished => {
-        this._payrollService.payroll.calculatePayroll();
-        this.calculating = this._payrollService.payroll.onCalculating();
-      }).catch(err => {
-      })
-    }else {
+      this.loadOtherPayrollInfo(
+        this.payrollType.value,
+        this.fromDate.value,
+        this.toDate.value
+      )
+        .then(finished => {
+          this._payrollService.payroll.calculatePayroll();
+          this.calculating = this._payrollService.payroll.onCalculating();
+        })
+        .catch(err => {});
+    } else {
       return null;
     }
   }
 
   saveToDatabase(payroll) {
-    let otherpay = this.otherpay.map(i => i._id);
-    let deduction = this.deductions.map(i => i._id);
-    let bonus = this.bonus.map(i => i._id);
+    const otherpay = this.otherpay.map(i => i._id);
+    const deduction = this.deductions.map(i => i._id);
+    const bonus = this.bonus.map(i => i._id);
 
-    this._payrollService.savePayroll(otherpay,deduction, bonus).subscribe(result => {
-      this.snackBar.open('Payroll was saved correctly', 'thank you', {
-        duration: 2000
-      });
-
-    }, err => {
-      this.snackBar.open('There was an error saving payroll', 'I will notify IT', {
-        duration: 5000
-      });
-    });
+    this._payrollService.savePayroll(otherpay, deduction, bonus).subscribe(
+      result => {
+        this.snackBar.open('Payroll was saved correctly', 'thank you', {
+          duration: 2000
+        });
+      },
+      err => {
+        this.snackBar.open(
+          'There was an error saving payroll',
+          'I will notify IT',
+          {
+            duration: 5000
+          }
+        );
+      }
+    );
   }
 
   // saveConcepts(){
@@ -299,7 +376,7 @@ export class ManageComponent implements OnInit {
     this._payrollService.deletePayroll();
   }
 
-  openExportBottomSheet(){
-      this._bottomSheet.open(ExportBottomSheetComponent);
+  openExportBottomSheet() {
+    this._bottomSheet.open(ExportBottomSheetComponent);
   }
 }

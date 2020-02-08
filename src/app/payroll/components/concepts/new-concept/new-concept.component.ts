@@ -62,7 +62,7 @@ export class NewConceptComponent implements OnInit {
   selectedEmployee: any;
   employeeConceptsColumns = ['type', 'concept', 'amount', 'date', 'status']
   filteredEmployees: Observable<Employee[]>;
-
+  conceptTotalDays: number;
   constructor(
     public fb: FormBuilder,
     private sessionService: SessionService,
@@ -81,13 +81,21 @@ export class NewConceptComponent implements OnInit {
     );
   }
 
+  isMaternity = (concept) => concept === 'Maternity';
+  isCSL = (concept) => concept === 'Certify Sick Leave'
+
   buildForm(){
     this.conceptFromGroup = this.fb.group({
-      employee: [],
-      type: [],
-      concept: [],
-      amount: [],
-      date: [],
+      employee: ['', Validators.required],
+      type: ['', Validators.required],
+      concept: ['', Validators.required],
+      amount: ['', Validators.required],
+      date: ['', Validators.required],
+      from: [],
+      to: [],
+      diagnosis: [],
+      institution: [],
+      doctorName: [],
     });
   }
 
@@ -133,9 +141,22 @@ export class NewConceptComponent implements OnInit {
       false,
       false,
       new Date(),
-      this.sessionService.getId()
+      this.sessionService.getId(),
+      form.concept === 'Maternity',
+      form.concept === 'Certify Sick Leave',
+      form.from,
+      form.to,
+      this.calculateDaysDiff(form.from, form.to),
+      form.diagnosis,
+      form.institution,
+      form.doctorName
     )
     this.saveConcept(newConcept);
+  }
+
+  calculateDaysDiff(from, to){
+    let timeDiff = to.getTime() - from.getTime();
+    return timeDiff / (1000 * 3600 * 24);
   }
 
   getConcepts(){
@@ -145,7 +166,7 @@ export class NewConceptComponent implements OnInit {
       verified: null,
       payed: false,
     }
-    this.payrollService.getConcepts(query).subscribe(res => {
+    this.payrollService.getConcepts(query.type, query.id, query.verified, query.payed).subscribe(res => {
       this.populateTable(res);
     })
   }

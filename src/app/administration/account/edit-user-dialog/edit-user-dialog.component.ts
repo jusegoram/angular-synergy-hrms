@@ -48,10 +48,20 @@ export class EditUserDialogComponent implements OnInit {
   pages: string[] = [];
   allPages: any[] = [];
 
+  clientsCtrl = new FormControl();
+  filteredClients: Observable<any[]>;
+  clients: string[] = [];
+  allClients: any[] = [];
   @ViewChild('pageInput', { static: false }) pageInput: ElementRef<
     HTMLInputElement
   >;
   @ViewChild('pageAuto', { static: false }) matAutocomplete: MatAutocomplete;
+
+  @ViewChild('clientInput', { static: false }) clientInput: ElementRef<
+    HTMLInputElement
+  >;
+  @ViewChild('clientAuto', { static: false })
+  matClientAutocomplete: MatAutocomplete;
 
   constructor(
     private fb: FormBuilder,
@@ -65,9 +75,17 @@ export class EditUserDialogComponent implements OnInit {
         page ? this._filter(page) : this.allPages.slice()
       )
     );
+
+    this.filteredClients = this.clientsCtrl.valueChanges.pipe(
+      startWith(null),
+      map((client: string | null) =>
+        client ? this._filterClient(client) : this.allClients.slice()
+      )
+    );
   }
   ngOnInit() {
     this.getAllPages();
+    this.getAllClients();
     this.items = this._adminService.userTypes;
 
     this.form = this.fb.group({
@@ -117,6 +135,7 @@ export class EditUserDialogComponent implements OnInit {
       this.pages = this.pagesPagetoName(this.data.pages);
     });
   }
+
   pagesNametoPage(name: string[]): number[] {
     const result: number[] = [];
     name.forEach(n => {
@@ -131,10 +150,20 @@ export class EditUserDialogComponent implements OnInit {
     const result: string[] = [];
     page.forEach(p => {
       const found = this.allPages.find(item => item.page === p);
-      if (found !== undefined) { result.push(found.name); }
+      if (found !== undefined) {
+        result.push(found.name);
+      }
     });
     return result;
   }
+
+  getAllClients() {
+    this._adminService.getClient().subscribe(result => {
+      this.allClients = result;
+      this.clients = this.data.clients;
+    });
+  }
+
   onSave() {
     const formValue = this.form.value;
     const user = {
@@ -143,6 +172,7 @@ export class EditUserDialogComponent implements OnInit {
       lastName: formValue.ln,
       username: formValue.username,
       pages: this.pagesNametoPage(this.pages),
+      clients: this.clients,
       role: formValue.role,
       rights: {
         edit: this.edit,
@@ -208,6 +238,50 @@ export class EditUserDialogComponent implements OnInit {
     const filterValue = value.toString().toLowerCase();
     return this.allPages.filter(page => {
       return page['name'].toLowerCase().includes(filterValue);
+    });
+  }
+
+  addClient(event: MatChipInputEvent): void {
+    // Add page only when MatAutocomplete is not open
+    // To make sure this does not conflict with OptionSelected Event
+    if (!this.matClientAutocomplete.isOpen) {
+      const input = event.input;
+      const value = event.value;
+
+      // Add our page
+      if ((value || ('' && !this.clients.includes(value))).trim()) {
+        this.clients.push(value.trim());
+      }
+
+      // Reset the input value
+      if (input) {
+        input.value = '';
+      }
+
+      this.clientsCtrl.setValue(null);
+    }
+  }
+
+  removeClient(client: string): void {
+    const index = this.clients.indexOf(client);
+
+    if (index >= 0) {
+      this.clients.splice(index, 1);
+    }
+  }
+
+  selectedClient(event: MatAutocompleteSelectedEvent): void {
+    if (!this.clients.includes(event.option.viewValue)) {
+      this.clients.push(event.option.viewValue);
+    }
+    this.clientInput.nativeElement.value = '';
+    this.clientsCtrl.setValue(null);
+  }
+
+  private _filterClient(value: string): any[] {
+    const filterValue = value.toString().toLowerCase();
+    return this.allClients.filter(client => {
+      return client['name'].toLowerCase().includes(filterValue);
     });
   }
 }

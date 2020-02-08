@@ -168,22 +168,15 @@ router.get('/company', function (req, res, next) {
 router.get('/shift', function (req, res, next) {
   var fields = [
       'employeeId',
-      'shiftName',
-      'monday-in',
-      'monday-out',
-      'tuesday-in',
-      'tuesday-out',
-      'wednesday-in',
-      'wednesday-out',
-      'thursday-in',
-      'thursday-out',
-      'friday-in',
-      'friday-out',
-      'saturday-in',
-      'saturday-out',
-      'sunday-in',
-      'sunday-out',
       'startDate',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      'breakAndLunchTime'
   ];
 
   var csv = json2csv({ data: '', fields: fields });

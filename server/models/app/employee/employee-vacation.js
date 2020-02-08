@@ -2,23 +2,17 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let EmployeeVacation = new Schema({
-  employee: {},
-  employeeId: {},
-  from: {},
-  to: {},
-  isPayed: {},
-  reason: {},
+  employee: {type: mongoose.Schema.Types.ObjectId},
+  employeeId: {type: Number},
+  from: {type: Date},
+  to: {type: Date},
+  amount: {type: Number},
+  isPayed: {type: Boolean},
+  createdDate: {type: Date, default: Date.now}
 });
-
+EmployeeVacation.index({employeeId: -1, isPayed: -1});
 const employeeVacation = mongoose.model('Employee-Vacation', EmployeeVacation);
 
-employeeVacation.statics.latestVacation =   function (employeeid, callback) {
-  this
-  .find({employeeId: employeeid})
-  .sort({"from": -1})
-  .limit(1)
-  .exec(callback)
-}
 
 module.exports = {
   employeeVacation

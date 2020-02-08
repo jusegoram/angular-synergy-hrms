@@ -33,7 +33,7 @@ export class ConceptVerificationComponent implements OnInit {
   buildVerificationTable(data){
     this.selection = new SelectionModel(true, []);
     this.verificationTable = null;
-    this.verificationTable = new MatTableDataSource(data)
+    this.verificationTable = new MatTableDataSource(data);
   }
 
   buildVerifiedTable(data){
@@ -47,11 +47,7 @@ export class ConceptVerificationComponent implements OnInit {
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.verificationTable.data.forEach(row => this.selection.select(row));
-  }
+
 
   getUnverifiedConcepts(){
     let type = this.selectedConceptForVerification;
@@ -61,7 +57,7 @@ export class ConceptVerificationComponent implements OnInit {
       payed: false,
       verified: false,
     }
-    this.payrollService.getConcepts(query).subscribe(res => {
+    this.payrollService.getConcepts(query.type, query.id, query.verified, query.payed).subscribe(res => {
       this.buildVerificationTable(res);
     })
   }
@@ -73,7 +69,7 @@ export class ConceptVerificationComponent implements OnInit {
       payed: false,
       verified: true,
     }
-    this.payrollService.getConcepts(query).subscribe(res => {
+    this.payrollService.getConcepts(query.type, query.id, query.verified, query.payed).subscribe(res => {
       this.buildVerifiedTable(res);
     })
   }

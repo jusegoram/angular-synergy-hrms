@@ -72,14 +72,20 @@ router.post("/hours", (req, res) => {
             hour["dialerId"] = valueArr[1];
             hour["date"] = valueArr[2];
             hour["systemHours"] = valueArr[3];
-            hour["tosHours"] = valueArr[4];
-            hour["timeIn"] = valueArr[5];
+            hour["breakHours"] = valueArr[4];
+            hour["lunchHours"] = valueArr[5];
+            hour["trainingHours"] = valueArr[6];
+            hour["tosHours"] = valueArr[7];
+            hour["timeIn"] = valueArr[8];
             delete hour["employeeId;dialerId;date;systemHours;tosHours;timeIn"];
           }
           hour.fileId = fileId;
+          hour.systemHours = splitTimetoHours(hour.systemHours);
+          hour.breakHours = splitTimetoHours(hour.breakHours);
+          hour.lunchHours = splitTimetoHours(hour.lunchHours);
+          hour.trainingHours = splitTimetoHours(hours.trainingHours);
           hour.tosHours = splitTimetoHours(hour.tosHours);
           hour.timeIn = splitTimetoHours(hour.timeIn);
-          hour.systemHours = splitTimetoHours(hour.systemHours);
           return hour;
         });
         let correctedHours = [];
@@ -97,33 +103,59 @@ router.post("/hours", (req, res) => {
                 (error, emp) => {
                   if (error) console.log(error);
                   if (emp !== null) {
-                    OperationsHours.findOne(
-                      { employeeId: hour.employeeId, date: hour.date },
-                      (error, doc) => {
-                        if (error) {
-                          console.log(error);
-                          cb();
-                        }
-                        if (doc === null) {
-                          hour.employee = emp._id;
-                          hour.employeeName =
-                            emp.firstName + " " + emp.lastName;
-                          hour.client = emp.company.client;
-                          hour.campaign = emp.company.campaign;
-                          hour.billable = emp.payroll
-                            ? emp.payroll.billable
-                            : null;
-                          correctedHours.push(hour);
-                          cb();
-                        } else {
-                          incorrectHours.push(hour);
-                          cb();
-                        }
+                    // OperationsHours.findOne(
+                    //   { employeeId: hour.employeeId, date: hour.date },
+                    //   (error, doc) => {
+                    //     if (error) {
+                    //       console.log(error);
+                    //       cb();
+                    //     }
+                    //     if (doc === null) {
+                    //       incorrectHours.push(hour);
+                    //       cb();
+                    //     } else {
+                    //       doc.employee = emp._id;
+                    //       doc.employeeName =
+                    //         emp.firstName + " " + emp.lastName;
+                    //       doc.client = emp.company.client;
+                    //       doc.campaign = emp.company.campaign;
+                    //       doc.billable = emp.payroll
+                    //         ? emp.payroll.billable
+                    //         : null;
+                    //       correctedHours.push(hour);
+                    //       cb();
+                    //     }
+                    //   }
+                    // );
+
+                    OperationsHours.updateOne({ employeeId: hour.employeeId, date: hour.date }, {$set: {
+                      employeeId: hour.employeeId,
+                      employee: emp._id,
+                      employeeName: emp.firstName + " " + emp.lastName,
+                      client: emp.company.client,
+                      campaign: emp.company.campaign,
+                      billable: emp.payroll? emp.payroll.billable: null,
+                      dialerId: hour.dialerId,
+                      date: hour.date,
+                      systemHours: hour.systemHours,
+                      breakHours: hour.breakHours,
+                      lunchHours: hour.lunchHours,
+                      trainingHours: hour.trainingHours,
+                      tosHours: hour.tosHours,
+                      timeIn: hour.timeIn,
+                      hasHours: true
+                    }}, (err, raw)=> {
+                      if(err){
+                      console.log(err);
+                      cb();
+                    }
+                      else {
+                        correctedHours.push(hour);
+                        cb();
                       }
-                    );
+                    })
                   } else {
                     incorrectHours.push(hour);
-                    console.log("its here");
                     cb();
                   }
                 }
@@ -131,17 +163,7 @@ router.post("/hours", (req, res) => {
             },
             err => {
               if (correctedHours.length > 0)
-                OperationsHours.create(correctedHours)
-                  .then(h => {
-                    res
-                      .status(200)
-                      .json({ uploaded: h, error: incorrectHours });
-                  })
-                  .catch(err =>
-                    res
-                      .status(400)
-                      .json({ error: err, incorrectHours: incorrectHours })
-                  );
+               res.status(200).json({correctedHours: correctedHours})
               if (correctedHours.length === 0)
                 res.status(400).json({ incorrectHours: incorrectHours });
             }

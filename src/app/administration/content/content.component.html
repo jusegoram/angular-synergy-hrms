@@ -11,7 +11,7 @@
     <div class="mat-card-top">
       <mat-card class="container pa-1">
         <h2> Menus </h2>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="width: 100%">
             <mat-select color="primary" placeholder="Menu Items" [(ngModel)]="selectedMenu" name="item">
                 <mat-option *ngFor="let menu of menus" [value]="menu">
                   {{menu.name}}
@@ -19,77 +19,104 @@
               </mat-select>
         </mat-form-field>
 
-        <mat-card class="menuCard pa-1">
-            <mat-form-field style="width:31%; margin: 2px">
-                <input matInput placeholder="Link State" [(ngModel)]="selectedMenu.state">
-              </mat-form-field>
+        <div class="menuCard pa-1">
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+                <mat-form-field appearance="outline" style="width:100%;">
+                    <mat-label>&nbsp;&nbsp;URL State</mat-label>
+                      <input matInput placeholder="" [(ngModel)]="selectedMenu.state">
+                      <span style="position: absolute; margin-top: -17px; margin-left: -5px;" matPrefix>/&nbsp;</span>
+                    </mat-form-field>
 
-              <mat-form-field style="width:31%; margin: 2px">
-                  <input matInput placeholder="Name" [(ngModel)]="selectedMenu.name">
-                </mat-form-field>
+                    <mat-form-field appearance="outline" style="width:100%;">
+                        <mat-label>Menu Item Name</mat-label>
+                        <input matInput placeholder="Name" [(ngModel)]="selectedMenu.name">
+                      </mat-form-field>
 
-                <mat-form-field style="width:31%;  margin: 2px">
-                    <input matInput placeholder="Icon" [(ngModel)]="selectedMenu.icon">
-                  </mat-form-field>
-                  <mat-form-field style="width:100%">
+                      <mat-form-field  appearance="outline" style="width:100%;">
+                          <mat-label>Material Icon Name</mat-label>
+                          <input matInput placeholder="Icon" [(ngModel)]="selectedMenu.icon">
+                        </mat-form-field>
+            </div>
+                  <mat-form-field appearance="outline" style="width:100%">
+                    <mat-label>Menu Type</mat-label>
                       <mat-select placeholder="Type" [(ngModel)]="selectedMenu.type">
                           <mat-option value="link">
-                            Link (without submenu)
+                            Link ( without submenu )
                           </mat-option>
                           <mat-option value="sub">
-                            Menu (with submenu)
+                            Menu ( with submenu )
                           </mat-option>
                         </mat-select>
                   </mat-form-field>
 
-            <div *ngIf="selectedMenu.type === 'sub'; else addChildren">
+            <div *ngIf="selectedMenu.type === 'sub'; else addChildren" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
+                <mat-card-subtitle fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0px">
+                    MENU ITEM CHILDREN
+                </mat-card-subtitle>
+              <mat-divider
+                [inset]="true">
+              </mat-divider>
               <mat-accordion *ngFor="let child of selectedMenu.children">
                 <mat-expansion-panel>
                   <mat-expansion-panel-header>
                     {{child.name}}
                   </mat-expansion-panel-header>
-                    <mat-form-field>
-                      <input matInput placeholder="name" [(ngModel)]="child.name">
-                    </mat-form-field>
-                    <mat-form-field>
-                      <input matInput placeholder="Link State" [(ngModel)]="child.state">
-                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+                        <mat-form-field appearance="outline">
+                            <mat-label> Child Name </mat-label>
+                            <input matInput placeholder="Name" [(ngModel)]="child.name">
+                          </mat-form-field>
+                          <mat-form-field appearance="outline">
+                              <mat-label> Child URL State </mat-label>
+                            <input matInput placeholder="URL State" [(ngModel)]="child.state">
+                          </mat-form-field>
+                    </div>
                 </mat-expansion-panel>
               </mat-accordion>
-              <mat-form-field>
-                <input matInput #childName placeholder="name">
-              </mat-form-field>
-              <mat-form-field>
-                <input matInput #childState placeholder="state">
-              </mat-form-field>
-              <button mat-button (click)="onAddSubmenu(childName.value, childState.value)"><mat-icon>add</mat-icon> Add Submenu</button>
+              <p></p>
+              <mat-divider
+              [inset]="true">
+            </mat-divider>
+
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+                  <mat-form-field appearance="outline">
+                      <mat-label> Child Name </mat-label>
+                      <input matInput #childName placeholder="Name">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label> Child URL State </mat-label>
+                      <input matInput #childState placeholder="URL State">
+                    </mat-form-field>
+                    <button mat-flat-button class="submenu-button" color='primary' (click)="onAddSubmenu(childName.value, childState.value)">ADD SUBMENU</button>
+              </div>
             </div>
 
           <ng-template #addChildren>
 
           </ng-template>
           <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-            <label>Page ID:</label>
-            <label>&nbsp;{{selectedMenu.page }},&nbsp;</label>
+            <mat-form-field appearance="outline">
+                <mat-label>Page ID</mat-label>
+                <input matInput placeholder="Enter Page ID" type="number" [(ngModel)]="this.selectedMenu.page">
+              </mat-form-field>
+              <div class="fill-remaining-space"></div>
+              <mat-form-field appearance="outline">
+                <mat-label>Menu Item Position</mat-label>
+                <input matInput placeholder="Enter Position value" type="number" [(ngModel)]="this.selectedMenu.position">
+              </mat-form-field>
           </div>
 
-          <mat-form-field appearance="outline">
-            <input matInput placeholder="Enter Page ID" type="number" [(ngModel)]="this.selectedMenu.page">
-          </mat-form-field>
-          <div class="fill-remaining-space"></div>
-          <mat-form-field>
-            <input matInput placeholder="Enter Position value" type="number" [(ngModel)]="this.selectedMenu.position">
-          </mat-form-field>
-        </mat-card>
+
+        </div>
         <ng-container *ngIf="selectedMenu._id === 'new'; else elseTemplate">
-            <button color="primary" mat-button (click)="onAdd()"><mat-icon>add</mat-icon> &nbsp; Add</button>
+            <button color="primary" mat-stroked-button (click)="onAdd()">ADD NEW MENU</button>
         </ng-container>
         <ng-template #elseTemplate>
-            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="80%">
 
-              <button color="primary" mat-button (click)="onSave()"><mat-icon>save</mat-icon> &nbsp; SAVE</button>
-              <div class="fill-remaining-space"></div>
-              <button mat-icon-button color='warn' (click)="onDelete()"><mat-icon>delete</mat-icon></button>
+              <button color="primary" mat-stroked-button (click)="onSave()">SAVE</button>
+
+              <button mat-icon-button color='warn' (click)="onDelete()">DELETE</button>
 
             </div>
         </ng-template>

@@ -1,308 +1,242 @@
+import { EmployeeService } from './../../employee.service';
+import {
+  MatTableDataSource,
+  MatPaginator,
+  MatSnackBar
+} from '@angular/material';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
   Component,
   OnInit,
-  Input,
-  SimpleChange,
-  SimpleChanges,
   OnChanges,
+  SimpleChanges,
+  SimpleChange,
+  Input,
   ViewChild
 } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators
-} from '../../../../../node_modules/@angular/forms';
-import {
-  MatTableDataSource,
-  MatSnackBar,
-  MatPaginator
-} from '../../../../../node_modules/@angular/material';
+import moment from 'moment';
 
 @Component({
   selector: 'shift',
   templateUrl: './shift.component.html',
-  styleUrls: ['./shift.component.css']
+  styleUrls: ['./shift.component.scss']
 })
 export class ShiftComponent implements OnInit, OnChanges {
   @Input() employee: any;
   @Input() authorization: any;
+
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  dataSource: any = [];
-  approvedUpdatesDataSource: any = [];
-  approvedUpdatesDisplayedColumns = ['reason', 'shift', 'effectiveDate', 'action'];
-  approvedUpdatesForm: FormGroup;
-  currentShift: any;
-  shifts: any = [];
-  today = Date.now();
-  wpForm: FormGroup;
-  displayedColumns = ['shiftName', 'startDate', 'endDate', 'createdDate'];
-  weekStart: Date;
-  weekEnd: Date;
+  onFirstLoad = {previousPageIndex: 0, pageIndex: 0, pageSize: 7};
+  dayMap = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday'
+  ];
+  items = ['PRESENT', 'LATE', 'ABSENT', 'ON LEAVE', 'ON VACATIONS', 'N/A'];
+  startOfWeek = moment().startOf('week');
+  endOfWeek = moment()
+    .endOf('week')
+    .add(1, 'day');
+  searchForm: FormGroup;
+  dataSource: MatTableDataSource<unknown[]>;
+  tableColumns = [
+    'day',
+    'status',
+    'attendance',
+    'shift',
+    'scheduledHours',
+    'workedHours',
+    'scheduledLunchBreak',
+    'lunchBreak',
+    'action'
+  ];
+
+  totalSched: any;
+  totalReal: { hh: number; mm: number; ss: number; value: number; valueString: string; };
+  totalSchedLB: any;
+  totalRealL: { hh: number; mm: number; ss: number; value: number; valueString: string; };
+  totalRealB: { hh: number; mm: number; ss: number; value: number; valueString: string; };
   constructor(
-    private _employeeService: EmployeeService,
     private fb: FormBuilder,
-    private snackbar: MatSnackBar
-  ) {}
+    private _employeeService: EmployeeService,
+    private sb: MatSnackBar
+  ) {
+    this.buildForm(this.startOfWeek, this.endOfWeek);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     const employee: SimpleChange = changes.employee;
-    if (employee.currentValue.shift.length !== 0) {
+    if (employee) {
       this.populateTable(employee.currentValue.shift);
-      const employeeShifts: any = employee.currentValue.shift;
-      const employeeShift: any[] =
-        employeeShifts[0].shift;
-      const shift = employeeShift.shift;
-      this.populateTable1(shift);
     }
   }
+  ngOnInit() {}
 
-  ngOnInit() {
-    this._employeeService.getShift().subscribe(result => {
-      this.shifts = result;
-    });
-    this.addActionColumn();
-    this.buildForm();
-    this.buildApprovedUpdatesForm();
-    [this.weekStart, this.weekEnd] = this.getWeekDates();
-    this._employeeService.getApprovedShiftUpdates(this.employee.employeeId, this.weekStart, this.weekEnd).subscribe(res => {
-      this.populateApprovedUpdates(res);
+  buildForm(start, end) {
+    this.searchForm = this.fb.group({
+      fromDate: [start.toDate(), Validators.required],
+      toDate: [end.toDate(), Validators.required]
     });
   }
-  addActionColumn() {
-    if (this.authorization.role === 9999) {
-      this.displayedColumns.push('action');
-    }
-  }
-  buildForm() {
-    this.wpForm = this.fb.group({
-      shift: [],
-      createdDate: []
-    });
+  populateTable(shift) {
+    shift.map(obj => ({ ...obj, readonly: false }));
+    this.dataSource = new MatTableDataSource(shift);
+    this.dataSource.paginator = this.paginator;
+    this.onPageChange(this.onFirstLoad);
   }
   myFilter = (d: Date): boolean => {
-    const [from, to] = this.getWeekDates();
-    return d >= from &&  d <= to;
-  }
-  getNextDate(param: number): Date {
-    const day = param + 1;
-    const d = new Date();
-    d.setDate(d.getDate() - d.getDay() + day);
-    return d;
-  }
+    const day = d.getDay();
+    // Prevent Saturday and Sunday from being selected.
+    return day === 0 || day === 1 || day === 6;
+  };
 
-  compareDate(date: Date): boolean {
-    const datenow = new Date();
-    if (datenow.getDay() === date.getDay()) {
-      return true;
-    } else {
-      return false;
-    }
+  onEdit(item) {
+    item.readonly = !item.readonly;
   }
-  getDayName(param: number): string {
-    let name = 'Monday';
-    switch (param) {
-      case 1:
-        name = 'Tuesday';
-        break;
-      case 2:
-        name = 'Wednesday';
-        break;
-      case 3:
-        name = 'Thursday';
-        break;
-      case 4:
-        name = 'Friday';
-        break;
-      case 5:
-        name = 'Saturday';
-        break;
-      case 6:
-        name = 'Sunday';
-        break;
-      default:
-        name = name;
-        break;
-    }
-    return name;
-  }
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
-  }
-  onSave() {
-    const shift = JSON.parse(JSON.stringify(this.wpForm.value.shift));
-    shift.shiftId = shift._id;
-    delete shift._id;
-
-    const employeeShift = {
-      employeeId: this.employee.employeeId,
-      employee: this.employee._id,
-      createdDate: new Date(),
-      startDate: this.wpForm.value.createdDate,
-      endDate: null,
-      shift: shift,
-      current:
-        this.wpForm.value.createdDate >
-        new Date(
-          this.dataSource &&
-          this.dataSource.data &&
-          this.dataSource.data.length > 0
-            ? this.dataSource.data[0].startDate
-            : '12/12/2999'
-        ),
-      first: !this.dataSource.data
-    };
-
-    this._employeeService.saveShift(employeeShift).subscribe(
-      (result: any) => {
-        const wp = this.shifts.filter(
-          item => item._id === result.shift.shiftId
-        );
-        result.shift = wp[0];
-        this.populateTable(result);
-        if (employeeShift.current || employeeShift.first) {
-          this.populateTable1(result.shift.shift);
-        }
-        this.openSuccess();
-      },
-      error => {
-        this.openError();
-      }
+  onSave(item) {
+    item.shiftScheduledHours = this.calculateTimeDifference(
+      item.shiftStartTime,
+      item.shiftEndTime
     );
-  }
-  populateTable(event: any) {
     if (
-      this.dataSource &&
-      this.dataSource.data &&
-      this.dataSource.data.length >= 0
+      item.shiftScheduledHours === 0 ||
+      item.shiftScheduledHours === undefined
     ) {
-      const data = this.dataSource.data;
-      data.unshift(event);
-      this.dataSource.data = data;
+      item.onShift = false;
     } else {
-      this.dataSource = new MatTableDataSource(event);
-      this.dataSource.paginator = this.paginator;
+      item.onShift = true;
     }
-  }
-  transformTime(param): string {
-    let result = '00:00';
-    if (param !== null) {
-      const stored = parseInt(param, 10);
-      const hours = Math.floor(stored / 60);
-      const minutes = stored - hours * 60;
-      const fixedMin = minutes === 0 ? '00' : minutes;
-      result = hours + ':' + fixedMin;
-      return result;
-    } else return result;
-  }
-  populateTable1(event: any) {
-    event.forEach(element => {
-      element.nextDate = this.getNextDate(element.day);
-      element.dayName = this.getDayName(element.day);
-      element.startTimeString = this.transformTime(element.startTime);
-      element.endTimeString = this.transformTime(element.endTime);
-    });
-    this.currentShift = new MatTableDataSource(event);
-  }
-  openSuccess() {
-    this.openSnackBar('Great! Everything was done correctly', 'Ok');
-  }
-  openError() {
-    this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
-  }
-  openSnackBar(message: string, action: string) {
-    this.snackbar.open(message, action, {
-      duration: 5000
-    });
-  }
-// FIXME: The delete shift function needs to be updated to the new database structure.
-  deleteShift(shift: object) {
-    this._employeeService.deleteShift(shift).subscribe(
-      (result: any) => {
-        this.dataSource = undefined;
-        this.populateTable(result.shift);
-        this.snackbar.open(
-          'Employee information updated successfully',
-          'thank you',
-          {
-            duration: 2000
-          }
+    if (item.shiftStartTime === undefined ||
+        item.shiftEndTime === undefined ||
+        item.shiftScheduledHours > 720 ||
+        item.shiftStartTime === item.shiftEndTime) {
+      this.openSB(
+        'Woops! An Error ocurred: Please check that the hours are in 24 Hour format(HH:MM)'
+      );
+    } else {
+      const shiftDate = moment(item.date),
+        now = moment();
+      //FIXME: CHANGE IS AFTER TO IS BEFORE.
+      if (shiftDate.isBefore(now, 'day')) {
+        this.openSB(
+          `Woops! An Error ocurred: You can't modify the shift of a day in the past`
         );
-      },
-      error => {
-        this.snackbar.open(
-          'Error updating information, please try again or notify the IT department',
-          'Try again',
-          {
-            duration: 2000
+      } else {
+        if(item.shiftStartTime === 0 && item.shiftEndTime === 0){ item.shiftScheduledBreakAndLunch = 0; }
+        this._employeeService.updateEmployeeShift(item).subscribe(result => {
+          if (result) {
+            item.readonly = !item.readonly;
+            this.onPageChange(this.onFirstLoad);
+            this.openSB(
+              'Perfect! The shift was updated successfully: Please refresh to verify'
+            );
           }
-        );
+        });
       }
-    );
-  }
-  getWeekDates() {
-    const now = new Date();
-    const dayOfWeek = now.getDay(); //0-6
-    const numDay = now.getDate();
-
-    const start = new Date(now); //copy
-    start.setDate(numDay - dayOfWeek);
-    start.setHours(0, 0, 0, 0);
-
-    const end = new Date(now); //copy
-    end.setDate(numDay + (7 - dayOfWeek));
-    end.setHours(0, 0, 0, 0);
-
-    return [start, end];
-  }
-
-  buildApprovedUpdatesForm() {
-    this.approvedUpdatesForm = this.fb.group({
-      reason: ['', Validators.required],
-      timeIn: ['', Validators.required],
-      timeOut: ['', Validators.required],
-      effectiveDate: ['', Validators.required],
-    });
-  }
-  saveApprovedUpdate(){
-    let query = this.approvedUpdatesForm.value;
-    query.employeeId = this.employee.employeeId;
-    this._employeeService.saveApprovedShiftUpdates(query).subscribe(res => {
-        this.approvedUpdatesDataSource = undefined;
-        this.populateApprovedUpdates(res);
-      this.approvedUpdatesForm.reset();
-    })
-  }
-  deleteApprovedUpdate() {
-  }
-  populateApprovedUpdates(data) {
-    if (this.approvedUpdatesDataSource && this.approvedUpdatesDataSource.data && this.approvedUpdatesDataSource.data.length > 0) {
-      this.approvedUpdatesDataSource.data.push(data);
-      this.joinUpdatesAndCurrentShift();
-
-    } else {
-      this.approvedUpdatesDataSource = new MatTableDataSource(data);
-      this.joinUpdatesAndCurrentShift();
     }
   }
 
-// 0 1 2 3 4 5 6
-// s m t w t f s
+  onSearch(fromDate, toDate) {
+    this._employeeService
+      .getEmployeeShift(this.employee.employeeId, fromDate, toDate)
+      .subscribe(result => {
+        this.populateTable(result);
+      });
+  }
 
-// 0 1 2 3 4 5 6
-// m t w t f s s
-  joinUpdatesAndCurrentShift(){
-    this.approvedUpdatesDataSource.data.forEach(update => {
-        let day = new Date(update.effectiveDate).getDay();
-        day = day === 0 ? 6 : day - 1;
+  onPageChange(e) {
+    console.log(e);
+    if(this.dataSource.data.length > 0) {
+      const currentDSIndex = e.pageIndex * e.pageSize;
+      let currentPage = [];
+      for (let i = 0; i < e.pageSize; i++) {
+        currentPage.push(this.dataSource.data[currentDSIndex + i]);
+      }
+      this.totalSched = currentPage.reduce((p, c) => p + c.shiftScheduledHours, 0);
+      this.totalReal = this.calculateTotalHours(currentPage.map(i => i.systemHours));
+      this.totalSchedLB = currentPage.reduce((p, c) => p + c.shiftScheduledBreakAndLunch, 0);
+      this.totalRealL = this.calculateTotalHours(currentPage.map(i => i.lunchHours));
+      this.totalRealB = this.calculateTotalHours(currentPage.map(i => i.breakHours));
+    }
+  }
+  calculateTotalHours(arr: any[]) {
+    console.log(arr);
+    if (arr.length > 0) {
+      const totaled: any = {
+        hh: Number,
+        mm: Number,
+        ss: Number
+      };
+      totaled.hh = arr.reduce((p, c) => p + c.hh, 0);
+      totaled.mm = arr.reduce((p, c) => p + c.mm, 0);
+      totaled.ss = arr.reduce((p, c) => p + c.ss, 0);
+      const time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
+      let hrs = ~~(time / 3600);
+      let mins = ~~((time % 3600) / 60);
+      let secs = ~~time % 60;
+      let ret = '';
 
-        console.log(day, update);
-        this.currentShift.data[day].startTimeString = update.timeIn;
-        this.currentShift.data[day].endTimeString = update.timeOut;
-        this.currentShift.data[day].onShift = update.timeIn.includes(':');
-    });
+      if (hrs > 0) {
+        ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+      }
+
+      ret += '' + mins + ':' + (secs < 10 ? '0' : '');
+      ret += '' + secs;
+      const correctedTotal = {
+        hh: hrs,
+        mm: mins,
+        ss: secs,
+        value: time / 3600,
+        valueString: ret
+      };
+      return correctedTotal;
+    } else {
+      const finished = {
+        hh: 0,
+        mm: 0,
+        ss: 0,
+        value: 0,
+        valueString: '00:00:00'
+      };
+      return finished;
+    }
+  }
+
+  calculateTimeDifference(startTime, endTime) {
+    if (startTime !== null && startTime !== undefined && endTime !== null && endTime !== undefined) {
+      if (startTime < endTime) {
+        return endTime - startTime;
+      }
+      if (startTime > endTime) {
+        return 1440 - startTime + endTime;
+      }
+    } else {
+      return 0;
+    }
+  }
+  timeToMinutes(time: string) {
+    if (time.includes(':') && time.length >= 4) {
+      const splitted = time.split(':'),
+        hours = parseInt(splitted[0], 10) * 60,
+        minutes = hours + parseInt(splitted[1], 10);
+      if (splitted[1].length > 1) {
+        return minutes;
+      }
+    }else {
+      if (time.length > 5) {
+        this.openSB(`Woops! An Error ocurred:
+        One of the time fields has an error,
+        please check that the time format is in 24h(24:00) Format.`);
+      }
+      return 0;
+    }
+  }
+  openSB(message) {
+    this.sb.open(message, 'Thank you!', { duration: 10000 });
   }
 }

@@ -55,6 +55,13 @@ export const AppRoutes: Routes = [
         canLoad: [SessionGuard]
       },
       {
+        path: 'hr',
+        canActivate: [SessionGuard],
+        canActivateChild: [SessionGuard],
+        loadChildren: () => import('./hr/hr.module').then(m => m.HrModule),
+        canLoad: [SessionGuard]
+      },
+      {
         path: 'admin',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],

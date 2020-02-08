@@ -99,6 +99,7 @@ export class ReportComponent implements OnInit {
   ngOnInit() {
     this.employeeService.getClient().subscribe(data => (this.clients = data));
     this.buildForm();
+    console.log(this.employeeService.getDecodedToken());
   }
   buildForm() {
     this.reportForm = this.fb.group({

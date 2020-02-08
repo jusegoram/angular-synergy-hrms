@@ -1,0 +1,33 @@
+.onshift {
+  background-color: lightgreen;
+}
+
+.dayoff {
+  background-color: lightcoral;
+}
+
+.today {
+  background-color: lightgray;
+}
+
+.not-today {
+  background-color: white;
+}
+
+.editable{
+  text-align: center;
+  font-size: small;
+  width: 35px;
+  border:none;
+  outline:none;
+  background:transparent;
+}
+.editable-border{
+  text-align: center;
+  font-size: small;
+  width: 35px;
+  background:transparent;
+}
+tr.mat-footer-row {
+  font-weight: bold;
+}

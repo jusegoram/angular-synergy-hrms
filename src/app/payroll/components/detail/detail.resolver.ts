@@ -14,7 +14,7 @@ export class DetailResolver implements Resolve<Payroll> {
   }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payroll> {
-    return this._payrollService.getPayroll(route.queryParams.id, '');
+    return this._payrollService.getPayroll(route.queryParams.id, '', false);
   }
 
 }

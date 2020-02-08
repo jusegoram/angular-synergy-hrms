@@ -103,6 +103,7 @@ export class SessionService {
     dec.rights.role = this.getRole();
     return dec.rights;
   }
+
   clearRole() {
     this._login = null;
     this._role = null;

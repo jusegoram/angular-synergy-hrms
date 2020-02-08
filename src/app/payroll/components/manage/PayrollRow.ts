@@ -309,28 +309,12 @@ export class PayrollRow {
   calculateTotalOtherpay() {
     return new Promise((res, rej) => {
       if (this.otherpay.length > 0) {
-        for (let i = 0; i < this.otherpay.length; i++) {
-          const element = this.otherpay[i];
-          switch (element.reason) {
-            case 'CSL':
-              this.csl.push(element);
-              break;
-            case 'MATERNITY':
-              this.maternity.push(element);
-              break;
-            case 'VACATIONS':
-              this.vacations.push(element);
-              break;
-            default:
-              break;
-          }
-        }
         if(this.otherpay.length === 1 ) {
           this.totalOtherpay = this.otherpay[0].amount;
           res(this.totalOtherpay);
         }
         if(this.otherpay.length > 1) {
-          const sum = this.otherpay.reduce((x, y) => x.amount + y.amount);
+          const sum = this.otherpay.reduce((x, y) => x + y.amount, 0);
           this.totalOtherpay = sum;
           res(this.totalOtherpay);
         }
@@ -347,7 +331,7 @@ export class PayrollRow {
         res(this.totalBonusPay);
       }
       if(this.bonus.length > 1) {
-        const sum = this.bonus.reduce((x, y) => x.amount + y.amount);
+        const sum = this.bonus.reduce((x, y) => x + y.amount, 0);
         this.totalBonusPay = sum;
         res(this.totalBonusPay);
       }
@@ -362,7 +346,7 @@ export class PayrollRow {
         res();
       }
       if (this.deductions.length > 1) {
-        const sum = this.deductions.reduce((x, y) => x.amount + y.amount);
+        const sum = this.deductions.reduce((x, y) => x + y.amount, 0);
         this.totalDeductions = sum;
         res();
       }
@@ -476,6 +460,7 @@ export class PayrollRow {
   }
 
     calculateConceptsGrossAndNet(socialTable, incometaxTable){
+      console.log('invoked');
       const tasks = [
         this.calculateTotalBonuses(),
       this.calculateTotalOtherpay(),
@@ -492,6 +477,8 @@ export class PayrollRow {
         );
       }, Promise.resolve([]))
       .then(arrayOfResults => {
+      }).catch(error => {
+        console.log(error);
       });
     }
 

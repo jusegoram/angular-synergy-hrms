@@ -1,3 +1,9 @@
+import { SignatureFieldComponent } from './../shared/signature-field/signature-field.component';
+import { SharedModule } from './../shared/shared.module';
+import { RequestInfoChangeDialogComponent } from './detail/request-info-change-dialog/request-info-change-dialog.component';
+import { CertifyDialogComponent } from './detail/certify-dialog/certify-dialog.component';
+import { TransferDialogComponent } from './detail/transfer-dialog/transfer-dialog.component';
+import { StatusDialogComponent } from './detail/status-dialog/status-dialog.component';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -29,18 +35,21 @@ import { AttritionComponent } from './detail/attrition/attrition.component';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { AvailableInformationComponent } from './report/available-information/available-information.component';
+import { PipeModule } from './../shared/pipes/pipe/pipe.module';
+
 
 @NgModule({
   imports: [
     CommonModule,
     EmployeeRoutingModule,
     MaterialSharedModule,
+    SharedModule,
     HttpClientModule,
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
-
-  ],
+    PipeModule.forRoot()
+    ],
   declarations: [
     UploadComponent,
     ReportComponent,
@@ -51,6 +60,10 @@ import { AvailableInformationComponent } from './report/available-information/av
     PositionComponent,
     PayrollComponent,
     AvatarComponent,
+    RequestInfoChangeDialogComponent,
+    StatusDialogComponent,
+    TransferDialogComponent,
+    CertifyDialogComponent,
     DialogComponent,
     CommentComponent,
     NewComponent,
@@ -60,9 +73,13 @@ import { AvailableInformationComponent } from './report/available-information/av
     PersonalEditDialogComponent,
     ShiftComponent,
     AttritionComponent,
-    AvailableInformationComponent
+    AvailableInformationComponent,
     ],
     entryComponents: [
+      RequestInfoChangeDialogComponent,
+      CertifyDialogComponent,
+      TransferDialogComponent,
+      StatusDialogComponent,
       DialogComponent,
       PayrollEditDialogComponent,
       PayrollEditDialogComponent,

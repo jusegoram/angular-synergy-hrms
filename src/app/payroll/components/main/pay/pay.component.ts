@@ -47,7 +47,7 @@ export class PayDialogComponent implements OnInit {
   export(){
     if(this.checkedRows.selected.length === 1) {
       const {payrolls, payedDate, fromDate, toDate} = this.checkedRows.selected[0];
-      this._payrollService.getPayroll(payrolls, '').subscribe(result =>{
+      this._payrollService.getPayroll(payrolls, '', true).subscribe(result =>{
         const data = result.map(i => {
           delete i._id;
           delete i.payrolls;

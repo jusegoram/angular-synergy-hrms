@@ -1,3 +1,4 @@
+let moment = require('moment');
 function calculateTimeDifference(startTime, endTime) {
   if (startTime < endTime) return (endTime - startTime);
   if (startTime > endTime) return (1440 - startTime + endTime);
@@ -38,8 +39,12 @@ var result = sortedShifts.forEach((i, index) => {
 
 
 
+let employees = [
+  {employeeId: '33302'},
+  {employeeId: '32234'},
+]
 
-let stringTest = 'Day Off'
-console.log(0 >/ 0);
+let filtered = employees.filter(i => i.employeeId === null);
+console.log(filtered[0]);
 
-console.log(item);
+console.log(moment().endOf('week').add(1, 'day'))

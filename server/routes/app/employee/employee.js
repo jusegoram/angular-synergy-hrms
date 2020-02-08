@@ -1,6 +1,7 @@
 let express = require("express");
 let router = express.Router();
 
+let moment = require("moment");
 let jwt = require("jsonwebtoken");
 let fs = require("fs");
 let mongoose = require("mongoose");
@@ -8,6 +9,7 @@ let mongoose = require("mongoose");
 let Employee = require("../../../models/app/employee/employee-main");
 let EmployeePosition = require("../../../models/app/employee/employee-position");
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
+let EmployeeHoursAndShift = require("../../../models/app/operations/operations-hour");
 
 router.get("/populateTable", function(req, res, next) {
   var token = jwt.decode(req.query.token);
@@ -30,14 +32,95 @@ router.get("/populateTable", function(req, res, next) {
 });
 
 router.get("/main", function(req, res) {
-  Employee.findById(req.query.id)
-    .limit(1)
-    .exec((err, result) => {
-      if (err) res.status(500);
-      else res.status(200).json(result);
+  let today = moment();
+  let startOfWeek = today.startOf("week").toDate();
+  let endOfWeek = today
+    .endOf("week")
+    .add(1, "day")
+    .toDate();
+  Employee.aggregate([
+    { $match: { _id: mongoose.Types.ObjectId(req.query.id) } },
+    {
+      $lookup: {
+        from: "employee-positions",
+        let: {
+          employee_id: "$_id"
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$employee", "$$employee_id"] }
+            }
+          },
+          {
+            $lookup: {
+              from: "administration-positions",
+              localField: "position",
+              foreignField: "_id",
+              as: "position"
+            }
+          },
+          { $unwind: "$position" },
+          { $sort: { startDate: 1 } }
+        ],
+        as: "position"
+      }
+    },
+    {
+      $lookup: {
+        from: "operations-hours",
+        let: {
+          employee_employeeId: "$employeeId"
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
+              },
+              date: {
+                $gte: startOfWeek,
+                $lte: endOfWeek
+              }
+            }
+          },
+          { $sort: { shiftDay: 1 } }
+        ],
+        as: "shift"
+      }
+    }
+  ]).exec((err, doc) => {
+    let [result] = doc;
+    if (err) res.status(500).json(err);
+    else res.status(200).json(result);
+  });
+  // Employee.findById(req.query.id)
+  //   .limit(1)
+  //   .exec((err, result) => {
+  //     if (err) res.status(500);
+  //     else res.status(200).json(result);
+  //   });
+});
+router.get("/shift", (req, res) => {
+  let { employeeId, fromDate, toDate } = req.query;
+
+  fromDate = new Date(fromDate);
+  toDate = new Date(toDate);
+  EmployeeHoursAndShift.find({
+    employeeId: employeeId,
+    date: { $gte: fromDate, $lte: toDate },
+  },
+  null,
+  {sort: {date: 1}}
+  )
+    .lean()
+    .exec((err, doc) => {
+      if (err) res.status(400).json(err);
+      else {
+        res.status(200).json(doc);
+      }
     });
 });
-
 router.put("/main", function(req, res, next) {
   let id = req.query.id;
   let newStatus = req.body.status.toLowerCase();
@@ -61,14 +144,15 @@ router.put("/main", function(req, res, next) {
   );
 });
 
-router.put("/shift", function(req, res, next) {
-  Employee.findById(req.query.id, function(err, result) {
-    if (!result) {
-      return next(new Error("could not load doc"));
-    } else {
-      //TODO: finish update for shifts
-    }
-  });
+//FIXME: update for new shift schema
+router.put("/shift", (req, res) => {
+  const {_id} = req.body;
+  const shift = req.body;
+  delete shift._id;
+  EmployeeHoursAndShift.updateOne({_id:_id}, {$set: shift}, (err, raw)=> {
+    if(err) res.status(400).json(err);
+    else res.status(200).json(raw);
+  })
 });
 
 router.put("/company", function(req, res) {
@@ -85,6 +169,23 @@ router.put("/company", function(req, res) {
     );
   }
 });
+
+router.put("/company/status", function(req, res) {
+  res.status(200).json(req.body);
+  // let companyInfo = req.body;
+  // let employee = req.body.employee;
+  // if (employee) {
+  //   Employee.findByIdAndUpdate(
+  //     companyInfo.employee,
+  //     { $set: { 'company.status': companyInfo } },
+  //     (err, result) => {
+  //       if (err) res.status(500).json(err);
+  //       else res.status(200).json(result);
+  //     }
+  //   );
+  // }
+});
+
 router.put("/position", function(req, res) {
   EmployeePosition.findById(req.query.id, function(err, result) {
     if (!result) return next(new Error("Could not load Document"));
@@ -189,51 +290,55 @@ router.post("/main", function(req, res) {
   });
 });
 
-router.post("/shift", function(req, res) {
-  let shift = req.body;
-  shift.shift.shift.map(item => {
-    item.scheduledHours = calculateTimeDifference(item.startTime, item.endTime);
-    return item;
-  });
-  shift.shift.totalHours = JSON.parse(JSON.stringify(shift.shift.shift))
-    .map(i => i.scheduledHours)
-    .reduce((a, b) => a + b);
-  shift.shift.daysonShift = shift.shift.shift.filter(
-    item => item.onShift
-  ).length;
-  let startDate = shift.startDate;
-  let updateOptions = shift.current && !shift.first;
+// router.post("/shift", function(req, res) {
+//   let shift = req.body;
+//   shift.shift.shift.map(item => {
+//     item.scheduledHours = calculateTimeDifference(item.startTime, item.endTime);
+//     return item;
+//   });
+//   shift.shift.totalHours = JSON.parse(JSON.stringify(shift.shift.shift))
+//     .map(i => i.scheduledHours)
+//     .reduce((a, b) => a + b);
+//   shift.shift.daysonShift = shift.shift.shift.filter(
+//     item => item.onShift
+//   ).length;
+//   let startDate = shift.startDate;
+//   let updateOptions = shift.current && !shift.first;
 
-  Employee.updateOne(
-    { _id: new mongoose.Types.ObjectId(req.body.employee) },
-    {
-      $set: { currentShift: shift.shift },
-      $push: { shift: { $each: [shift], $sort: { startDate: -1 } } }
-    },
-    (err, raw) => {
-      if (err) res.status(400).json(err);
-      else if (updateOptions) {
-        Employee.findByIdAndUpdate(
-          req.body.employee,
-          {
-            $set: { "shift.1.endDate": startDate }
-          },
-          { new: true },
-          (err, raw) => {
-            if (err) res.status(400).json(err);
-            else {
-              raw.currentShift = currentShift(raw.shift);
-              raw.save().then(result => {
-                res.status(200).json(shift);
-              });
-            }
-          }
-        );
-      } else {
-        res.status(200).json(shift);
-      }
-    }
-  );
+//   Employee.updateOne(
+//     { _id: new mongoose.Types.ObjectId(req.body.employee) },
+//     {
+//       $set: { currentShift: shift.shift },
+//       $push: { shift: { $each: [shift], $sort: { startDate: -1 } } }
+//     },
+//     (err, raw) => {
+//       if (err) res.status(400).json(err);
+//       else if (updateOptions) {
+//         Employee.findByIdAndUpdate(
+//           req.body.employee,
+//           {
+//             $set: { "shift.1.endDate": startDate }
+//           },
+//           { new: true },
+//           (err, raw) => {
+//             if (err) res.status(400).json(err);
+//             else {
+//               raw.currentShift = currentShift(raw.shift);
+//               raw.save().then(result => {
+//                 res.status(200).json(shift);
+//               });
+//             }
+//           }
+//         );
+//       } else {
+//         res.status(200).json(shift);
+//       }
+//     }
+//   );
+// });
+//FIXME: update for new shift schema
+router.post("/shift", (req, res) => {
+  return;
 });
 
 function currentShift(shifts) {
@@ -248,11 +353,8 @@ function currentShift(shifts) {
 }
 
 function calculateTimeDifference(startTime, endTime) {
-  if (
-    startTime === null &&
-    startTime === undefined &&
-    !startTime.includes(':')
-  )return 0;
+  if (startTime === null && startTime === undefined && !startTime.includes(":"))
+    return 0;
   if (startTime < endTime) return endTime - startTime;
   if (startTime > endTime) return 1440 - startTime + endTime;
   return 0;
@@ -269,7 +371,6 @@ function currentShift(shifts) {
   });
   return current;
 }
-
 
 router.post("/company", function(req, res) {
   let id = new mongoose.Types.ObjectId();
@@ -564,55 +665,41 @@ router.delete("/position", (req, res) => {
   );
 });
 
-router.delete("/shift", (req, res) => {
-  let id = req.query.id;
-  employee = req.query.employee;
+// router.delete("/shift", (req, res) => {
+//   let id = req.query.id;
+//   employee = req.query.employee;
 
-  Employee.findByIdAndUpdate(
-    employee,
-    { $pull: { shift: { _id: id } } },
-    { new: true },
-    (err, doc) => {
-      if (err) res.status(500).json(err);
-      else res.status(200).json(doc);
-    }
-  );
+//   Employee.findByIdAndUpdate(
+//     employee,
+//     { $pull: { shift: { _id: id } } },
+//     { new: true },
+//     (err, doc) => {
+//       if (err) res.status(500).json(err);
+//       else res.status(200).json(doc);
+//     }
+//   );
+// });
+
+//FIXME: adjust for new shift schema
+router.delete("/shift", (req, res) => {
+  return;
 });
 
 router.get("/shift/updates", (req, res) => {
   const { employeeId, fromDate, toDate } = req.query;
   EmployeeShift.approvedShiftUpdates
-  .find({
-    employeeId: employeeId,
-    effectiveDate: { $gte: fromDate, $lte: toDate }
-  })
-  .lean()
-  .exec((err, doc) => {
-    if(err) res.status(400).json(err);
-    else res.status(200).json(doc);
-  });
-  
+    .find({
+      employeeId: employeeId,
+      effectiveDate: { $gte: fromDate, $lte: toDate }
+    })
+    .lean()
+    .exec((err, doc) => {
+      if (err) res.status(400).json(err);
+      else res.status(200).json(doc);
+    });
 });
 
-router.post("/shift/updates", (req, res) => {
-    let update = req.body;
-    EmployeeShift.approvedShiftUpdates.update({employeeId: update.employeeId, effectiveDate: update.effectiveDate}, { $set : update }, { upsert: true}, (err, doc) => {
-      if(err) res.status(400).json(err);
-      else {
-        let {employeeId} = update;
-        let [fromDate, toDate] = getWeekDates();
-        EmployeeShift.approvedShiftUpdates.find({
-          employeeId: employeeId,
-          effectiveDate: { $gte: fromDate, $lte: toDate }
-        })
-        .lean()
-        .exec((err, doc) => {
-          if(err) res.status(400).json(err);
-          else res.status(200).json(doc);
-        });
-      }
-    })
-});
+
 
 function getWeekDates() {
   const now = new Date();

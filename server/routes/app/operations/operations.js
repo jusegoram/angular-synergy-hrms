@@ -58,6 +58,9 @@ router.get('/hourTemplate', function (req, res, next) {
       'dialerId',
       'date',
       'systemHours',
+      'breakHours',
+      'lunchHours',
+      'trainingHours',
       'tosHours',
       'timeIn'
   ];

@@ -1,3 +1,4 @@
+import { PayrollService } from './../../services/payroll.service';
 import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { MatTableDataSource } from '@angular/material';
 import { ChartData, Datum } from './../../../shared/ChartData';
@@ -24,30 +25,34 @@ export class DetailComponent implements OnInit {
   totals: any;
   totalTableDataSource: any;
   clientTableDataSource: any;
-  dataSource:any;
+  dataSource: any;
   filterItems: any;
   filterValue = '';
-  constructor(private route: ActivatedRoute, private zone: NgZone, private minutesecondsPipe: MinuteSecondsPipe) { }
+  constructor(
+    private route: ActivatedRoute,
+    private zone: NgZone,
+    private minutesecondsPipe: MinuteSecondsPipe,
+    private _payrollService: PayrollService
+  ) {}
 
   ngOnInit() {
     this.resolvedData = this.route.snapshot.data['payroll'];
     this.stats = this.resolvedData.stats;
     this.payroll = this.resolvedData.payroll[0];
     this.dataSource = new MatTableDataSource(this.payroll.employees);
-    this.filterItems = ['employeeId','employeeName', 'client', 'campaign'];
+    this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
     this.barChartSwitchableData = this.mapBarChartData(this.stats);
     this.totals = this.calculateTotals(this.stats);
     this.totalTableDataSource = new MatTableDataSource(this.totals);
     this.initializeCharts();
-
   }
-    applyFilter(filter: string) {
-      if(filter){
-        filter = filter.trim(); // Remove whitespace
-        filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.dataSource.filter = filter;
-      }
+  applyFilter(filter: string) {
+    if (filter) {
+      filter = filter.trim(); // Remove whitespace
+      filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+      this.dataSource.filter = filter;
     }
+  }
 
   dataplotClickHandler(eventObj) {
     const dataObj = eventObj.dataObj;
@@ -59,51 +64,55 @@ export class DetailComponent implements OnInit {
   }
 
   initializeCharts() {
-    this.doughnutChartData = new ChartData({
-      caption: 'Payroll Campaign Distribution Chart',
-      subCaption: 'For employees in the current payroll',
-      defaultcenterlabel: 'RCC BPO',
-      aligncaptionwithcanvas: '0',
-      captionpadding: '0',
-      decimals: '1',
-      plottooltext:
-        '<b>$percentValue</b> of our employees are on <b>$label</b>',
-      centerlabel: 'Employees: $value',
-      theme: 'fusion',
-      exportenabled: '1',
-      exportfilename: 'payrollDoughnutChart1'
-    }, this.mapDoughNutChartData(this.stats, 'client', '', 'employeesAmount'));
+    this.doughnutChartData = new ChartData(
+      {
+        caption: 'Payroll Campaign Distribution Chart',
+        subCaption: 'For employees in the current payroll',
+        defaultcenterlabel: 'RCC BPO',
+        aligncaptionwithcanvas: '0',
+        captionpadding: '0',
+        decimals: '1',
+        plottooltext:
+          '<b>$percentValue</b> of our employees are on <b>$label</b>',
+        centerlabel: 'Employees: $value',
+        theme: 'fusion',
+        exportenabled: '1',
+        exportfilename: 'payrollDoughnutChart1'
+      },
+      this.mapDoughNutChartData(this.stats, 'client', '', 'employeesAmount')
+    );
 
     this.barChartData = new ChartData(
       {
-        caption: "AIP's Financial Details",
+        caption: 'AIP\'s Financial Details',
         decimals: '2',
         numberPrefix: '$',
         subcaption: '',
         xaxisname: 'Concept',
         yaxisname: 'Amount (BZD)',
-        plottooltext:
-          ' <b>$label</b> - $<b>$value</b>',
+        plottooltext: ' <b>$label</b> - $<b>$value</b>',
         numbersuffix: '',
         theme: 'fusion',
         exportenabled: '1',
         exportfilename: 'payrollBarChart1'
-      }
-      , this.barDataSwitch('AIP'));
-      this.setClientTableData('AIP');
-
+      },
+      this.barDataSwitch('AIP')
+    );
+    this.setClientTableData('AIP');
   }
   barDataSwitch(client) {
-    let data = this.barChartSwitchableData.filter(item => item.client === client);
+    const data = this.barChartSwitchableData.filter(
+      item => item.client === client
+    );
     return data[0].data;
   }
   mapBarChartData(data: any[]) {
     const mirrorData = JSON.parse(JSON.stringify(data));
     let mappedItems = [];
     mappedItems = mirrorData.map(item => {
-      let keyArray = {
+      const keyArray = {
         client: item._id.client,
-        data: [],
+        data: []
       };
       delete item.totalRegularHours;
       delete item.totalOvertimeHours;
@@ -118,7 +127,7 @@ export class DetailComponent implements OnInit {
         const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
         keyArray.data.push({
           label: finalResult,
-          value: Math.round(item[key] * 100) / 100,
+          value: Math.round(item[key] * 100) / 100
         });
       });
       return keyArray;
@@ -127,25 +136,33 @@ export class DetailComponent implements OnInit {
     return mappedItems;
   }
 
-  setClientTableData(client){
-    const data = JSON.parse(JSON.stringify(this.stats.filter(item => item._id.client === client)[0]))
+  setClientTableData(client) {
+    const data = JSON.parse(
+      JSON.stringify(this.stats.filter(item => item._id.client === client)[0])
+    );
     delete data._id;
-    const mappedData = Object.keys(data).map( (key, index) => {
+    const mappedData = Object.keys(data).map((key, index) => {
       const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
       if (key === 'campaigns') {
         return {
           label: finalResult,
           value: data[key].length
-        }
+        };
       } else {
-        const transform = this.minutesecondsPipe.transform(Math.round( data[key] * 100)/100)
-        const value = index === 5 || index === 7 || index === 9 || index === 11
-        ? transform : (Math.round( data[key] * 100)/100).toLocaleString('en-US', {minimumFractionDigits: 2});
+        const transform = this.minutesecondsPipe.transform(
+          Math.round(data[key] * 100) / 100
+        );
+        const value =
+          index === 5 || index === 7 || index === 9 || index === 11
+            ? transform
+            : (Math.round(data[key] * 100) / 100).toLocaleString('en-US', {
+                minimumFractionDigits: 2
+              });
         return {
           label: finalResult,
-          value:  value
-        }
+          value: value
+        };
       }
     });
     this.clientTableDataSource = new MatTableDataSource(mappedData);
@@ -168,30 +185,44 @@ export class DetailComponent implements OnInit {
       totalBonus: 0,
       totalOtherpay: 0,
       totalCompanyContributions: 0,
-      totalEmployeeContributions: 0,
+      totalEmployeeContributions: 0
     };
 
-    const returnedArr = Object.keys(calculatedTotal).map( (key, index) => {
+    const returnedArr = Object.keys(calculatedTotal).map((key, index) => {
       const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
       if (key === 'campaigns') {
         return {
           label: finalResult,
-          value:  data.reduce((a, b) => {return {[key]: a[key].concat(b[key])}})[key].length
-        }
+          value: data.reduce((a, b) => {
+            return { [key]: a[key].concat(b[key]) };
+          })[key].length
+        };
       } else {
-        let value
-        if(index === 5 || index === 7 || index ===  9 || index === 11) {
-          const calc = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
-          value = this.minutesecondsPipe.transform(calc)
+        let value;
+        if (index === 5 || index === 7 || index === 9 || index === 11) {
+          const calc =
+            Math.round(
+              data.reduce((a, b) => {
+                return { [key]: a[key] + b[key] };
+              })[key] * 100
+            ) / 100;
+          value = this.minutesecondsPipe.transform(calc);
         } else {
-          value = Math.round( data.reduce((a, b) => {return { [key]: a[key] + b[key] }})[key] * 100)/100
-          value = parseInt( value, 10).toLocaleString('en-US', {minimumFractionDigits: 2})
-          }
+          value =
+            Math.round(
+              data.reduce((a, b) => {
+                return { [key]: a[key] + b[key] };
+              })[key] * 100
+            ) / 100;
+          value = parseInt(value, 10).toLocaleString('en-US', {
+            minimumFractionDigits: 2
+          });
+        }
         return {
           label: finalResult,
-          value:  value
-        }
+          value: value
+        };
       }
     });
 
@@ -199,7 +230,7 @@ export class DetailComponent implements OnInit {
   }
   mapDoughNutChartData(data, labelPath, labelPath2, valuePath): Datum[] {
     let mappedData: Datum[];
-    mappedData = data.map((item) => {
+    mappedData = data.map(item => {
       let label;
       if (labelPath === 'client' && labelPath2 === '') {
         label = item._id.client;
@@ -213,5 +244,20 @@ export class DetailComponent implements OnInit {
     });
     return mappedData;
   }
+  reloadAll() {
+    this.route.queryParams.subscribe(params => {
+      const {id} = params;
+      this._payrollService.getPayroll(id, '', false).subscribe(result => {
+        this.stats = result.stats;
+        this.payroll = result.payroll[0];
+        this.dataSource = new MatTableDataSource(this.payroll.employees);
+        this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
+        this.barChartSwitchableData = this.mapBarChartData(this.stats);
+        this.totals = this.calculateTotals(this.stats);
+        this.totalTableDataSource = new MatTableDataSource(this.totals);
+        this.initializeCharts();
+      });
+    })
 
+  }
 }

@@ -1,10 +1,14 @@
+import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
+import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
+import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
+import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 import { SessionService } from '../../session/session.service';
 import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { EmployeeService } from '../employee.service';
 import { ActivatedRoute } from '@angular/router';
 import {Employee, EmployeeCompany, Position} from '../Employee';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Client } from '../../administration/employee/models/positions-models';
 import { DatePipe, AsyncPipe } from '@angular/common';
@@ -30,9 +34,36 @@ export class DetailComponent implements OnInit {
  items: any[];
  reaptimes: any[];
  genders: any[];
+ statusChange = false;
+ helpMessage = `
+  HELPING TOOLTIP:
+  \u2022\STATUS\xA0TRACKER\xA0:\xA0Every time an employee's status
+  is changed an 'STATUS TRACKER' must be filled. Please follow the
+  directions once you have clicked the button to request and attrition.
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \u2022\xA0TRANSFER\xA0TRACKER\xA0:\xA0Every\xA0time\xA0an employee's campaign
+  is changed a 'TRANSFER TRACKER' must be filled. Please follow the
+  directions once you have clicked the button to request a campaign change.
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \u2022\xA0CERTIFY\xA0TRACKER\xA0:\xA0Every\xA0time\xA0an employee is certified after training
+  a 'CERTIFY TRACKER' must be filled so that the position can be changed. Please follow the
+  directions once you have clicked the button to request a certification.
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0
+  \u2022\xA0REQUEST\xA0INFO\xA0CHANGE\xA0:\xA0If\xA0you\xA0find outdated or incorrect information please
+  request and info change to minimize report and payroll errors.
+
+ `;
   constructor(private employeeService: EmployeeService,
     private route: ActivatedRoute,
-    public snackBar: MatSnackBar, private fb: FormBuilder, private datePipe: DatePipe) {
+    public snackBar: MatSnackBar,
+    private fb: FormBuilder,
+    public dialog: MatDialog) {
     this.newCompany = new EmployeeCompany(
       '',
       '', '', '',
@@ -117,6 +148,10 @@ export class DetailComponent implements OnInit {
       this.mainForm.value.gender, // add to form
       this.mainForm.value.middleName
     );
+
+    if (this.statusChange) {
+      console.log('execute status change');
+    }
     this.employeeService.updateEmployee(employee).subscribe(
         data => {
           this.snackBar.open('Employee information updated successfully', 'thank you', {
@@ -183,5 +218,62 @@ export class DetailComponent implements OnInit {
       const i = this.clients.findIndex((result) => result.name === this.companyForm.value.client);
       if ( i >= 0 ) {this.campaigns = this.clients[i].campaigns; }
     }
+  }
+
+  openStatusDialog(): void {
+    const dialogRef = this.dialog.open(StatusDialogComponent, {
+      width: '700px',
+      data: {status: this.mainForm.value.status}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
+      }else {
+        this.statusChange = result;
+      }
+    });
+  }
+  openTransferDialog(): void {
+    const dialogRef = this.dialog.open(TransferDialogComponent, {
+      width: '700px',
+      data: {status: this.mainForm.value.status}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
+      }else {
+        this.statusChange = result;
+      }
+    });
+  }
+  openCertifyDialog(): void {
+    const dialogRef = this.dialog.open(CertifyDialogComponent, {
+      width: '700px',
+      data: {status: this.mainForm.value.status}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
+      }else {
+        this.statusChange = result;
+      }
+    });
+  }
+  openRequestChangeDialog(): void {
+    const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
+      width: '700px',
+      data: {status: this.mainForm.value.status}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
+      }else {
+        this.statusChange = result;
+      }
+    });
   }
 }

@@ -31,9 +31,9 @@ export class EmployeeService {
   _detail: Observable<Employee> = null;
   public status = [
     { value: 'active', viewValue: 'Active' },
-    { value: 'resignation', viewValue: 'Resignation' },
-    { value: 'dissmisal', viewValue: 'Dissmisal' },
-    { value: 'termination', viewValue: 'Termination' },
+    { value: 'resignation', viewValue: 'Resignation' , onclick: 'openStatusDialog()'},
+    { value: 'dissmisal', viewValue: 'Dissmisal', onclick: 'openStatusDialog()' },
+    { value: 'termination', viewValue: 'Termination', onclick: 'openStatusDialog()' },
     { value: 'on-hold', viewValue: 'On-Hold' },
     { value: 'transfer', viewValue: 'Transfer' },
  //   { value: 'trainee', viewValue: 'Trainee' }
@@ -71,9 +71,13 @@ export class EmployeeService {
    * @memberof EmployeeService
    */
 
-  getClient(): Observable<any> {
+  getClient(contextFilter?: string[]): Observable<any> {
     if (!this._clients) {
-      this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client').pipe(
+      let params;
+      if(contextFilter && contextFilter.length > 0) {
+         params = new HttpParams().set('clients', JSON.stringify(contextFilter));
+      }
+      this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client' , { params: params }).pipe(
         map((data) => {
           this.clients = data;
           return data;
@@ -173,6 +177,10 @@ export class EmployeeService {
     const params = new HttpParams().set('id', param);
     return this.httpClient.get<Array<EmployeeComment>>('/api/v1/employee/comment', { params: params });
   }
+  getEmployeeShift(employeeId, fromDate, toDate) {
+    const params = new HttpParams().set('employeeId', employeeId).set('fromDate', fromDate).set('toDate', toDate);
+    return this.httpClient.get('/api/v1/employee/shift', { params: params });
+  }
   /**
    *
    *
@@ -226,6 +234,13 @@ export class EmployeeService {
     const params = new HttpParams().set('id', comment._id);
 
     return this.httpClient.put('/api/v1/employee/payroll', body, { headers: headers, params: params });
+  }
+  updateEmployeeShift(shift) {
+    const body = shift;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', shift._id);
+
+    return this.httpClient.put('/api/v1/employee/shift', body, { headers: headers, params: params });
   }
   /**
    *
@@ -305,6 +320,9 @@ export class EmployeeService {
     return this.sessionService.getRights();
   }
 
+  getDecodedToken(){
+    return this.sessionService.decodeToken();
+  }
 
   deletePosition(position: any) {
     let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`;
@@ -321,7 +339,7 @@ export class EmployeeService {
     return this.httpClient.post('/api/v1/employee/report/information', body, { headers: headers });
   }
 
-  getApprovedShiftUpdates(employeeId, fromDate, toDate){
+  getApprovedShiftUpdates(employeeId, fromDate, toDate) {
     const params = new HttpParams()
     .set('fromDate', fromDate)
     .set('toDate', toDate)
@@ -329,7 +347,7 @@ export class EmployeeService {
 
     return this.httpClient.get('/api/v1/employee/shift/updates', {params: params});
   }
-  
+
   saveApprovedShiftUpdates(query) {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

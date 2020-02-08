@@ -1,7 +1,9 @@
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span> Payroll Detail Dashboard</span>
+    <span> {{payroll.employees[0].payrollType}} PAYROLL </span>
     <span class="fill-remaining-space"></span>
+    <span >FROM {{payroll.fromDate | date: 'LLLL d, yyyy' | uppercase}} - TO
+        {{payroll.toDate | date: 'LLLL d, yyyy' | uppercase }}</span>
   </mat-toolbar-row>
   <mat-toolbar-row>
   </mat-toolbar-row>
@@ -10,16 +12,7 @@
 </mat-toolbar>
 
 <div class="mat-card-top">
-  <mat-card class="pa-1">
-    <mat-card-header>
-      <mat-card-title>{{payroll.employees[0].payrollType}} PAYROLL</mat-card-title>
-      <mat-card-subtitle>From {{payroll.fromDate | date: 'EEE, LLLL d, yyyy'}} ---- To
-        {{payroll.toDate | date: 'EEE, LLLL d, yyyy' }}</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-
-    </mat-card-content>
-  </mat-card>
+  <app-edit-payroll [payroll]='payroll' (onApplyUpdate)='reloadAll()'></app-edit-payroll>
   <mat-card class="pa-1">
     <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start start" fxLayoutGap="5px">
       <div style='height: 400px; width:100%'>
