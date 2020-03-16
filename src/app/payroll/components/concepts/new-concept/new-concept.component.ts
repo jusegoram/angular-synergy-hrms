@@ -20,9 +20,14 @@ export class NewConceptComponent implements OnInit {
   otherPayments: PayrollConcept[];
 
   conceptTypeList = [{
-    type: 'Bonus',
+    type: 'Taxable Bonus',
     concepts: [
-      { concept: 'One' }
+      { concept: 'Other Bonus' }
+    ]
+  },
+  {type: 'Non-Taxable Bonus',
+    concepts: [
+      { concept: 'Attendance Bonus (Falcon)' },
     ]
   },
   {
@@ -41,11 +46,11 @@ export class NewConceptComponent implements OnInit {
   {
     type: 'Other Payments',
     concepts: [
+      { concept: 'Certify Sick Leave' },
+      { concept: 'Compassionate Leave' },
+      { concept: 'Maternity Leave' },
       { concept: 'Training Hours' },
       { concept: 'Training Stipend' },
-      { concept: 'Attendance Bonus (Falcon)' },
-      { concept: 'Certify Sick Leave' },
-      { concept: 'Maternity' },
       { concept: 'Time off System' },
       { concept: 'Time off System 1.5' },
       { concept: 'Time off System 2X' },
@@ -54,14 +59,21 @@ export class NewConceptComponent implements OnInit {
       { concept: 'Card 2X' },
       { concept: 'Salary Differences (Discrepancies)' },
     ]
+  },
+  {
+    type: 'Final Payments',
+    concepts: [
+      { concept: 'Severance'},
+      { concept: 'Notice Payment'},
+    ]
   }
 ];
 
-  conceptFromGroup: FormGroup
+  conceptFromGroup: FormGroup;
   employeeList: any;
   employeeConcepts: any;
   selectedEmployee: any;
-  employeeConceptsColumns = ['type', 'concept', 'amount', 'date', 'status']
+  employeeConceptsColumns = ['type', 'concept', 'amount', 'date', 'status'];
   filteredEmployees: Observable<Employee[]>;
   conceptTotalDays: number;
   constructor(
@@ -81,11 +93,14 @@ export class NewConceptComponent implements OnInit {
        })
     );
   }
-
+  isNotice =  (concept) => concept === 'Notice Payment';
+  isSeverance =  (concept) => concept === 'Severance';
+  isCompassionateLeave =  (concept) => concept === 'Compassionate Leave';
   isMaternity = (concept) => concept === 'Maternity';
-  isCSL = (concept) => concept === 'Certify Sick Leave'
+  isCSL = (concept) => concept === 'Certify Sick Leave';
+  isTaxableBonus = (type) => type === 'Taxable Bonus';
 
-  buildForm(){
+  buildForm() {
     this.conceptFromGroup = this.fb.group({
       employee: ['', Validators.required],
       type: ['', Validators.required],
@@ -96,24 +111,24 @@ export class NewConceptComponent implements OnInit {
       to: [],
       diagnosis: [],
       institution: [],
-      doctorName: [],
+      doctorName: []
     });
   }
 
-  populateTable(data){
+  populateTable(data) {
     this.employeeConcepts = null;
     this.employeeConcepts = new MatTableDataSource(data);
   }
-  getEmployees(){
+  getEmployees() {
     this.payrollService.getEmployees().subscribe(result => {
       this.employeeList = result.map((item) => {
         item.fullSearchName =  `(${item.employeeId}) ${item.firstName} ${item.middleName} ${item.lastName}`;
         return item;
       });
 
-    })
+    });
   }
-  refreshTable(event){
+  refreshTable(event) {
     const data = this.employeeConcepts.data;
     data.push(event);
     this.employeeConcepts.data = data;
@@ -125,9 +140,9 @@ export class NewConceptComponent implements OnInit {
   setEmployee(employee: Employee) {
     this.selectedEmployee = employee;
   }
-  onAddConcept(){
+  onAddConcept() {
     const form = this.conceptFromGroup.value;
-    const employee = this.selectedEmployee
+    const employee = this.selectedEmployee;
     const newConcept = new PayrollConcept(
       form.type.type,
       employee._id,
@@ -143,42 +158,61 @@ export class NewConceptComponent implements OnInit {
       false,
       new Date(),
       this.sessionService.getId(),
-      form.concept === 'Maternity',
-      form.concept === 'Certify Sick Leave',
+      this.isMaternity(form.concept),
+      this.isCSL(form.concept),
       form.from,
       form.to,
       this.calculateDaysDiff(form.from, form.to),
       form.diagnosis,
       form.institution,
-      form.doctorName
-    )
+      form.doctorName,
+      false,
+      null,
+      null,
+      this.isNotice(form.concept),
+      this.isSeverance(form.concept),
+      this.isCompassionateLeave(form.concept),
+      false,
+      this.isTaxableBonus(form.type.type)
+      );
     this.saveConcept(newConcept);
   }
 
-  calculateDaysDiff(from, to){
-    let timeDiff = to.getTime() - from.getTime();
+  calculateDaysDiff(from, to) {
+    if (from && to) {
+      const timeDiff = to.getTime() - from.getTime();
     return timeDiff / (1000 * 3600 * 24);
+    }
+      return null;
   }
 
-  getConcepts(){
+  getConcepts() {
+    const form = this.conceptFromGroup.value;
     const query = {
-      type: this.conceptFromGroup.value.type.type,
+      type: form.type.type,
       id: this.selectedEmployee._id,
-      verified: null,
+      verified: false,
       payed: false,
+      assigned: false,
+    };
+    if (form.type.type === 'Taxable Bonus' || form.type.type === 'Non-Taxable Bonus') {
+      Object.assign(query, {
+        taxable: this.isTaxableBonus(form.type.type),
+      });
     }
-    this.payrollService.getConcepts(query.type, query.id, query.verified, query.payed).subscribe(res => {
+    this.payrollService.getConcepts(query).subscribe(res => {
       this.populateTable(res);
-    })
+    });
   }
-  saveConcept(concept){
+  saveConcept(concept) {
     this.payrollService.saveConcept(concept).subscribe(res => {
       this.refreshTable(res);
-      this.openSnackbar('The concept was succesfully saved', 'Great thanks!')
-    })
+      this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
+    });
   }
   openSnackbar(message, button) {
-    this.snackbar.open(message, button, {duration: 10*1000})
+    this.snackbar.open(message, button, {duration: 10 * 1000});
   }
 
+  // TODO: upload bulk, api is ready to take bulk.
 }

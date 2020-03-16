@@ -38,7 +38,7 @@
       <ng-container matColumnDef="selected">
         <mat-header-cell *matHeaderCellDef> Select </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <mat-checkbox #checked [id]="element?._id?._id" [disabled]='element?.isPayed' (click)="$event.stopPropagation()"
+          <mat-checkbox #checked [id]="element?._id" [disabled]='element?.isPayed' (click)="$event.stopPropagation()"
             (change)="$event ? checkedRows.toggle(element) : null" [checked]="checkedRows.isSelected(element)">
           </mat-checkbox>
         </mat-cell>
@@ -56,41 +56,41 @@
         </mat-cell>
       </ng-container>
       <ng-container matColumnDef="fromDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> From </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element?._id.fromDate |  date:'EEE - LLLL d - yyyy' }} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> FROM </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element?.fromDate |  date:'EEE - LLLL d - yyyy' }} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="toDate">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> To </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element?._id.toDate | date:'EEE - LLLL d - yyyy' }}
+        <mat-header-cell *matHeaderCellDef mat-sort-header> TO </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element?.toDate | date:'EEE - LLLL d - yyyy' }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="employeesAmount">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Employees Payed </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EMPLOYEES PAYED </mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element?.employeesAmount}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalPayed">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Amount </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element?.totalPayed | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> AMOUNT </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element?.totalPayed['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalCompanyContributions">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Company Social Contribution </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>RCC SS Contribution </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{element?.totalCompanyContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          {{element?.totalCompanyContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalEmployeeContributions">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Employee Social Contribution </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> EMP SS Contribution </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{element?.totalEmployeeContributions | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+          {{element?.totalEmployeeContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="totalTaxes">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> Income Tax </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element?.totalTaxes | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header> INCOME TAX </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element?.totalTaxes['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}} </mat-cell>
       </ng-container>
 
 
@@ -99,7 +99,7 @@
             (click)='onPaySelectedPayrolls()' [disabled]='checkedRows?.selected?.length === 0'>PAY SELECTED PAYROLLS</button>
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element?._id._id}" mat-menu-item
+          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element?._id}" mat-menu-item
             matTooltip="Go to details">
             <span>EDIT  &nbsp; &nbsp;</span>
             <mat-icon>arrow_forward</mat-icon>

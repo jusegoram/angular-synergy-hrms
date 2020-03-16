@@ -32,25 +32,26 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <mat-slide-toggle color="primary" color="primary" formControlName="clientCheck">Client</mat-slide-toggle>
+        <mat-slide-toggle color="primary" color="primary" formControlName="clientCheck" [disabled]="auth.clients.length > 0">Client</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.clientCheck" [formGroup]="queryForm">
 
           <mat-form-field appearance="outline">
             <mat-select placeholder="Client Filter" name="item" formControlName="client"
               (selectionChange)="setCampaigns($event.value)">
+              <mat-option value=''>ALL CLIENTS</mat-option>
               <mat-option *ngFor="let item of clients" [value]="item">
                 {{item.name}}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </div>
-        <mat-slide-toggle color="primary" formControlName="campaignCheck"
-          [disabled]="!this.reportForm.value.clientCheck">Campaign</mat-slide-toggle>
+        <mat-slide-toggle color="primary" formControlName="campaignCheck">Campaign</mat-slide-toggle>
         <div fxLayout="row" *ngIf="this.reportForm.value.campaignCheck && this.reportForm.value.clientCheck"
           [formGroup]="queryForm">
           <mat-form-field appearance="outline">
             <mat-select placeholder="Campaign Filter" name="item" formControlName="campaign"
               *ngIf="this.reportForm.value.campaignCheck">
+              <mat-option value=''>ALL CAMPAIGNS</mat-option>
               <mat-option *ngFor="let item of campaigns" [value]="item">
                 {{item.name}}
               </mat-option>

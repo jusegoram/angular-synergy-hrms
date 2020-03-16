@@ -5,11 +5,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "chrome",
+      "type": "edge",
       "request": "launch",
-      "name": "Chrome",
+      "name": "Edge",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}"
+      "webRoot": "${workspaceFolder}/src"
     },
     {
       "type": "node",

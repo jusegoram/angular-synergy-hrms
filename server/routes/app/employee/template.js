@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var json2csv = require('json2csv');
+const { parse } = require('json2csv');
 router.get('/', function (req, res, next) {
     var fields = [
         'employeeId',
@@ -12,7 +12,7 @@ router.get('/', function (req, res, next) {
         'status'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
 
     res.set("Content-Disposition", "attachment;filename=employee-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -30,7 +30,8 @@ router.get('/position', function (req, res, next) {
         'endDate'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-position-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -56,7 +57,8 @@ router.get('/personal', function (req, res, next) {
         'emailDate'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-personal-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -71,7 +73,8 @@ router.get('/personal/hobbies', (req, res) => {
         'hobbyComment',
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-personal-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -90,7 +93,8 @@ router.get('/payroll', function (req, res, next) {
         'paymentType'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-payroll-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -111,7 +115,8 @@ router.get('/family', function (req, res, next) {
         'comment',
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-family-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -131,7 +136,8 @@ router.get('/education', function (req, res, next) {
         'endDate'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-education-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -156,7 +162,8 @@ router.get('/company', function (req, res, next) {
         'bilingual'
     ];
 
-    var csv = json2csv({ data: '', fields: fields });
+    var csv = parse('', {fields});
+
 
     res.set("Content-Disposition", "attachment;filename=employee-company-upload.csv");
     res.set("Content-Type", "application/octet-stream");
@@ -179,7 +186,8 @@ router.get('/shift', function (req, res, next) {
       'breakAndLunchTime'
   ];
 
-  var csv = json2csv({ data: '', fields: fields });
+  var csv = parse('', {fields});
+
 
   res.set("Content-Disposition", "attachment;filename=employee-shift-upload.csv");
   res.set("Content-Type", "application/octet-stream");

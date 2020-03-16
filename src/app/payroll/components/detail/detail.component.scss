@@ -47,7 +47,25 @@ mat-card {
 }
 
 .viewport {
-  height: 500px;
+  height: 130px;
+  overflow-y: scroll;
   border: 1px solid gainsboro;
   border-radius: 5px;
+}
+.table-border {
+  height: 130px;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+}
+table.greyGridTable {
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+table.greyGridTable th {
+  background: #f2f2f2;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  font-size: 12px;
 }

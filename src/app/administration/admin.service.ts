@@ -250,4 +250,52 @@ export class AdminService {
     return this.httpClient.get(`/api/v1/uploads/${_id}`, {headers: headers, params: params});
   }
 
+  getHolidays(query){
+    const {pageNumber, size} = query;
+    const params = new HttpParams().set('page', pageNumber).set('limit', size);
+    const _id = 'q';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.get(`/api/v1/admin/payroll/holidays/${_id}`, {headers: headers, params: params});
+  }
+  updateHolidays(){
+
+  }
+  setHolidays(){
+
+  }
+  deleteHolidays(){
+
+  }
+  getSoSec(query){
+    const {pageNumber, size} = query;
+    const params = new HttpParams().set('page', pageNumber).set('limit', size);
+    const _id = 'q';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.get(`/api/v1/admin/payroll/socialsecurity/${_id}`, {headers: headers, params: params});
+  }
+  updateSoSec(){
+
+  }
+  setSoSec(){
+
+  }
+  deleteSoSec(){
+
+  }
+  getIncomeTax(query){
+    const {pageNumber, size} = query;
+    const params = new HttpParams().set('page', pageNumber).set('limit', size);
+    const _id = 'q';
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.get(`/api/v1/admin/payroll/incomeTax/${_id}`, {headers: headers, params: params});
+  }
+  updateIncomeTax(){
+
+  }
+  setIncomeTax(){
+
+  }
+  deleteIncomeTax(){
+
+  }
 }

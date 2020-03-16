@@ -1,15 +1,27 @@
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { EditPayrollDetailComponent } from './edit-payroll-detail/edit-payroll-detail.component';
+import { MatDialog } from '@angular/material/dialog';
 import { PayrollService } from './../../services/payroll.service';
 import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { MatTableDataSource } from '@angular/material/table';
 import { ChartData, Datum } from './../../../shared/ChartData';
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { MatStepper } from '@angular/material/stepper';
+import { noop } from 'rxjs';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
+  @ViewChild('myTable', { static: false }) table: any;
+  @ViewChild('stepper', { static: false }) stepper: MatStepper;
+  @ViewChild('failedFinalizeSwal', { static: false }) failedFinalizeSwal: SwalComponent;
+
+  rows = [];
+  ColumnMode = ColumnMode;
   resolvedData: any;
   stats: any[];
   payroll: any;
@@ -28,30 +40,39 @@ export class DetailComponent implements OnInit {
   dataSource: any;
   filterItems: any;
   filterValue = '';
+  user;
   constructor(
     private route: ActivatedRoute,
     private zone: NgZone,
     private minutesecondsPipe: MinuteSecondsPipe,
-    private _payrollService: PayrollService
-  ) {}
+    private _payrollService: PayrollService,
+    private matDialog: MatDialog,
+  ) {
+    this.user = this._payrollService.getDecodedToken();
+    console.log(this.user);
+  }
 
   ngOnInit() {
     this.resolvedData = this.route.snapshot.data['payroll'];
     this.stats = this.resolvedData.stats;
-    this.payroll = this.resolvedData.payroll[0];
-    this.dataSource = new MatTableDataSource(this.payroll.employees);
+    this.payroll = this.resolvedData.payroll;
+    this.dataSource = new MatTableDataSource(this.payroll);
+    this.rows = this.dataSource.data;
     this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
     this.barChartSwitchableData = this.mapBarChartData(this.stats);
     this.totals = this.calculateTotals(this.stats);
     this.totalTableDataSource = new MatTableDataSource(this.totals);
     this.initializeCharts();
   }
+  toggleExpandRow(row) {
+    this.table.rowDetail.toggleExpandRow(row);
+  }
+
+
   applyFilter(filter: string) {
-    if (filter) {
-      filter = filter.trim(); // Remove whitespace
-      filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-      this.dataSource.filter = filter;
-    }
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.rows = this.dataSource.filteredData;
   }
 
   dataplotClickHandler(eventObj) {
@@ -172,6 +193,7 @@ export class DetailComponent implements OnInit {
       campaigns: 0,
       employeesAmount: 0,
       totalPayed: 0,
+      totalMonthlyWages: 0,
       totalWeeklyWages: 0,
       totalTaxes: 0,
       totalRegularHours: 0,
@@ -200,7 +222,7 @@ export class DetailComponent implements OnInit {
         };
       } else {
         let value;
-        if (index === 5 || index === 7 || index === 9 || index === 11) {
+        if (index === 6 || index === 8 || index === 10 || index === 12) {
           const calc =
             Math.round(
               data.reduce((a, b) => {
@@ -249,15 +271,39 @@ export class DetailComponent implements OnInit {
       const {id} = params;
       this._payrollService.getPayroll(id, '', false).subscribe(result => {
         this.stats = result.stats;
-        this.payroll = result.payroll[0];
-        this.dataSource = new MatTableDataSource(this.payroll.employees);
+        this.payroll = result.payroll;
+        this.dataSource = new MatTableDataSource(this.payroll);
+        this.rows = this.dataSource.data;
         this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
         this.barChartSwitchableData = this.mapBarChartData(this.stats);
         this.totals = this.calculateTotals(this.stats);
         this.totalTableDataSource = new MatTableDataSource(this.totals);
         this.initializeCharts();
       });
-    })
+    });
+  }
+  editPayrollRecord(row) {
+    const dialogRef = this.matDialog.open(EditPayrollDetailComponent, {
+      width: '600px',
+      data: row,
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      this.reloadAll();
+    });
+  }
+  deletePayrollRecord(row) {
+    console.log(row);
+  }
+  finalize() {
+    if (this.rows[0].isPayed) {
+      const query = this.user;
+      this._payrollService.updatePayroll(this.rows[0].payroll_Id, query, 'FIN').subscribe(result => {
+        console.log(result);
+        this.reloadAll();
+      });
+    } else {
+      this.failedFinalizeSwal.fire().then(e => noop());
+    }
   }
 }

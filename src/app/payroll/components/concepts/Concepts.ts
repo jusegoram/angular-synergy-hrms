@@ -26,6 +26,11 @@ export class PayrollConcept {
             public isPartiallyPayed?: boolean,
             public partialPayment?: number,
             public outstandingAmount?: number,
+            public notice?: boolean,
+            public severance?: boolean,
+            public compassionate?: boolean,
+            public leaveWithoutPay?: boolean,
+            public taxable?: boolean,
         ) {
     }
 }

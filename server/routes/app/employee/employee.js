@@ -11,11 +11,20 @@ let EmployeePosition = require("../../../models/app/employee/employee-position")
 let EmployeeShift = require("../../../models/app/employee/employee-shift");
 let EmployeeHoursAndShift = require("../../../models/app/operations/operations-hour");
 
-router.get("/populateTable", function(req, res, next) {
-  var token = jwt.decode(req.query.token);
+router.get("/", function(req, res, next) {
+  console.log('invoked');
+  let query = req.query.clients;
+  let contextFilter;
+  if(query) {
+    query = JSON.parse(query);
+    contextFilter = { 'company.client': {$in: query}};
+  }else{
+    contextFilter = {};
+  }
+
   let employees = [];
   let cursor = Employee.find(
-    {},
+    contextFilter,
     "_id employeeId firstName middleName lastName socialSecurity status company"
   )
     .lean()
@@ -84,7 +93,7 @@ router.get("/main", function(req, res) {
               }
             }
           },
-          { $sort: { shiftDay: 1 } }
+          { $sort: { date: 1 } }
         ],
         as: "shift"
       }

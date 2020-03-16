@@ -4,7 +4,7 @@ var jwt = require("jsonwebtoken");
 var fastcsv = require("fast-csv");
 var Employee = require("../../../models/app/employee/employee-main");
 var fs = require("fs");
-
+let moment = require("moment");
 router.post("/", function(req, res, next) {
   let query = req.body;
   for (let propName in query) {
@@ -19,77 +19,95 @@ router.post("/", function(req, res, next) {
   if (
     query["company.hireDate"].$gte === null ||
     query["company.hireDate"].$gte === undefined ||
-    !query["company.hireDate"].$gte.includes('/')
+    !query["company.hireDate"].$gte.includes("/")
   ) {
     delete query["company.hireDate"];
-  }else{
-    query["company.hireDate"].$gte = new Date(query["company.hireDate"].$gte)
-    query["company.hireDate"].$lte = new Date(query["company.hireDate"].$lte)
+  } else {
+    query["company.hireDate"].$gte = new Date(query["company.hireDate"].$gte);
+    query["company.hireDate"].$lte = new Date(query["company.hireDate"].$lte);
   }
   if (
     query["company.terminationDate"].$gte === null ||
     query["company.terminationDate"].$gte === undefined ||
-    !query["company.terminationDate"].$gte.includes('/')
+    !query["company.terminationDate"].$gte.includes("/")
   ) {
     delete query["company.terminationDate"];
-  }else {
-    query["company.terminationDate"].$gte = new Date(query["company.terminationDate"].$gte);
-    query["company.terminationDate"].$lte = new Date(query["company.terminationDate"].$lte)
+  } else {
+    query["company.terminationDate"].$gte = new Date(
+      query["company.terminationDate"].$gte
+    );
+    query["company.terminationDate"].$lte = new Date(
+      query["company.terminationDate"].$lte
+    );
   }
   const [fromDate, toDate] = getWeekDates();
-  console.log(query);
   Employee.aggregate([
-    {$match: query},
-    {$lookup: { 
-      from: 'employee-positions',
-      let: {
-        employee_id: '$_id'
-      }, pipeline: [
-        {$match: {
-          $expr: { $eq: ['$employee','$$employee_id']},
-        }},
-        {$lookup: { from: 'administration-positions',localField: 'position', foreignField: '_id', as: 'position'}},
-        {$unwind: '$position'},
-        {$sort: {'startDate': 1}},  
-      ]
-        , as: 'position'}},
-    {$lookup: { 
-      from: 'employee-shift-updates',
-      let: {
-        employee_employeeId: '$employeeId'
-      }, pipeline: [
-        {$match: {
-          $expr: { $eq: ['$employeeId','$$employee_employeeId']},
-          effectiveDate: {
-            $gte: fromDate,$lte: toDate 
-          }
-        }}
-    ], as: 'shiftUpdates'}},
+    { $match: query },
+    {
+      $lookup: {
+        from: "employee-positions",
+        let: {
+          employee_id: "$_id"
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$employee", "$$employee_id"] }
+            }
+          },
+          {
+            $lookup: {
+              from: "administration-positions",
+              localField: "position",
+              foreignField: "_id",
+              as: "position"
+            }
+          },
+          { $unwind: "$position" },
+          { $sort: { startDate: 1 } }
+        ],
+        as: "position"
+      }
+    },
+    {
+      $lookup: {
+        from: "operations-hours",
+        let: {
+          employee_employeeId: "$employeeId"
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
+              },
+              date: {
+                $gte: fromDate,
+                $lte: toDate
+              }
+            }
+          },
+          { $sort: { date: 1 } }
+        ],
+        as: "shift"
+      }
+    }
   ]).exec((err, doc) => {
-   console.log(err);
+    console.log(err);
     res.status(200).json(doc);
-  })
+  });
 
   // syn and payrol
-  // employee first last client campaign manager supervisor hiring Date, position Date, position, wage, 
+  // employee first last client campaign manager supervisor hiring Date, position Date, position, wage,
 
-  //let employees = [];
-  // let cursor = Employee.find(query).select('-position.position.baseWage').cursor();
-  // cursor.on("data", item => employees.push(item));
-  // cursor.on("end", () => res.status(200).json(employees));
 });
 function getWeekDates() {
-  const now = new Date();
-  const dayOfWeek = now.getDay(); //0-6
-  const numDay = now.getDate();
-
-  const start = new Date(now); //copy
-  start.setDate(numDay - dayOfWeek);
-  start.setHours(0, 0, 0, 0);
-
-  const end = new Date(now); //copy
-  end.setDate(numDay + (7 - dayOfWeek));
-  end.setHours(0, 0, 0, 0);
+  let today = moment();
+  let start = today.startOf("week").toDate();
+  let end = today
+    .endOf("week")
+    .add(1, "day")
+    .toDate();
 
   return [start, end];
 }
@@ -265,34 +283,35 @@ let companyMissing = () => {
       let employeesLength = employees.length;
       for (let i = 0; i < employeesLength; i++) {
         const element = employees[i].company;
-        if(element !== null && element !== undefined) {
+        if (element !== null && element !== undefined) {
           let client =
-          element.client !== undefined && element.client !== null
-            ? element.client.length
-            : 0;
-        let campaign =
-          element.campaign !== undefined && element.campaign !== null
-            ? element.campaign.length
-            : 0;
-        let manager =
-          element.manager !== undefined && element.manager !== null
-            ? element.manager.length
-            : 0;
-        let supervisor =
-          element.supervisor.length !== undefined
-            ? element.supervisor.length
-            : 0;
-        let hireDate =
-          element.hireDate.toString().length !== undefined
-            ? element.hireDate.toString().length
-            : 0;
-        if (client < 1) checkedEmployees.push(employees[i]);
-        else if (campaign < 1) checkedEmployees.push(employees[i]);
-        else if (manager < 4) checkedEmployees.push(employees[i]);
-        else if (supervisor < 4) checkedEmployees.push(employees[i]);
-        else if (hireDate < 1) checkedEmployees.push(employees[i]);
-
-        }else{ checkedEmployees.push(employees[i])}
+            element.client !== undefined && element.client !== null
+              ? element.client.length
+              : 0;
+          let campaign =
+            element.campaign !== undefined && element.campaign !== null
+              ? element.campaign.length
+              : 0;
+          let manager =
+            element.manager !== undefined && element.manager !== null
+              ? element.manager.length
+              : 0;
+          let supervisor =
+            element.supervisor.length !== undefined
+              ? element.supervisor.length
+              : 0;
+          let hireDate =
+            element.hireDate.toString().length !== undefined
+              ? element.hireDate.toString().length
+              : 0;
+          if (client < 1) checkedEmployees.push(employees[i]);
+          else if (campaign < 1) checkedEmployees.push(employees[i]);
+          else if (manager < 4) checkedEmployees.push(employees[i]);
+          else if (supervisor < 4) checkedEmployees.push(employees[i]);
+          else if (hireDate < 1) checkedEmployees.push(employees[i]);
+        } else {
+          checkedEmployees.push(employees[i]);
+        }
         if (i === employees.length - 1) {
           resolve(checkedEmployees);
         }
@@ -402,7 +421,7 @@ let personalMissing = () => {
       $and: [
         {
           $or: [
-            { "personal": { $exists: false }},
+            { personal: { $exists: false } },
             { "personal.maritalStatus": "" },
             { "personal.address": "" },
             { "personal.town": "" },
@@ -410,12 +429,12 @@ let personalMissing = () => {
             { "personal.addressDate": null },
             { "personal.celNumber": "" },
             { "personal.birthDate": null },
-            { "personal.birthPlace":  "" },
+            { "personal.birthPlace": "" },
             { "personal.birthPlaceDis": "" },
             { "personal.birthPlaceTow": "" },
             { "personal.emailAddress": "" },
             { "personal.emailDate": null },
-            { "personal.hobbies.0": {$exists: false} }
+            { "personal.hobbies.0": { $exists: false } }
           ]
         },
         { status: "active" }
@@ -438,7 +457,9 @@ let personalMissing = () => {
 let emergencyContactMissing = () => {
   return new Promise((resolve, reject) => {
     let employees = [];
-    let cursor = Employee.find({ $and: [ {family: { $exists: false }}, { status: "active" }] })
+    let cursor = Employee.find({
+      $and: [{ family: { $exists: false } }, { status: "active" }]
+    })
       .lean()
       .cursor();
     cursor.on("data", item => {

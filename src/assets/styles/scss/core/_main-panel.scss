@@ -75,9 +75,9 @@ $mat-toolbar-height-mobile-landscape: 48px !default;
       @include flex(1 0 auto);
     }
   }
-  @include media-breakpoint-up(md) {
-    margin-left: $sidebar-width;
-  }
+ // @include media-breakpoint-up(sm) {
+  //  margin-left: $sidebar-width !important;
+//  }
 }
 
 .app-dark .mat-drawer-content {

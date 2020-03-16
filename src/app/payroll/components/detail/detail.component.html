@@ -1,224 +1,675 @@
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span> {{payroll.employees[0].payrollType}} PAYROLL </span>
+    <span> {{ payroll[0].payrollType }} PAYROLL </span>
     <span class="fill-remaining-space"></span>
-    <span >FROM {{payroll.fromDate | date: 'LLLL d, yyyy' | uppercase}} - TO
-        {{payroll.toDate | date: 'LLLL d, yyyy' | uppercase }}</span>
+    <span
+      >FROM {{ payroll[0].fromDate | date: "LLLL d, yyyy" | uppercase }} - TO
+      {{ payroll[0].toDate | date: "LLLL d, yyyy" | uppercase }}</span
+    >
   </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
 </mat-toolbar>
-
-<div class="mat-card-top">
-  <app-edit-payroll [payroll]='payroll' (onApplyUpdate)='reloadAll()'></app-edit-payroll>
-  <mat-card class="pa-1">
-    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start start" fxLayoutGap="5px">
-      <div style='height: 400px; width:100%'>
-          <fusioncharts [width]="width" [height]="height" [type]="type" [dataFormat]="dataFormat"
-          [dataSource]="doughnutChartData" (dataplotClick)="dataplotClickHandler($event)">
-        </fusioncharts>
-      </div>
-     <div style='height: 400px; width:100%'>
-        <fusioncharts [width]="widthBar" [height]="heightBar" type="column2d" [dataFormat]="dataFormat"
-        [dataSource]="barChartData" (dataplotClick)="dataplotClickHandler($event)">
+<ng-template #stats>
+  <div
+    fxLayout="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="5px"
+  >
+    <div style="height: 400px; width:100%">
+      <fusioncharts
+        [width]="width"
+        [height]="height"
+        [type]="type"
+        [dataFormat]="dataFormat"
+        [dataSource]="doughnutChartData"
+        (dataplotClick)="dataplotClickHandler($event)"
+      >
       </fusioncharts>
-     </div>
     </div>
-    <div class='tables pa-1 ma-1' fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-      <div style='width: 50%' fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
-        <h3>Total Payroll Stats</h3>
-        <div class='table'>
-          <table style='width: 100%' mat-table #table [dataSource]="totalTableDataSource">
-            <ng-container matColumnDef="concept">
-              <th mat-header-cell *matHeaderCellDef> CONCEPT </th>
-              <td mat-cell *matCellDef="let row"> {{row.label}} </td>
-            </ng-container>
-            <ng-container matColumnDef="amount">
-              <th mat-header-cell *matHeaderCellDef> AMOUNT </th>
-              <td mat-cell *matCellDef="let row"> {{row.value}} </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['concept', 'amount']; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['concept', 'amount'];"></tr>
-          </table>
-        </div>
-
-      </div>
-      <div style='width: 50%' fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="5px">
-        <h3>{{this.barChartData.chart.caption}}</h3>
-        <div class='table'>
-          <table style='width: 100%' mat-table #table [dataSource]="clientTableDataSource">
-            <ng-container matColumnDef="concept">
-              <th mat-header-cell *matHeaderCellDef> CONCEPT </th>
-              <td mat-cell *matCellDef="let row"> {{row.label}} </td>
-            </ng-container>
-            <ng-container matColumnDef="amount">
-              <th mat-header-cell *matHeaderCellDef> AMOUNT </th>
-              <td mat-cell *matCellDef="let row"> {{row.value}} </td>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['concept', 'amount']; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: ['concept', 'amount'];"></tr>
-          </table>
-        </div>
-
+    <div style="height: 400px; width:100%">
+      <fusioncharts
+        [width]="widthBar"
+        [height]="heightBar"
+        type="column2d"
+        [dataFormat]="dataFormat"
+        [dataSource]="barChartData"
+        (dataplotClick)="dataplotClickHandler($event)"
+      >
+      </fusioncharts>
+    </div>
+  </div>
+  <div
+    class="tables pa-1 ma-1"
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="20px"
+  >
+    <div
+      style="width: 50%"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="5px"
+    >
+      <h3>Total Payroll Stats</h3>
+      <div class="table">
+        <table
+          style="width: 100%"
+          mat-table
+          #table
+          [dataSource]="totalTableDataSource"
+        >
+          <ng-container matColumnDef="concept">
+            <th mat-header-cell *matHeaderCellDef>CONCEPT</th>
+            <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>AMOUNT</th>
+            <td mat-cell *matCellDef="let row">{{ row.value }}</td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="['concept', 'amount']; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: ['concept', 'amount']"></tr>
+        </table>
       </div>
     </div>
-  </mat-card>
+    <div
+      style="width: 50%"
+      fxLayout="column"
+      fxLayoutAlign="center center"
+      fxLayoutGap="5px"
+    >
+      <h3>{{ this.barChartData.chart.caption }}</h3>
+      <div class="table">
+        <table
+          style="width: 100%"
+          mat-table
+          #table
+          [dataSource]="clientTableDataSource"
+        >
+          <ng-container matColumnDef="concept">
+            <th mat-header-cell *matHeaderCellDef>CONCEPT</th>
+            <td mat-cell *matCellDef="let row">{{ row.label }}</td>
+          </ng-container>
+          <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>AMOUNT</th>
+            <td mat-cell *matCellDef="let row">{{ row.value }}</td>
+          </ng-container>
+          <tr
+            mat-header-row
+            *matHeaderRowDef="['concept', 'amount']; sticky: true"
+          ></tr>
+          <tr mat-row *matRowDef="let row; columns: ['concept', 'amount']"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</ng-template>
 
-  <mat-card class="pa-1">
-    <mat-card-header>
-      <mat-card-title>Employees</mat-card-title>
-      <mat-card-subtitle>Details for each employee included in the payroll</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-            <!-- <mat-form-field appearance=outline>
-              <mat-label>Filter Field</mat-label>
-          <mat-select placeholder="Placeholder"  name="item">
-            <mat-option *ngFor="let item of filterItems" [value]="item">
-              {{item.viewValue}}
-            </mat-option>
-          </mat-select>
-            </mat-form-field> -->
-          <mat-form-field appearance=outline>
-              <mat-label>Filter Value</mat-label>
-              <input matInput placeholder="Abc" [(ngModel)]="filterValue" (keyup)="applyFilter(filterValue)">
-            </mat-form-field>
+<ng-template #viewEmployees>
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
+    <mat-form-field appearance='outline'>
+      <mat-label>SEARCH</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="...">
+    </mat-form-field>
+    <button mat-flat-button (click)="stepper.next()" color='accent' *ngIf="!payroll[0].isFinalized"
+    >FINALIZE</button>
+  </div>
+
+  <ngx-datatable
+    #myTable
+    class="material"
+    style="height: 800px; box-shadow: none !important;"
+    [rows]="rows"
+    [columnMode]="ColumnMode.force"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [scrollbarV]="true"
+    [limit]="14"
+  >
+    <ngx-datatable-row-detail
+      rowHeight="150"
+      #myDetailRow
+    >
+      <ng-template
+        let-row="row"
+        let-expanded="expanded"
+        ngx-datatable-row-detail-template
+      >
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="15px">
+          <div class="table-border">
+            <table class="greyGridTable">
+              <thead>
+                <th span="2">REGULAR RATE HRS +</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong
+                      >SYS:
+                      {{
+                        row.totalSystemRegularPay?.hours * 60 | minutesHours
+                      }}@{{
+                        (row.totalSystemRegularPay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalSystemRegularPay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TRA:
+                      {{
+                        row.totalTrainingRegularPay?.hours * 60 | minutesHours
+                      }}@{{
+                        row.totalTrainingRegularPay?.rate?.$numberDecimal
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTrainingRegularPay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TOS:
+                      {{ row.totalTosRegularPay?.hours * 60 | minutesHours }}@{{
+                        (row.totalTosRegularPay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTosRegularPay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >OVERTIME:
+                      {{ row.totalOvertimePay?.hours * 60 | minutesHours }}@{{
+                        (row.totalOvertimePay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalOvertimePay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-border">
+            <table class="greyGridTable">
+              <thead>
+                <th span="2">X1.5 HOLIDAY HRS +</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong
+                      >SYS:
+                      {{
+                        row.totalSystemHolidayX1Pay?.hours * 60 | minutesHours
+                      }}@{{
+                        (row.totalSystemHolidayX1Pay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalSystemHolidayX1Pay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TRA:
+                      {{
+                        row.totalTrainingHolidayX1Pay?.hours * 60 | minutesHours
+                      }}@{{
+                        row.totalTrainingHolidayX1Pay?.rate?.$numberDecimal
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTrainingHolidayX1Pay?.totalPayed)[
+                        "$numberDecimal"
+                      ] | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TOS:
+                      {{ row.totalTosHolidayX1Pay?.hours * 60 | minutesHours }}@{{
+                        (row.totalTosHolidayX1Pay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTosHolidayX1Pay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-border">
+            <table class="greyGridTable">
+              <thead>
+                <th span="2">X2 HOLIDAY HRS +</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong
+                      >SYS:
+                      {{
+                        row.totalSystemHolidayX2Pay?.hours * 60 | minutesHours
+                      }}@{{
+                        (row.totalSystemHolidayX2Pay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalSystemHolidayX2Pay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TRA:
+                      {{
+                        row.totalTrainingHolidayX2Pay?.hours * 60 | minutesHours
+                      }}@{{
+                        row.totalTrainingHolidayX2Pay?.rate?.$numberDecimal
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTrainingHolidayX2Pay?.totalPayed)[
+                        "$numberDecimal"
+                      ] | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong
+                      >TOS:
+                      {{ row.totalTosHolidayX2Pay?.hours * 60 | minutesHours }}@{{
+                        (row.totalTosHolidayX2Pay?.rate)["$numberDecimal"]
+                          | currency: ""
+                      }}</strong
+                    >
+                  </td>
+                  <td>
+                    {{
+                      (row.totalTosHolidayX2Pay?.totalPayed)["$numberDecimal"]
+                        | currency: "$"
+                    }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="viewport">
+            <table class="greyGridTable">
+              <thead>
+                <th>OTHER PAYMENTS +</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeOtherpays">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="viewport">
+            <table class="greyGridTable">
+              <thead>
+                <th>PAYED LEAVES +</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeCSL">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+                <tr *ngFor="let ops of row.employeeMaternities">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="viewport">
+            <table class="greyGridTable">
+              <thead>
+                <th>DEDUCTIONS -</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeDeductions">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-border">
+            <table class="greyGridTable">
+              <thead>
+                <th>SOCIAL & TAX -</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>EMP-CON</strong></td>
+                  <td>
+                    {{
+                      row.ssEmployeeContribution["$numberDecimal"] | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>*RCC-CON</strong></td>
+                  <td>
+                    {{
+                      row.ssEmployerContribution["$numberDecimal"] | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>INCOME TAX</strong></td>
+                  <td>{{ row.incomeTax["$numberDecimal"] | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-border">
+            <table class="greyGridTable">
+              <thead>
+                <th>TOTALS</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <strong>
+                      TAXABLE GROSS
+                    </strong>
+                  </td>
+                  <td>
+                    {{
+                      row.grossBeforeCSLPayment["$numberDecimal"] | currency: "$"
+                    }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>
+                      TOTAL GROSS
+                    </strong>
+                  </td>
+                  <td>
+                    {{ row.grossPayment["$numberDecimal"] | currency: "$" }}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>
+                      NET PAYMENT
+                    </strong>
+                  </td>
+                  <td>{{ row.netPayment["$numberDecimal"] | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
         </div>
-      <cdk-virtual-scroll-viewport mat-table class="viewport" itemSize="48" minBufferPx="200" maxBufferPx="400">
-        <tr class="mat-header-row">
-          <th mat-header-cell>
-            Employee ID
-          </th>
-          <th mat-header-cell>
-            Name
-          </th>
-          <th mat-header-cell>
-            Client
-          </th>
-          <th mat-header-cell>
-            Campaign
-          </th>
-          <th mat-header-cell>
-            Base Wage
-          </th>
-          <th mat-header-cell>
-            Regular Hours
-          </th>
-          <th mat-header-cell>
-            Hourly Rate
-          </th>
-          <th mat-header-cell>
-            Overtime Hours
-          </th>
-          <th mat-header-cell>
-            Overtime Rate
-          </th>
-          <th mat-header-cell>
-            Other Payments
-          </th>
-          <th mat-header-cell>
-            Bonus
-          </th>
-          <th mat-header-cell>
-            Gross Salary
-          </th>
-          <th mat-header-cell>
-            Social Security
-          </th>
-          <th mat-header-cell>
-            Tax
-          </th>
-          <th mat-header-cell>
-            Other Deductions
-          </th>
-          <th mat-header-cell>
-            Net Salary
-          </th>
-          <th mat-header-cell>
-            Dates
-          </th>
-          <th mat-header-cell>
-            Action
-          </th>
-        </tr>
-        <ng-container *cdkVirtualFor="let n of dataSource">
-          <tr>
-            <td mat-cell width="90px">
-              <span>{{n.employeeId}}</span>
-            </td>
-            <td mat-cell width="200px">
-              <span>{{n.employeeName}}</span>
-            </td>
-            <td mat-cell width="70px">
-              <span>{{n.employeeCompany.client}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{n.employeeCompany.campaign}}</span>
-            </td>
-            <td mat-cell width="80px">
-              <span>{{n.wage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{n.totalRegularHoursPay?.hours | minuteSeconds}}</span>
-            </td>
-            <td mat-cell width="50px">
-              <span>{{n.hourlyRate.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{n.totalOvertimeHoursPay?.hours | minuteSeconds }}</span>
-            </td>
-            <td mat-cell width="80px">
-              <span>{{n.overtimeRate?.toFixed(2) | currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
-            </td>
-            <td mat-cell width="70px">
-              <span>{{n.totalOtherpay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="70px">
-              <span>{{n.totalBonusPay | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{n.grossWage | currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="60px">
-              <span>{{(n.socialSecurityEmployee + n.socialSecurityEmployer )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
-            </td>
-            <td mat-cell width="60px">
-              <span>{{(n.incomeTax )| currency:'BZD':'symbol-narrow':'1.2-2'}}</span>
-            </td>
-            <td mat-cell width="70px">
-              <span>{{n.totalDeductions| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{n.netWage| currency:'BZD':'symbol-narrow':'2.2-2'}}</span>
-            </td>
-            <td mat-cell width="90px">
-              <span>{{payroll.fromDate | date: 'MMM&nbsp;d'}} {{ payroll.toDate | date: 'MMM&nbsp;d'}}</span>
-            </td>
-            <td mat-cell>
-              <span> <button mat-icon-button [matMenuTriggerFor]="menu">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                  <a mat-menu-item>
-                    <mat-icon>monetization_on</mat-icon>
-                    <span>Payed Payroll Details'</span>
-                  </a>
-                  <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.employee}" mat-menu-item>
-                    <mat-icon>account_circle</mat-icon>
-                    <span>Go to Profile</span>
-                  </a>
-                  <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.supervisor}" mat-menu-item>
-                    <mat-icon>supervised_user_circle</mat-icon>
-                    <span>Go to Supervisor</span>
-                  </a>
-                </mat-menu>
-              </span>
-            </td>
-          </tr>
+      </ng-template>
+    </ngx-datatable-row-detail>
+    <ngx-datatable-column
+      [width]="60"
+      [resizeable]="false"
+      [sortable]="false"
+      [draggable]="false"
+      [canAutoResize]="false"
+    >
+      <ng-template
+        let-row="row"
+        let-expanded="expanded"
+        ngx-datatable-cell-template
+      >
+        <button
+          style="margin-top: -10px;"
+          mat-icon-button
+          color="primary"
+          [title]="'EXPAND DETAILS'"
+          (click)="toggleExpandRow(row)"
+        >
+        <ng-container *ngIf="!expanded; else elseTemplate">
+          <mat-icon>arrow_right</mat-icon>
         </ng-container>
-      </cdk-virtual-scroll-viewport>
-    </mat-card-content>
+        <ng-template #elseTemplate>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </ng-template>
+      </button>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Employee ID"
+      [width]="45"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Name"
+      prop="employeeName"
+      [width]="100"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Client"
+      [width]="40"
+      prop="employeeCompany.client"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Campaign"
+      [width]="50"
+      prop="employeeCompany.campaign"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Hire Date"
+      [width]="40"
+      prop="employeeCompany.hireDate"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | date: "MM/dd/yyyy" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Position"
+      [width]="40"
+      prop="positionName"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Since"
+      [width]="50"
+      prop="employeePosition.startDate"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | date: "MM/dd/yyyy" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Monthly Wage"
+      [width]="50"
+      prop="positionBaseWage"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Weekly Wage"
+      [width]="50"
+      prop="positionBaseWage"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ (value * 12) / 48 | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Gross Wage"
+      [width]="40"
+      prop="grossPayment.$numberDecimal"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Net Wage"
+      [width]="10"
+      prop="netPayment.$numberDecimal"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        <strong>{{ value | currency: "$" }}</strong>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      [width]="30"
+      [sortable]="false"
+      [draggable]="false"
+      *ngIf="!payroll[0].isFinalized"
+    >
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button
+          mat-icon-button
+          color="primary"
+          style="margin-top: -10px;"
+          [matMenuTriggerFor]="menu"
+        >
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editPayrollRecord(row)"><mat-icon>edit</mat-icon>EDIT</button>
+          <button mat-menu-item *ngIf="!row.isPayed" [swal]='deleteSwal' color='warn'><mat-icon>delete</mat-icon>REMOVE</button>
+          <swal
+          #deleteSwal
+          title="ARE YOU SURE"
+          text='You can&apos;t undo a deleted payroll record'
+          icon='question'
+          [showCancelButton]="true"
+          [focusCancel]="true"
+          (confirm)="deletePayrollRecord(row)"
+          >
+          </swal>
+        </mat-menu>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</ng-template>
+<div class="mat-card-top">
+  <mat-card class="pa-1">
+    <ng-container *ngIf="!payroll[0]?.isFinalized; else elseTemplate">
+      <mat-horizontal-stepper #stepper>
+        <mat-step label="VIEW STATS">
+          <ng-template [ngTemplateOutlet]="stats"></ng-template>
+        </mat-step>
+        <mat-step label="MODIFY RECORDS">
+          <ng-template [ngTemplateOutlet]="viewEmployees"></ng-template>
+        </mat-step>
+        <mat-step label="FINALIZE">
+          <div class='pa-2' fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="15px">
+            <h2> INFORMATION INTEGRITY AGREEMENT </h2>
+            <h3 style="width: 500px; overflow: fit-content;">
+              Through this agreement, I <u>{{this.user.name}}</u> declare that the information in this payroll is trustworthy.
+              This payroll has been throughly checked to <i>identify</i>, and <i>remove</i> any kind of fraud or hour manipulation.
+              <strong> If a fraud was discovered in the future: I, {{this.user.name}}, am held responsible of reviewing and approving this payroll. </strong>
+            </h3>
+
+            <h3>NO MORE EDITING IS ALLOWED BEYOND THIS POINT</h3>
+            <mat-card-subtitle>Synergy Team - If you understand the responsability held upon you by finalizing this payroll please click the FINALIZE button below.</mat-card-subtitle>
+            <button mat-raised-button color='warn' [swal]='finalizeSwal'>FINALIZE PAYROLL</button>
+            <swal
+            #finalizeSwal
+            title="ARE YOU SURE"
+            text='Remember, no editing is allowed beyond this point. Furthermore, you can only finalize payrolls that have been payed. To FINALIZE click on OK'
+            icon='question'
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="finalize()"
+            >
+            </swal>
+            <swal
+            #failedFinalizeSwal
+            title="OH NO!"
+            text='You can&apos;t finalize a payroll until its payed'
+            icon='error'
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="finalize()"
+            >
+            </swal>
+          </div>
+        </mat-step>
+      </mat-horizontal-stepper>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <mat-tab-group>
+        <mat-tab label="VIEW STATS">
+          <ng-template [ngTemplateOutlet]="stats"></ng-template>
+        </mat-tab>
+        <mat-tab label="VIEW EMPLOYEES">
+          <ng-template [ngTemplateOutlet]="viewEmployees"></ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-template>
   </mat-card>
 </div>

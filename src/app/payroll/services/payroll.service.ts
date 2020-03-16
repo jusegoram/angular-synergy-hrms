@@ -1,7 +1,7 @@
 import { SessionService } from './../../session/session.service';
 import { Payroll } from '../components/manage/Payroll';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, noop } from 'rxjs';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 
@@ -57,7 +57,7 @@ export class PayrollService {
     );
   }
 
-  savePayedPayroll(data){
+  savePayedPayroll(data) {
     const body = {
       'payedEmployees': data,
       'payedPayrolls': data[0].payrolls,
@@ -69,11 +69,7 @@ export class PayrollService {
     });
   }
 
-  getPayedPayrolls(){
-    return this.httpClient.get<any>('/api/v1/payroll/pay');
-  }
-
-  sendPayslipts(payId){
+  sendPayslipts(payId) {
     const body = {
       payId: payId
     };
@@ -83,8 +79,8 @@ export class PayrollService {
     });
   }
 
-  getPayslip(employee, payId){
-    const params = new HttpParams().set('payId', payId)
+  getPayslip(employee, payId) {
+    const params = new HttpParams().set('payId', payId);
     return this.httpClient.get<any>(`/api/v1/payroll/payslips/${employee}`, {
       params: params
     });
@@ -98,24 +94,28 @@ export class PayrollService {
     });
   }
 
-  getClient(): Observable<any> {
+  getClient(contextFilter?: string[]): Observable<any> {
     if (!this._clients) {
-      this._clients = this.httpClient
-        .get<any>('/api/v1/admin/employee/client')
-        .pipe(
-          map(data => {
-            this._clients = data;
-            return data;
-          }),
-          publishReplay(1),
-          refCount()
-        );
+      let params;
+      if (contextFilter && contextFilter.length > 0) {
+         params = new HttpParams().set('clients', JSON.stringify(contextFilter));
+      }
+      this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client' , { params: params }).pipe(
+        map((data) => {
+          return data;
+        }),
+        publishReplay(1),
+        refCount()
+      );
     }
     return this._clients;
   }
 
+  getDecodedToken() {
+    return this._sessionService.decodeToken();
+  }
   getEmployeesByPayrollType(payrollType, from, to) {
-    //FIX
+    // FIX-ME: fix this
     return this.httpClient.get<any>(
       `/api/v1/payroll/getPayroll?payrollType=${payrollType}&from=${from}&to=${to}`
     );
@@ -152,36 +152,29 @@ export class PayrollService {
       params: params
     });
   }
-  savePayroll(otherpay, deductions, bonus){
+  savePayroll(payroll) {
     const body = {
-      payroll: this.payroll,
-      otherpay: otherpay,
-      deduction: deductions,
-      bonus: bonus,
+      payroll: payroll,
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post('/api/v1/payroll/', body, {
       headers: headers
     });
   }
-  updatePayroll(payroll, element, type) {
+  updatePayroll(payroll, element, type, payrollRecordId?) {
     const body = element;
-    const params = new HttpParams().set('conceptType', type);
+    const params = new HttpParams().set('conceptType', type).set('payrollRecordId', payrollRecordId);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.put('/api/v1/payroll/' + payroll, body, {headers: headers, params: params});
   }
 
-  getPayroll(id: any, type: any, finalized: any): Observable<any> {
-    let params
-    if(id.length === 2){
-       params = new HttpParams().set('id', id[0]).set('id2', id[1]).set('type', type).set('finalized', finalized);
-    }else{
-      params = new HttpParams().set('id', id).set('type', type).set('finalized', finalized);
-    }
+  getPayroll(id: any, type: any, finalized: any, payed?: any): Observable<any> {
+    let params;
+      params = new HttpParams().set('id', id).set('type', type).set('finalized', finalized).set('payed', payed);
     return this.httpClient.get<any>('/api/v1/payroll', {params: params});
   }
 
-  getPayedHistory(){
+  getPayedHistory() {
     return this.httpClient.get<any>('/api/v1/payroll/payed');
   }
   deletePayroll() {
@@ -191,34 +184,53 @@ export class PayrollService {
 
   }
 
-  getConcepts(type, id, verified, payed, maternity?, csl?){
+  getConcepts(arg: {
+    type?: string, id?: string, verified?: boolean,
+    payed?: boolean, maternity?: boolean, csl?: boolean,
+    notice?: boolean, severance?: boolean, compassionate?: boolean,
+    leaveWithoutPay?: boolean, vacations?: boolean, assigned?: boolean, taxable?: boolean , payroll?: string}) {
+    const {type, id, verified,
+      payed, maternity, csl,
+      notice, severance, compassionate,
+      leaveWithoutPay, vacations, assigned, taxable, payroll} = arg;
     // if id === 'all' then all employees are fetched
-    const params = new HttpParams()
-    .set('verified', verified)
-    .set('payed', payed)
-    .set('maternity', maternity)
-    .set('csl', csl);
+    let params = new HttpParams();
+    params = verified !== undefined && verified !== null ? params.set('verified', verified + '') : params;
+    params = payed  !== undefined && payed  !== null ? params.set('payed', payed + '') : params;
+    params = maternity !== undefined && maternity !== null ? params.set('maternity', maternity + '')  : params;
+    params = csl !== undefined && csl !== null ? params.set('csl', csl + '') : params;
+    params = notice !== undefined && notice !== null ? params.set('notice', notice + '') : params;
+    params = severance !== undefined && severance !== null ? params.set('severance', severance + '') : params;
+    params = compassionate !== undefined && compassionate !== null ? params.set('compassionate', compassionate + '') : params;
+    params = leaveWithoutPay !== undefined && leaveWithoutPay !== null ? params.set('LeaveWithoutPay', leaveWithoutPay + '') : params;
+    params = vacations !== undefined && vacations !== null ? params.set('vacations', vacations + '') : params;
+    params = assigned !== undefined && assigned !== null ? params.set('assigned', assigned + '') : params;
+    params = payroll !== undefined && payroll !== null ? params.set('payroll', payroll) : params;
+    params = taxable !== undefined && taxable !== null ? params.set('taxable', taxable + '') : params;
+
+
+
     return this.httpClient.get<any>(`/api/v1/payroll/concepts/${type}/${id}`, {
       params: params
     });
   }
 
-  saveConcept(concept){
-    const {type, employee} = concept
+  saveConcept(concept) {
+    const {type, employee} = concept;
     const body = concept;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(`/api/v1/payroll/concepts/${type}/${employee}`, body, {
       headers: headers
     });
   }
-  updateConcept({type, id, query}){
+  updateConcept({type, id, query}) {
     const body = {id, query};
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put(`/api/v1/payroll/concepts/${type}`, body, {headers: headers})
+    return this.httpClient.put(`/api/v1/payroll/concepts/${type}`, body, {headers: headers});
   }
-  deleteConcept({type, id}){
-    const params = new HttpParams().set('id', id)
-    return this.httpClient.delete(`/api/v1/payroll/concepts/${type}`, {params: params})
+  deleteConcept({type, id}) {
+    const params = new HttpParams().set('id', id);
+    return this.httpClient.delete(`/api/v1/payroll/concepts/${type}`, {params: params});
   }
   getEmployees() {
     if (!this._employees) {
@@ -234,6 +246,9 @@ export class PayrollService {
   }
   refreshEmployees() {
     this._employees = null;
+  }
+  getUser() {
+    return this._sessionService.decodeToken();
   }
 
 

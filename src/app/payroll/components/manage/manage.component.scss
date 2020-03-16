@@ -26,11 +26,6 @@ $mat-toolbar-height-mobile-landscape: 148px !default;
   margin-right: auto;
   margin-bottom: 20px;
 }
-.viewport {
-  height: 500px;
-  border: 1px solid gainsboro;
-  border-radius: 5px;
-}
 .fill-remaining-space {
   flex: 1 1 auto;
 }
@@ -54,5 +49,30 @@ mat-expansion-panel {
 
 .headers-align .mat-expansion-panel-header-description {
   justify-content: space-between;
-  align-items: center;
+  align-items: left;
+}
+table.greyGridTable {
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+ th {
+  background: #f2f2f2;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+div.wrapper {
+  height: 240px; // change this to desired height
+  overflow: scroll;
+}
+div.wrapper::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #aaa;
+  }
+  div.wrapper::-webkit-scrollbar-thumb {
+    background: #000;
 }

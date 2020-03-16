@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"SynergyLink": {
+		"Synergy": {
 			"root": "",
 			"sourceRoot": "src",
 			"projectType": "application",
@@ -23,6 +23,7 @@
 						"styles": [
 							"src/assets/fonts/pe/css/pe-icon-set-weather.css",
 							"src/assets/fonts/data-table/icons.css",
+							"node_modules/@sweetalert2/theme-material-ui/_material-ui.scss",
 							"src/assets/styles/app.scss"
 						],
 						"scripts": [
@@ -55,18 +56,18 @@
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"options": {
-						"browserTarget": "SynergyLink:build"
+						"browserTarget": "Synergy:build"
 					},
 					"configurations": {
 						"production": {
-							"browserTarget": "SynergyLink:build:production"
+							"browserTarget": "Synergy:build:production"
 						}
 					}
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",
 					"options": {
-						"browserTarget": "SynergyLink:build"
+						"browserTarget": "Synergy:build"
 					}
 				},
 				"test": {
@@ -81,6 +82,7 @@
 						"styles": [
 							"src/assets/fonts/pe/css/pe-icon-set-weather.css",
 							"src/assets/fonts/data-table/icons.css",
+							"node_modules/@sweetalert2/theme-material-ui/_material-ui.scss",
 							"src/assets/styles/app.scss"
 						],
 						"assets": [
@@ -103,7 +105,7 @@
 				}
 			}
 		},
-		"SynergyLink-e2e": {
+		"Synergy-e2e": {
 			"root": "",
 			"sourceRoot": "",
 			"projectType": "application",
@@ -112,7 +114,7 @@
 					"builder": "@angular-devkit/build-angular:protractor",
 					"options": {
 						"protractorConfig": "./protractor.conf.js",
-						"devServerTarget": "SynergyLink:serve"
+						"devServerTarget": "Synergy:serve"
 					}
 				},
 				"lint": {
@@ -129,7 +131,7 @@
 			}
 		}
 	},
-	"defaultProject": "SynergyLink",
+	"defaultProject": "Synergy",
 	"schematics": {
 		"@schematics/angular:component": {
 			"prefix": "app",

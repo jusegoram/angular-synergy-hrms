@@ -148,7 +148,6 @@ export class ShiftComponent implements OnInit, OnChanges {
   }
 
   onPageChange(e) {
-    console.log(e);
     if(this.dataSource.data.length > 0) {
       const currentDSIndex = e.pageIndex * e.pageSize;
       let currentPage = [];
@@ -163,7 +162,6 @@ export class ShiftComponent implements OnInit, OnChanges {
     }
   }
   calculateTotalHours(arr: any[]) {
-    console.log(arr);
     if (arr.length > 0) {
       const totaled: any = {
         hh: Number,

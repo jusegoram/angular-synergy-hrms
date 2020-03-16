@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import * as XLSX from 'xlsx';
 
 @Component({
-  selector: 'ops-kpi',
+  selector: 'report-kpi',
   templateUrl: './kpi.component.html',
   styleUrls: ['./kpi.component.scss']
 })

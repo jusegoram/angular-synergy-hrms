@@ -11,6 +11,7 @@ import moment from 'moment';
   styleUrls: ['./report.component.scss']
 })
 export class ReportComponent implements OnInit {
+  private auth: any;
   data: any;
   clients: any[];
   campaigns: any[];
@@ -97,14 +98,14 @@ export class ReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.employeeService.getClient().subscribe(data => (this.clients = data));
+    this.auth = this.employeeService.getDecodedToken();
+    this.employeeService.getClient(this.auth.clients).subscribe(data => (this.clients = data));
     this.buildForm();
-    console.log(this.employeeService.getDecodedToken());
   }
   buildForm() {
     this.reportForm = this.fb.group({
       statusCheck: [false],
-      clientCheck: [false],
+      clientCheck: [this.auth.clients.length > 0] ,
       campaignCheck: [false],
       supervisorCheck: [false],
       hireDateCheck: [false],
@@ -142,7 +143,8 @@ export class ReportComponent implements OnInit {
     const queryParam = this.queryForm.value;
     const obj = {
       status: queryParam.status,
-      'company.client': queryParam.client.name,
+      'company.client': this.auth.clients.length > 0 && !queryParam.client.name
+                                  ? { $in : this.auth.clients } : queryParam.client.name,
       'company.campaign': queryParam.campaign.name,
       'company.supervisor': queryParam.supervisor,
       'company.manager': queryParam.manager,
@@ -331,71 +333,15 @@ export class ReportComponent implements OnInit {
   }
 
   exportShift(element) {
+    const shift = element.shift;
     if (this.shiftInfoToggle) {
-      const workpatterns = element.shift;
-      const workpattern = workpatterns[0];
       const exportShift: any = {};
-      if (workpattern) {
-        const shift = workpattern.shift;
-        const week = shift.shift;
-        if (shift !== undefined) {
-          exportShift._id = workpattern._id;
-          exportShift.employeeId = workpattern.employeeId;
-          exportShift.name = shift.name;
-          if (element.shiftUpdates.length > 0) {
-            for (let i = 0; i < element.shiftUpdates.length; i++) {
-              const update = element.shiftUpdates[i];
-              let day = new Date(update.effectiveDate).getDay();
-              day = day === 0 ? 6 : day - 1;
-              week[day].startTime = update.timeIn;
-              week[day].endTime = update.timeOut;
-              week[day].onShift = update.timeIn.includes(':');
-            }
-          }
-          exportShift['monday-in'] = week[0].onShift
-            ? this.transformTime(week[0].startTime)
-            : '00:00';
-          exportShift['monday-out'] = week[0].onShift
-            ? this.transformTime(week[0].endTime)
-            : '00:00';
-          exportShift['tuesday-in'] = week[1].onShift
-            ? this.transformTime(week[1].startTime)
-            : '00:00';
-          exportShift['tuesday-out'] = week[1].onShift
-            ? this.transformTime(week[1].endTime)
-            : '00:00';
-          exportShift['wednesday-in'] = week[2].onShift
-            ? this.transformTime(week[2].startTime)
-            : '00:00';
-          exportShift['wednesday-out'] = week[2].onShift
-            ? this.transformTime(week[2].endTime)
-            : '00:00';
-          exportShift['thursday-in'] = week[3].onShift
-            ? this.transformTime(week[3].startTime)
-            : '00:00';
-          exportShift['thursday-out'] = week[3].onShift
-            ? this.transformTime(week[3].endTime)
-            : '00:00';
-          exportShift['friday-in'] = week[4].onShift
-            ? this.transformTime(week[4].startTime)
-            : '00:00';
-          exportShift['friday-out'] = week[4].onShift
-            ? this.transformTime(week[4].endTime)
-            : '00:00';
-          exportShift['saturday-in'] = week[5].onShift
-            ? this.transformTime(week[5].startTime)
-            : '00:00';
-          exportShift['saturday-out'] = week[5].onShift
-            ? this.transformTime(week[5].endTime)
-            : '00:00';
-          exportShift['sunday-in'] = week[6].onShift
-            ? this.transformTime(week[6].startTime)
-            : '00:00';
-          exportShift['sunday-out'] = week[6].onShift
-            ? this.transformTime(week[6].endTime)
-            : '00:00';
-          exportShift['shiftStartDate'] = workpattern.startDate;
-        }
+      for (let i = 0; i < shift.length; i++) {
+        const day = shift[i];
+        exportShift[moment(day.date)
+      .format('MM/DD/YYYY')
+      .toString()] =
+      `${this.transformTime(day.shiftStartTime)} - ${this.transformTime(day.shiftEndTime)}`;
       }
       return exportShift !== null && exportShift !== undefined
         ? exportShift

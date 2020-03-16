@@ -1,7 +1,10 @@
+import { IncomeTaxComponent } from './payroll/income-tax/income-tax.component';
+import { HolidaysComponent } from './payroll/holidays/holidays.component';
+import { SocialSecurityComponent } from './payroll/social-security/social-security.component';
 import { MaterialSharedModule } from './../shared/material.shared.module';
 import { AdminRoutingModule } from './admin.routing';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { AccountComponent } from './account/acount.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { ContentComponent } from './content/content.component';
@@ -21,6 +24,8 @@ import { AuthenticationService } from '../authentication.service';
 import { EditUserDialogComponent } from './account/edit-user-dialog/edit-user-dialog.component';
 import { CreateUserComponent } from './account/create-user/create-user.component';
 import { RecentActivitiesComponent } from './account/recent-activities/recent-activities.component';
+import { PayrollComponent } from './payroll/payroll.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 @NgModule({
@@ -30,10 +35,15 @@ import { RecentActivitiesComponent } from './account/recent-activities/recent-ac
     MaterialSharedModule,
     FormsModule,
     HttpClientModule,
+    NgxDatatableModule,
   ],
   declarations: [
     AccountComponent,
     EmployeeComponent,
+    PayrollComponent,
+    SocialSecurityComponent,
+    HolidaysComponent,
+    IncomeTaxComponent,
     ContentComponent,
     ClientComponent,
     WorkpatternComponent,
@@ -47,7 +57,7 @@ import { RecentActivitiesComponent } from './account/recent-activities/recent-ac
     CreateUserComponent,
     RecentActivitiesComponent,
   ],
-  providers: [AdminService,
+  providers: [AdminService, CurrencyPipe, DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

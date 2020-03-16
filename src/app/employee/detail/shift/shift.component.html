@@ -79,12 +79,12 @@
           </ng-container>
         <ng-container matColumnDef="scheduledHours">
           <th mat-header-cell *matHeaderCellDef> Sched. HRS </th>
-          <td mat-cell *matCellDef="let row"> {{row.shiftScheduledHours | minutesHours}} </td>
+          <td mat-cell *matCellDef="let row"> {{row?.shiftScheduledHours | minutesHours}} </td>
           <td mat-footer-cell *matFooterCellDef> {{totalSched | minutesHours}} </td>
         </ng-container>
         <ng-container matColumnDef="workedHours" style="background-color:aliceblue;">
           <th mat-header-cell *matHeaderCellDef style="background-color:aliceblue;"> Real HRS </th>
-          <td mat-cell *matCellDef="let row" style="background-color:aliceblue;"> {{row.systemHours.value}} </td>
+          <td mat-cell *matCellDef="let row" style="background-color:aliceblue;"> {{row?.systemHours?.value}} </td>
           <td mat-footer-cell *matFooterCellDef  style="background-color:aliceblue;"> {{totalReal?.valueString}} </td>
         </ng-container>
         <ng-container matColumnDef="scheduledLunchBreak">
@@ -96,7 +96,7 @@
         </ng-container>
         <ng-container matColumnDef="lunchBreak" style="background-color:aliceblue;">
           <th mat-header-cell *matHeaderCellDef style="background-color:aliceblue;"> Real L&B </th>
-          <td mat-cell *matCellDef="let row" style="background-color:aliceblue;"> L:{{row?.lunchHours.value}} + B:{{row?.breakHours.value}} </td>
+          <td mat-cell *matCellDef="let row" style="background-color:aliceblue;"> L:{{row?.lunchHours?.value}} + B:{{row?.breakHours?.value}} </td>
           <td mat-footer-cell *matFooterCellDef  style="background-color:aliceblue;"> L:{{totalRealL?.valueString}} + B:{{totalRealB?.valueString}}</td>
         </ng-container>
         <ng-container matColumnDef="action">

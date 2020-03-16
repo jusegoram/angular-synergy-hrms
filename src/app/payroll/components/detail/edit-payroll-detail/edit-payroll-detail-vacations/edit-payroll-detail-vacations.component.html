@@ -1,0 +1,110 @@
+<div class="pa-0">
+  <ngx-datatable
+    class="material"
+    style="top: 0px; box-shadow: none !important;"
+    [rows]="rows"
+    [columns]="columns"
+    [columnMode]="ColumnMode.standard"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="50"
+    [limit]="5"
+  ></ngx-datatable>
+  <ng-template #editCell let-row="row" let-rowIndex="rowIndex">
+    <div>
+      <span *ngIf="row.verified" style="color: green;">VERIFIED</span>
+      <button
+        mat-icon-button
+        style="margin-left: 0px; margin-top: -10px;"
+        color="primary"
+        (click)="confirmValue(row)"
+        [disabled]='row.verified'
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+      <swal #confirmSwal
+      title='WARNING'
+      text='You can&apos;t verify your own vacation concepts, please ask one of your accounting teammates'
+      icon = 'warning'
+      ></swal>
+      <swal #successSwal
+      title= 'SAVED'
+      text= "The payroll will refresh once you close the edit dialog."
+      icon='success'
+      ></swal>
+      <button
+        mat-icon-button
+        style="margin-left: 0px; margin-top: -10px;"
+        color="warn"
+        [disabled]='row.verified'
+        [swal]='deleteSwal'
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+      <swal #deleteSwal
+      title= 'Are you sure?'
+      text= "You won't be able to revert this!"
+      icon='question'
+      [showCancelButton]="true"
+      [focusCancel]="true"
+      (confirm)="deleteValue(row, rowIndex)"
+      ></swal>
+    </div>
+  </ng-template>
+
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <mat-form-field appearance="outline" [formGroup]="vacationsForm">
+      <mat-error>* Required</mat-error>
+      <input
+        matInput
+        [matDatepicker]="fromPicker"
+        placeholder="FROM DATE"
+        formControlName="from"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="fromPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #fromPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" [formGroup]="vacationsForm">
+      <mat-error>* Required</mat-error>
+      <input
+        matInput
+        [matDatepicker]="toPicker"
+        placeholder="TO DATE"
+        formControlName="to"
+      />
+      <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+      <mat-datepicker #toPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <mat-form-field appearance="outline" [formGroup]="vacationsForm">
+      <mat-error>* Required</mat-error>
+      <input
+        matInput
+        type="number"
+        placeholder="AMOUNT ($)"
+        formControlName="amount"
+      />
+    </mat-form-field>
+    <button mat-button [disabled]="vacationsForm.invalid" (click)="saveValue()">
+      ADD VACATIONS
+    </button>
+    <mat-error
+      *ngIf="
+      vacationsForm.controls['from'].hasError('required') && vacationsForm.controls['from'].touched||
+      vacationsForm.controls['to'].hasError('required') && vacationsForm.controls['to'].touched||
+      vacationsForm.controls['amount'].hasError('required') && vacationsForm.controls['amount'].touched
+      ">
+      * The <i>FROM</i> and <i>TO</i> fields represent the dates the person went
+      and will come back from vacations. <br />
+      * The <i>AMOUNT</i> field represents the amount in <i>MONEY $</i> to pay
+      the employee.
+    </mat-error>
+
+  </div>
+
+
+</div>

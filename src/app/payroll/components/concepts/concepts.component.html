@@ -21,13 +21,33 @@
         <span>Payroll Concepts</span>
         <span class="fill-remaining-space"></span>
     </mat-toolbar-row>
-    <mat-toolbar-row >
-    </mat-toolbar-row>
-    <mat-toolbar-row >
-      </mat-toolbar-row>
   </mat-toolbar>
-  <div class="mat-card-top">
+  <div>
     <!-- <app-time-off-requests></app-time-off-requests> -->
-    <app-new-concept></app-new-concept>
-    <app-concept-verification></app-concept-verification>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          LEAVES
+        </mat-expansion-panel-header>
+        vacations works
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          FINAL PAYMENT
+        </mat-expansion-panel-header>
+        content
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          ADD CONCEPT
+        </mat-expansion-panel-header>
+        <app-new-concept></app-new-concept>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          VERIFY CONCEPT
+        </mat-expansion-panel-header>
+        <app-concept-verification></app-concept-verification>
+      </mat-expansion-panel>
+    </mat-accordion>
   </div>

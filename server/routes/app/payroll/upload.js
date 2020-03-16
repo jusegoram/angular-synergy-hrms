@@ -33,7 +33,7 @@ var upload = multer({storage: storage}).single('file');
 //     } if( uploadFile.mimetype != "text/csv" ){
 //       return res.status(400).send("Sorry only CSV files can be processed for upload");
 //     }
-//     csv.fromPath(req.file.path,{headers: true, ignoreEmpty: true})
+//     csv.parseFile(req.file.path,{headers: true, ignoreEmpty: true})
 //       .on('data', function(data){
 //         data['_id'] = new mongoose.Types.ObjectId();
 //         data['idasnum'] = parseInt(data['employeeId']+"");

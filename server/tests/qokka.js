@@ -1,50 +1,15 @@
 let moment = require('moment');
-function calculateTimeDifference(startTime, endTime) {
-  if (startTime < endTime) return (endTime - startTime);
-  if (startTime > endTime) return (1440 - startTime + endTime);
+
+function rangeToDateList(start, end) {
+  let parsedStart = moment(start, 'MM/DD/YYYY');
+  let parsedEnd = moment(end, 'MM/DD/YYYY');
+  const dates = [];
+  let currentDate = moment(start, 'MM/DD/YYYY');
+  while (parsedStart.isBefore(parsedEnd)) {
+    dates.push(currentDate.toDate());
+    currentDate.add(1, 'days');
+  }
+  return dates;
 }
 
-
-
-
-
-var item =
-    [
-        { day: 0, onShift: true, scheduledHours: 5},
-        { day: 1, onShift: true , scheduledHours: 5},
-        { day: 2, onShift: true , scheduledHours: 5},
-        { day: 3, onShift: true , scheduledHours: 5},
-        { day: 4, onShift: true , scheduledHours: 5},
-        { day: 5, onShift: true , scheduledHours: 0},
-        { day: 6, onShift: true , scheduledHours: 0},
-    ]
-
-var shifts = [
-    {shift:1 , startDate: new Date('10/10/2019')},
-    {shift:2 , startDate: new Date('11/10/2019')},
-    {shift:3 , startDate: new Date('12/10/2019')},
-    {shift:4 , startDate: new Date('09/10/2019')},
-    {shift:5 , startDate: new Date('08/10/2019')},
-    {shift:6 , startDate: new Date('07/10/2019')},
-    {shift:7 , startDate: new Date('06/10/2019')},
-]
-
-var current;
-var sortedShifts = shifts.sort((a, b) => a.startDate < b.startDate);
-
-var result = sortedShifts.forEach((i, index) => {
-    if (i.startDate > new Date()) current = sortedShifts[index === sortedShifts.length - 1 ? index : index + 1];
-  })
-
-
-
-
-let employees = [
-  {employeeId: '33302'},
-  {employeeId: '32234'},
-]
-
-let filtered = employees.filter(i => i.employeeId === null);
-console.log(filtered[0]);
-
-console.log(moment().endOf('week').add(1, 'day'))
+console.log(rangeToDateList('02/01/2020', '02/10/2020'))

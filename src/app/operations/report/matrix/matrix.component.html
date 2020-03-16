@@ -1,0 +1,142 @@
+<div class="pa-2">
+  <h1 style="width: 100%; text-align: center;">TIME NOW | {{ CurrentTime | async |date:'HH:mm:ss' }}</h1>
+  <mat-card class="pa-1">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+        <mat-form-field appearance="fill" [formGroup]="queryForm">
+          <mat-label>CLIENT</mat-label>
+          <mat-select
+            placeholder="Client Filter"
+            formControlName="client"
+            (selectionChange)="setCampaigns($event.value)"
+          >
+            <mat-option *ngFor="let item of clients" [value]="item">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" [formGroup]="queryForm">
+          <mat-label>CAMPAIGN</mat-label>
+          <mat-select placeholder="Campaign Filter" formControlName="campaign">
+            <mat-option *ngFor="let item of campaigns" [value]="item.name">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" [formGroup]="queryForm">
+          <input
+            matInput
+            [matDatepickerFilter]="myFilter"
+            [matDatepicker]="pickerFrom"
+            placeholder="FROM"
+            formControlName="from"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFrom"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerFrom></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill" [formGroup]="queryForm">
+          <input
+            matInput
+            [matDatepickerFilter]="myFilter"
+            [matDatepicker]="pickerTO"
+            placeholder="TO"
+            formControlName="to"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerTO"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerTO></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="button-div">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="onLoadMatrix()"
+          [disabled]="queryForm.invalid"
+        >
+          LOAD MATRIX
+        </button>
+      </div>
+    </div>
+    <mat-form-field
+      appearance="fill"
+      style="width: 50%;"
+      [formGroup]="queryForm"
+    >
+      <mat-chip-list #chipList2 aria-label="Fruit selection">
+        <mat-chip
+          *ngFor="let position of positions"
+          [selectable]="selectable"
+          [removable]="removable"
+          (removed)="removePosition(position)"
+        >
+          {{ position }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="POSITIONS TO INCLUDE IN THE MATRIX"
+          #positionInput
+          formControlName="position"
+          [matAutocomplete]="positionAuto"
+          [matChipInputFor]="chipList2"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="addPosition($event)"
+        />
+      </mat-chip-list>
+      <mat-autocomplete
+        #positionAuto="matAutocomplete"
+        (optionSelected)="selectedPosition($event)"
+      >
+        <mat-option
+          *ngFor="let position of filteredPositions | async"
+          [value]="position.positionId"
+        >
+          {{ position.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <ng-container *ngIf="this.results.length > 0; else elseTemplate">
+      <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+        <button mat-button [matMenuTriggerFor]="menu" color='primary'>EXPORT</button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="exportAs('png')" [swal]="['BOOM!','Ah di get it fih yu, wan sekant!', 'success']">IMAGE</button>
+          <button mat-menu-item (click)="exportAs('xlsx')">EXCEL</button>
+        </mat-menu>
+      </div>
+      <div class="wrapper">
+        <table #table class="greyGridTable" id="matrix">
+          <thead>
+            <th class="time-header">TIME</th>
+            <th *ngFor="let item of results">
+              {{ item.header | date: "MM/dd/yyyy" }}
+            </th>
+          </thead>
+          <tr *ngFor="let item of results[0]?.values; let valueIndex = index">
+            <td class="timeframe">
+              {{ (results[0]?.keys)[valueIndex] | minutesHours }}
+            </td>
+            <td *ngFor="let item of results">
+              {{ (item?.values)[valueIndex] }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <div
+        fxLayout="column"
+        fxLayoutAlign="space-around center"
+        fxLayoutGap="10px"
+        style="height: 400px;width: 100%;"
+      >
+        <h3>Select the Matrix parameters, then click on <i>LOAD MATRIX</i></h3>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

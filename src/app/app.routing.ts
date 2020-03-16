@@ -12,9 +12,6 @@ export const AppRoutes: Routes = [
     redirectTo: '/signin',
     pathMatch: 'full'
   },
-  // {
-  //   path: '', component: AppComponent, canActivate: [RootGuard], canLoad: [RootGuard]
-  // },
   {
   path: '',
   component: AdminLayoutComponent,

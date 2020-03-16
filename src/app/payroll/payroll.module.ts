@@ -1,10 +1,11 @@
-import { EditPayrollTabComponent } from './components/detail/edit-payroll/edit-payroll-tab/edit-payroll-tab.component';
-import { EditPayrollComponent } from './components/detail/edit-payroll/edit-payroll.component';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { EditPayrollDetailVacationsComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail-vacations/edit-payroll-detail-vacations.component';
+
 import { PipeModule } from './../shared/pipes/pipe/pipe.module';
 import { MinuteSecondsPipe } from './../shared/pipes/minute-seconds.pipe';
 import { DetailResolver } from './components/detail/detail.resolver';
 import { NgModule } from '@angular/core';
-import {CommonModule, TitleCasePipe} from '@angular/common';
+import { CommonModule, TitleCasePipe, CurrencyPipe, DatePipe } from '@angular/common';
 
 import { PayrollRoutingModule } from './payroll-routing.module';
 import { UploadComponent } from './components/upload/upload.component';
@@ -37,10 +38,13 @@ import { TimeOffRequestsComponent } from './components/concepts/time-off-request
 import { NewConceptComponent } from './components/concepts/new-concept/new-concept.component';
 import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
 import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls/finalized-payrolls.component';
+import { EditPayrollDetailComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
 
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
-
+export function provideSwal() {
+  return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
+}
 
 @NgModule({
   imports: [
@@ -53,6 +57,7 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     NgxDatatableModule,
     FusionChartsModule,
     ExportAsModule,
+    SweetAlert2Module.forRoot({provideSwal}),
     PipeModule.forRoot()
   ],
   declarations: [
@@ -69,9 +74,10 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     NewConceptComponent,
     FinalizedPayrollsComponent,
     ConceptVerificationComponent,
-    EditPayrollComponent,
-    EditPayrollTabComponent],
-  providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef,
+    EditPayrollDetailComponent,
+    EditPayrollDetailVacationsComponent,
+    ],
+  providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef, CurrencyPipe, DatePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
@@ -84,7 +90,8 @@ FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
     }],
     entryComponents: [
       ExportBottomSheetComponent,
-      PayDialogComponent
+      PayDialogComponent,
+      EditPayrollDetailComponent
     ]
 })
 export class PayrollModule { }

@@ -1,36 +1,36 @@
 <table style="width: 100%" mat-table #table [dataSource]="dataSource">
   <ng-container matColumnDef="fromDate">
     <th mat-header-cell *matHeaderCellDef>From</th>
-    <td mat-cell *matCellDef="let row">{{ row.fromDate }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.fromDate |  date:'EEE - LLL d - yyyy' }}</td>
   </ng-container>
   <ng-container matColumnDef="toDate">
     <th mat-header-cell *matHeaderCellDef>To</th>
-    <td mat-cell *matCellDef="let row">{{ row.toDate }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.toDate |  date:'EEE - LLL d - yyyy' }}</td>
   </ng-container>
   <ng-container matColumnDef="employeesAmount">
     <th mat-header-cell *matHeaderCellDef>Employees Payed</th>
-    <td mat-cell *matCellDef="let row">{{ row.employeesAmount }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.employeesAmount }}</td>
   </ng-container>
   <ng-container matColumnDef="totalPayed">
     <th mat-header-cell *matHeaderCellDef>Amount</th>
-    <td mat-cell *matCellDef="let row">{{ row.totalPayed }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.totalPayed['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalCompanyContributions">
     <th mat-header-cell *matHeaderCellDef>Company Social Contribution</th>
-    <td mat-cell *matCellDef="let row">{{ row.totalCompanyContributions }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.totalCompanyContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalEmployeeContributions">
     <th mat-header-cell *matHeaderCellDef>Employee Social Contribution</th>
-    <td mat-cell *matCellDef="let row">{{ row.totalEmployeeContributions }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.totalEmployeeContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalTaxes">
     <th mat-header-cell *matHeaderCellDef>Income Tax</th>
-    <td mat-cell *matCellDef="let row">{{ row.totalTaxes }}</td>
+    <td mat-cell *matCellDef="let row">{{ row?.totalTaxes['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="details">
     <th mat-header-cell *matHeaderCellDef></th>
      <td mat-cell *matCellDef="let element">
-          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element?._id._id}" mat-menu-item
+          <a [routerLink]="['/', 'payroll', 'detail' ]" [queryParams]="{id: element?._id}" mat-menu-item
             matTooltip="Go to details">
             <span>VIEW PAYROLL&nbsp; &nbsp;</span>
             <mat-icon>arrow_forward</mat-icon>

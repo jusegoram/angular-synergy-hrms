@@ -1,11 +1,9 @@
-<mat-card>
+<div>
     <mat-card-header>
-        <mat-card-title>CONCEPT VERIFICATION</mat-card-title>
         <mat-card-subtitle>Verify newly added concepts</mat-card-subtitle>
     </mat-card-header>
-
     <mat-card-content>
-        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px" style='width: 100%'>
+        <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px" style='width: 100%'>
             <mat-form-field appearance='outline'>
                 <mat-select placeholder="Placeholder" [(ngModel)]="selectedConceptForVerification" name="item">
                     <mat-option *ngFor="let item of concepts" [value]="item.name" (click)='getUnverifiedConcepts()'>
@@ -13,7 +11,10 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-flat-button color='accent' class='push-right' (click)="verifyConcepts()" [disabled]='selection.selected.length === 0'>VERIFY SELECTED</button>
+            <div>
+                <button mat-button color='primary' class='push-right' (click)="refresh()">REFRESH</button>
+                <button mat-flat-button color='accent' class='push-right' (click)="verifyConcepts()" [disabled]='selection.selected.length === 0'>VERIFY SELECTED</button>
+            </div>
         </div>
         <table mat-table [dataSource]="verificationTable" style='width: 100%'>
 
@@ -76,10 +77,10 @@
             <span></span>
         </span>
     </mat-card-content>
-    <mat-card-header>
-        <mat-card-title>VERIFIED CONCEPTS</mat-card-title>
+        <div class="ma-2">
+            <h2>VERIFIED CONCEPTS</h2>
         <mat-card-subtitle>All the verified concepts that have not been payed</mat-card-subtitle>
-    </mat-card-header>
+        </div>
     <mat-card-content>
         <mat-form-field appearance='outline'>
             <mat-select placeholder="Placeholder" [(ngModel)]="selectedconceptForVerified" name="item">
@@ -129,4 +130,4 @@
             <span></span>
         </span>
     </mat-card-content>
-</mat-card>
+</div>

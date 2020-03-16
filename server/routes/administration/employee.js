@@ -28,8 +28,17 @@ router.post("/client", function(req, res, next) {
 });
 
 router.get("/client", function(req, res, next) {
+  let query = req.query.clients;
+  let contextFilter;
+  if(query) {
+    query = JSON.parse(query);
+    contextFilter = { 'name': {$in: query}};
+  }else{
+    contextFilter = {};
+  }
+
   let clients = [];
-  let cursor = Client.find()
+  let cursor = Client.find(contextFilter)
     .lean()
     .cursor();
   cursor.on("data", item => clients.push(item));

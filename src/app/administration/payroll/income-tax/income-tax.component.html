@@ -1,0 +1,24 @@
+<div class="pa-2">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px" class="pa-1">
+    <button mat-button>UPLOAD</button>
+  </div>
+  <ngx-datatable
+  class="material"
+  style="top: 0px; height: 650px; width: 100%;"
+  [rows]="rows"
+  [columns]="columns"
+  [columnMode]="ColumnMode.force"
+  [headerHeight]="50"
+  [scrollbarV]="true"
+  [footerHeight]="50"
+  [rowHeight]="50"
+  [externalPaging]="true"
+  [count]="page.totalElements"
+  [offset]="page.pageNumber"
+  (page)="setPage($event)"
+  ></ngx-datatable>
+  <ng-template #IncomeTaxEditCell let-row="row">
+    <button mat-button (click)="editRow(row)" style="margin-left: 0px; margin-top: -7px;" color='primary'>EDIT</button>
+  </ng-template>
+
+</div>

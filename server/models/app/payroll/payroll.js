@@ -2,10 +2,53 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 //TODO: PAYED LEAVES
+let hhmmssSchema = new Schema({
+  value: {type: String, required: true},
+  valueInMinutes: {type: Number, required: true},
+  hh: {type: Number, required: true},
+  mm: {type: Number, required: true},
+  ss: {type: Number, required: true}
+})
+
+let shiftSchema = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  uniqueId: { type: String, unique: true},
+  employeeId: { type: String, required: true },
+  employeeName: {type: String},
+  billable: {type: Boolean},
+  client: {type: String},
+  campaign: {type: String },
+  hasShift: {type: Boolean, default: false},
+  shiftDay: { type: Number }, //new
+  onShift: { type: Boolean }, //new
+  shiftStartTime: {type: Number}, //new
+  shiftEndTime: { type: Number }, //new
+  shiftScheduledHours: {type: Number}, //new
+  shiftScheduledBreakAndLunch: {type: Number},
+  dialerId: { type: String, required: false },
+  date: { type: Date, required: true },
+  hasHours: {type: Boolean, default: false},
+  matrix: {type: String, default: null},
+  hourlyRate: {type: Number},
+  positionName: {type: String},
+  holiday: {type: Boolean, default: false},
+  holidayRate: {type: Number},
+  systemHours: { type: hhmmssSchema, required: false },
+  breakHours: { type: hhmmssSchema, required: false }, //new
+  lunchHours:{ type: hhmmssSchema, required: false }, //new
+  trainingHours:{ type: hhmmssSchema, required: false }, //new
+  tosHours: { type: hhmmssSchema, required: false }, //new
+  timeIn:  { type: hhmmssSchema, required: false },
+  attendance: {type: String, default: 'ABSENT'}, //present, absent, on-leave, on-vacation, unknown
+  employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
+  fileId: { type: mongoose.Schema.Types.ObjectId},
+  createdDate: { type: Date, default: Date.now},
+});
 
 let BonusSchema = new Schema({
   type: {type: String},
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
+  taxable: {type:Boolean},
   employeeName: {type: String},
   employeeId: { type: String },
   reason: { type: String },
@@ -15,12 +58,13 @@ let BonusSchema = new Schema({
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verificationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
-  payroll: {type: String},
+  payroll: { type: mongoose.Schema.Types.ObjectId, ref: "payroll" },
   payed:{type: Boolean, default: false},
+  assigned: {type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
 });
-BonusSchema.index({ date: -1, employee: -1 });
+BonusSchema.index({ date: -1, employeeId: -1 });
 
 let DeductionSchema = new Schema({
   type: {type: String},
@@ -33,17 +77,23 @@ let DeductionSchema = new Schema({
   amount: { type: Number },
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
-  payroll: {type: String},
+  payroll: { type: mongoose.Schema.Types.ObjectId, ref: "payroll" },
+  assigned: {type: Boolean, default: false},
   payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
 });
-DeductionSchema.index({ date: -1 });
+DeductionSchema.index({date: -1, employeeId: -1 });
 
 let OtherPaySchema = new Schema({
   type: {type: String},
-  maternity: {type: Boolean, default: false},
-  csl: {type: Boolean, default: false},
+  notice: {type: Boolean, default: false}, //Not taxable
+  severance: {type: Boolean, default: false}, //Not Taxable
+  compassionate: {type: Boolean, default: false},
+  leaveWithoutPay: {type: Boolean, default: false},
+  vacations: {type: Boolean, default: false},
+  maternity: {type: Boolean, default: false},//Not Taxable
+  csl: {type: Boolean, default: false},//Not Taxable
   employee: { type: mongoose.Schema.Types.ObjectId, ref: "employee-main" },
   employeeName: {type: String},
   employeeId: { type: String },
@@ -63,192 +113,149 @@ let OtherPaySchema = new Schema({
   creationFingerprint: {type: mongoose.Schema.Types.ObjectId, ref: "Administration-User"},
   verified: {type: Boolean, default: false},
   assigned: {type: Boolean, default: false},
-  payroll: {type: String},
+  payroll: { type: mongoose.Schema.Types.ObjectId, ref: "payroll" },
   payed:{type: Boolean, default: false},
     createdAt: {type: Date, required: false, default: Date.now},
     createdBy: {type: Object, required: false},
 });
-OtherPaySchema.index({ date: -1 });
+OtherPaySchema.index({date: -1, employeeId: -1 });
 
+let PayrollHours = new Schema({
+  hh: { type: Number },
+  mm: { type: Number },
+  ss: { type: Number },
+  value: { type: Number },
+  hourlyRate: { type: mongoose.Schema.Types.Decimal128 }
+});
 
-
-let employeeSchema = new Schema( {
-  regularHours: { type: Number },
-  wage: { type: Number },
-  hours: { type: [Object]},
-  overtime: { type: Number },
-  holiday: { type: [Object] },
-  bonus: { type: Array },
-  otherpay: { type: Array },
-  csl: { type: Array },
-  maternity: { type: Array },
-  vacations: { type: Array },
-  deductions: { type: Array },
-  grossWage: { type: Number },
-  totalSystemHours: {
-    hh: { type: Number },
-    mm: { type: Number },
-    ss: { type: Number },
-    value: { type: Number },
-    valueString: { type: String }
-  },
-  totalHolidayHours: {
-    hours: { type: Number },
-    rate: { type: Number },
-    totalPayed: { type: Number }
-  },
-  totalOvertimeHours: {
-    hh: { type: Number },
-    mm: { type: Number },
-    ss: { type: Number },
-    value: { type: Number },
-    valueString: { type: String }
-  },
-  totalRegularHoursPay: {
-    hours: { type: Number },
-    rate: { type: Number },
-    totalPayed: { type: Number }
-  },
-  totalHolidayHoursPayX2: {
-    hours: { type: Number },
-    rate: { type: Number },
-    totalPayed: { type: Number }
-  },
-  totalHolidayHoursPayX1: {
-    hours: { type: Number },
-    rate: { type: Number },
-    totalPayed: { type: Number }
-  },
-  totalOvertimeHoursPay: {
-    hours: { type: Number },
-    rate: { type: Number },
-    totalPayed: { type: Number }
-  },
-  totalBonusPay: { type: Number },
-  totalOtherpay: { type: Number },
-  totalDeductions: { type: Number },
-  socialSecurityEmployee: { type: Number },
-  socialSecurityEmployer: { type: Number },
-  incomeTax: { type: Number },
-  netWage: { type: Number },
-  employee: { type: String },
-  employeeId: { type: Number },
-  firstName: { type: String },
-  middleName: { type: String },
-  lastName: { type: String },
-  socialSecurity: { type: String },
-  status: { type: String },
-  emailAddress: {type: String},
-  payrollType: { type: String },
-  hourlyRate: { type: Number },
-  employeeName: { type: String },
-  employeeCompany: {
-    employee: { type: String },
-    reapplicantTimes: { type: Object },
-    reapplicant: { type: Object },
-    terminationDate: { type: Date },
-    hireDate: { type: Date },
-    trainingGroupNum: { type: Object },
-    trainingGroupRef: { type: String },
-    trainer: { type: String },
-    supervisor: { type: String },
-    campaign: { type: String },
-    client: { type: String },
-    employeeId: { type: String },
-    _id: { type: String},
-    manager: { type: String }
-  },
-  employeePosition: {
-    _id: { type: String },
-    positionId: { type: String },
-    name: { type: String },
-    baseWage: {type: Number }
-  },
-  employeePayroll: {
-    employee: { type: String },
-    billable: { type: Boolean },
-    bankAccount: { type: String },
-    bankName: { type: String },
-    baseWage: { type: String },
-    payrollType: { type: String },
-    positionId: { type: String },
-    TIN: { type: String },
-    employeeId: { type: String},
-    _id: { type: String }
-  },
-  employeeShift: { type: Object },
-  fromDate: { type: Date },
-  toDate: { type: Date },
-  overtimeRate: { type: Number }
+let PayrollPayment = new Schema({
+  hours: { type: Number },
+  rate: { type: mongoose.Schema.Types.Decimal128 },
+  totalPayed: { type: mongoose.Schema.Types.Decimal128 },
 });
 
 let PayrollSchema = new Schema({
-  employees: {type: [employeeSchema]},
-  payrollType: {type: String},
-  isPayed: {type: Boolean, default: false},
-  isFinalized: {type: Boolean, default: false},
-  payedDate: {type: Date},
-  payId:{type: String},
-  socialTable: { type: [Object]},
-  incometaxTable: { type: [Object]},
-  deductionsTable: { type: [Object]},
-  otherpayTable: { type: [Object]},
-  exceptionsTable: { type: [Object]},
-  holidayTable: { type: [Object] },
-  fromDate: { type: Date },
-  toDate: { type: Date },
-  updatedAt: {type: Date, required: false },
-    createdAt: {type: Date, required: false, default: Date.now},
-    createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
-});
-
-
-
-PayrollSchema.index({ fromDate: -1 });
-
-let PayedPayrollWeekSchema = new Schema({
-  payroll : { type: mongoose.Schema.Types.ObjectId, ref: "payroll" },
-  fromDate: { type: Date},
-  toDate: { type: Date },
-  updatedAt: {type: Date, required: false },
-    createdAt: {type: Date, required: false, default: Date.now},
-    createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
-});
-
-let PayedEmployeesSchema = new Schema(
-  {
-    employee: { type: mongoose.Schema.Types.ObjectId, ref: 'employee-main' },
-    payrolls: { type: [PayedPayrollWeekSchema] },
-    employeeId: {type: String },
-    firstName: { type: String },
-    middleName: { type: String },
-    lastName: { type: String },
-    client: {type: String },
+  fromDate: { type: Date }, //included on save
+  toDate: { type: Date }, //included on save
+  payroll_Id: {type: mongoose.Schema.Types.ObjectId }, //included on save
+  createdAt: {type: Date, required: false, default: Date.now},//included on save
+  createdBy: {type: Object, required: false},//included on save
+  isFinalized: {type: Boolean, default: false}, //included on finalize
+  updatedAt: {type: Date, required: false }, //included on finalize
+  updatedBy: {type: Object, required: false}, //included on finalize
+  payment_Id:{type: mongoose.Schema.Types.ObjectId },//included on payed
+  paymentDate: {type: Date}, //included on payed
+  isPayed: {type: Boolean, default: false}, //included on payed
+  payedBy: {type: Object, required: false},
+  employee: { type: mongoose.Schema.Types.ObjectId},
+  employeeId: { type: Number},
+  firstName: { type: String  },
+  middleName: { type: String },
+  lastName: { type: String },
+  employeeName: { type: String },
+  socialSecurity:{ type: String },
+  status:{ type: String },
+  onFinalPayment: { type: Boolean },
+  employeeCompany: {
+    client: { type: String },
     campaign: { type: String },
-    billable: { type: Boolean },
-    bankAccount: { type: String },
-    bankName: { type: String },
-    payrollType: { type: String },
+    hireDate: { type: Date },
+    supervisor: { type: String },
+    manager: { type: String },
+    trainer: { type: String },
+    trainingGroupRef: { type: String },
+    trainingGroupNum: { type: Number },
+    terminationDate: { type: Date },
+    reapplicant: { type: Boolean },
+    reapplicantTimes: { type: Number},
+    bilingual: { type: Boolean },
+    createdAt: { type: Date }
+  },
+  employeePayroll: {
     TIN: { type: String },
-    socialSecurity: { type: String },
-    totalIncomeTax: { type: Number },
-    totalCompanyContributions: { type: Number },
-    totalEmployeeContributions: { type: Number },
-    totalNetWage: { type: Number },
-    updatedAt: {type: Date, required: false },
-    createdAt: {type: Date, required: false, default: Date.now},
-    createdBy: {type: Object, required: false},
-    updatedBy: {type: Object, required: false},
-  }
-);
-let PayedPayrollSchema = new Schema({
-  payedEmployees: { type: [PayedEmployeesSchema]},
-  payedPayrolls: { type: [PayedPayrollWeekSchema]},
+    payrollType: { type: String },
+    bankName: { type: String },
+    bankAccount: { type: String },
+    billable: { type: Boolean },
+    paymentType: { type: String },
+    createdAt: { type: Date }
+  },
+  payrollType: { type: String },
+  employeePosition: {
+    client: { type: String },
+    department: { type: String },
+    position: {
+      positionId: { type: String },
+      name: { type: String },
+      baseWage: { type: Number },
+    },
+    startDate: { type: Date },
+    endDate: { type: Date },
+  },
+  employeeShiftRegular: { type: [shiftSchema] },
+  employeeShiftHolidayX1: { type: [shiftSchema] },
+  employeeShiftHolidayX2: { type: [shiftSchema] },
+  employeeTaxableBonus: { type: [BonusSchema] },//Implement | almost done
+  employeeNonTaxableBonus: { type: [BonusSchema] },//Implement | almost done
+  employeeDeductions: { type: [DeductionSchema] },
+  employeeOtherpays: { type: [OtherPaySchema] }, //needs an update after save
+  employeeFinalPayment: {type: [OtherPaySchema]}, //Implement | almost done
+  employeeMaternities: { type: [OtherPaySchema] },
+  employeeCSL: { type: [OtherPaySchema] },
+  employeeBonus: { type: [BonusSchema] },
+  positionName: { type: String },
+  positionId: { type: String },
+  positionBaseWage: { type: Number },
+  positionHourlyRate: { type: mongoose.Schema.Types.Decimal128 },
+  totalScheduledMinutes: { type: Number },
+  totalSystemHoursRegular: { type: PayrollHours },
+  totalTrainingHoursRegular: { type: PayrollHours },
+  totalTosHoursRegular: { type: PayrollHours },
+  totalSystemHoursHolidayX1: { type: PayrollHours },
+  totalTrainingHoursHolidayX1: { type: PayrollHours },
+  totalTosHoursHolidayX1: { type: PayrollHours },
+  totalSystemHoursHolidayX2: { type: PayrollHours },
+  totalTrainingHoursHolidayX2: { type: PayrollHours },
+  totalTosHoursHolidayX2: { type: PayrollHours },
+  totalTaxableBonus: { type: mongoose.Schema.Types.Decimal128 },//Implement | almost done | added in taxable gross
+  totalNonTaxableBonus: { type: mongoose.Schema.Types.Decimal128 },//Implement | almost done | not added into gross
+  totalDeductions: { type: mongoose.Schema.Types.Decimal128 },
+  totalOtherPays: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  totalFinalPayments: { type: mongoose.Schema.Types.Decimal128 }, //implement | almost done
+  totalMaternities: { type: mongoose.Schema.Types.Decimal128 },
+  totalCSL: { type: mongoose.Schema.Types.Decimal128 },
+  totalOvertime: { type: Number },
+  totalOvertimePay: { type: PayrollPayment },
+  totalSystemRegularPay: { type: PayrollPayment },
+  totalTrainingRegularPay: { type: PayrollPayment },
+  totalTosRegularPay: { type: PayrollPayment },
+  totalSystemHolidayX1Pay: { type: PayrollPayment },
+  totalTrainingHolidayX1Pay: { type: PayrollPayment },
+  totalTosHolidayX1Pay: { type: PayrollPayment },
+  totalSystemHolidayX2Pay: { type: PayrollPayment },
+  totalTrainingHolidayX2Pay: { type: PayrollPayment },
+  totalTosHolidayX2Pay: { type: PayrollPayment },
+  grossBeforeCSLPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  grossPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  ssEmployeeContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  ssEmployerContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  incomeTax: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  netPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
 });
 
-const payedPayroll = mongoose.model('payed-payroll', PayedPayrollSchema);
+
+
+PayrollSchema.index({ fromDate: -1, toDate: -1});
+PayrollSchema.index({ payroll_Id: -1});
+PayrollSchema.index({ payment_Id: -1});
+
+let PayrollSequenceSchema = new Schema({
+  _id: {type: String},
+  sequence_value: {type: Number, default: 0},
+})
+
+
+const payrollSequence = mongoose.model("payroll-sequence", PayrollSequenceSchema);
 const payroll = mongoose.model("payroll", PayrollSchema);
 const bonus = mongoose.model("payroll-bonus", BonusSchema);
 const deduction = mongoose.model("payroll-deduction", DeductionSchema);
@@ -259,5 +266,5 @@ module.exports = {
   deduction,
   otherPay,
   payroll,
-  payedPayroll,
+  payrollSequence
 };

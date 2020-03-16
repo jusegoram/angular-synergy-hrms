@@ -41,7 +41,7 @@ export class MainComponent implements OnInit {
   selectedType = '';
   auth: any;
   checkedRows: any;
-
+  user;
   constructor(
     private _payrollService: PayrollService,
     public snackBar: MatSnackBar,
@@ -49,11 +49,12 @@ export class MainComponent implements OnInit {
     private _bottomSheet: MatBottomSheet
 
     ) {
+      this.user = this._payrollService.getDecodedToken();
   }
 
   ngOnInit() {
     this.auth = this._payrollService.getAuth();
-    this.getData('');
+    this.getData('all');
   }
 
 
@@ -61,27 +62,13 @@ export class MainComponent implements OnInit {
     if (this.checkedRows.selected.length === 2) {
       const item = this.checkedRows.selected;
       const ids = [
-        item[0]._id._id,
-        item[1]._id._id
+        item[0]._id,
+        item[1]._id
       ];
-      let botomSheetRef;
-      let instance;
-      this._payrollService.getPayroll(ids, '', false).subscribe(result => {
-        const employees = result;
-        botomSheetRef = this._bottomSheet.open(ExportBottomSheetComponent, {
-          data: {employees: employees},
-        });
-        instance = botomSheetRef.instance;
-        botomSheetRef.afterDismissed().subscribe(e => {
-          if(e !== undefined) {
-            this._payrollService.savePayedPayroll(e.employees).subscribe(res => {
-              this.reloadData(e);
-              this.openSnackBar(`Your download will start and this payed payroll will also be stored in our Database.`, 'Great, Thanks!');
-            })
-          }
-        });
-      });
-
+      const query = this.user;
+      this._payrollService.updatePayroll(JSON.stringify(ids), query, 'PAY').subscribe(result => {
+        this.getData('');
+      })
     }else{
       this.openSnackBar(`It's only allowed to pay 2 Payrolls at a time`, 'Got it, Thanks!')
     }

@@ -26,15 +26,15 @@ export class FinalizedPayrollsComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.refresh){
-      this.getData('');
+      this.getData('all');
     }
   }
   ngOnInit() {
-    this._payrollService.getPayroll('', this.type, true);
+    this._payrollService.getPayroll('all', this.type, true);
   }
 
   getData = (param) => {
-    this._payrollService.getPayroll('', this.type, true).subscribe(res => {
+    this._payrollService.getPayroll('all', this.type, true).subscribe(res => {
       this.populateTable(res);
     });
   }

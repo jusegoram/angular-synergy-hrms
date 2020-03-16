@@ -4,7 +4,6 @@ let mongooseUniqueValidator = require('mongoose-unique-validator');
 let mongooseAutopopulate = require("mongoose-autopopulate")
 
 var companySchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true},
   client: { type: String, required: false}, //reports index
   campaign: { type: String, required: false }, //reports index
@@ -35,7 +34,6 @@ var hobbySchema = new Schema({
 });
 
 var personalSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true},
   maritalStatus:{ type: String, required: false },
   amountOfChildren: {type: Number, required: false}, // NEW
@@ -59,7 +57,6 @@ var personalSchema = new Schema({
 });
 
 let payrollSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   TIN: {type: String, required: true },
   payrollType: {type: String, required: true },
@@ -76,7 +73,6 @@ let payrollSchema = new Schema({
 });
 
 var commentsSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: {type: String, required: true},
   reason: {type: String, required: false},
   comment: {type: String, required: true },
@@ -90,7 +86,6 @@ var commentsSchema = new Schema({
 });
 
 var attritionSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: {type: String, required: true},
   reason1: {type: String, required: true },
   reason2: {type: String, required: false },
@@ -105,7 +100,6 @@ var attritionSchema = new Schema({
 });
 
 var familySchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: {type: String, required: true },
   referenceName: { type: String, required: true },
   age: {type: Number, required: true },
@@ -123,7 +117,6 @@ var familySchema = new Schema({
 });
 
 var educationSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   employeeId: { type: String, required: true },
   institution: { type: String, required: true },
   levelOfEducation: { type: String, required: true },
@@ -169,13 +162,13 @@ let EmployeeShiftSchema = new Schema({
 });
 
 let EmployeeSchema = new Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     onFinalPayment: { type: Boolean, default: false},
     payedFinalPayment: { type: Boolean, default: false},
     onVacations: { type: Boolean, default: false},
     onMaternity: { type: Boolean, default: false},
     onCSL: { type: Boolean, default: false},
     employeeId: { type: Number, required: true, unique: true},
+    dialerId:{ type: Number, required: true, unique: true},
     firstName: {type: String, required: true},
     middleName:{ type: String, required: false },
     lastName: {type: String, required: true},

@@ -35,7 +35,7 @@ export class PayslipsComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this._payrollService.getPayedPayrolls().subscribe(result => {
+    this._payrollService.getPayroll('', '', '' , true).subscribe(result => {
       this.populateTable(result);
   });
   }
@@ -48,12 +48,13 @@ export class PayslipsComponent implements OnInit {
     return result;
   }
   getRecords(){
-    if(this.checkedRows.selected.length === 1) {
-      const {payrolls} = this.checkedRows.selected[0];
-      this._payrollService.getPayroll(payrolls, '', true).subscribe(result => {
-          this.records = result.sort((a, b) => { return a.firstName.localeCompare(b.firstName)});
-      })
-    }
+  //  FIXME: update acording to new spec
+    // if(this.checkedRows.selected.length === 1) {
+    //   const {payrolls} = this.checkedRows.selected[0];
+    //   this._payrollService.getPayroll(payrolls, '', true).subscribe(result => {
+    //       this.records = result.sort((a, b) => { return a.firstName.localeCompare(b.firstName)});
+    //   })
+   // }
 
   }
   getPayslip(){

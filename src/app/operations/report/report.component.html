@@ -6,170 +6,17 @@
 
 </mat-toolbar>
 <mat-tab-group backgroundColor="primary">
-  <mat-tab label="Hours">
-    <div class="pa-1">
-        <mat-card-header>
-            <mat-card-subtitle>
-              Select filter values and Run Query, you will export all records if left blank.
-            </mat-card-subtitle>
-          </mat-card-header>
-          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px" [formGroup]="queryForm">
-            <mat-form-field appearance="outline">
-              <mat-label>From (MM/DD/YYYY)</mat-label>
-              <input matInput [matDatepicker]="pickerFrom" placeholder="title" formControlName="From">
-              <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-              <mat-datepicker #pickerFrom></mat-datepicker>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>To (MM/DD/YYYY)</mat-label>
-              <input matInput [matDatepicker]="pickerTo" placeholder="title" formControlName="To">
-              <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-              <mat-datepicker #pickerTo></mat-datepicker>
-            </mat-form-field>
-            <div class="fill-remaining-space"></div>
-            <mat-form-field appearance="outline">
-                <mat-label>Search</mat-label>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search...">
-              </mat-form-field>
-          </div>
-          <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" [formGroup]="queryForm">
-            <mat-form-field appearance="outline">
-              <mat-label>Client</mat-label>
-              <mat-select placeholder="Client Filter" formControlName="Client" (selectionChange)="setCampaigns($event.value)">
-                <mat-option [value]="{campaigns: []}">-- ALL --</mat-option>
-                <mat-option *ngFor="let item of clients" [value]="item">
-                  {{item.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Campaign</mat-label>
-              <mat-select placeholder="Campaign Filter" formControlName="Campaign">
-                <mat-option value=''>-- ALL --</mat-option>
-                <mat-option *ngFor="let item of campaigns" [value]="item.name">
-                  {{item.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <input matInput placeholder="Dialer ID" formControlName="dialerId">
-              <mat-label>Dialer ID</mat-label>
-            </mat-form-field>
-            <div class="fill-remaining-space"></div>
-            <button mat-flat-button color="primary" (click)="runQuery()">
-              <mat-icon>search</mat-icon> Run Query
-            </button>
-          </div>
-
-        <mat-card *ngIf="notfound">
-          <mat-card-header>
-            <mat-card-title>NO RECORDS FOUND</mat-card-title>
-            <mat-card-subtitle>try to be a little more specific or check your filter values</mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-content>
-
-          </mat-card-content>
-          <mat-card-actions>
-            <button mat-button (click)="reload()">Try Again</button>
-          </mat-card-actions>
-        </mat-card>
-
-        <mat-card *ngIf="dataSource && !notfound" class="pa-1">
-
-            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
-              <button mat-stroked-button color="primary" matTooltip="Export to Excel File" (click)="export()">
-                EXPORT
-              </button>
-              <button mat-stroked-button color="warn" matTooltip="Clear filter" (click)="reload()">
-                CLEAR
-              </button>
-            </div>
-          <mat-card-content>
-            <cdk-virtual-scroll-viewport mat-table class="container" itemSize="48" minBufferPx="200" maxBufferPx="400">
-              <tr class="mat-header-row">
-                <th mat-header-cell>
-                  Employee ID
-                </th>
-                <th mat-header-cell>
-                  Name
-                </th>
-                <th mat-header-cell>
-                  Client
-                </th>
-                <th mat-header-cell>
-                  Campaign
-                </th>
-                <th mat-header-cell>
-                  Dialer ID.
-                </th>
-                <th mat-header-cell>
-                  Hours
-                </th>
-                <th mat-header-cell>
-                  TOS Hours
-                </th>
-                <th mat-header-cell>
-                  Time In
-                </th>
-                <th mat-header-cell>
-                  Date
-                </th>
-                <th mat-header-cell>
-                  Action
-                </th>
-              </tr>
-              <ng-container *cdkVirtualFor="let n of dataSource">
-                <tr>
-                  <td mat-cell width="10%">
-                    <span>{{n.employeeId}}</span>
-                  </td>
-                  <td mat-cell width="15%">
-                    <span>{{n.employeeName}}</span>
-                  </td>
-                  <td mat-cell width="10%">
-                    <span>{{n.client}}</span>
-                  </td>
-                  <td mat-cell width="10%">
-                    <span>{{n.campaign}}</span>
-                  </td>
-                  <td mat-cell width="10%">
-                    <span>{{n.dialerId}}</span>
-                  </td>
-                  <td mat-cell width="8%">
-                    <span>{{n.systemHours.value}}</span>
-                  </td>
-                  <td mat-cell width="8%">
-                    <span>{{n.tosHours.value}}</span>
-                  </td>
-                  <td mat-cell width="8%">
-                    <span>{{n.timeIn.value}}</span>
-                  </td>
-                  <td mat-cell width="25%">
-                    <span>{{n.date | date: 'EEE MMM d, y - ( MM/dd/yy )'}}</span>
-                  </td>
-                  <td mat-cell>
-                    <span> <button mat-icon-button [matMenuTriggerFor]="menu">
-                        <mat-icon>more_vert</mat-icon>
-                      </button>
-                      <mat-menu #menu="matMenu">
-                        <a [routerLink]="['/', 'employee', 'detail' ]" [queryParams]="{id: n.employee}" mat-menu-item>
-                          <mat-icon>account_circle</mat-icon>
-                          <span>Go to agent</span>
-                        </a>
-                      </mat-menu>
-                    </span>
-                  </td>
-                </tr>
-              </ng-container>
-            </cdk-virtual-scroll-viewport>
-          </mat-card-content>
-        </mat-card>
-    </div>
+  <mat-tab label="MATRIX">
+    <report-matrix></report-matrix>
+  </mat-tab>
+  <mat-tab label="ATTENDANCE">
+    <report-attendance></report-attendance>
   </mat-tab>
   <mat-tab label="KPI">
-    <ops-kpi></ops-kpi>
+    <report-kpi></report-kpi>
+  </mat-tab>
+  <mat-tab label="HOURS">
+    <report-hours></report-hours>
   </mat-tab>
 
 </mat-tab-group>

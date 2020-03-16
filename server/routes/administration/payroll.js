@@ -2,6 +2,10 @@ let express = require('express');
 let router = express.Router();
 let jwt = require('jsonwebtoken');
 let Department = require('../../models/administration/administration-department');
+let AdminPayroll = require('../../models/administration/administration-payroll');
+let SocialSecurity = AdminPayroll.SocialTable;
+let IncomeTax = AdminPayroll.IncomeTaxTable;
+let Holidays = AdminPayroll.HolidayTable;
 let mongoose = require('mongoose');
 
 
@@ -122,6 +126,43 @@ router.delete('/position', (req, res) => {
   Department.position.deleteOne({_id: req.query._id}, (err, doc) => {
     if(err) res.status(500).json(err);
     else res.status(200).json(doc);
+  })
+});
+
+router.get('/socialsecurity/:id', (req, res) => {
+  let {page, limit} = req.query;
+  const options = {
+    page: parseInt(page, 10) + 1,
+    limit: parseInt(limit, 10),
+     sort: {earnings: 1},
+  };
+  SocialSecurity.paginate({}, options, (err, docs) => {
+    if(err) res.status(400).json(err);
+    else if(docs) res.status(200).json(docs);
+  })
+});
+router.get('/holidays/:id', (req, res) => {
+  let {page, limit} = req.query;
+  const options = {
+    page: parseInt(page, 10) + 1,
+    limit: parseInt(limit, 10),
+     sort: {date: 1},
+  };
+  Holidays.paginate({}, options, (err, docs) => {
+    if(err) res.status(400).json(err);
+    else if(docs) res.status(200).json(docs);
+  })
+});
+router.get('/incomeTax/:id', (req, res) => {
+  let {page, limit} = req.query;
+  const options = {
+    page: parseInt(page, 10) + 1,
+    limit: parseInt(limit, 10),
+     sort: {fromAmount: 1},
+  };
+  IncomeTax.paginate({}, options, (err, docs) => {
+    if(err) res.status(400).json(err);
+    else if(docs) res.status(200).json(docs);
   })
 });
 

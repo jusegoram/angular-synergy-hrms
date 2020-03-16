@@ -3,6 +3,9 @@ let jwt = require("jsonwebtoken");
 let _ = require("lodash");
 let fs = require("fs");
 let async = require("async");
+let crypto = require("crypto");
+let moment = require("moment");
+
 //require the express router
 let router = express.Router();
 //require multer for the file uploads & fast-csv for parsing csv
@@ -56,7 +59,7 @@ router.post("/hours", (req, res) => {
       res.status(400).send("Sorry only CSV files can be processed for upload");
 
     csv
-      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .parseFile(req.file.path, { headers: true, ignoreEmpty: true })
       .on("data", data => {
         data["_id"] = new mongoose.Types.ObjectId();
         data["employee"] = null;
@@ -72,12 +75,24 @@ router.post("/hours", (req, res) => {
             hour["dialerId"] = valueArr[1];
             hour["date"] = valueArr[2];
             hour["systemHours"] = valueArr[3];
+            hour["tosHours"] = valueArr[4];
+            hour["timeIn"] = valueArr[5];
+            delete hour["employeeId;dialerId;date;systemHours;tosHours;timeIn"];
+          }
+          if(hour["employeeId;dialerId;date;systemHours;breakHours;lunchHours;trainingHours;tosHours;timeIn"]){
+            const valueArr = hour[
+              "employeeId;dialerId;date;systemHours;breakHours;lunchHours;trainingHours;tosHours;timeIn"
+            ].split(";");
+            hour["employeeId"] = valueArr[0];
+            hour["dialerId"] = valueArr[1];
+            hour["date"] = valueArr[2];
+            hour["systemHours"] = valueArr[3];
             hour["breakHours"] = valueArr[4];
             hour["lunchHours"] = valueArr[5];
             hour["trainingHours"] = valueArr[6];
             hour["tosHours"] = valueArr[7];
             hour["timeIn"] = valueArr[8];
-            delete hour["employeeId;dialerId;date;systemHours;tosHours;timeIn"];
+            delete hour["employeeId;dialerId;date;systemHours;breakHours;lunchHours;trainingHours;tosHours;timeIn"];
           }
           hour.fileId = fileId;
           hour.systemHours = splitTimetoHours(hour.systemHours);
@@ -93,79 +108,86 @@ router.post("/hours", (req, res) => {
         let dups = duplicateInArray(hours, "employeeId", "date");
         if (dups.length > 0) {
           incorrectHours.push(...dups);
-          res.status(400).json({ error: 'There are duplicates within the same file', incorrectHours: incorrectHours });
+          res
+            .status(400)
+            .json({
+              error: "There are duplicates within the same file",
+              incorrectHours: incorrectHours
+            });
         } else {
+          let bulkUpdate = new Array();
           async.each(
             hours,
             (hour, cb) => {
-              EmployeeSchema.findOne(
-                { employeeId: hour.employeeId },
-                (error, emp) => {
-                  if (error) console.log(error);
-                  if (emp !== null) {
-                    // OperationsHours.findOne(
-                    //   { employeeId: hour.employeeId, date: hour.date },
-                    //   (error, doc) => {
-                    //     if (error) {
-                    //       console.log(error);
-                    //       cb();
-                    //     }
-                    //     if (doc === null) {
-                    //       incorrectHours.push(hour);
-                    //       cb();
-                    //     } else {
-                    //       doc.employee = emp._id;
-                    //       doc.employeeName =
-                    //         emp.firstName + " " + emp.lastName;
-                    //       doc.client = emp.company.client;
-                    //       doc.campaign = emp.company.campaign;
-                    //       doc.billable = emp.payroll
-                    //         ? emp.payroll.billable
-                    //         : null;
-                    //       correctedHours.push(hour);
-                    //       cb();
-                    //     }
-                    //   }
-                    // );
-
-                    OperationsHours.updateOne({ employeeId: hour.employeeId, date: hour.date }, {$set: {
-                      employeeId: hour.employeeId,
-                      employee: emp._id,
-                      employeeName: emp.firstName + " " + emp.lastName,
-                      client: emp.company.client,
-                      campaign: emp.company.campaign,
-                      billable: emp.payroll? emp.payroll.billable: null,
-                      dialerId: hour.dialerId,
-                      date: hour.date,
-                      systemHours: hour.systemHours,
-                      breakHours: hour.breakHours,
-                      lunchHours: hour.lunchHours,
-                      trainingHours: hour.trainingHours,
-                      tosHours: hour.tosHours,
-                      timeIn: hour.timeIn,
-                      hasHours: true
-                    }}, (err, raw)=> {
-                      if(err){
-                      console.log(err);
-                      cb();
-                    }
-                      else {
-                        correctedHours.push(hour);
-                        cb();
+              if(hour.employeeId && hour.dialerId && hour.date && hour.systemHours && hour.tosHours){
+                const uniqueId = crypto
+                .createHash("sha256")
+                .update(
+                  hour.employeeId +
+                    "-" +
+                    moment(hour.date, "MM/DD/YYYY").format()
+                )
+                .digest("hex");
+                if(isNaN(hour.systemHours.valueInMinutes) || isNaN(hour.tosHours.valueInMinutes) || isNaN(hour.timeIn.valueInMinutes)) {
+                  cb();
+                }else {
+                  bulkUpdate.push({updateOne: {
+                    filter: { uniqueId: uniqueId, hasHours: false},
+                    update: {
+                      $set: {
+                        dialerId: hour.dialerId,
+                        systemHours: hour.systemHours,
+                        breakHours: hour.breakHours,
+                        lunchHours: hour.lunchHours,
+                        trainingHours: hour.trainingHours,
+                        tosHours: hour.tosHours,
+                        timeIn: hour.timeIn,
+                        attendance: "PRESENT",
+                        hasHours: true
                       }
-                    })
-                  } else {
-                    incorrectHours.push(hour);
-                    cb();
-                  }
+                    }
+                  }});
+                  cb();
                 }
-              );
+
+              // OperationsHours.updateOne(
+              //   { uniqueId: uniqueId, hasHours: false},
+              //   {
+              //     $set: {
+              //       dialerId: hour.dialerId,
+              //       systemHours: hour.systemHours,
+              //       breakHours: hour.breakHours,
+              //       lunchHours: hour.lunchHours,
+              //       trainingHours: hour.trainingHours,
+              //       tosHours: hour.tosHours,
+              //       timeIn: hour.timeIn,
+              //       attendance: "PRESENT",
+              //       hasHours: true
+              //     }
+              //   },
+              //   (err, raw) => {
+              //     if (err) {
+              //       incorrectHours.push(hour);
+              //       cb();
+              //     } else {
+              //       correctedHours.push(hour);
+              //       cb();
+              //     }
+              //   }
+              // );
+              }else {
+                cb('The file has an invalid format, please download the CSV template');
+              }
             },
             err => {
-              if (correctedHours.length > 0)
-               res.status(200).json({correctedHours: correctedHours})
-              if (correctedHours.length === 0)
-                res.status(400).json({ incorrectHours: incorrectHours });
+              if (err)
+                res.status(400).json({error: err})
+              else {
+                OperationsHours.bulkWrite(bulkUpdate, (err, doc) => {
+                  if(err) console.log(err);
+                  else res.status(200).json({correctedHours:doc.modifiedCount, incorrectHours: doc.result });
+                })
+              }
             }
           );
         }
@@ -213,7 +235,7 @@ router.post("/kpi", (req, res) => {
         .status(400)
         .send("Sorry only CSV files can be processed for upload");
     csv
-      .fromPath(req.file.path, { headers: true, ignoreEmpty: true })
+      .parseFile(req.file.path, { headers: true, ignoreEmpty: true })
       .on("data", data => {
         data["_id"] = new mongoose.Types.ObjectId();
         data["employee"] = null;
@@ -301,21 +323,39 @@ function splitTimetoHours(item) {
   let hhmmss = {};
   if (item !== undefined && item !== null && item !== "") {
     let split = item.split(":");
-    hhmmss = {
-      value: item,
-      hh: parseInt(split[0], 10),
-      mm: parseInt(split[1], 10),
-      ss: parseInt(split[2], 10)
-    };
+    if(split.length === 3){
+      hhmmss = {
+        value: item,
+        valueInMinutes:
+          parseInt(split[0], 10) * 60 +
+          parseInt(split[1], 10) +
+          parseInt(split[2], 10) / 60,
+        hh: parseInt(split[0], 10),
+        mm: parseInt(split[1], 10),
+        ss: parseInt(split[2], 10)
+      };
+    }else if(split.length === 2){
+      hhmmss = {
+        value: item +':00',
+        valueInMinutes:
+          parseInt(split[0], 10) * 60 +
+          parseInt(split[1], 10),
+        hh: parseInt(split[0], 10),
+        mm: parseInt(split[1], 10),
+        ss: 0
+      };
+    }else{
+      return;
+    }
   } else {
     hhmmss = {
       value: "00:00:00",
+      valueInMinutes: 0,
       hh: 0,
       mm: 0,
       ss: 0
     };
   }
-
   return hhmmss;
 }
 module.exports = router;

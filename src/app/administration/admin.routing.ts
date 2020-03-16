@@ -1,3 +1,4 @@
+import { PayrollComponent } from './payroll/payroll.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ContentComponent } from './content/content.component';
 import { AccountComponent } from './account/acount.component';
@@ -9,6 +10,7 @@ export const routes: Routes = [
     path: '',
       children : [
          { path : 'employee', component : EmployeeComponent },
+         { path : 'payroll', component : PayrollComponent },
          { path : 'permissions', component : AccountComponent },
          { path : 'content', component : ContentComponent }
         ]

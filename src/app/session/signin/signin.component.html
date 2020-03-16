@@ -12,7 +12,7 @@
                 <p class="mat-text-muted">Sign in with your Synergy ID to continue.</p>
                 <mat-form-field style="width: 80%" appearance="outline">
                   <mat-label>Synergy ID</mat-label>
-                  <input matInput placeholder="Synergy ID" [formControl]="form.controls['uname']"  [matAutocomplete]="auto">
+                  <input matInput placeholder="Synergy ID" [formControl]="form.controls['uname']"  autocomplete='username' id='username' [matAutocomplete]="auto">
                   <mat-autocomplete #auto="matAutocomplete">
                     <mat-option [value]="form.value.uname + synergyId">
                       {{synergyId}}
@@ -23,7 +23,7 @@
 
                 <mat-form-field style="width: 80%" appearance="outline">
                   <mat-label>Password</mat-label>
-                  <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" [formControl]="form.controls['password']">
+                  <input matInput [type]="hide ? 'password' : 'text'" placeholder="Password" autocomplete='current-password' id='current-password' [formControl]="form.controls['password']">
                   <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
                   <mat-error *ngIf="form.controls['password'].hasError('required') && form.controls['password'].touched" class="mat-text-warn">Please enter a valid password</mat-error>
                 </mat-form-field>

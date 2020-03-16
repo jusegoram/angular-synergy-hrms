@@ -116,8 +116,13 @@ export class EmployeeService {
    * @memberof EmployeeService
    */
   getEmployees(): Observable<Array<Employee>> {
+    const contextFilter = this.getDecodedToken().clients;
+    let params;
+      if (contextFilter && contextFilter.length > 0) {
+        params = new HttpParams().set('clients', JSON.stringify(contextFilter));
+     }
     if (!this._employees) {
-      this._employees = this.httpClient.get<Array<Employee>>('/api/v1/employee/populateTable').pipe(
+      this._employees = this.httpClient.get<Array<Employee>>('/api/v1/employee', {params: params}).pipe(
         publishReplay(1),
         refCount()
       );

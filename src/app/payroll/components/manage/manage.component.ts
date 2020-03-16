@@ -1,6 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
 import { PayrollRow } from './PayrollRow';
 import { PayrollService } from '../../services/payroll.service';
+
 import {
   FormControl,
   Validators,
@@ -8,7 +10,7 @@ import {
   ValidationErrors,
   ValidatorFn
 } from '@angular/forms';
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, NgZone } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,6 +19,7 @@ import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 import { Payroll } from './Payroll';
 import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 
 @Component({
   selector: 'app-manage',
@@ -24,14 +27,17 @@ import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-
   styleUrls: ['./manage.component.scss']
 })
 export class ManageComponent implements OnInit {
+  @ViewChild('myTable', { static: false }) table: any;
+
   socialSecurityTable: any[];
 
   // Make Holiday interface for saving in database.
-  dataSource: any;
-  payrollSettings: any[];
+  rows = [];
+  ColumnMode = ColumnMode;
+
   payrollType = new FormControl('', [Validators.required]);
   fromDate = new FormControl('', [
-    this.dateMinimum(moment().add(-15, 'days')),
+    this.dateMinimum(moment().add(-21, 'days')),
     Validators.required
   ]);
   toDate = new FormControl('', [
@@ -41,7 +47,6 @@ export class ManageComponent implements OnInit {
   holidays = [];
   lastPayrollSettings: any;
   currentPayrollSettings: any;
-  dataSourceSocialTable: any;
   socialTableDisplayedColumns: string[] = [];
   displayedColumns = ['employeeId'];
   calculating = false;
@@ -50,16 +55,23 @@ export class ManageComponent implements OnInit {
   bonus: any[];
   deductions: any[];
   otherpay: any[];
-
+  chartDataSource: any;
+  pieCharDataSource: any;
+  chartObj: any;
+  handler: any;
+  selectedOnChart = [];
   constructor(
     private _payrollService: PayrollService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet,
-    private minuteSeconds: MinuteSecondsPipe
+    private minuteSeconds: MinuteSecondsPipe,
+    private _datePipe: DatePipe,
+    private zone: NgZone
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   dateFilterFrom = (d: Date): boolean => {
     let statement = true;
@@ -101,170 +113,192 @@ export class ManageComponent implements OnInit {
     console.log('executed');
     return this.payrollType.valid && this.fromDate.valid && this.toDate.valid;
   }
-  populateTable(data) {
-    this.dataSource = new MatTableDataSource(data);
-    this.dataSourceSocialTable = new MatTableDataSource(
-      this._payrollService.payroll.socialTable
-    );
-    this.socialTableDisplayedColumns = [
-      'earnings',
-      'employeeDeductions',
-      'employerDeductions',
-      'totalContributions'
-    ];
-  }
-  loadOtherPayrollInfo(payroll, from, to) {
-    return new Promise((resolve, reject) => {
-      const employeeIds = this._payrollService.payroll.employees.map(
-        i => i.employee
-      );
-      this._payrollService
-        .getOtherPayrollInfo(employeeIds, payroll, from, to)
-        .subscribe((result: any[]) => {
-          this.hours = result[0];
-          this.bonus = result[1];
-          this.deductions = result[2];
-          this.otherpay = result[3];
-          const debouncedHours = this.debounce(
-            () => {
-              this._payrollService.payroll.joinEmployee(this.hours, 'hours');
-            },
-            100,
-            true
-          );
-          const debouncedBonus = this.debounce(
-            () => {
-              this._payrollService.payroll.joinEmployee(this.bonus, 'bonus');
-            },
-            100,
-            true
-          );
-          const debouncedDeductions = this.debounce(
-            () => {
-              this._payrollService.payroll.joinEmployee(
-                this.deductions,
-                'deductions'
-              );
-            },
-            100,
-            true
-          );
-          const debouncedOtherpay = this.debounce(
-            () => {
-              this._payrollService.payroll.joinEmployee(
-                this.otherpay,
-                'otherpay'
-              );
-            },
-            100,
-            true
-          );
-          debouncedHours();
-          debouncedBonus();
-          debouncedDeductions();
-          debouncedOtherpay();
-          setTimeout(() => {
-            resolve();
-          }, 500);
-        });
-    });
-  }
 
-  debounce(func, wait, immediate) {
-    let timeout;
+  // loadOtherPayrollInfo(payroll, from, to) {
+  //   return new Promise((resolve, reject) => {
+  //     const employeeIds = this._payrollService.payroll.employees.map(
+  //       i => i.employee
+  //     );
+  //     this._payrollService
+  //       .getOtherPayrollInfo(employeeIds, payroll, from, to)
+  //       .subscribe((result: any[]) => {
+  //         this.hours = result[0];
+  //         this.bonus = result[1];
+  //         this.deductions = result[2];
+  //         this.otherpay = result[3];
+  //         const debouncedHours = this.debounce(
+  //           () => {
+  //             this._payrollService.payroll.joinEmployee(this.hours, 'hours');
+  //           },
+  //           100,
+  //           true
+  //         );
+  //         const debouncedBonus = this.debounce(
+  //           () => {
+  //             this._payrollService.payroll.joinEmployee(this.bonus, 'bonus');
+  //           },
+  //           100,
+  //           true
+  //         );
+  //         const debouncedDeductions = this.debounce(
+  //           () => {
+  //             this._payrollService.payroll.joinEmployee(
+  //               this.deductions,
+  //               'deductions'
+  //             );
+  //           },
+  //           100,
+  //           true
+  //         );
+  //         const debouncedOtherpay = this.debounce(
+  //           () => {
+  //             this._payrollService.payroll.joinEmployee(
+  //               this.otherpay,
+  //               'otherpay'
+  //             );
+  //           },
+  //           100,
+  //           true
+  //         );
+  //         debouncedHours();
+  //         debouncedBonus();
+  //         debouncedDeductions();
+  //         debouncedOtherpay();
+  //         setTimeout(() => {
+  //           resolve();
+  //         }, 500);
+  //       });
+  //   });
+  // }
 
-    return function() {
-      let context = this,
-        args = arguments;
-      let callNow = immediate && !timeout;
-      clearTimeout(timeout);
-      timeout = setTimeout(function() {
-        timeout = null;
-        if (!immediate) {
-          func.apply(context, args);
-        }
-      }, wait);
-      if (callNow) func.apply(context, args);
-    };
-  }
-  loadPayrollType(payroll, from, to) {
+  loadPayrollType(payroll, from: Date, to: Date) {
+    const fromDate = moment(from).format('MM-DD-YYYY').toString();
+    const toDate = moment(to).format('MM-DD-YYYY').toString();
     this._payrollService
-      .getEmployeesByPayrollType(payroll, from, to)
-      .subscribe((result: PayrollRow[]) => {
-        this._payrollService.setPayroll(
-          result,
-          this.fromDate.value,
-          this.toDate.value,
-          this.payrollSettings[0],
-          this.payrollSettings[1],
-          this.payrollSettings[2],
-          this.payrollSettings[3],
-          this.payrollSettings[4],
-          this.payrollSettings[5]
-        );
-        this.populateTable(this._payrollService.payroll.employees);
+      .getEmployeesByPayrollType(payroll, fromDate, toDate)
+      .subscribe((result: any) => {
+        this.chartDataSource = this.mapChartData(result.stats);
+        this.pieCharDataSource = this.mapPieCharData(result.payroll);
+        this.rows = [...result.payroll];
+
       });
   }
-  loadSettings(from, to) {
-    this._payrollService.getPayrollSettings(from, to).subscribe(result => {
-      this.payrollSettings = result;
+
+  mapChartData(data) {
+    if(!data || data.length === 0) {
+      return;
+    }
+    const categories = data[0].categories.map(cat => {
+      return {label: this._datePipe.transform(new Date(cat), 'MM/dd/yyyy')};
     });
-  }
-  onLoadBonus(e) {
-    const files = e.target.files,
-      f = files[0];
-    const reader = new FileReader();
-    let jsonSheet;
-    reader.onload = (file: any) => {
-      const data = new Uint8Array(file.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
+    const mapped = data.map(i => {
+      return {
+        seriesname: i.seriesname.toUpperCase(),
+        data: i.data,
+      };
+    });
+      return {
+      chart: {
+        caption: 'Hours Records Client/Day',
+        subcaption: 'UNIT: HOUR RECORDS',
+        numbersuffix: '',
+        showsum: '1',
+        plottooltext:
+          '$label has <b>$dataValue</b> records for $seriesName',
+        theme: 'fusion',
+        drawcrossline: '1',
+        exportEnabled: '1'
 
-      const first_sheet_name = workbook.SheetNames[0];
-
-      const worksheet = workbook.Sheets[first_sheet_name];
-      jsonSheet = XLSX.utils.sheet_to_json(worksheet, {
-        raw: true
-      });
+      },
+      categories: [
+        {
+          category: [
+            ...categories
+          ]
+        }
+      ],
+      dataset: mapped
     };
-    reader.readAsArrayBuffer(f);
-    setTimeout(() => {
-      this.populateTable(
-        this._payrollService.payroll.joinEmployee(jsonSheet, 'bonus')
-      );
-    }, 500);
   }
 
-  onLoadDeductions(e) {
-    const files = e.target.files,
-      f = files[0];
-    const reader = new FileReader();
-    let jsonSheet;
-    reader.onload = (e: any) => {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
-
-      const first_sheet_name = workbook.SheetNames[0];
-
-      const worksheet = workbook.Sheets[first_sheet_name];
-      jsonSheet = XLSX.utils.sheet_to_json(worksheet, {
-        raw: true
+  mapPieCharData(data) {
+    const clientSet = new Set(data.map(i => i.employeeCompany.client));
+    const returnData = [];
+    clientSet.forEach((client: string) => {
+      const value = data.filter(i => i.employeeCompany.client === client);
+      returnData.push({
+        label: client.toUpperCase(),
+        value: value.length,
       });
+    });
+    return {
+      chart: {
+        caption: 'Total Bi-Weekly Employees',
+        centerLabelBold: '1',
+        showpercentvalues: '0',
+        defaultCenterLabel: 'Total B/W Employees: ' + data.length,
+        aligncaptionwithcanvas: '0',
+        captionpadding: '0',
+        decimals: '1',
+        plottooltext:
+          '<b>$percentValue</b> of Employees are on <b>$label</b>',
+        centerlabel: '$label |$value',
+        theme: 'fusion',
+        exportEnabled: '1'
+
+      },
+      data: [
+       ...returnData
+      ]
     };
-    reader.readAsArrayBuffer(f);
-    setTimeout(() => {
-      this.populateTable(
-        this._payrollService.payroll.joinEmployee(jsonSheet, 'deductions')
-      );
-    }, 500);
   }
+
+  dataplotClickHandler(e) {
+    this.zone.run(() => {
+      //TODO: can filter the array based on what is picked for future feature.
+    });
+}
+initialized($event) {
+  this.chartObj = $event.chart;
+  this.attachEvent();
+}
+attachEvent() {
+  this.handler = this.dataplotClickHandler.bind(this);
+  this.chartObj.addEventListener('dataplotClick', this.handler);
+}
+
+
+  // onLoadBonus(e) {
+  //   const files = e.target.files,
+  //     f = files[0];
+  //   const reader = new FileReader();
+  //   let jsonSheet;
+  //   reader.onload = (file: any) => {
+  //     const data = new Uint8Array(file.target.result);
+  //     const workbook = XLSX.read(data, { type: 'array' });
+
+  //     const first_sheet_name = workbook.SheetNames[0];
+
+  //     const worksheet = workbook.Sheets[first_sheet_name];
+  //     jsonSheet = XLSX.utils.sheet_to_json(worksheet, {
+  //       raw: true
+  //     });
+  //   };
+  //   reader.readAsArrayBuffer(f);
+  //   setTimeout(() => {
+  //     this.populateTable(
+  //       this._payrollService.payroll.joinEmployee(jsonSheet, 'bonus')
+  //     );
+  //   }, 500);
+  // }
 
   dateMinimum(date: moment.Moment): ValidatorFn {
     const FORMAT_DATE = 'DD/MM/YYYY';
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value == null) return null;
+      if (control.value == null) { return null; }
 
       const controlDate = moment(control.value, FORMAT_DATE);
-      if (!controlDate.isValid()) return null;
+      if (!controlDate.isValid()) { return null; }
 
       const validationDate = date;
       return controlDate.isAfter(validationDate)
@@ -281,10 +315,10 @@ export class ManageComponent implements OnInit {
   dateMaximum(date: string): ValidatorFn {
     const FORMAT_DATE = 'DD/MM/YYYY';
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value == null) return null;
+      if (control.value == null) { return null; }
 
       const controlDate = moment(control.value, FORMAT_DATE);
-      if (!controlDate.isValid()) return null;
+      if (!controlDate.isValid()) { return null; }
 
       const validationDate = moment(this.fromDate.value, FORMAT_DATE).add(
         7,
@@ -301,46 +335,32 @@ export class ManageComponent implements OnInit {
     };
   }
 
-  calculatePayroll() {
-    if (!this.calculating) {
-      console.log('invoked');
-      this.calculating = true;
-      this.loadOtherPayrollInfo(
-        this.payrollType.value,
-        this.fromDate.value,
-        this.toDate.value
-      )
-        .then(finished => {
-          this._payrollService.payroll.calculatePayroll();
-          this.calculating = this._payrollService.payroll.onCalculating();
-        })
-        .catch(err => {});
-    } else {
-      return null;
-    }
-  }
-
-  saveToDatabase(payroll) {
-    const otherpay = this.otherpay.map(i => i._id);
-    const deduction = this.deductions.map(i => i._id);
-    const bonus = this.bonus.map(i => i._id);
-
-    this._payrollService.savePayroll(otherpay, deduction, bonus).subscribe(
+  saveToDatabase(payroll, from, to) {
+    const
+      createdBy = this._payrollService.getUser(),
+      fromDate = moment(from).toDate(),
+      toDate = moment(to).toDate(),
+      fixedPayroll = payroll.map(o => {
+        const mapped = {...o, employee: o._id, fromDate: fromDate, toDate: toDate, createdBy: createdBy};
+        delete mapped._id;
+        return mapped;
+      });
+    this._payrollService.savePayroll(fixedPayroll).subscribe(
       result => {
-        this.snackBar.open('Payroll was saved correctly', 'thank you', {
-          duration: 2000
-        });
+        console.log(result);
       },
       err => {
-        this.snackBar.open(
-          'There was an error saving payroll',
-          'I will notify IT',
-          {
-            duration: 5000
-          }
-        );
+        console.log(err);
       }
     );
+  }
+  toggleExpandRow(row) {
+    console.log('Toggled Expand Row!', row);
+    this.table.rowDetail.toggleExpandRow(row);
+  }
+
+  onDetailToggle(event) {
+    console.log('Detail Toggled', event);
   }
 
   // saveConcepts(){
@@ -368,10 +388,7 @@ export class ManageComponent implements OnInit {
   //   }
   // }
   clearTable() {
-    this.calculating = false;
-    this.dataSource = null;
-    delete this.dataSource;
-    this._payrollService.deletePayroll();
+    this.rows = [];
   }
 
   openExportBottomSheet() {
