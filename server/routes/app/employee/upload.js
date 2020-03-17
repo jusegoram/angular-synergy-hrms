@@ -676,7 +676,7 @@ function parseShift(shift) {
                   }
                   newEmployeeHour.hasShift = true;
                   newEmployeeHour.shiftDay = date.day();
-                  newEmployeeHour.date = date.format();
+                  newEmployeeHour.date = date.toISOString();
                   newEmployeeHour.employee = doc._id,
                   newEmployeeHour.employeeName = doc.firstName + " " + doc.lastName,
                   newEmployeeHour.client = doc.company.client,

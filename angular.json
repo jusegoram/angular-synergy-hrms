@@ -23,7 +23,6 @@
 						"styles": [
 							"src/assets/fonts/pe/css/pe-icon-set-weather.css",
 							"src/assets/fonts/data-table/icons.css",
-							"node_modules/@sweetalert2/theme-material-ui/_material-ui.scss",
 							"src/assets/styles/app.scss"
 						],
 						"scripts": [
@@ -82,7 +81,6 @@
 						"styles": [
 							"src/assets/fonts/pe/css/pe-icon-set-weather.css",
 							"src/assets/fonts/data-table/icons.css",
-							"node_modules/@sweetalert2/theme-material-ui/_material-ui.scss",
 							"src/assets/styles/app.scss"
 						],
 						"assets": [

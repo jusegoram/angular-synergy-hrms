@@ -63,15 +63,16 @@ $lookup: {
           $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
         },
         date: {
-          $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-          $lte: moment(to, 'MM-DD-YYYY').toISOString()
+          $gte: moment(from, 'MM-DD-YYYY').toDate(),
+          $lte: moment(to, 'MM-DD-YYYY').toDate()
         },
         payed: false,
         payroll: { $exists: false },
         holiday: false
       }
     },
-    { $sort: { date: 1 } }
+    { $sort: { date: 1 } },
+
   ],
   as: "employeeShiftRegular"
 }
@@ -89,8 +90,8 @@ $lookup: {
             $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
           },
           date: {
-            $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-            $lte: moment(to, 'MM-DD-YYYY').toISOString()
+            $gte: moment(from, 'MM-DD-YYYY').toDate(),
+            $lte: moment(to, 'MM-DD-YYYY').toDate()
           },
           payed: false,
           payroll: { $exists: false },
@@ -116,8 +117,8 @@ $lookup: {
               $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
             },
             date: {
-              $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-              $lte: moment(to, 'MM-DD-YYYY').toISOString()
+              $gte: moment(from, 'MM-DD-YYYY').toDate(),
+              $lte: moment(to, 'MM-DD-YYYY').toDate()
             },
             payed: false,
             payroll: { $exists: false },
@@ -143,8 +144,8 @@ $lookup: {
           $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
         },
         date: {
-          $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-          $lte: moment(to, 'MM-DD-YYYY').toISOString()
+          $gte: moment(from, 'MM-DD-YYYY').toDate(),
+          $lte: moment(to, 'MM-DD-YYYY').toDate()
         },
         payed: false,
         verified: true,
@@ -169,8 +170,8 @@ $lookup: {
           $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
         },
         date: {
-          $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-          $lte: moment(to, 'MM-DD-YYYY').toISOString()
+          $gte: moment(from, 'MM-DD-YYYY').toDate(),
+          $lte: moment(to, 'MM-DD-YYYY').toDate()
         },
         payed: false,
         verified: true,
@@ -201,8 +202,8 @@ $lookup: {
             $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
           },
           date: {
-            $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-            $lte: moment(to, 'MM-DD-YYYY').toISOString()
+            $gte: moment(from, 'MM-DD-YYYY').toDate(),
+            $lte: moment(to, 'MM-DD-YYYY').toDate()
           },
           payed: false,
           verified: true,
@@ -228,8 +229,8 @@ $lookup: {
               $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
             },
             date: {
-              $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-              $lte: moment(to, 'MM-DD-YYYY').toISOString()
+              $gte: moment(from, 'MM-DD-YYYY').toDate(),
+              $lte: moment(to, 'MM-DD-YYYY').toDate()
             },
             payed: false,
           verified: true,
@@ -257,8 +258,8 @@ $lookup: {
                     $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
                   },
                   date: {
-                    $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-                    $lte: moment(to, 'MM-DD-YYYY').toISOString()
+                    $gte: moment(from, 'MM-DD-YYYY').toDate(),
+                    $lte: moment(to, 'MM-DD-YYYY').toDate()
                   },
                   payed: false,
                   verified: true,
@@ -271,8 +272,8 @@ $lookup: {
                     $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
                   },
                   date: {
-                    $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-                    $lte: moment(to, 'MM-DD-YYYY').toISOString()
+                    $gte: moment(from, 'MM-DD-YYYY').toDate(),
+                    $lte: moment(to, 'MM-DD-YYYY').toDate()
                   },
                   payed: false,
                   verified: true,
@@ -302,8 +303,8 @@ $lookup: {
           $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
         },
         date: {
-          $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-          $lte: moment(to, 'MM-DD-YYYY').toISOString()
+          $gte: moment(from, 'MM-DD-YYYY').toDate(),
+          $lte: moment(to, 'MM-DD-YYYY').toDate()
         },
         payed: false,
         verified: true,
@@ -330,8 +331,8 @@ $lookup: {
             $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
           },
           date: {
-            $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-            $lte: moment(to, 'MM-DD-YYYY').toISOString()
+            $gte: moment(from, 'MM-DD-YYYY').toDate(),
+            $lte: moment(to, 'MM-DD-YYYY').toDate()
           },
           payed: false,
           verified: true,
@@ -515,7 +516,8 @@ $lookup: {
         '$totalSystemHolidayX1Pay.totalPayed', '$totalTrainingHolidayX1Pay.totalPayed' ,'$totalTosHolidayX1Pay.totalPayed',
         '$totalSystemHolidayX2Pay.totalPayed', '$totalTrainingHolidayX2Pay.totalPayed', '$totalTosHolidayX2Pay.totalPayed',
         '$totalOvertimePay.totalPayed',
-        '$totalOtherPays','$totalTaxableBonus'
+        '$totalOtherPays',
+        '$totalTaxableBonus'
       ]
     },
     grossPayment: {
@@ -525,7 +527,8 @@ $lookup: {
         '$totalSystemHolidayX1Pay.totalPayed', '$totalTrainingHolidayX1Pay.totalPayed' ,'$totalTosHolidayX1Pay.totalPayed',
         '$totalSystemHolidayX2Pay.totalPayed', '$totalTrainingHolidayX2Pay.totalPayed', '$totalTosHolidayX2Pay.totalPayed',
         '$totalOvertimePay.totalPayed',
-        '$totalOtherPays', '$totalTaxableBonus',
+        '$totalOtherPays',
+        '$totalTaxableBonus',
         '$totalMaternities', '$totalCSL', '$totalFinalPayments'
       ]
     },
@@ -627,8 +630,8 @@ var GetEmployeeHoursStats = (type, from, to) => [ // Stage 1
                       $eq: ["$employeeId", { $toString: "$$employee_employeeId" }]
                     },
                     date: {
-                      $gte: moment(from, 'MM-DD-YYYY').toISOString(),
-                      $lte: moment(to, 'MM-DD-YYYY').toISOString()
+                      $gte: moment(from, 'MM-DD-YYYY').toDate(),
+                      $lte: moment(to, 'MM-DD-YYYY').toDate()
                     },
                     payed: false,
                     hasHours: true,

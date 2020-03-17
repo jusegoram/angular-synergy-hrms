@@ -53,11 +53,12 @@ router.post("/", (req, res) => {
     .exec((err, doc) => {
       if (err)
         res
-          .status(500)
+          .status(400)
           .json({ message: "Error while creating payroll", err: err });
       else {
         if (doc > 0) {
-          res.status(500).json({
+          console.log(doc);
+          res.status(400).json({
             message: "The payroll you are trying to create already exists.",
             err: doc
           });
@@ -70,11 +71,11 @@ router.post("/", (req, res) => {
             }
           };
           let mapped = payroll.map(o => ({ ...o, payroll_Id: id }));
-
           Payroll.insertMany(mapped, (err, inserted) => {
+            console.log(err, inserted);
             if (err)
               res
-                .status(500)
+                .status(400)
                 .json({ message: "Error while creating payroll", err: err });
             else {
               Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
@@ -85,7 +86,6 @@ router.post("/", (req, res) => {
                         .status(200)
                         .json({
                           message: "Great!, the payroll got saved",
-                          doc: inserted
                         })
                     )
                   )
@@ -618,7 +618,7 @@ router.get("/payslips/:id", async (req, res) => {
       }
     }
   ]).exec((err, doc) => {
-    if (err) res.status(500).json(err);
+    if (err) res.status(400).json(err);
     var itemsProcessed = 0;
     let employeePayslip = doc[0];
     //const html = payslipTemplate({employeePayslip: employeePayslip})
@@ -710,7 +710,7 @@ router.get("/employees", (req, res) => {
     },
     { $limit: 53 }
   ]).exec((err, doc) => {
-    if (err) res.status(500).json(err);
+    if (err) res.status(400).json(err);
     res.status(200).json(doc);
   });
 });
@@ -719,23 +719,20 @@ router.get("/getPayroll", (req, res) => {
   let type = req.query.payrollType + "";
   let from = req.query.from;
   let to = req.query.to;
-  console.log(from, to);
-  Employee.aggregate([...GetEmployeesShiftAndConcepts(type, from, to)])
+  Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to))
   .allowDiskUse()
     .exec((err, result) => {
-      res.status(200).json({payroll:result});
-      // Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {
-      //   console.log(e);
-      //   if (e) res.status(400).json(e);
-      //   else res.status(200).json({payroll:result, stats: r});
-      // });
+      Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {
+        if (e) res.status(400).json(e);
+        else res.status(200).json({payroll:result, stats: r});
+      });
     });
   // getActiveAndPayrolltypeEmployees(type, from, to).then(
   //   resolve => {
   //     res.status(200).json(resolve);
   //   },
   //   reject => {
-  //     res.status(500).json(reject);
+  //     res.status(400).json(reject);
   //   }
   // );
 });

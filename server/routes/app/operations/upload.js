@@ -125,28 +125,33 @@ router.post("/hours", (req, res) => {
                 .update(
                   hour.employeeId +
                     "-" +
-                    moment(hour.date, "MM/DD/YYYY").format()
+                    moment(hour.date, "MM/DD/YYYY").toISOString()
                 )
                 .digest("hex");
                 if(isNaN(hour.systemHours.valueInMinutes) || isNaN(hour.tosHours.valueInMinutes) || isNaN(hour.timeIn.valueInMinutes)) {
                   cb();
                 }else {
-                  bulkUpdate.push({updateOne: {
-                    filter: { uniqueId: uniqueId, hasHours: false},
-                    update: {
-                      $set: {
-                        dialerId: hour.dialerId,
-                        systemHours: hour.systemHours,
-                        breakHours: hour.breakHours,
-                        lunchHours: hour.lunchHours,
-                        trainingHours: hour.trainingHours,
-                        tosHours: hour.tosHours,
-                        timeIn: hour.timeIn,
-                        attendance: "PRESENT",
-                        hasHours: true
+                  let update = {
+                     updateOne :
+                      {
+                        filter: { uniqueId: uniqueId, hasHours: false},
+                        update: {
+                          $set: {
+                            dialerId: hour.dialerId,
+                            systemHours: hour.systemHours,
+                            breakHours: hour.breakHours,
+                            lunchHours: hour.lunchHours,
+                            trainingHours: hour.trainingHours,
+                            tosHours: hour.tosHours,
+                            timeIn: hour.timeIn,
+                            attendance: "PRESENT",
+                            hasHours: true
+                          }
+                        }
                       }
-                    }
-                  }});
+
+                  }
+                  bulkUpdate.push(update);
                   cb();
                 }
 
