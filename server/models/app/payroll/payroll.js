@@ -11,8 +11,7 @@ let hhmmssSchema = new Schema({
 })
 
 let shiftSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  uniqueId: { type: String, unique: true},
+  uniqueId: { type: String },
   employeeId: { type: String, required: true },
   employeeName: {type: String},
   billable: {type: Boolean},
@@ -235,12 +234,12 @@ let PayrollSchema = new Schema({
   totalSystemHolidayX2Pay: { type: PayrollPayment },
   totalTrainingHolidayX2Pay: { type: PayrollPayment },
   totalTosHolidayX2Pay: { type: PayrollPayment },
-  grossBeforeCSLPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
-  grossPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
-  ssEmployeeContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
-  ssEmployerContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
-  incomeTax: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
-  netPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
+  grossBeforeCSLPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
+  grossPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
+  ssEmployeeContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
+  ssEmployerContribution: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
+  incomeTax: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
+  netPayment: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save 8
 });
 
 

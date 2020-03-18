@@ -113,20 +113,20 @@
         </thead>
         <tbody>
           <tr>
-            <td><strong>SYS: {{row.totalSystemRegularPay.hours*60 | minutesHours}}@{{row.totalSystemRegularPay.rate |currency:''}}</strong></td>
-            <td>{{row.totalSystemRegularPay.totalPayed|currency:'$'}}</td>
+            <td><strong>SYS: {{row.totalSystemRegularPay.hours*60 | minutesHours}}@{{row.totalSystemRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
+            <td>{{row.totalSystemRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TRA: {{row.totalTrainingRegularPay.hours*60 | minutesHours}}@{{row.totalTrainingRegularPay.rate |currency:''}}</strong></td>
-            <td>{{row.totalTrainingRegularPay.totalPayed|currency:'$'}}</td>
+            <td><strong>TRA: {{row.totalTrainingRegularPay.hours*60 | minutesHours}}@{{row.totalTrainingRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
+            <td>{{row.totalTrainingRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TOS: {{row.totalTosRegularPay.hours*60 | minutesHours}}@{{row.totalTosRegularPay.rate |currency:''}}</strong></td>
-            <td>{{row.totalTosRegularPay.totalPayed|currency:'$'}}</td>
+            <td><strong>TOS: {{row.totalTosRegularPay.hours*60 | minutesHours}}@{{row.totalTosRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
+            <td>{{row.totalTosRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>OVERTIME: {{row.totalOvertimePay.hours*60 | minutesHours}}@{{row.totalOvertimePay.rate |currency:''}}</strong></td>
-            <td>{{row.totalOvertimePay.totalPayed|currency:'$'}}</td>
+            <td><strong>OVERTIME: {{row.totalOvertimePay.hours*60 | minutesHours}}@{{row.totalOvertimePay.rate['$numberDecimal'] |currency:''}}</strong></td>
+            <td>{{row.totalOvertimePay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
         </tbody>
       </table>
@@ -137,16 +137,16 @@
         </thead>
         <tbody>
           <tr>
-            <td><strong>SYS: {{row.totalSystemHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX1Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalSystemHolidayX1Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>SYS: {{row.totalSystemHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalSystemHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TRA: {{row.totalTrainingHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX1Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalTrainingHolidayX1Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>TRA: {{row.totalTrainingHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalTrainingHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TOS: {{row.totalTosHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX1Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalTosHolidayX1Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>TOS: {{row.totalTosHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalTosHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
         </tbody>
       </table>
@@ -156,16 +156,16 @@
         </thead>
         <tbody>
           <tr>
-            <td><strong>SYS: {{row.totalSystemHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX2Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalSystemHolidayX2Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>SYS: {{row.totalSystemHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalSystemHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TRA: {{row.totalTrainingHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX2Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalTrainingHolidayX2Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>TRA: {{row.totalTrainingHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalTrainingHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
-            <td><strong>TOS: {{row.totalTosHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX2Pay.rate |number:'0.2'}}</strong></td>
-            <td>{{row.totalTosHolidayX2Pay.totalPayed|currency:'$'}}</td>
+            <td><strong>TOS: {{row.totalTosHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
+            <td>{{row.totalTosHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
           </tr>
         </tbody>
       </table>
@@ -219,15 +219,15 @@
         <tbody>
           <tr>
             <td><strong>EMP-CON.</strong></td>
-            <td>{{row.ssEmployeeContribution|currency:'$'}}</td>
+            <td>{{row.ssEmployeeContribution['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
             <td><strong>*RCC-CON</strong></td>
-            <td>{{row.ssEmployerContribution|currency:'$'}}</td>
+            <td>{{row.ssEmployerContribution['$numberDecimal']|currency:'$'}}</td>
           </tr>
           <tr>
             <td><strong>INCOME TAX</strong></td>
-            <td>{{row.incomeTax|currency:'$'}}</td>
+            <td>{{row.incomeTax['$numberDecimal']|currency:'$'}}</td>
           </tr>
         </tbody>
       </table>
@@ -240,19 +240,19 @@
             <td><strong>
               GROSS - CSL - MAT
             </strong></td>
-            <td>{{row.grossBeforeCSLPayment | currency:'$'}}</td>
+            <td>{{row.grossBeforeCSLPayment['$numberDecimal'] | currency:'$'}}</td>
           </tr>
           <tr>
             <td><strong>
               GROSS
             </strong></td>
-            <td>{{row.grossPayment | currency:'$'}}</td>
+            <td>{{row.grossPayment['$numberDecimal'] | currency:'$'}}</td>
           </tr>
           <tr>
             <td><strong>
               NET
             </strong></td>
-            <td>{{row.netPayment | currency:'$'}}</td>
+            <td>{{row.netPayment['$numberDecimal']| currency:'$'}}</td>
           </tr>
         </tbody>
       </table>
@@ -304,12 +304,12 @@
   </ngx-datatable-column>
   <ngx-datatable-column name="Gross Wage" [width]="50" prop="grossPayment">
     <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | currency:'$'}}
+      {{value['$numberDecimal'] | currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
   <ngx-datatable-column name="Net Wage" [width]="50" prop="netPayment">
     <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | currency:'$'}}
+      {{value['$numberDecimal'] | currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
 </ngx-datatable>

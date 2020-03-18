@@ -19,8 +19,8 @@ let [
 ] = require("../payroll/payrollStoreProc");
 router.post("/", (req, res) => {
   const { payroll } = req.body;
-  const from = payroll[0].fromDate,
-    to = payroll[0].toDate;
+  const from = payroll.fromDate,
+    to = payroll.toDate;
   const conceptMatch = {
     date: {
       $gte: moment(from).toDate(),
@@ -49,15 +49,14 @@ router.post("/", (req, res) => {
   })
     .limit(10)
     .lean()
-    .count()
     .exec((err, doc) => {
+      console.log(err);
       if (err)
         res
           .status(400)
           .json({ message: "Error while creating payroll", err: err });
       else {
-        if (doc > 0) {
-          console.log(doc);
+        if (doc.length > 0) {
           res.status(400).json({
             message: "The payroll you are trying to create already exists.",
             err: doc
@@ -70,29 +69,36 @@ router.post("/", (req, res) => {
               assigned: true,
             }
           };
-          let mapped = payroll.map(o => ({ ...o, payroll_Id: id }));
-          Payroll.insertMany(mapped, (err, inserted) => {
-            console.log(err, inserted);
-            if (err)
-              res
-                .status(400)
-                .json({ message: "Error while creating payroll", err: err });
-            else {
-              Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                  Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                    Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
-                      res
-                        .status(200)
-                        .json({
-                          message: "Great!, the payroll got saved",
-                        })
+          Employee.aggregate(
+            [
+              ...GetEmployeesShiftAndConcepts(
+              payroll.type,
+              moment(from).format('MM-DD-YYYY').toString(),
+              moment(to).format('MM-DD-YYYY').toString(),
+              id,
+              payroll.createdBy),
+              { $merge : { into : "payrolls" } }
+            ]).exec((err, result) => {
+              if (err)
+                res
+                  .status(400)
+                  .json({ message: "Error while creating payroll", err: err });
+              else {
+                Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                  Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                    Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                      Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
+                        res
+                          .status(200)
+                          .json({
+                            message: "Great!, the payroll got saved",
+                          })
+                      )
                     )
                   )
-                )
-              );
-            }
-          });
+                );
+              }
+          })
         }
       }
     });
@@ -719,7 +725,7 @@ router.get("/getPayroll", (req, res) => {
   let type = req.query.payrollType + "";
   let from = req.query.from;
   let to = req.query.to;
-  Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to))
+  Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to, '', ''))
   .allowDiskUse()
     .exec((err, result) => {
       Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {

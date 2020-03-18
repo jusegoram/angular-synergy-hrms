@@ -67,9 +67,9 @@ export class MainComponent implements OnInit {
       ];
       const query = this.user;
       this._payrollService.updatePayroll(JSON.stringify(ids), query, 'PAY').subscribe(result => {
-        this.getData('');
-      })
-    }else{
+        this.getData('all');
+      });
+    } else {
       this.openSnackBar(`It's only allowed to pay 2 Payrolls at a time`, 'Got it, Thanks!')
     }
   }
@@ -115,7 +115,7 @@ export class MainComponent implements OnInit {
   }
   reloadData(e) {
     this.refreshEvent = e;
-    this.getData('');
+    this.getData('all');
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {

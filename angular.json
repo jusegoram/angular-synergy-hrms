@@ -23,7 +23,8 @@
 						"styles": [
 							"src/assets/fonts/pe/css/pe-icon-set-weather.css",
 							"src/assets/fonts/data-table/icons.css",
-							"src/assets/styles/app.scss"
+							"src/assets/styles/app.scss",
+							"node_modules/@sweetalert2/theme-material-ui/material-ui.scss"
 						],
 						"scripts": [
 						]

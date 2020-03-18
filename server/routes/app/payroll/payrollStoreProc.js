@@ -1,6 +1,6 @@
 let moment = require('moment');
 
-var GetEmployeesShiftAndConcepts = (type, from, to) => [ {$match: {
+var GetEmployeesShiftAndConcepts = (type, from, to, payroll_Id, createdBy) => [ {$match: {
   $or: [
     { status: "active", "payroll.payrollType": type },
     { onFinalPayment: true, "payroll.payrollType": type }
@@ -8,7 +8,9 @@ var GetEmployeesShiftAndConcepts = (type, from, to) => [ {$match: {
 }}
 , {
 $project: {
-  _id:1,
+  employee: '$_id',
+  fromDate: moment(from, 'MM-DD-YYYY').toDate(),
+  toDate: moment(to, 'MM-DD-YYYY').toDate(),
   employeeId:1,
   firstName:1,
   middleName:1,
@@ -22,7 +24,17 @@ $project: {
   employeePayroll: '$payroll',
   payrollType: '$payroll.payrollType',
   position: {$arrayElemAt: [ "$position", -1 ]},
+  _id: 0
 }
+},
+{
+  $addFields: {
+    payroll_Id: payroll_Id,
+    createdBy: createdBy,
+    isFinalized: false,
+    isPayed: false,
+    createdAt: new Date(),
+  }
 },
 {
 $lookup: {
@@ -355,7 +367,7 @@ $lookup: {
     positionName: '$employeePosition.position.name',
     positionId: '$employeePosition.position.positionId',
     positionBaseWage: '$employeePosition.position.baseWage',
-    positionHourlyRate:  {$cond:[{$arrayElemAt: [ "$employeeShiftRegular.hourlyRate", 0 ]}, {$arrayElemAt: [ "$employeeShiftRegular.hourlyRate", 0 ]}, 0]},
+    positionHourlyRate:  {$toDecimal: {$cond:[{$arrayElemAt: [ "$employeeShiftRegular.hourlyRate", 0 ]}, {$arrayElemAt: [ "$employeeShiftRegular.hourlyRate", 0 ]}, 0]}},
     totalScheduledMinutes: {$sum: '$employeeShiftRegular.shiftScheduledHours'},
   }
 },{
@@ -365,69 +377,72 @@ $lookup: {
       mm: {$sum: '$employeeShiftRegular.systemHours.mm'},
       ss: {$sum: '$employeeShiftRegular.systemHours.ss'},
       value:{$sum: '$employeeShiftRegular.systemHours.valueInMinutes'},
-      hourlyRate: '$positionHourlyRate'
+      hourlyRate: {$toDecimal: '$positionHourlyRate'}
     },
     totalTrainingHoursRegular: {
       hh: {$sum: '$employeeShiftRegular.trainingHours.hh'},
       mm: {$sum: '$employeeShiftRegular.trainingHours.mm'},
       ss: {$sum: '$employeeShiftRegular.trainingHours.ss'},
-      value:{$sum: '$employeeShiftRegular.trainingHours.valueInMinutes'}
+      value:{$sum: '$employeeShiftRegular.trainingHours.valueInMinutes'},
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 0]}}
     },
     totalTosHoursRegular: {
       hh: {$sum: '$employeeShiftRegular.tosHours.hh'},
       mm: {$sum: '$employeeShiftRegular.tosHours.mm'},
       ss: {$sum: '$employeeShiftRegular.tosHours.ss'},
       value:{$sum: '$employeeShiftRegular.tosHours.valueInMinutes'},
-      hourlyRate: {$multiply: ['$positionHourlyRate', 1]}
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 1]}}
     },
     totalSystemHoursHolidayX1: {
       hh: {$sum: '$employeeShiftHolidayX1.systemHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX1.systemHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX1.systemHours.ss'},
       value:{$sum: '$employeeShiftHolidayX1.systemHours.valueInMinutes'},
-      hourlyRate: {$multiply: ['$positionHourlyRate', 1.5]}
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 1.5]}}
     },
     totalTrainingHoursHolidayX1: {
       hh: {$sum: '$employeeShiftHolidayX1.trainingHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX1.trainingHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX1.trainingHours.ss'},
-      value:{$sum: '$employeeShiftHolidayX1.trainingHours.valueInMinutes'}
+      value:{$sum: '$employeeShiftHolidayX1.trainingHours.valueInMinutes'},
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 0]}}
     },
     totalTosHoursHolidayX1: {
       hh: {$sum: '$employeeShiftHolidayX1.tosHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX1.tosHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX1.tosHours.ss'},
       value:{$sum: '$employeeShiftHolidayX1.tosHours.valueInMinutes'},
-      hourlyRate: {$multiply: ['$positionHourlyRate', 1.5]}
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 1.5]}}
     },
     totalSystemHoursHolidayX2: {
       hh: {$sum: '$employeeShiftHolidayX2.systemHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX2.systemHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX2.systemHours.ss'},
       value:{$sum: '$employeeShiftHolidayX2.systemHours.valueInMinutes'},
-      hourlyRate: {$multiply: ['$positionHourlyRate', 2.0]}
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 2.0]}}
 
     },
     totalTrainingHoursHolidayX2: {
       hh: {$sum: '$employeeShiftHolidayX2.trainingHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX2.trainingHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX2.trainingHours.ss'},
-      value:{$sum: '$employeeShiftHolidayX2.trainingHours.valueInMinutes'}
+      value:{$sum: '$employeeShiftHolidayX2.trainingHours.valueInMinutes'},
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 0]}}
     },
     totalTosHoursHolidayX2: {
       hh: {$sum: '$employeeShiftHolidayX2.tosHours.hh'},
       mm: {$sum: '$employeeShiftHolidayX2.tosHours.mm'},
       ss: {$sum: '$employeeShiftHolidayX2.tosHours.ss'},
       value:{$sum: '$employeeShiftHolidayX2.tosHours.valueInMinutes'},
-      hourlyRate: {$multiply: ['$positionHourlyRate', 2.0]}
+      hourlyRate: {$toDecimal: {$multiply: ['$positionHourlyRate', 2.0]}}
     },
-    totalTaxableBonus: {$sum: '$employeeTaxableBonus.amount'},
-    totalNonTaxableBonus: {$sum: '$employeeNonTaxableBonus.amount'},
-    totalDeductions: {$sum: '$employeeDeductions.amount'},
-    totalOtherPays: {$sum: '$employeeOtherpays.amount'},
-    totalMaternities: {$sum: '$employeeMaternities.amount'},
-    totalFinalPayments: {$sum: '$employeeFinalPayments.amount'},
-    totalCSL: {$sum: '$employeeCSL.amount'},
+    totalTaxableBonus: {$toDecimal: {$sum: '$employeeTaxableBonus.amount'}},
+    totalNonTaxableBonus: {$toDecimal: {$sum: '$employeeNonTaxableBonus.amount'}},
+    totalDeductions: {$toDecimal: {$sum: '$employeeDeductions.amount'}},
+    totalOtherPays: {$toDecimal: {$sum: '$employeeOtherpays.amount'}},
+    totalMaternities: {$toDecimal: {$sum: '$employeeMaternities.amount'}},
+    totalFinalPayments: {$toDecimal: {$sum: '$employeeFinalPayments.amount'}},
+    totalCSL: {$toDecimal: {$sum: '$employeeCSL.amount'}},
   }
 },
 {
@@ -458,58 +473,58 @@ $lookup: {
   $addFields: {
     totalOvertimePay: {
       hours: '$totalOvertime',
-      rate:  {$multiply: ['$totalSystemHoursRegular.hourlyRate', 0.5]},
-      totalPayed: { $multiply: ['$totalOvertime', {$multiply: ['$totalSystemHoursRegular.hourlyRate', 0.5]}]}
+      rate:  {$toDecimal:{$multiply: ['$totalSystemHoursRegular.hourlyRate', 0.5]}},
+      totalPayed: {$toDecimal: { $multiply: ['$totalOvertime', {$multiply: ['$totalSystemHoursRegular.hourlyRate', 0.5]}]}}
     },
     totalSystemRegularPay: {
       hours: {$divide: ['$totalSystemHoursRegular.value', 60]},
-      rate:  '$totalSystemHoursRegular.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalSystemHoursRegular.value', 60]}, '$totalSystemHoursRegular.hourlyRate'] }
+      rate:  {$toDecimal: '$totalSystemHoursRegular.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalSystemHoursRegular.value', 60]}, '$totalSystemHoursRegular.hourlyRate'] }}
     },
     totalTrainingRegularPay: {
       hours: {$divide: ['$totalTrainingHoursRegular.value', 60]},
-      rate:  {$multiply: ['$totalSystemHoursRegular.hourlyRate', 0]},
-      totalPayed: { $multiply: [{$divide: ['$totalTrainingHoursRegular.value', 60]}, 0] }
+      rate:  {$toDecimal:{$multiply: ['$totalSystemHoursRegular.hourlyRate', 0]}},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTrainingHoursRegular.value', 60]}, 0] }}
     },
     totalTosRegularPay: {
       hours: {$divide: ['$totalTosHoursRegular.value', 60]},
-      rate:  '$totalTosHoursRegular.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalTosHoursRegular.value', 60]}, '$totalTosHoursRegular.hourlyRate'] }
+      rate:  {$toDecimal:'$totalTosHoursRegular.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTosHoursRegular.value', 60]}, '$totalTosHoursRegular.hourlyRate'] }}
     },
     totalSystemHolidayX1Pay: {
       hours: {$divide: ['$totalSystemHoursHolidayX1.value', 60]},
-      rate:  '$totalSystemHoursHolidayX1.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalSystemHoursHolidayX1.value', 60]}, '$totalSystemHoursHolidayX1.hourlyRate'] }
+      rate:  {$toDecimal:'$totalSystemHoursHolidayX1.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalSystemHoursHolidayX1.value', 60]}, '$totalSystemHoursHolidayX1.hourlyRate'] }}
     },
     totalTrainingHolidayX1Pay: {
       hours: {$divide: ['$totalTrainingHoursHolidayX1.value', 60]},
-      rate:  {$multiply: ['$totalSystemHoursRegular.hourlyRate', 0]},
-      totalPayed: { $multiply: [{$divide: ['$totalTrainingHoursHolidayX1.value', 60]}, 0] }
+      rate:  {$toDecimal:{$multiply: ['$totalSystemHoursRegular.hourlyRate', 0]}},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTrainingHoursHolidayX1.value', 60]}, 0] }}
     },
     totalTosHolidayX1Pay: {
       hours: {$divide: ['$totalTosHoursHolidayX1.value', 60]},
-      rate:  '$totalTosHoursHolidayX1.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalTosHoursHolidayX1.value', 60]}, '$totalSystemHoursHolidayX1.hourlyRate'] }
+      rate:  {$toDecimal:'$totalTosHoursHolidayX1.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTosHoursHolidayX1.value', 60]}, '$totalSystemHoursHolidayX1.hourlyRate'] }}
     },
     totalSystemHolidayX2Pay: {
       hours: {$divide: ['$totalSystemHoursHolidayX2.value', 60]},
-      rate:  '$totalSystemHoursHolidayX2.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalSystemHoursHolidayX2.value', 60]}, '$totalSystemHoursHolidayX2.hourlyRate'] }
+      rate:  {$toDecimal:'$totalSystemHoursHolidayX2.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalSystemHoursHolidayX2.value', 60]}, '$totalSystemHoursHolidayX2.hourlyRate'] }}
     },
     totalTrainingHolidayX2Pay: {
       hours: {$divide: ['$totalTrainingHoursHolidayX2.value', 60]},
-      rate:  '$totalTrainingHoursHolidayX2.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalTrainingHoursHolidayX2.value', 60]}, 0] }
+      rate:  {$toDecimal:'$totalTrainingHoursHolidayX2.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTrainingHoursHolidayX2.value', 60]}, 0] }}
     },
     totalTosHolidayX2Pay: {
       hours: {$divide: ['$totalTosHoursHolidayX2.value', 60]},
-      rate:  '$totalTosHoursHolidayX2.hourlyRate',
-      totalPayed: { $multiply: [{$divide: ['$totalTosHoursHolidayX2.value', 60]}, '$totalSystemHoursHolidayX2.hourlyRate'] }
+      rate:  {$toDecimal:'$totalTosHoursHolidayX2.hourlyRate'},
+      totalPayed: {$toDecimal: { $multiply: [{$divide: ['$totalTosHoursHolidayX2.value', 60]}, '$totalSystemHoursHolidayX2.hourlyRate'] }}
     }
   }
 },{
   $addFields: {
-    grossBeforeCSLPayment: {
+    grossBeforeCSLPayment: {$toDecimal: {
       $sum:
       [
         '$totalSystemRegularPay.totalPayed', '$totalTrainingRegularPay.totalPayed', '$totalTosRegularPay.totalPayed',
@@ -519,8 +534,8 @@ $lookup: {
         '$totalOtherPays',
         '$totalTaxableBonus'
       ]
-    },
-    grossPayment: {
+    }},
+    grossPayment: {$toDecimal: {
       $sum:
       [
         '$totalSystemRegularPay.totalPayed', '$totalTrainingRegularPay.totalPayed', '$totalTosRegularPay.totalPayed',
@@ -531,7 +546,7 @@ $lookup: {
         '$totalTaxableBonus',
         '$totalMaternities', '$totalCSL', '$totalFinalPayments'
       ]
-    },
+    }},
   }
 },
 {
@@ -585,7 +600,7 @@ $lookup: {
               $and:
               [
                 { $lte: [ "$fromAmount",  "$$gross" ] },
-                { $gte: [ {$sum: ["$toAmount", 0.09]}, "$$gross" ] }
+                { $gte: [ {$sum: ["$toAmount", 0.1]}, "$$gross" ] }
               ]
             }
           }
@@ -596,14 +611,14 @@ $lookup: {
 },
 {
   $addFields: {
-    ssEmployeeContribution: {$cond:[{$arrayElemAt: [ "$socialContribution", 0 ]}, {$arrayElemAt: [ "$socialContribution.employeeContribution", 0 ]}, 0]},
-    ssEmployerContribution:  {$cond:[{$arrayElemAt: [ "$socialContribution", 0 ]}, {$arrayElemAt: [ "$socialContribution.employerContribution", 0 ]}, 0]},
-    incomeTax:  {$cond: {if:{$eq: [{$size: '$incomeTax'}, 1]}, then: {$arrayElemAt: ['$incomeTax.taxAmount', 0]}, else: 0}},
+    ssEmployeeContribution: {$toDecimal: {$cond:[{$arrayElemAt: [ "$socialContribution", 0 ]}, {$arrayElemAt: [ "$socialContribution.employeeContribution", 0 ]}, 0]}},
+    ssEmployerContribution: {$toDecimal: {$cond:[{$arrayElemAt: [ "$socialContribution", 0 ]}, {$arrayElemAt: [ "$socialContribution.employerContribution", 0 ]}, 0]}} ,
+    incomeTax:  {$toDecimal: {$cond: {if:{$eq: [{$size: '$incomeTax'}, 2]}, then: {$arrayElemAt: ['$incomeTax.taxAmount', 1]}, else: {$cond: {if: {$eq: [{$size: '$incomeTax'}, 1]},then: {$arrayElemAt: ['$incomeTax.taxAmount', 0]}, else: 0} }}}},
   }
 },
 {
   $addFields: {
-    netPayment: {$subtract: [{$subtract: [{$subtract: ['$grossPayment', '$ssEmployeeContribution']}, '$incomeTax']}, '$totalDeductions']}
+    netPayment: {$toDecimal: {$subtract: [{$subtract: [{$subtract: ['$grossPayment', '$ssEmployeeContribution']}, '$incomeTax']}, '$totalDeductions']}}
   }
 }
 ];
@@ -780,7 +795,7 @@ var GetPayedPayrolls = () => [
       totalHolidayHoursX1Pay: {
         $sum: "$totalSystemHolidayX1Pay.totalPayed"
       },
-      totalBonus: { $sum: "$totalBonusPay" },
+      totalBonus: { $sum: "$totalTaxableBonus" },
       totalOtherpay: { $sum: "$totalOtherPays" },
       totalDeductions: { $sum: "$totalDeductions" },
       totalCompanyContributions: {

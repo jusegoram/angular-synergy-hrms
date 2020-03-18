@@ -339,13 +339,8 @@ attachEvent() {
     const
       createdBy = this._payrollService.getUser(),
       fromDate = moment(from).toDate(),
-      toDate = moment(to).toDate(),
-      fixedPayroll = payroll.map(o => {
-        const mapped = {...o, employee: o._id, fromDate: fromDate, toDate: toDate, createdBy: createdBy};
-        delete mapped._id;
-        return mapped;
-      });
-    this._payrollService.savePayroll(fixedPayroll).subscribe(
+      toDate = moment(to).toDate()
+    this._payrollService.savePayroll({fromDate: fromDate, toDate: toDate, createdBy: createdBy, type: payroll[0].payrollType}).subscribe(
       result => {
         console.log(result);
       },
