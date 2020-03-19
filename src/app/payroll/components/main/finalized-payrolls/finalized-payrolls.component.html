@@ -1,30 +1,37 @@
+<div>
+  <mat-toolbar>
+      <mat-toolbar-row>
+        <mat-card-subtitle>FINALIZED PAYROLLS</mat-card-subtitle>
+        <span class="fill-remaining-space"></span>
+        </mat-toolbar-row>
+  </mat-toolbar>
 <table style="width: 100%" mat-table #table [dataSource]="dataSource">
   <ng-container matColumnDef="fromDate">
-    <th mat-header-cell *matHeaderCellDef>From</th>
+    <th mat-header-cell *matHeaderCellDef>FROM</th>
     <td mat-cell *matCellDef="let row">{{ row?.fromDate |  date:'EEE - LLL d - yyyy' }}</td>
   </ng-container>
   <ng-container matColumnDef="toDate">
-    <th mat-header-cell *matHeaderCellDef>To</th>
+    <th mat-header-cell *matHeaderCellDef>TO</th>
     <td mat-cell *matCellDef="let row">{{ row?.toDate |  date:'EEE - LLL d - yyyy' }}</td>
   </ng-container>
   <ng-container matColumnDef="employeesAmount">
-    <th mat-header-cell *matHeaderCellDef>Employees Payed</th>
+    <th mat-header-cell *matHeaderCellDef>EMPLOYEES PAYED</th>
     <td mat-cell *matCellDef="let row">{{ row?.employeesAmount }}</td>
   </ng-container>
   <ng-container matColumnDef="totalPayed">
-    <th mat-header-cell *matHeaderCellDef>Amount</th>
+    <th mat-header-cell *matHeaderCellDef>AMOUNT</th>
     <td mat-cell *matCellDef="let row">{{ row?.totalPayed['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalCompanyContributions">
-    <th mat-header-cell *matHeaderCellDef>Company Social Contribution</th>
+    <th mat-header-cell *matHeaderCellDef>RCC SOCIAL CONT.</th>
     <td mat-cell *matCellDef="let row">{{ row?.totalCompanyContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalEmployeeContributions">
-    <th mat-header-cell *matHeaderCellDef>Employee Social Contribution</th>
+    <th mat-header-cell *matHeaderCellDef>EMP SOCIAL CONT.</th>
     <td mat-cell *matCellDef="let row">{{ row?.totalEmployeeContributions['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="totalTaxes">
-    <th mat-header-cell *matHeaderCellDef>Income Tax</th>
+    <th mat-header-cell *matHeaderCellDef>INCOME TAX</th>
     <td mat-cell *matCellDef="let row">{{ row?.totalTaxes['$numberDecimal'] | currency:'BZD':'symbol-narrow':'1.2-2'}}</td>
   </ng-container>
   <ng-container matColumnDef="details">
@@ -54,3 +61,4 @@
   </ng-container>
   <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 50]">
   </mat-paginator>
+  </div>

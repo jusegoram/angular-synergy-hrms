@@ -299,7 +299,7 @@
   </ngx-datatable-column>
   <ngx-datatable-column name="Weekly Wage" [width]="50" prop="positionBaseWage">
     <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value*12/48| currency:'$'}}
+      {{value*12/52| currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
   <ngx-datatable-column name="Gross Wage" [width]="50" prop="grossPayment">

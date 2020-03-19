@@ -1,3 +1,5 @@
+import { PayedPayrollsComponent } from './components/main/payed-payrolls/payed-payrolls.component';
+import { NonFinalizedPayrollsComponent } from './components/main/non-finalized-payrolls/non-finalized-payrolls.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { EditPayrollDetailVacationsComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail-vacations/edit-payroll-detail-vacations.component';
 
@@ -24,7 +26,6 @@ import { ExportBottomSheetComponent } from './components/manage/export-bottom-sh
 import { ManageComponent } from './components/manage/manage.component';
 import { MainComponent } from './components/main/main.component';
 import { DetailComponent } from './components/detail/detail.component';
-import { PayDialogComponent } from './components/main/pay/pay.component';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from 'fusioncharts';
 import * as ExcelExport from 'fusioncharts/fusioncharts.excelexport'
@@ -68,11 +69,12 @@ export function provideSwal() {
     ExportBottomSheetComponent,
     MainComponent,
     DetailComponent,
-    PayDialogComponent,
     ConceptsComponent,
     TimeOffRequestsComponent,
     NewConceptComponent,
     FinalizedPayrollsComponent,
+    NonFinalizedPayrollsComponent,
+    PayedPayrollsComponent,
     ConceptVerificationComponent,
     EditPayrollDetailComponent,
     EditPayrollDetailVacationsComponent,
@@ -90,7 +92,6 @@ export function provideSwal() {
     }],
     entryComponents: [
       ExportBottomSheetComponent,
-      PayDialogComponent,
       EditPayrollDetailComponent
     ]
 })
