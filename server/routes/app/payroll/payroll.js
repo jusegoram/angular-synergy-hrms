@@ -203,7 +203,7 @@ var getPayrollDetail = id => {
           totalTaxes: { $toDouble: "$totalTaxes" },
 
           totalWeeklyWages: {
-            $divide: [{ $multiply: [{ $sum: "$totalMonthlyWages" }, 12] }, 48]
+            $divide: [{ $multiply: [{ $sum: "$totalMonthlyWages" }, 12] }, 52]
           }
         }
       },
