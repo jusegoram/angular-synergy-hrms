@@ -771,10 +771,11 @@ var GetPayedPayrolls = () => [
       fromDate: { $last: "$fromDate" },
       toDate: { $first: "$toDate" },
       paymentDate: { $last: '$paymentDate'},
+      campaigns: { $addToSet: {$concat: ["$employeeCompany.client", "-", "$employeeCompany.campaign"]} },
       employees: { $addToSet: "$employeeId" },
       totalPayed: { $sum: "$netPayment" },
       totalWages: { $sum: "$positionBaseWage" },
-       totalTaxes: { $sum: "$incomeTax" },
+      totalTaxes: { $sum: "$incomeTax" },
       totalRegularHours: { $sum: "$totalSystemRegularPay.hours" },
       totalRegularHoursPay: {
         $sum: "$totalSystemRegularPay.totalPayed"
@@ -807,6 +808,9 @@ var GetPayedPayrolls = () => [
       },
 
     },
+    {$addFields: {
+      totalWages:  {$divide: [{ $multiply: ["$totalWages", 12] }, 52]},
+    }},
     {
       $addFields: {
         employeesAmount: { $size: "$employees" }
@@ -814,13 +818,68 @@ var GetPayedPayrolls = () => [
     }
 ]
 var GetPayedPayrollsStats = (id) => [
-  {
-    $match: {
-      payment_Id: id
-    }
-  },
-  { $sort: { fromDate: -1 } },
+  { $match: { payment_Id: id } },
+  {$group: {
+      _id: {
+        client: '$employeeCompany.client',
+        campaign: '$employeeCompany.campaign'
+      },
+      campaign: { $first: "$employeeCompany.campaign" },
+      payrolls: {$addToSet: "$payroll_Id"},
+      fromDate: { $last: "$fromDate" },
+      toDate: { $first: "$toDate" },
+      paymentDate: { $last: '$paymentDate'},
+      employees: { $addToSet: "$employeeId" },
+      totalPayed: { $sum: "$netPayment" },
+      totalWages: { $sum: "$positionBaseWage" },
+      totalTaxes: { $sum: "$incomeTax" },
+      totalRegularHours: { $sum: "$totalSystemRegularPay.hours" },
+      totalRegularHoursPay: {
+        $sum: "$totalSystemRegularPay.totalPayed"
+      },
+      totalOvertimeHours: { $sum: "$totalOvertimePay.hours" },
+      totalOvertimeHoursPay: {
+        $sum: "$totalOvertimePay.totalPayed"
+      },
+      totalHolidayHoursX2: {
+        $sum: "$totalSystemHolidayX2Pay.hours"
+      },
+      totalHolidayHoursX2Pay: {
+        $sum: "$totalSystemHolidayX2Pay.totalPayed"
+      },
+      totalHolidayHoursX1: {
+        $sum: "$totalSystemHolidayX1Pay.hours"
+      },
+      totalHolidayHoursX1Pay: {
+        $sum: "$totalSystemHolidayX1Pay.totalPayed"
+      },
+      totalBonus: { $sum: "$totalTaxableBonus" },
+      totalOtherpay: { $sum: "$totalOtherPays" },
+      totalDeductions: { $sum: "$totalDeductions" },
+      totalCompanyContributions: {
+        $sum: "$ssEmployerContribution"
+      },
+      totalEmployeeContributions: {
+        $sum: "$ssEmployeeContribution"
+      }
+      },
 
+    },
+    {$addFields: {
+      totalWages:  {$divide: [{ $multiply: ["$totalWages", 12] }, 52]},
+    }},
+    {
+      $addFields: {
+        employeesAmount: { $size: "$employees" }
+      }
+    },
+    {
+      $group: {
+        _id: '$_id.client',
+        client: { $first: "$employeeCompany.client" },
+        campaigns: { $push: '$$ROOT'},
+      }
+    }
 ]
 
 module.exports = [GetEmployeesShiftAndConcepts, GetEmployeeHoursStats, GetPayedPayroll, GetPayedPayrolls, GetPayedPayrollsStats]
