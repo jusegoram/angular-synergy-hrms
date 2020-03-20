@@ -97,7 +97,7 @@ export class PersonalComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
   }
 // TO DO: add town and district
-  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar, private fb: FormBuilder, private titlecasePipe:TitleCasePipe) {
+  constructor(private employeeService: EmployeeService, public snackBar: MatSnackBar, private fb: FormBuilder, private titlecasePipe: TitleCasePipe) {
     this.newPersonal = new EmployeePersonal(
       '', '', '', '', 0,
       '', '', '' , null ,
@@ -155,19 +155,19 @@ export class PersonalComponent implements OnInit, OnChanges {
     });
   }
 
-  buildHobbiesForm(){
+  buildHobbiesForm() {
     this.hobbiesForm = this.fb.group({
       hobbyTitle: [''],
       hobbyComment: ['']
     });
   }
 
-  buildHobbiesTable(hobbies){
+  buildHobbiesTable(hobbies) {
     this.hobbiesDataSource = new MatTableDataSource(hobbies);
   }
 
-  onAddHobby(){
-    let values = this.hobbiesForm.value;
+  onAddHobby() {
+    const values = this.hobbiesForm.value;
     this.hobbies.push({hobbyTitle: values.hobbyTitle, hobbyComment: values.hobbyComment });
     this.buildHobbiesTable(this.hobbies);
     this.onSubmit();

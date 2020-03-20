@@ -76,8 +76,8 @@ export class PayDialogComponent implements OnInit {
     });
   }
 
-  datePipe(){
-    return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')}
+  datePipe() {
+    return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')};
 }
   populateTable(data) {
     // this.dataSource = new MatTableDataSource(data)
@@ -110,7 +110,7 @@ export class PayDialogComponent implements OnInit {
   onSelect({ selected }) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
-    if(selected.length === 1) {
+    if (selected.length === 1) {
       this.loadStats(selected[0]);
     }
   }

@@ -58,7 +58,7 @@ export class MainComponent implements OnInit {
   }
 
 
-  onPaySelectedPayrolls(){
+  onPaySelectedPayrolls() {
     if (this.checkedRows.selected.length === 2) {
       const item = this.checkedRows.selected;
       const ids = [
@@ -70,7 +70,7 @@ export class MainComponent implements OnInit {
         this.getData('all');
       });
     } else {
-      this.openSnackBar(`It's only allowed to pay 2 Payrolls at a time`, 'Got it, Thanks!')
+      this.openSnackBar(`It's only allowed to pay 2 Payrolls at a time`, 'Got it, Thanks!');
     }
   }
 
@@ -97,7 +97,7 @@ export class MainComponent implements OnInit {
   }
 
   applyFilter(filter: string) {
-    if (filter){
+    if (filter) {
       filter = filter.trim(); // Remove whitespace
       filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
       this.dataSource.filter = filter;

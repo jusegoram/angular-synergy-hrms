@@ -39,15 +39,15 @@ export class PayslipsComponent implements OnInit {
       this.populateTable(result);
   });
   }
-  populateTable(data){
-    this.dataSource = new MatTableDataSource(data)
+  populateTable(data) {
+    this.dataSource = new MatTableDataSource(data);
     this.checkedRows = new SelectionModel(true, []);
   }
-  transform(hrs){
+  transform(hrs) {
     const result = this.minutesSecondsPipe.transform(hrs);
     return result;
   }
-  getRecords(){
+  getRecords() {
   //  FIXME: update acording to new spec
     // if(this.checkedRows.selected.length === 1) {
     //   const {payrolls} = this.checkedRows.selected[0];
@@ -57,12 +57,12 @@ export class PayslipsComponent implements OnInit {
    // }
 
   }
-  getPayslip(){
+  getPayslip() {
     const {employee} = this.selectedValue._id;
     const {payId} = this.checkedRows.selected[0]._id;
     this._payrollService.getPayslip(employee, payId).subscribe( result => {
       this.snackBar.open('Your download will start in less than 3 Seconds', 'Ok', {duration: 500});
-      this.employeePayslip = result
+      this.employeePayslip = result;
       setTimeout(() => {
         this.saveToPdf();
       }, 500);
@@ -70,16 +70,16 @@ export class PayslipsComponent implements OnInit {
 
 
   }
-  saveToPdf(){
+  saveToPdf() {
     const config: ExportAsConfig = {
       type: 'pdf',
       elementId: 'payslip',
       options: {
          format: 'letter', orientation: 'portrait'
       }
-    }
+    };
     this._exportasService.save(config, `${this.selectedValue.employeeId} - payslip`).subscribe(() => {
       this.snackBar.open('Download Started', 'Great!, thanks.', {duration: 500});
-  })
+  });
   }
 }

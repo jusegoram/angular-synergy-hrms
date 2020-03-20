@@ -27,7 +27,7 @@ import { DetailComponent } from './components/detail/detail.component';
 import { PayDialogComponent } from './components/main/pay/pay.component';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from 'fusioncharts';
-import * as ExcelExport from 'fusioncharts/fusioncharts.excelexport'
+import * as ExcelExport from 'fusioncharts/fusioncharts.excelexport';
 import * as Charts from 'fusioncharts/fusioncharts.charts';
 // import * as Widgets from 'fusioncharts/fusioncharts.widgets';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
@@ -41,7 +41,7 @@ import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls
 import { EditPayrollDetailComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
 
 
-FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
+FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
 }

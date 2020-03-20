@@ -1,6 +1,6 @@
 import { SessionService } from './../../session/session.service';
 import { EmployeeService } from './../employee.service';
-///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
+/// <reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
 import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 // const URL = '/api/';
@@ -73,7 +73,7 @@ export class UploadComponent {
       url: setURL,
       allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
       isHTML5: true,
-      authTokenHeader: "Authorization",
+      authTokenHeader: 'Authorization',
       authToken: this._employeeService.tokenGetter(),
     });
     this.refresh();
@@ -95,21 +95,21 @@ export class UploadComponent {
   refresh() {
     this.dataSource = new MatTableDataSource(this.uploader.queue);
   }
-  getTemplate(template){
-    this._employeeService.getTemplate(template.value).subscribe((data:BlobPart) => {
+  getTemplate(template) {
+    this._employeeService.getTemplate(template.value).subscribe((data: BlobPart) => {
       this.openSnackBar('Download started', 'thanks');
-      var a = document.createElement('a');
-      var blob = new Blob([data], {type: 'text/csv' }),
+      let a = document.createElement('a');
+      let blob = new Blob([data], {type: 'text/csv' }),
       url = window.URL.createObjectURL(blob);
 
       a.href = url;
-      a.download = template.text +".csv";
+      a.download = template.text + '.csv';
       a.click();
       window.URL.revokeObjectURL(url);
       a.remove();
     }, err => {
       console.error(err);
-      this.openSnackBar('Woops! Could not start download','Try again');
-    })
+      this.openSnackBar('Woops! Could not start download', 'Try again');
+    });
   }
 }

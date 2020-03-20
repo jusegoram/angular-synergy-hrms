@@ -12,6 +12,11 @@ import { SessionService } from '../../../session/session.service';
   styleUrls: ['./attrition.component.scss']
 })
 export class AttritionComponent implements OnInit {
+  constructor(
+    private fb: FormBuilder,
+    public snackBar: MatSnackBar,
+    private employeeService: EmployeeService,
+    private sessionService: SessionService) { }
   @Input() employee: Employee;
   @Input() authorization: any;
   dataSource: any;
@@ -19,10 +24,6 @@ export class AttritionComponent implements OnInit {
   employeeAttrition: any;
   editAttritionId: string;
   userFullName: any;
-  nameToSplit = (name: string) => {
-   let split = name.split(' ');
-    return split;
-  };
   editAttritionDate: Date;
   reasons = [
     {value: 'Absenteeism'},
@@ -70,18 +71,17 @@ export class AttritionComponent implements OnInit {
   ];
   displayedColumns = ['reason', 'secondaryReason', 'comment', 'by', 'date'];
   public attritionForm: FormGroup;
-  constructor(
-    private fb: FormBuilder,
-    public snackBar: MatSnackBar,
-    private employeeService: EmployeeService,
-    private sessionService: SessionService) { }
+  nameToSplit = (name: string) => {
+   const split = name.split(' ');
+    return split;
+  }
 
 
   ngOnInit() {
     this.employeeAttrition = this.employee.attrition;
     this.populateTable(this.employeeAttrition);
     this.buildForms();
-    this.userFullName= this.nameToSplit(this.sessionService.getName());
+    this.userFullName = this.nameToSplit(this.sessionService.getName());
   }
   buildForms() {
     this.attritionForm = this.fb.group({
@@ -118,7 +118,7 @@ export class AttritionComponent implements OnInit {
       this.employeeService.saveAttrition(com).subscribe(data => {
         this.populateTable(data);
       }, error => {});
-    }else {
+    } else {
       const com = new EmployeeAttrition(
         this.editAttritionId,
         this.employee.employeeId.toString(10),

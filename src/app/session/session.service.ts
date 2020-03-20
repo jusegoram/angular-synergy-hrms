@@ -98,7 +98,7 @@ export class SessionService {
     const dec = this.decodeToken();
     return dec.userId;
   }
-  getRights(){
+  getRights() {
     const dec = this.decodeToken();
     dec.rights.role = this.getRole();
     return dec.rights;

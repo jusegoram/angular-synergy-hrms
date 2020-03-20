@@ -95,7 +95,7 @@ export class ClientComponent implements OnInit {
             duration: 2000,
           });
         });
-      }else if (this.clients[i].state === 'newCampaign') {
+      } else if (this.clients[i].state === 'newCampaign') {
         this._admService.updateClient(this.clients[i]).subscribe(data => {
           this.snackBar.open('Information saved successfully', 'thank you', {
             duration: 2000,
@@ -106,7 +106,7 @@ export class ClientComponent implements OnInit {
             duration: 2000,
           });
         });
-      }else if (this.clients[i].state === 'modified') {
+      } else if (this.clients[i].state === 'modified') {
         this._admService.updateClient(this.clients[i]).subscribe(data => {
           this.snackBar.open('Information saved successfully', 'thank you', {
             duration: 2000,

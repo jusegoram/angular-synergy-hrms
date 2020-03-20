@@ -185,7 +185,7 @@ export class ManageComponent implements OnInit {
   }
 
   mapChartData(data) {
-    if(!data || data.length === 0) {
+    if (!data || data.length === 0) {
       return;
     }
     const categories = data[0].categories.map(cat => {
@@ -255,7 +255,7 @@ export class ManageComponent implements OnInit {
 
   dataplotClickHandler(e) {
     this.zone.run(() => {
-      //TODO: can filter the array based on what is picked for future feature.
+      // TODO: can filter the array based on what is picked for future feature.
     });
 }
 initialized($event) {
@@ -339,7 +339,7 @@ attachEvent() {
     const
       createdBy = this._payrollService.getUser(),
       fromDate = moment(from).toDate(),
-      toDate = moment(to).toDate()
+      toDate = moment(to).toDate();
     this._payrollService.savePayroll({fromDate: fromDate, toDate: toDate, createdBy: createdBy, type: payroll[0].payrollType}).subscribe(
       result => {
         console.log(result);

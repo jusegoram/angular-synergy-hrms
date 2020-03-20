@@ -33,9 +33,9 @@ export class NewDialogComponent  {
         item.onShift = false;
         item.endTime = null;
         item.startTime = null;
-      }else if ( item.day === day && item.onShift === false) {
+      } else if ( item.day === day && item.onShift === false) {
         item.onShift = true;
-      }else if (item.day !== day && item.onShift === null) {
+      } else if (item.day !== day && item.onShift === null) {
         item.onShift = true;
       }
     });

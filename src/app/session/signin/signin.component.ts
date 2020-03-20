@@ -14,7 +14,7 @@ export class SigninComponent implements OnInit {
 
   public form: FormGroup;
   return = '';
-  synergyId = '@rccbpo.com'
+  synergyId = '@rccbpo.com';
   hide = true;
 
   constructor(

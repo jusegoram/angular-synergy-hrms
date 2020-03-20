@@ -19,7 +19,7 @@ export class CertifyDialogComponent {
     });
   }
 
-  get certificationDateHasError(){
+  get certificationDateHasError() {
     return this.certifyForm.get('certificationDate').invalid;
   }
 

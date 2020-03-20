@@ -1,0 +1,17 @@
+.mat-card-header{
+    justify-content: center;
+}
+
+mat-card-content{
+    padding: 15px;
+    .info-type-fields{
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .issue-description-field-wrapper{
+        width: 100%;
+        margin-top: 10px;
+    }
+}

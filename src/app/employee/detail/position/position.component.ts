@@ -76,7 +76,7 @@ export class PositionComponent implements OnInit {
   }
 
   addActionColumn(rights: boolean) {
-    if(rights){
+    if (rights) {
       this.displayedColumns.push('action');
     }
   }
@@ -158,11 +158,11 @@ export class PositionComponent implements OnInit {
     console.log(element);
   }
 
-  deletePosition(position: object){
-    this.employeeService.deletePosition(position).subscribe((result:any) => {
-     let i = this.dataSource.data.indexOf(position);
-    if(i > -1) {
-      let newData = JSON.parse(JSON.stringify(this.dataSource.data));
+  deletePosition(position: object) {
+    this.employeeService.deletePosition(position).subscribe((result: any) => {
+     const i = this.dataSource.data.indexOf(position);
+    if (i > -1) {
+      const newData = JSON.parse(JSON.stringify(this.dataSource.data));
       newData.splice(i, 1);
       this.dataSource = undefined;
       this.populateTable(newData);
@@ -174,6 +174,6 @@ export class PositionComponent implements OnInit {
       this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
         duration: 2000,
       });
-    })
+    });
   }
 }

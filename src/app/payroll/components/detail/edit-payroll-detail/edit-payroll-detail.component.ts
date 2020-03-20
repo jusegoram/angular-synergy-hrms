@@ -17,7 +17,7 @@ export class EditPayrollDetailComponent implements OnInit {
 
   ngOnInit() {
   }
-  onClose(){
+  onClose() {
     this.dialogRef.close();
   }
 }

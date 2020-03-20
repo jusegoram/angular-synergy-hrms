@@ -68,7 +68,7 @@ export class DetailComponent implements OnInit {
     this.newCompany = new EmployeeCompany(
       '',
       '', '', '',
-      '', '', '','',
+      '', '', '', '',
       '', null,
       null, null,
       null, null, false);
@@ -85,7 +85,7 @@ export class DetailComponent implements OnInit {
      this.positions = this.employee.position;
      if (!this.positions[0]) {
        this.latestPos = new Position();
-     }else {
+     } else {
       const i = this.positions.length - 1;
       this.latestPos = this.positions[i];
      }
@@ -230,7 +230,7 @@ export class DetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
-      }else {
+      } else {
         this.statusChange = result;
       }
     });
@@ -244,7 +244,7 @@ export class DetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
-      }else {
+      } else {
         this.statusChange = result;
       }
     });
@@ -258,7 +258,7 @@ export class DetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
-      }else {
+      } else {
         this.statusChange = result;
       }
     });
@@ -272,7 +272,7 @@ export class DetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
-      }else {
+      } else {
         this.statusChange = result;
       }
     });

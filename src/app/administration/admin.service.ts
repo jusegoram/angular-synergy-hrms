@@ -20,11 +20,11 @@ export class AdminService {
   constructor( protected httpClient: HttpClient) { }
 
   userTypes = [
-    { value: 0, viewValue: "Accounting"},
-    { value: 1, viewValue: "Management"},
-    { value: 2, viewValue: "Training"},
-    { value: 3, viewValue: "Administrator"},
-    { value: 9999, viewValue: "Web Administrator" },
+    { value: 0, viewValue: 'Accounting'},
+    { value: 1, viewValue: 'Management'},
+    { value: 2, viewValue: 'Training'},
+    { value: 3, viewValue: 'Administrator'},
+    { value: 9999, viewValue: 'Web Administrator' },
   ];
   createDepartment(department: Department) {
     const body = JSON.stringify(department);
@@ -93,11 +93,11 @@ export class AdminService {
     return this._users;
   }
   editUser(param): any {
-    if(param) {
+    if (param) {
       const body = JSON.stringify(param);
       const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
       return this.httpClient.put('/api/v1/users/' + param._id, body, { headers: headers });
-    } throw new Error("Failed to get the model...");
+    } throw new Error('Failed to get the model...');
   }
   deleteUser(param: any): any {
     return this.httpClient.delete('/api/v1/users/' + param);
@@ -250,52 +250,52 @@ export class AdminService {
     return this.httpClient.get(`/api/v1/uploads/${_id}`, {headers: headers, params: params});
   }
 
-  getHolidays(query){
+  getHolidays(query) {
     const {pageNumber, size} = query;
     const params = new HttpParams().set('page', pageNumber).set('limit', size);
     const _id = 'q';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.get(`/api/v1/admin/payroll/holidays/${_id}`, {headers: headers, params: params});
   }
-  updateHolidays(){
+  updateHolidays() {
 
   }
-  setHolidays(){
+  setHolidays() {
 
   }
-  deleteHolidays(){
+  deleteHolidays() {
 
   }
-  getSoSec(query){
+  getSoSec(query) {
     const {pageNumber, size} = query;
     const params = new HttpParams().set('page', pageNumber).set('limit', size);
     const _id = 'q';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.get(`/api/v1/admin/payroll/socialsecurity/${_id}`, {headers: headers, params: params});
   }
-  updateSoSec(){
+  updateSoSec() {
 
   }
-  setSoSec(){
+  setSoSec() {
 
   }
-  deleteSoSec(){
+  deleteSoSec() {
 
   }
-  getIncomeTax(query){
+  getIncomeTax(query) {
     const {pageNumber, size} = query;
     const params = new HttpParams().set('page', pageNumber).set('limit', size);
     const _id = 'q';
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.get(`/api/v1/admin/payroll/incomeTax/${_id}`, {headers: headers, params: params});
   }
-  updateIncomeTax(){
+  updateIncomeTax() {
 
   }
-  setIncomeTax(){
+  setIncomeTax() {
 
   }
-  deleteIncomeTax(){
+  deleteIncomeTax() {
 
   }
 }

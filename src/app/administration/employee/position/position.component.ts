@@ -92,7 +92,7 @@ export class PositionComponent implements OnInit {
           console.error(error);
           this.openError();
         });
-    }else {
+    } else {
       this.openError();
     }
   }

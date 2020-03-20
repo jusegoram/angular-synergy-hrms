@@ -103,7 +103,7 @@ export class ConceptVerificationComponent implements OnInit {
         });
       } else {
         this.openSnackbar('Sorry, you cant verify your own concepts, ask an accounting teammate', 'Ok, sorry');
-        return null;}
+        return null; }
     } else {
       if (single.creationFingerprint === verificationFingerprint) {
         this.openSnackbar('Sorry, you cant VERIFY your own concepts, ask an accounting teammate', 'Ok, sorry');
