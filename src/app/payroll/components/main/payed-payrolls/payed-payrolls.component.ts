@@ -3,11 +3,9 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, OnInit, Inject, Input, NgZone } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { SelectionModel } from '@angular/cdk/collections';
 import { ChartData, Datum } from '../../../../shared/ChartData';
 
 @Component({
@@ -18,18 +16,6 @@ import { ChartData, Datum } from '../../../../shared/ChartData';
 export class PayedPayrollsComponent implements OnInit {
   @Input() type;
   wb: XLSX.WorkBook;
-  // checkedRows: any;
-  // dataSource: any;
-  // displayedColumns = [
-  //   'selected',
-  //   'payRun',
-  //   'fromDate',
-  //   'toDate',
-  //   'employeesAmount',
-  //   'totalPayed',
-  //   'totalCompanyContributions',
-  //   'totalEmployeeContributions',
-  //   'totalTaxes'];
   rows = new Array();
   columns = [];
   selected = new Array();
@@ -97,10 +83,7 @@ export class PayedPayrollsComponent implements OnInit {
   datePipe(){
     return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')}
 }
-  populateTable(data) {
-    // this.dataSource = new MatTableDataSource(data)
-    // this.checkedRows = new SelectionModel(true, []);
-  }
+
   sendPayslips(payId) {
     this._payrollService.sendPayslipts(payId).subscribe(res => {});
   }
