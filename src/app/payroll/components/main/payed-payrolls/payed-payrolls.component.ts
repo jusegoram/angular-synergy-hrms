@@ -1,13 +1,14 @@
 import { MinuteSecondsPipe } from './../../../../shared/pipes/minute-seconds.pipe';
 import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, NgZone } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 import { SelectionModel } from '@angular/cdk/collections';
+import { ChartData, Datum } from '../../../../shared/ChartData';
 
 @Component({
   selector: 'app-payed-payrolls',
@@ -32,6 +33,7 @@ export class PayedPayrollsComponent implements OnInit {
   rows = new Array();
   columns = [];
   selected = new Array();
+  selectedClient = new Array();
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
   statsRows = new Array();
@@ -39,12 +41,28 @@ export class PayedPayrollsComponent implements OnInit {
     { name: 'CONCEPT', prop: 'concept' },
     { name: 'AMOUNT', prop: 'amount'}
   ];
+  tableMessages = {
+    emptyMessage: 'PLEASE CLICK ON A PAYROLL RUN TO LOAD THE STATS',
+  }
+  clientStatsRows = new Array();
+  clientStatsColumns = [
+    { name: 'CONCEPT', prop: 'concept' },
+    { name: 'AMOUNT', prop: 'amount'}
+  ];
+  clientTableMessages = {
+    emptyMessage: 'PLEASE CLICK ON A CLIENT IN THE CHART TO LOAD THIS TABLE',
+  }
+  doughnutChartData: any;
+  clientStats: any;
+  exportInfo: any[];
   constructor(
     private currency: CurrencyPipe,
     private _datePipe: DatePipe,
     private _payrollService: PayrollService,
     private _minuteSeconds: MinuteSecondsPipe,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private zone: NgZone,
+
   ) {
     this.columns = [
       { name: 'PAY RUN DATE', prop: 'paymentDate', pipe: this.datePipe() },
@@ -65,8 +83,7 @@ export class PayedPayrollsComponent implements OnInit {
         name: 'TOTAL TAXES',
         prop: 'totalTaxes.$numberDecimal',
         pipe: this.currency
-      },
-      { name: 'EXPORT' }
+      }
     ];
   }
 
@@ -74,9 +91,6 @@ export class PayedPayrollsComponent implements OnInit {
     this.wb = XLSX.utils.book_new();
     this._payrollService.getPayroll('', '', '', true).subscribe(result => {
       this.rows = result;
-      for (let i = 0; i < 10; i++) {
-        this.rows = [...this.rows, ...result];
-      }
     });
   }
 
@@ -92,34 +106,79 @@ export class PayedPayrollsComponent implements OnInit {
   }
 
   export() {
-    // if(this.checkedRows.selected.length === 1) {
-    //   const {payrolls, payedDate, fromDate, toDate} = this.checkedRows.selected[0];
-    //   this._payrollService.getPayroll(payrolls, '', true).subscribe(result =>{
-    //     const data = result.map(i => {
-    //       delete i._id;
-    //       delete i.payrolls;
-    //       return Object.assign({
-    //         'payRun': moment(payedDate).format('MM/DD/YYYY').toString(),
-    //         'from': moment(fromDate).format('MM/DD/YYYY').toString(),
-    //         'to': moment(toDate).format('MM/DD/YYYY').toString(),
-    //       }, i)
-    //     });
-    //     const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
-    //   XLSX.utils.book_append_sheet(this.wb, main, 'sheet 1');
-    //   const date = moment().format('MM-DD-YYYY HH:mm:ss').toString();
-    //   XLSX.writeFile(this.wb, `payroll-${date}.xlsx`);
-    //   })
-    // }else this.snackBar.open('Please export one Pay run at a time', 'I will, Thanks.', {duration: 5000})
+    const result = this.exportInfo;
+        const data = result.map(i => {
+          return {
+            employeeId: i.employeeId,
+            firstName: i.firstName,
+            middleName: i.middleName,
+            lastName: i.lastName,
+            employeeName: i.employeeName,
+            onFinalPayment: i.onFinalPayment,
+            employeeSSN: i.employeeSSN,
+            employeeStatus: i.employeeStatus,
+            employeeEmail: i.employeeEmail,
+            client: i.employeeCompany.client,
+            campaign: i.employeeCompany.campaign,
+            hireDate: i.employeeCompany.hireDate,
+            billable: i.employeePayroll.billable,
+            bankAccount: i.employeePayroll.bankAccount,
+            bankName: i.employeePayroll.bankName,
+            TIN: i.employeePayroll.TIN,
+            positionHourlyRate: i.positionHourlyRate['$numberDecimal'],
+            payrollType: i.payrollType,
+            positionName: i.positionName,
+            positionId: i.positionId,
+            positionBaseWage: i.positionBaseWage,
+            totalScheduledMinutes: i.totalScheduledMinutes,
+            totalDeductions: i.totalDeductions['$numberDecimal'],
+            totalOtherPays: i.totalOtherPays['$numberDecimal'],
+            totalMaternities: i.totalMaternities['$numberDecimal'],
+            totalCSL: i.totalCSL['$numberDecimal'],
+            totalTaxableBonus: i.totalTaxableBonus['$numberDecimal'],
+            totalNonTaxableBonus: i.totalNonTaxableBonus['$numberDecimal'],
+            totalFinalPayments: i.totalFinalPayments['$numberDecimal'],
+            totalOvertimeHours: i.totalOvertimePayHours,
+            totalSystemRegularHours: i.totalSystemRegularPayHours,
+            totalTrainingRegularHours: i.totalTrainingRegularPayHours,
+            totalTosRegularHours: i.totalTosRegularPayHours,
+            totalSystemHolidayX1Hours: i.totalSystemHolidayX1PayHours,
+            totalTrainingHolidayX1Hours: i.totalTrainingHolidayX1PayHours,
+            totalTosHolidayX1Hours: i.totalTosHolidayX1PayHours,
+            totalSystemHolidayX2Hours: i.totalSystemHolidayX2PayHours,
+            totalTrainingHolidayX2Hours: i.totalTrainingHolidayX2PayHours,
+            totalTosHolidayX2Hours: i.totalTosHolidayX2PayHours,
+            taxableGross: i.grossBeforeCSLPayment['$numberDecimal'],
+            completeGross: i.grossPayment['$numberDecimal'],
+            ssEmployeeContribution: i.ssEmployeeContribution['$numberDecimal'],
+            ssEmployerContribution: i.ssEmployerContribution['$numberDecimal'],
+            incomeTax: i.incomeTax['$numberDecimal'],
+            netPayment: i.netPayment['$numberDecimal'],
+          };
+        });
+        const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+      XLSX.utils.book_append_sheet(this.wb, main, 'sheet 1');
+      const date = moment().format('MM-DD-YYYY HH:mm:ss').toString();
+      XLSX.writeFile(this.wb, `payroll-${date}.xlsx`);
   }
   onSelect({ selected }) {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
     if(selected.length === 1) {
       this.loadStats(selected[0]);
+    }else if( selected.length === 0){
+      this.statsRows = [];
+      this.clientStatsRows = [];
+      delete this.doughnutChartData;
     }
   }
   loadStats(row) {
     this.statsRows = this.mapTotalStats(row);
+    this._payrollService.getPayrollRun(row._id).subscribe((result: any) => {
+      this.initCharts(result.stats);
+      this.clientStats = result.stats;
+      this.exportInfo = result.details;
+    });
   }
   mapTotalStats(data) {
     const stats = JSON.parse(JSON.stringify(data));
@@ -164,5 +223,60 @@ export class PayedPayrollsComponent implements OnInit {
     });
 
     return returnedArr.sort((a,b) => a.concept.localeCompare(b.concept) );
+  }
+  dataplotClickHandler(e){
+    this.zone.run(() => {
+      if(this.selectedClient.indexOf(e.dataObj.categoryLabel) !== -1) {
+        this.selectedClient.splice(0, this.selectedClient.length);
+      } else {
+        if (this.selectedClient.length === 1) {
+          this.selectedClient = [];
+        }
+        this.selectedClient.push(e.dataObj.categoryLabel);
+      }
+      if (this.selectedClient.length === 1) {
+        const [clientStats] = this.clientStats.filter( c => c._id.client === this.selectedClient[0]);
+        this.clientStatsColumns = [
+          { name: this.selectedClient[0].toUpperCase(), prop: 'concept' },
+          { name: 'AMOUNT', prop: 'amount'}
+        ];
+        this.clientStatsRows = this.mapTotalStats(clientStats);
+      }
+    });
+  }
+  initCharts(stats) {
+    this.doughnutChartData = new ChartData(
+      {
+        caption: 'PAYROLL RUN CLIENT DISTRIBUTION',
+        subCaption: 'For employees in the payroll run',
+        defaultcenterlabel: 'RCC BPO',
+        aligncaptionwithcanvas: '0',
+        captionpadding: '0',
+        decimals: '1',
+        plottooltext:
+          '<b>$percentValue</b> of our employees are on <b>$label</b>',
+        centerlabel: '$value',
+        theme: 'fusion',
+        exportenabled: '1',
+        exportfilename: 'payrollDoughnutChart1'
+      },
+      this.mapDoughNutChartData(stats, 'client', '', 'employeesAmount')
+    );
+  }
+  mapDoughNutChartData(data, labelPath, labelPath2, valuePath): Datum[] {
+    let mappedData: Datum[];
+    mappedData = data.map(item => {
+      let label;
+      if (labelPath === 'client' && labelPath2 === '') {
+        label = item._id.client;
+      } else {
+        label = item[labelPath] + ' - ' + item[labelPath2];
+      }
+      return {
+        label: label,
+        value: item[valuePath]
+      };
+    });
+    return mappedData;
   }
 }

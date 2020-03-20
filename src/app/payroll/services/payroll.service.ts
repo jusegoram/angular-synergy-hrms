@@ -26,47 +26,9 @@ export class PayrollService {
 
   getAuth(): any {
     return this._sessionService.getRights();
-
   }
-
-  public get payroll() {
-    return this._payroll;
-  }
-
-  public setPayroll(
-    employees,
-    fromDate,
-    toDate,
-    socialTable,
-    holidayTable,
-    exceptionsTable,
-    otherpayTable,
-    deductionsTable,
-    incometaxTable
-  ) {
-    this._payroll = new Payroll(
-      employees,
-      fromDate,
-      toDate,
-      socialTable,
-      holidayTable,
-      exceptionsTable,
-      otherpayTable,
-      deductionsTable,
-      incometaxTable
-    );
-  }
-
-  savePayedPayroll(data) {
-    const body = {
-      'payedEmployees': data,
-      'payedPayrolls': data[0].payrolls,
-    };
-
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/payroll/pay', body, {
-      headers: headers
-    });
+  getDecodedToken() {
+    return this._sessionService.decodeToken();
   }
 
   sendPayslipts(payId) {
@@ -111,46 +73,21 @@ export class PayrollService {
     return this._clients;
   }
 
-  getDecodedToken() {
-    return this._sessionService.decodeToken();
-  }
-  getEmployeesByPayrollType(payrollType, from, to) {
-    // FIX-ME: fix this
+  createPayroll(payrollType, from, to) {
     return this.httpClient.get<any>(
-      `/api/v1/payroll/getPayroll?payrollType=${payrollType}&from=${from}&to=${to}`
+      `/api/v1/payroll/new?payrollType=${payrollType}&from=${from}&to=${to}`
     );
   }
-
-  getOtherPayrollInfo(employees: any, payroll: any, from: any, to: any) {
-    const query = {
-      employees: employees,
-      payrollType: payroll,
-      from: from,
-      to: to
-    };
-    const body = query;
+  getPayroll(id: any, type: any, finalized: any, payed?: any): Observable<any> {
+    let params;
+      params = new HttpParams().set('id', id).set('type', type).set('finalized', finalized).set('payed', payed);
+    return this.httpClient.get<any>('/api/v1/payroll', {params: params});
+  }
+  updatePayroll(payroll, element, type, payrollRecordId?) {
+    const body = element;
+    const params = new HttpParams().set('conceptType', type).set('payrollRecordId', payrollRecordId);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/payroll/getOtherPayrollInfo', body, {
-      headers: headers
-    });
-  }
-
-  getHours(from: any, to: any) {
-    const params = new HttpParams().set('gte', from).set('lte', to);
-    return this.httpClient.get<any>('/api/v1/payroll/getHours', {
-      params: params
-    });
-  }
-
-  getPayrollSettings(from, to) {
-    return this.httpClient.get<any>(`/api/v1/payroll/settings?from=${from}&to=${to}`);
-  }
-
-  getLastYearPayrolls(id: any) {
-    const params = new HttpParams().set('id', id);
-    return this.httpClient.get<any>('/api/v1/payroll/employees', {
-      params: params
-    });
+    return this.httpClient.put('/api/v1/payroll/' + payroll, body, {headers: headers, params: params});
   }
   savePayroll(payroll) {
     const body = {
@@ -161,28 +98,19 @@ export class PayrollService {
       headers: headers
     });
   }
-  updatePayroll(payroll, element, type, payrollRecordId?) {
-    const body = element;
-    const params = new HttpParams().set('conceptType', type).set('payrollRecordId', payrollRecordId);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put('/api/v1/payroll/' + payroll, body, {headers: headers, params: params});
+  getPayrollRun(payment_Id) {
+    return this.httpClient.get('/api/v1/payroll/' + payment_Id + '/details');
   }
-
-  getPayroll(id: any, type: any, finalized: any, payed?: any): Observable<any> {
-    let params;
-      params = new HttpParams().set('id', id).set('type', type).set('finalized', finalized).set('payed', payed);
-    return this.httpClient.get<any>('/api/v1/payroll', {params: params});
+  getLastYearPayrolls(id: any) {
+    const params = new HttpParams().set('id', id);
+    return this.httpClient.get<any>('/api/v1/payroll/employees', {
+      params: params
+    });
   }
-
   getPayedHistory() {
     return this.httpClient.get<any>('/api/v1/payroll/payed');
   }
-  deletePayroll() {
-    this._payroll = null;
-    delete this._payroll;
 
-
-  }
 
   getConcepts(arg: {
     type?: string, id?: string, verified?: boolean,

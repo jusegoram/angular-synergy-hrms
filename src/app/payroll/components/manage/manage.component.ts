@@ -175,7 +175,7 @@ export class ManageComponent implements OnInit {
     const fromDate = moment(from).format('MM-DD-YYYY').toString();
     const toDate = moment(to).format('MM-DD-YYYY').toString();
     this._payrollService
-      .getEmployeesByPayrollType(payroll, fromDate, toDate)
+      .createPayroll(payroll, fromDate, toDate)
       .subscribe((result: any) => {
         this.chartDataSource = this.mapChartData(result.stats);
         this.pieCharDataSource = this.mapPieCharData(result.payroll);

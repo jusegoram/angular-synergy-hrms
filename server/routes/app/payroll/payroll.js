@@ -17,92 +17,8 @@ let adminPayroll = require("../../../models/administration/administration-payrol
 let [
   GetEmployeesShiftAndConcepts, GetEmployeeHoursStats, GetPayedPayroll, GetPayedPayrolls, GetPayedPayrollsStats
 ] = require("../payroll/payrollStoreProc");
-router.post("/", (req, res) => {
-  const { payroll } = req.body;
-  const from = payroll.fromDate,
-    to = payroll.toDate;
-  const conceptMatch = {
-    date: {
-      $gte: moment(from).toDate(),
-      $lte: moment(to).toDate()
-    },
-    payed: false,
-    verified: true,
-    payroll: { $exists: false }
-  };
-  const hoursMatch = {
-    date: {
-      $gte: moment(from).toDate(),
-      $lte: moment(to).toDate()
-    },
-    payed: false,
-    payroll: { $exists: false }
-  };
 
-  Payroll.find({
-    $or: [
-      { $and: [{ fromDate: { $gte: from } }, { fromDate: { $lte: to } }] },
-      { $and: [{ toDate: { $gte: from } }, { toDate: { $lte: to } }] },
-      { $and: [{ fromDate: { $gte: from } }, { toDate: { $lte: to } }] },
-      { $and: [{ fromDate: { $lte: from } }, { toDate: { $gte: to } }] }
-    ]
-  })
-    .limit(10)
-    .lean()
-    .exec((err, doc) => {
-      console.log(err);
-      if (err)
-        res
-          .status(400)
-          .json({ message: "Error while creating payroll", err: err });
-      else {
-        if (doc.length > 0) {
-          res.status(400).json({
-            message: "The payroll you are trying to create already exists.",
-            err: doc
-          });
-        } else {
-          let id = new mongoose.Types.ObjectId();
-          const setPayrollId = {
-            $set: {
-              payroll: id,
-              assigned: true,
-            }
-          };
-          Employee.aggregate(
-            [
-              ...GetEmployeesShiftAndConcepts(
-              payroll.type,
-              moment(from).format('MM-DD-YYYY').toString(),
-              moment(to).format('MM-DD-YYYY').toString(),
-              id,
-              payroll.createdBy),
-              { $merge : { into : "payrolls" } }
-            ]).exec((err, result) => {
-              if (err)
-                res
-                  .status(400)
-                  .json({ message: "Error while creating payroll", err: err });
-              else {
-                Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                  Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                    Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                      Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
-                        res
-                          .status(200)
-                          .json({
-                            message: "Great!, the payroll got saved",
-                          })
-                      )
-                    )
-                  )
-                );
-              }
-          })
-        }
-      }
-    });
-});
+
 
 var getPayrolls = (type, finalizedBoolean) => {
   return new Promise((resolve, reject) => {
@@ -235,6 +151,20 @@ var getPayedRuns = () => {
          });
   })
 };
+router.get("/new", (req, res) => {
+  let type = req.query.payrollType + "";
+  let from = req.query.from;
+  let to = req.query.to;
+  Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to, '', ''))
+  .allowDiskUse()
+    .exec((err, result) => {
+      Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {
+        if (e) res.status(400).json(e);
+        else res.status(200).json({payroll:result, stats: r});
+      });
+    });
+});
+
 router.get("/", (req, res) => {
   const { id, type, finalized, payed} = req.query;
   let finalizedBoolean = finalized === "true" ? true : false;
@@ -252,7 +182,92 @@ router.get("/", (req, res) => {
       .catch(err => res.status(400).json(err));
   }
 });
+router.post("/", (req, res) => {
+  const { payroll } = req.body;
+  const from = payroll.fromDate,
+    to = payroll.toDate;
+  const conceptMatch = {
+    date: {
+      $gte: moment(from).toDate(),
+      $lte: moment(to).toDate()
+    },
+    payed: false,
+    verified: true,
+    payroll: { $exists: false }
+  };
+  const hoursMatch = {
+    date: {
+      $gte: moment(from).toDate(),
+      $lte: moment(to).toDate()
+    },
+    payed: false,
+    payroll: { $exists: false }
+  };
 
+  Payroll.find({
+    $or: [
+      { $and: [{ fromDate: { $gte: from } }, { fromDate: { $lte: to } }] },
+      { $and: [{ toDate: { $gte: from } }, { toDate: { $lte: to } }] },
+      { $and: [{ fromDate: { $gte: from } }, { toDate: { $lte: to } }] },
+      { $and: [{ fromDate: { $lte: from } }, { toDate: { $gte: to } }] }
+    ]
+  })
+    .limit(10)
+    .lean()
+    .exec((err, doc) => {
+      console.log(err);
+      if (err)
+        res
+          .status(400)
+          .json({ message: "Error while creating payroll", err: err });
+      else {
+        if (doc.length > 0) {
+          res.status(400).json({
+            message: "The payroll you are trying to create already exists.",
+            err: doc
+          });
+        } else {
+          let id = new mongoose.Types.ObjectId();
+          const setPayrollId = {
+            $set: {
+              payroll: id,
+              assigned: true,
+            }
+          };
+          Employee.aggregate(
+            [
+              ...GetEmployeesShiftAndConcepts(
+              payroll.type,
+              moment(from).format('MM-DD-YYYY').toString(),
+              moment(to).format('MM-DD-YYYY').toString(),
+              id,
+              payroll.createdBy),
+              { $merge : { into : "payrolls" } }
+            ]).exec((err, result) => {
+              if (err)
+                res
+                  .status(400)
+                  .json({ message: "Error while creating payroll", err: err });
+              else {
+                Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                  Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                    Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                      Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
+                        res
+                          .status(200)
+                          .json({
+                            message: "Great!, the payroll got saved",
+                          })
+                      )
+                    )
+                  )
+                );
+              }
+          })
+        }
+      }
+    });
+});
 var getPayedPayrollDetails = (payment_Id) => {
   return new Promise((resolve, reject) => {
     Payroll.aggregate([
@@ -264,15 +279,17 @@ var getPayedPayrollDetails = (payment_Id) => {
   })
 }
 var getPayedPayrollStats = (payment_Id) => {
+return new Promise((resolve, reject) => {
   Payroll.aggregate([
     ...GetPayedPayrollsStats(payment_Id)
   ]).exec((err, doc) => {
     if(err) reject(err);
       else resolve(doc);
   })
+});
 }
 router.get('/:payment_Id/details', (req, res) => {
-  let {payment_Id} = req.param;
+  let {payment_Id} = req.params;
    getPayedPayrollStats(payment_Id)
    .then(stats => {
      getPayedPayrollDetails(payment_Id)
@@ -281,24 +298,68 @@ router.get('/:payment_Id/details', (req, res) => {
      }).catch(e => res.status(200).json({stats: stats, details: e}));
    }).catch(e => res.status(400).json({message: 'error', err: e}));
 });
+let getSSAndTaxes = grossPayment => {
+  if(grossPayment > 1213) grossPayment = 1213.30;
+  return new Promise((resolve, reject) => {
+    adminPayroll.SocialTable.aggregate([
+      {
+        $match: {
+          $expr: {
+            $or: [
+              {
+                $and: [
+                  { $lte: ["$fromEarnings", grossPayment] },
+                  { $gte: ["$toEarnings", grossPayment] }
+                ]
+              },
+              {
+                $and: [
+                  { $lte: ["$fromEarnings", grossPayment] },
+                  { $gte: [grossPayment, 460] },
+                  { $eq: ["$toEarnings", 460] }
+                ]
+              }
+            ]
+          }
+        },
 
-// let assignCSL = element => {
-//   return new Promise((resolve, reject) => {
-//     const cloned = JSON.parse(JSON.stringify(element));
-//     const otherpays = cloned.otherpay;
-//     const mapped = otherpays.map(i => i._id);
-//     Otherpay.updateMany(
-//       { _id: { $in: mapped } },
-//       { $set: { assigned: true } }
-//     ).exec((err, doc) => {
-//       if (err) reject();
-//       else resolve();
-//     });
-//   });
-// };
-// let assignMat = element => {
-//   return new Promise((resolve, reject) => {});
-// };
+      },
+      {
+        $lookup: {
+          from: "payroll-incometaxtables",
+          pipeline: [
+            {
+              $match: {
+                  $expr:
+                  {
+                    $and:
+                    [
+                      { $lte: [ "$fromAmount",  grossPayment ] },
+                      { $gte: [ {$sum: ["$toAmount", 0.09]}, grossPayment ] }
+                    ]
+                  }
+                }
+            },
+          ],
+          as: "incomeTax"
+        },
+      },
+      { $project: {
+        _id: 0 ,
+        ssEmployeeContribution: '$employeeContribution',
+        ssEmployerContribution: '$employerContribution',
+        incomeTax: {$arrayElemAt: [ "$incomeTax.taxAmount", 0]},
+      }}
+    ]).exec((err, doc) => {
+      if (err) reject(err);
+      else {
+        let [single] = doc
+        if(grossPayment < 500) single.incomeTax = 0;
+        resolve(single);
+      }
+    });
+  });
+};
 let assignVac = (element, payrollRecordId) => {
   return new Promise((resolve, reject) => {
     if( element.verified === true){
@@ -362,68 +423,6 @@ let assignVac = (element, payrollRecordId) => {
 let assignFP = element => {
   return new Promise((resolve, reject) => {});
 };
-let getSSAndTaxes = grossPayment => {
-  if(grossPayment > 1213) grossPayment = 1213.30;
-  return new Promise((resolve, reject) => {
-    adminPayroll.SocialTable.aggregate([
-      {
-        $match: {
-          $expr: {
-            $or: [
-              {
-                $and: [
-                  { $lte: ["$fromEarnings", grossPayment] },
-                  { $gte: ["$toEarnings", grossPayment] }
-                ]
-              },
-              {
-                $and: [
-                  { $lte: ["$fromEarnings", grossPayment] },
-                  { $gte: [grossPayment, 460] },
-                  { $eq: ["$toEarnings", 460] }
-                ]
-              }
-            ]
-          }
-        },
-
-      },
-      {
-        $lookup: {
-          from: "payroll-incometaxtables",
-          pipeline: [
-            {
-              $match: {
-                  $expr:
-                  {
-                    $and:
-                    [
-                      { $lte: [ "$fromAmount",  grossPayment ] },
-                      { $gte: [ {$sum: ["$toAmount", 0.09]}, grossPayment ] }
-                    ]
-                  }
-                }
-            },
-          ],
-          as: "incomeTax"
-        },
-      },
-      { $project: {
-        _id: 0 ,
-        ssEmployeeContribution: '$employeeContribution',
-        ssEmployerContribution: '$employerContribution',
-        incomeTax: {$arrayElemAt: [ "$incomeTax.taxAmount", 0]},
-      }}
-    ]).exec((err, doc) => {
-      if (err) reject(err);
-      else {
-        let [single] = doc
-        if(grossPayment < 500) single.incomeTax = 0;
-        resolve(single);
-      }
-    });
-  });
-};
 let finalizePayroll = (payrollId, user) => {
   return new Promise((resolve, reject) => {
     let query = {
@@ -451,6 +450,21 @@ let payPayrolls = (ids, user) => {
     }
     let parsedIds = JSON.parse(ids);
     let [id1, id2] = parsedIds;
+    Otherpay.updateMany(
+      { payroll: { $in: parsedIds } },
+      { $set: { payed: true } },
+      (err, raw) => {}
+    );
+    Bonus.updateMany(
+      { payroll: { $in: parsedIds } },
+      { $set: { payed: true } },
+      (err, raw) => {}
+    );
+    Deduction.updateMany(
+      { payroll: { $in: parsedIds } },
+      { $set: { payed: true } },
+      (err, raw) => {}
+    );
     Payroll.updateMany({payroll_Id: {$in: [mongoose.Types.ObjectId(id1),mongoose.Types.ObjectId(id2)]}}, query).exec((err, doc) => {
       console.log(err);
       if(err) reject(err);
@@ -721,167 +735,8 @@ router.get("/employees", (req, res) => {
   });
 });
 
-router.get("/getPayroll", (req, res) => {
-  let type = req.query.payrollType + "";
-  let from = req.query.from;
-  let to = req.query.to;
-  Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to, '', ''))
-  .allowDiskUse()
-    .exec((err, result) => {
-      Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {
-        if (e) res.status(400).json(e);
-        else res.status(200).json({payroll:result, stats: r});
-      });
-    });
-  // getActiveAndPayrolltypeEmployees(type, from, to).then(
-  //   resolve => {
-  //     res.status(200).json(resolve);
-  //   },
-  //   reject => {
-  //     res.status(400).json(reject);
-  //   }
-  // );
-});
-
-router.get("/concepts/:type/:id", (req, res) => {
-  const { type, id } = req.params;
-  const {
-    verified, payed, maternity,
-    csl, notice, severance,
-    compassionate, leaveWithoutPay,
-    vacations, assigned, payroll} = req.query;
-
-  let query = new Object();
-  if(assigned === 'true') {
-    query = {
-      $or: [
-        {
-          assigned: assigned === 'true'
-        },
-        {
-          assigned: assigned === 'true'
-        }
-      ]
-    };
-  }else {
-    query = {
-      $or: [
-        {
-          assigned: false
-        },
-        {
-          assigned: { $exists: false }
-        }
-      ]
-    };
-  }
-
-  if (id !== "all") {
-    query["$or"][0].employee = id;
-    query["$or"][1].employee = id;
-  }
-  if (verified !== undefined && verified !== "null") {
-    query["$or"][0].verified = verified === "true";
-    query["$or"][1].verified = verified === "true";
-  }
-  if (payed !== undefined && payed !== "null") {
-    query["$or"][0].payed = payed === "true";
-    query["$or"][1].payed = payed === "true";
-  }
-  if (maternity !== undefined && maternity !== "null") {
-    query["$or"][0].maternity = maternity === "true";
-    query["$or"][1].maternity = maternity === "true";
-  }
-  if (csl !== undefined && csl !== "null") {
-    query["$or"][0].csl = csl === "true";
-    query["$or"][1].csl = csl === "true";
-  }
-  if (notice !== undefined && notice !== "null") {
-    query["$or"][0].notice = notice === "true";
-    query["$or"][1].notice = notice === "true";
-  }
-  if (severance !== undefined && severance !== "null") {
-    query["$or"][0].severance = severance === "true";
-    query["$or"][1].severance = severance === "true";
-  }
-
-  if (compassionate !== undefined && compassionate !== "null") {
-    query["$or"][0].compassionate = compassionate === "true";
-    query["$or"][1].compassionate = compassionate === "true";
-  }
-
-  if (leaveWithoutPay !== undefined && leaveWithoutPay !== "null") {
-    query["$or"][0].leaveWithoutPay = leaveWithoutPay === "true";
-    query["$or"][1].leaveWithoutPay = leaveWithoutPay === "true";
-  }
-
-  if (vacations !== undefined && vacations !== "null") {
-    query["$or"][0].vacations = vacations === "true";
-    query["$or"][1].vacations = vacations === "true";
-  }
-  if (payroll !== undefined && payroll !== "null") {
-    query["$or"][0].payroll = payroll;
-    query["$or"][1].payroll = payroll;
-  }
 
 
-  let deductions = () => {
-    Deduction.find(query)
-      .lean()
-      .exec((err, doc) => {
-        if (err) res.status(400).json(err);
-        else {
-          res.status(200).json(doc);
-        }
-      });
-  };
-
-  let otherpays = () => {
-    Otherpay.find(query)
-      .lean()
-      .exec((err, doc) => {
-        if (err) res.status(400).json(err);
-        else {
-          res.status(200).json(doc);
-        }
-      });
-  };
-  let bonus = () => {
-    Bonus.find(query)
-      .lean()
-      .exec((err, doc) => {
-        if (err) res.status(400).json(err);
-        else {
-          res.status(200).json(doc);
-        }
-      });
-  };
-
-  switch (type.toLowerCase().replace(/\s+/g, "")) {
-    case "deduction":
-      deductions();
-      break;
-    case "otherpayments":
-      otherpays();
-      break;
-      case "taxablebonus":
-        bonus();
-      break;
-      case "non-taxablebonus":
-        bonus();
-      break;
-      case "finalpayments":
-        otherpays();
-      break;
-
-    default:
-      res.status(400).json({
-        error:
-          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
-      });
-      break;
-  }
-});
 
 var saveDeductions = (concept) => {
   return new Promise((resolve, reject) => {
@@ -1040,6 +895,145 @@ var saveFinalPayment = (concept) => {
     })
   });
 }
+router.get("/concepts/:type/:id", (req, res) => {
+  const { type, id } = req.params;
+  const {
+    verified, payed, maternity,
+    csl, notice, severance,
+    compassionate, leaveWithoutPay,
+    vacations, assigned, payroll} = req.query;
+
+  let query = new Object();
+  if(assigned === 'true') {
+    query = {
+      $or: [
+        {
+          assigned: assigned === 'true'
+        },
+        {
+          assigned: assigned === 'true'
+        }
+      ]
+    };
+  }else {
+    query = {
+      $or: [
+        {
+          assigned: false
+        },
+        {
+          assigned: { $exists: false }
+        }
+      ]
+    };
+  }
+
+  if (id !== "all") {
+    query["$or"][0].employee = id;
+    query["$or"][1].employee = id;
+  }
+  if (verified !== undefined && verified !== "null") {
+    query["$or"][0].verified = verified === "true";
+    query["$or"][1].verified = verified === "true";
+  }
+  if (payed !== undefined && payed !== "null") {
+    query["$or"][0].payed = payed === "true";
+    query["$or"][1].payed = payed === "true";
+  }
+  if (maternity !== undefined && maternity !== "null") {
+    query["$or"][0].maternity = maternity === "true";
+    query["$or"][1].maternity = maternity === "true";
+  }
+  if (csl !== undefined && csl !== "null") {
+    query["$or"][0].csl = csl === "true";
+    query["$or"][1].csl = csl === "true";
+  }
+  if (notice !== undefined && notice !== "null") {
+    query["$or"][0].notice = notice === "true";
+    query["$or"][1].notice = notice === "true";
+  }
+  if (severance !== undefined && severance !== "null") {
+    query["$or"][0].severance = severance === "true";
+    query["$or"][1].severance = severance === "true";
+  }
+
+  if (compassionate !== undefined && compassionate !== "null") {
+    query["$or"][0].compassionate = compassionate === "true";
+    query["$or"][1].compassionate = compassionate === "true";
+  }
+
+  if (leaveWithoutPay !== undefined && leaveWithoutPay !== "null") {
+    query["$or"][0].leaveWithoutPay = leaveWithoutPay === "true";
+    query["$or"][1].leaveWithoutPay = leaveWithoutPay === "true";
+  }
+
+  if (vacations !== undefined && vacations !== "null") {
+    query["$or"][0].vacations = vacations === "true";
+    query["$or"][1].vacations = vacations === "true";
+  }
+  if (payroll !== undefined && payroll !== "null") {
+    query["$or"][0].payroll = payroll;
+    query["$or"][1].payroll = payroll;
+  }
+
+
+  let deductions = () => {
+    Deduction.find(query)
+      .lean()
+      .exec((err, doc) => {
+        if (err) res.status(400).json(err);
+        else {
+          res.status(200).json(doc);
+        }
+      });
+  };
+
+  let otherpays = () => {
+    Otherpay.find(query)
+      .lean()
+      .exec((err, doc) => {
+        if (err) res.status(400).json(err);
+        else {
+          res.status(200).json(doc);
+        }
+      });
+  };
+  let bonus = () => {
+    Bonus.find(query)
+      .lean()
+      .exec((err, doc) => {
+        if (err) res.status(400).json(err);
+        else {
+          res.status(200).json(doc);
+        }
+      });
+  };
+
+  switch (type.toLowerCase().replace(/\s+/g, "")) {
+    case "deduction":
+      deductions();
+      break;
+    case "otherpayments":
+      otherpays();
+      break;
+      case "taxablebonus":
+        bonus();
+      break;
+      case "non-taxablebonus":
+        bonus();
+      break;
+      case "finalpayments":
+        otherpays();
+      break;
+
+    default:
+      res.status(400).json({
+        error:
+          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
+      });
+      break;
+  }
+});
 router.post("/concepts/:type/:id", (req, res) => {
   const { id, type } = req.params;
   const concept = req.body;
@@ -1077,7 +1071,6 @@ router.post("/concepts/:type/:id", (req, res) => {
     break;
   }
 });
-
 router.put("/concepts/:type", (req, res) => {
   const { type } = req.params;
   const { id, query } = req.body;
@@ -1124,7 +1117,6 @@ router.put("/concepts/:type", (req, res) => {
       break;
   }
 });
-
 router.delete("/concepts/:type", (req, res) => {
   const { type } = req.params;
   const { id } = req.query;
@@ -1172,258 +1164,258 @@ router.delete("/concepts/:type", (req, res) => {
   }
 });
 
-router.post("/getOtherPayrollInfo", (req, res) => {
-  let employeeIds;
-  let from = req.body.from;
-  let to = req.body.to;
-  Promise.all([
-    getHours(employeeIds, from, to),
-    getBonus(employeeIds, from, to),
-    getDeductions(employeeIds, from, to),
-    getOtherpay(employeeIds, from, to)
-  ])
-    .then(result => {
-      res.status(200).json(result);
-    })
-    .catch(err => {
-      console.log(err);
-    });
-});
+// router.post("/getOtherPayrollInfo", (req, res) => {
+//   let employeeIds;
+//   let from = req.body.from;
+//   let to = req.body.to;
+//   Promise.all([
+//     getHours(employeeIds, from, to),
+//     getBonus(employeeIds, from, to),
+//     getDeductions(employeeIds, from, to),
+//     getOtherpay(employeeIds, from, to)
+//   ])
+//     .then(result => {
+//       res.status(200).json(result);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// });
 
-router.get("/settings", (req, res) => {
-  let fromDate = decodeURIComponent(req.query.from);
-  let toDate = decodeURIComponent(req.query.to);
-  getPayrollSettings(fromDate, toDate).then(
-    result => {
-      res.status(200).json(result);
-    },
-    rejected => {
-      res.status(400).json(rejected);
-    }
-  );
-});
+// router.get("/settings", (req, res) => {
+//   let fromDate = decodeURIComponent(req.query.from);
+//   let toDate = decodeURIComponent(req.query.to);
+//   getPayrollSettings(fromDate, toDate).then(
+//     result => {
+//       res.status(200).json(result);
+//     },
+//     rejected => {
+//       res.status(400).json(rejected);
+//     }
+//   );
+// });
 
-var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
-  let type = payrollType.toUpperCase();
-  return new Promise((resolve, reject) => {
-    let employees = [];
-    let cursor = Employee.find(
-      {
-        $or: [
-          { status: "active", "payroll.payrollType": type },
-          { onFinalPayment: true, "payroll.payrollType": type }
-        ]
-      },
-      "_id employeeId firstName middleName lastName socialSecurity status personal.emailAddress company payroll position shift"
-    )
-      .populate({
-        path: "Employee-Shift",
-        options: { sort: { startDate: -1 }, limit: 1 }
-      })
-      .sort({ _id: -1 })
-      .cursor();
-    cursor.on("data", item => {
-      employees.push(item);
-    });
-    cursor.on("error", err => {
-      console.log(err);
-      if (err) reject(err);
-    });
-    cursor.on("end", () => {
-      let mappedEmployees = employees.map(async employee => {
-        let hours;
-        let resEmployee = JSON.parse(JSON.stringify(employee));
-        delete resEmployee._id;
-        delete resEmployee.payroll;
-        delete resEmployee.company;
-        delete resEmployee.payroll;
-        delete resEmployee.position;
-        delete resEmployee.shift;
-        resEmployee.employeeName = `${employee.firstName} ${employee.middleName} ${employee.lastName}`;
-        resEmployee.employeeName + employee.middleName
-          ? employee.middleName + " " + employee.lastName
-          : employee.lastName;
-        resEmployee.employeePosition = employee.position[
-          employee.position.length - 1
-        ]
-          ? employee.position[employee.position.length - 1].position
-          : null;
-        resEmployee.employeeShift = employee.shift[0]
-          ? employee.shift[0].shift
-          : null;
-        resEmployee.employee = employee._id;
-        resEmployee.employeePayroll = employee.payroll;
-        resEmployee.payrollType = employee.payroll.payrollType;
-        resEmployee.employeeCompany = employee.company;
-        resEmployee.hourlyRate = calculateHourlyRate(
-          resEmployee.employeePosition
-            ? resEmployee.employeePosition.baseWage
-            : null
-        );
-        return resEmployee;
-      });
-      Promise.all(mappedEmployees).then(completed => {
-        resolve(completed);
-      });
-    });
-  });
-};
+// var getActiveAndPayrolltypeEmployees = (payrollType, from, to) => {
+//   let type = payrollType.toUpperCase();
+//   return new Promise((resolve, reject) => {
+//     let employees = [];
+//     let cursor = Employee.find(
+//       {
+//         $or: [
+//           { status: "active", "payroll.payrollType": type },
+//           { onFinalPayment: true, "payroll.payrollType": type }
+//         ]
+//       },
+//       "_id employeeId firstName middleName lastName socialSecurity status personal.emailAddress company payroll position shift"
+//     )
+//       .populate({
+//         path: "Employee-Shift",
+//         options: { sort: { startDate: -1 }, limit: 1 }
+//       })
+//       .sort({ _id: -1 })
+//       .cursor();
+//     cursor.on("data", item => {
+//       employees.push(item);
+//     });
+//     cursor.on("error", err => {
+//       console.log(err);
+//       if (err) reject(err);
+//     });
+//     cursor.on("end", () => {
+//       let mappedEmployees = employees.map(async employee => {
+//         let hours;
+//         let resEmployee = JSON.parse(JSON.stringify(employee));
+//         delete resEmployee._id;
+//         delete resEmployee.payroll;
+//         delete resEmployee.company;
+//         delete resEmployee.payroll;
+//         delete resEmployee.position;
+//         delete resEmployee.shift;
+//         resEmployee.employeeName = `${employee.firstName} ${employee.middleName} ${employee.lastName}`;
+//         resEmployee.employeeName + employee.middleName
+//           ? employee.middleName + " " + employee.lastName
+//           : employee.lastName;
+//         resEmployee.employeePosition = employee.position[
+//           employee.position.length - 1
+//         ]
+//           ? employee.position[employee.position.length - 1].position
+//           : null;
+//         resEmployee.employeeShift = employee.shift[0]
+//           ? employee.shift[0].shift
+//           : null;
+//         resEmployee.employee = employee._id;
+//         resEmployee.employeePayroll = employee.payroll;
+//         resEmployee.payrollType = employee.payroll.payrollType;
+//         resEmployee.employeeCompany = employee.company;
+//         resEmployee.hourlyRate = calculateHourlyRate(
+//           resEmployee.employeePosition
+//             ? resEmployee.employeePosition.baseWage
+//             : null
+//         );
+//         return resEmployee;
+//       });
+//       Promise.all(mappedEmployees).then(completed => {
+//         resolve(completed);
+//       });
+//     });
+//   });
+// };
 
-var getDeductions = (employee, fromDate, toDate) => {
-  // let mappedEmployees = employees.map(employee => employee.employee);
-  return new Promise((resolve, reject) => {
-    Deduction.find({
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      },
-      payed: false,
-      verified: true,
-      payroll: { $exists: false }
-    })
-      .sort({ employee: -1 })
-      .lean()
-      .exec((err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      });
-  });
-};
+// var getDeductions = (employee, fromDate, toDate) => {
+//   // let mappedEmployees = employees.map(employee => employee.employee);
+//   return new Promise((resolve, reject) => {
+//     Deduction.find({
+//       date: {
+//         $gte: fromDate,
+//         $lte: toDate
+//       },
+//       payed: false,
+//       verified: true,
+//       payroll: { $exists: false }
+//     })
+//       .sort({ employee: -1 })
+//       .lean()
+//       .exec((err, res) => {
+//         if (err) reject(err);
+//         else resolve(res);
+//       });
+//   });
+// };
 
-var getBonus = (employees, fromDate, toDate) => {
-  // let mappedEmployees = employees.map(employee => employee.employee);
-  return new Promise((resolve, reject) => {
-    Bonus.find({
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      },
-      payed: false,
-      verified: true,
-      payroll: { $exists: false }
-    })
-      .sort({ employee: -1 })
-      .lean()
-      .exec((err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      });
-  });
-};
+// var getBonus = (employees, fromDate, toDate) => {
+//   // let mappedEmployees = employees.map(employee => employee.employee);
+//   return new Promise((resolve, reject) => {
+//     Bonus.find({
+//       date: {
+//         $gte: fromDate,
+//         $lte: toDate
+//       },
+//       payed: false,
+//       verified: true,
+//       payroll: { $exists: false }
+//     })
+//       .sort({ employee: -1 })
+//       .lean()
+//       .exec((err, res) => {
+//         if (err) reject(err);
+//         else resolve(res);
+//       });
+//   });
+// };
 
-var getOtherpay = (employees, fromDate, toDate) => {
-  // let mappedEmployees = employees.map(employee => employee.employee);
-  return new Promise((resolve, reject) => {
-    Otherpay.find({
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      },
-      payed: false,
-      verified: true,
-      maternity: false,
-      payroll: { $exists: false }
-    })
-      .sort({ employee: -1 })
-      .lean()
-      .exec((err, res) => {
-        if (err) reject(err);
-        else resolve(res);
-      });
-  });
-};
+// var getOtherpay = (employees, fromDate, toDate) => {
+//   // let mappedEmployees = employees.map(employee => employee.employee);
+//   return new Promise((resolve, reject) => {
+//     Otherpay.find({
+//       date: {
+//         $gte: fromDate,
+//         $lte: toDate
+//       },
+//       payed: false,
+//       verified: true,
+//       maternity: false,
+//       payroll: { $exists: false }
+//     })
+//       .sort({ employee: -1 })
+//       .lean()
+//       .exec((err, res) => {
+//         if (err) reject(err);
+//         else resolve(res);
+//       });
+//   });
+// };
 
-var getHours = (employees, fromDate, toDate) => {
-  // let mappedEmployees = employees.map(employee => employee.employee);
-  return new Promise((resolve, reject) => {
-    if (fromDate === undefined || toDate === undefined) {
-      reject("hours error");
-    }
-    Hours.find({
-      date: {
-        $gte: fromDate,
-        $lte: toDate
-      }
-    })
-      .sort({ employee: -1 })
-      .lean()
-      .exec((err, res) => {
-        if (err) reject(err);
-        else {
-          resolve(res);
-        }
-      });
-  });
-};
+// var getHours = (employees, fromDate, toDate) => {
+//   // let mappedEmployees = employees.map(employee => employee.employee);
+//   return new Promise((resolve, reject) => {
+//     if (fromDate === undefined || toDate === undefined) {
+//       reject("hours error");
+//     }
+//     Hours.find({
+//       date: {
+//         $gte: fromDate,
+//         $lte: toDate
+//       }
+//     })
+//       .sort({ employee: -1 })
+//       .lean()
+//       .exec((err, res) => {
+//         if (err) reject(err);
+//         else {
+//           resolve(res);
+//         }
+//       });
+//   });
+// };
 
-var getSettingsTaskArray = (fromDate, toDate) => {
-  let tasks = [
-    "SocialTable",
-    "HolidayTable",
-    "ExceptionsTable",
-    "OtherPayTable",
-    "DeductionsTable",
-    "IncomeTaxTable"
-  ];
-  let promiseChain = tasks.map(task => {
-    if (task === "HolidayTable") {
-      return new Promise((resolve, reject) => {
-        adminPayroll[task]
-          .find({
-            date: {
-              $gte: fromDate,
-              $lte: toDate
-            }
-          })
-          .lean()
-          .exec((err, res) => {
-            if (err) reject(err);
-            else resolve(res);
-          });
-      });
-    } else {
-      return new Promise((resolve, reject) => {
-        adminPayroll[task]
-          .find()
-          .lean()
-          .exec((err, res) => {
-            if (err) reject(err);
-            else resolve(res);
-          });
-      });
-    }
-  });
-  return promiseChain;
-};
-var getPayrollSettings = (fromDate, toDate) => {
-  return new Promise((resolve, reject) => {
-    const tasks = getSettingsTaskArray(fromDate, toDate);
-    return tasks
-      .reduce((promiseChain, currentTask) => {
-        return promiseChain.then(chainResults =>
-          currentTask.then(currentResult => [...chainResults, currentResult])
-        );
-      }, Promise.resolve([]))
-      .then(arrayOfResults => {
-        resolve(arrayOfResults);
-      })
-      .catch(err => {
-        reject(err);
-      });
-  });
-};
+// var getSettingsTaskArray = (fromDate, toDate) => {
+//   let tasks = [
+//     "SocialTable",
+//     "HolidayTable",
+//     "ExceptionsTable",
+//     "OtherPayTable",
+//     "DeductionsTable",
+//     "IncomeTaxTable"
+//   ];
+//   let promiseChain = tasks.map(task => {
+//     if (task === "HolidayTable") {
+//       return new Promise((resolve, reject) => {
+//         adminPayroll[task]
+//           .find({
+//             date: {
+//               $gte: fromDate,
+//               $lte: toDate
+//             }
+//           })
+//           .lean()
+//           .exec((err, res) => {
+//             if (err) reject(err);
+//             else resolve(res);
+//           });
+//       });
+//     } else {
+//       return new Promise((resolve, reject) => {
+//         adminPayroll[task]
+//           .find()
+//           .lean()
+//           .exec((err, res) => {
+//             if (err) reject(err);
+//             else resolve(res);
+//           });
+//       });
+//     }
+//   });
+//   return promiseChain;
+// };
+// var getPayrollSettings = (fromDate, toDate) => {
+//   return new Promise((resolve, reject) => {
+//     const tasks = getSettingsTaskArray(fromDate, toDate);
+//     return tasks
+//       .reduce((promiseChain, currentTask) => {
+//         return promiseChain.then(chainResults =>
+//           currentTask.then(currentResult => [...chainResults, currentResult])
+//         );
+//       }, Promise.resolve([]))
+//       .then(arrayOfResults => {
+//         resolve(arrayOfResults);
+//       })
+//       .catch(err => {
+//         reject(err);
+//       });
+//   });
+// };
 
-function calculateHourlyRate(employeeWage) {
-  if (employeeWage !== null) {
-    let wage = employeeWage;
-    hourlyRate = 0;
-    hourlyRate = (wage * 12) / 26 / 90;
-    return hourlyRate;
-  } else {
-    return 0;
-  }
-}
+// function calculateHourlyRate(employeeWage) {
+//   if (employeeWage !== null) {
+//     let wage = employeeWage;
+//     hourlyRate = 0;
+//     hourlyRate = (wage * 12) / 26 / 90;
+//     return hourlyRate;
+//   } else {
+//     return 0;
+//   }
+// }
 
-function getVacationSalary(employeeVacation) {}
+// function getVacationSalary(employeeVacation) {}
 
 module.exports = router;

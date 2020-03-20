@@ -1,8 +1,12 @@
     <div>
       <mat-toolbar>
         <mat-toolbar-row>
-          <mat-card-subtitle>PAYED PAYROLLS STATS</mat-card-subtitle>
-          <span class="fill-remaining-space"></span>
+          <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
+            <mat-card-subtitle>PAYED PAYROLLS STATS</mat-card-subtitle>
+            <div *ngIf="statsRows && doughnutChartData">
+              <button mat-flat-button color='primary' (click)="export()">EXPORT</button>
+            </div>
+          </div>
           </mat-toolbar-row>
     </mat-toolbar>
             <!-- <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
@@ -77,9 +81,9 @@
                   <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50, 100]" showFirstLastButtons>
                   </mat-paginator> -->
                   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-                    <div style='width: 25%; height: 350px'>
+                    <div style='width: 25%; height: 400px'>
                       <ngx-datatable
-                      style='width: 100%; height: 350px'
+                      style='width: 100%; height: 400px'
                       class="material"
                       [columns]="statsColumns"
                       [columnMode]="ColumnMode.force"
@@ -88,6 +92,33 @@
                       [limit]="5"
                       [rows]="statsRows"
                       [scrollbarV]="true"
+                      [messages]="tableMessages"
+                      >
+                    </ngx-datatable>
+                    </div>
+                    <div style="width: 40%; height: 400px" *ngIf="statsRows && doughnutChartData">
+                      <fusioncharts
+                        [width]="'100%'"
+                        [height]="'400'"
+                        [type]="'doughnut2d'"
+                        [dataFormat]="'json'"
+                        [dataSource]="doughnutChartData"
+                        (dataplotClick)="dataplotClickHandler($event)"
+                      >
+                      </fusioncharts>
+                    </div>
+                    <div style='width: 25%; height: 400px' *ngIf="statsRows && doughnutChartData">
+                      <ngx-datatable
+                      style='width: 100%; height: 400px'
+                      class="material"
+                      [columns]="clientStatsColumns"
+                      [columnMode]="ColumnMode.force"
+                      [headerHeight]="50"
+                      [rowHeight]="50"
+                      [limit]="5"
+                      [rows]="clientStatsRows"
+                      [scrollbarV]="true"
+                      [messages]="clientTableMessages"
                       >
                     </ngx-datatable>
                     </div>
@@ -107,18 +138,12 @@
                     [headerHeight]="50"
                     [footerHeight]="50"
                     rowHeight="auto"
-                    [limit]="5"
+                    [limit]="3"
                     [rows]="rows"
                     [selectionType]="SelectionType.multiClick"
                     (select)="onSelect($event)"
                   >
                   </ngx-datatable>
-                  <ng-template #ngxExportCell>
-                    <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="5px">
-                      <button mat-button color='primary'>EXPORT</button>
-                    </div>
-                  </ng-template>
-
                 </div>
 
 

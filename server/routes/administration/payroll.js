@@ -90,7 +90,7 @@ router.post('/position', (req, res ) => {
   .populate({path: 'positions', model: 'Administration-Position'})
   .exec((err, doc) => {
     if(err) res.status(500).json(err);
-    else  res.json(200, doc);
+    else  res.status(200).json(doc);
   })
 });
 
