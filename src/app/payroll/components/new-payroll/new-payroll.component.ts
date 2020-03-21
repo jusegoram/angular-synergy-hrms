@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
+import { MinuteSecondsPipe } from '../../../shared/pipes/minute-seconds.pipe';
 import { PayrollRow } from './PayrollRow';
 import { PayrollService } from '../../services/payroll.service';
 
@@ -20,14 +21,16 @@ import * as moment from 'moment';
 import { Payroll } from './Payroll';
 import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-manage',
-  templateUrl: './manage.component.html',
-  styleUrls: ['./manage.component.scss']
+  templateUrl: './new-payroll.component.html',
+  styleUrls: ['./new-payroll.component.scss']
 })
-export class ManageComponent implements OnInit {
+export class NewPayrollComponent implements OnInit {
   @ViewChild('myTable', { static: false }) table: any;
+  @ViewChild('successSwal') private successSwal: SwalComponent;
 
   socialSecurityTable: any[];
 
@@ -61,11 +64,9 @@ export class ManageComponent implements OnInit {
   handler: any;
   selectedOnChart = [];
   constructor(
+    private router: Router,
     private _payrollService: PayrollService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private _bottomSheet: MatBottomSheet,
-    private minuteSeconds: MinuteSecondsPipe,
     private _datePipe: DatePipe,
     private zone: NgZone
   ) {}
@@ -342,10 +343,8 @@ attachEvent() {
       toDate = moment(to).toDate()
     this._payrollService.savePayroll({fromDate: fromDate, toDate: toDate, createdBy: createdBy, type: payroll[0].payrollType}).subscribe(
       result => {
-        console.log(result);
-      },
-      err => {
-        console.log(err);
+        this.successSwal.fire().then(e => {});
+        this.router.navigate(['payroll', 'main']);
       }
     );
   }

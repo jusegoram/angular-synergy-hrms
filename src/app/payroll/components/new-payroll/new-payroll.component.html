@@ -86,7 +86,7 @@
          CLEAR TABLE
       </button>
       <div>
-        <button mat-stroked-button (click)="saveToDatabase(this.rows, this.fromDate.value, this.toDate.value)" >SAVE TO DATABASE</button>
+        <button mat-stroked-button [swal]='confirmSwal' >SAVE TO DATABASE</button>
       </div>
     </h2>
     <mat-card-subtitle>{{payrollType.value}} QUICK VIEW</mat-card-subtitle>
@@ -302,16 +302,29 @@
       {{value*12/52| currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
-  <ngx-datatable-column name="Gross Wage" [width]="50" prop="grossPayment">
+  <ngx-datatable-column name="Gross Wage" [width]="50" prop="grossPayment.$numberDecimal">
     <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value['$numberDecimal'] | currency:'$'}}
+      {{value | currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
-  <ngx-datatable-column name="Net Wage" [width]="50" prop="netPayment">
+  <ngx-datatable-column name="Net Wage" [width]="50" prop="netPayment.$numberDecimal">
     <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value['$numberDecimal'] | currency:'$'}}
+      {{value | currency:'$'}}
     </ng-template>
   </ngx-datatable-column>
 </ngx-datatable>
+<swal #confirmSwal
+title= 'Ready to save?'
+text= "please click on the confirm button"
+icon='question'
+[showCancelButton]="true"
+[focusCancel]="true"
+(confirm)="saveToDatabase(this.rows, this.fromDate.value, this.toDate.value)"
+></swal>
+<swal #successSwal
+title= 'SAVED'
+text= "The payroll was saved succesfully!"
+icon='success'
+></swal>
 </div>
 

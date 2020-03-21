@@ -2,7 +2,7 @@ import { ConceptsComponent } from './components/concepts/concepts.component';
 import { MainComponent } from './components/main/main.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {ManageComponent} from './components/manage/manage.component';
+import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
 import {PayslipsComponent} from './components/payslips/payslips.component';
 import {UploadComponent} from './components/upload/upload.component';
 import {ExportComponent} from './components/export/export.component';
@@ -16,7 +16,7 @@ export const routes: Routes = [
       { path: 'main', component: MainComponent},
       { path: 'concepts', component: ConceptsComponent},
       { path: 'detail', component: DetailComponent, resolve: { payroll: DetailResolver }},
-      { path: 'manage', component: ManageComponent },
+      { path: 'new', component: NewPayrollComponent },
       { path: 'payslip', component: PayslipsComponent },
       { path: 'upload', component: UploadComponent },
       { path: 'export', component: ExportComponent },

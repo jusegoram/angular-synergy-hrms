@@ -75,9 +75,7 @@ export class PayedPayrollsComponent implements OnInit {
 
   ngOnInit() {
     this.wb = XLSX.utils.book_new();
-    this._payrollService.getPayroll('', '', '', true).subscribe(result => {
-      this.rows = result;
-    });
+    this.loadPayedPayrolls();
   }
 
   datePipe(){
@@ -87,7 +85,11 @@ export class PayedPayrollsComponent implements OnInit {
   sendPayslips(payId) {
     this._payrollService.sendPayslipts(payId).subscribe(res => {});
   }
-
+  loadPayedPayrolls() {
+    this._payrollService.getPayroll('', '', '', true).subscribe(result => {
+      this.rows = result;
+    });
+  }
   export() {
     const result = this.exportInfo;
         const data = result.map(i => {

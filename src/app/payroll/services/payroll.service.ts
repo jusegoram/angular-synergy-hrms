@@ -1,5 +1,4 @@
 import { SessionService } from './../../session/session.service';
-import { Payroll } from '../components/manage/Payroll';
 import { Injectable } from '@angular/core';
 import { Observable, noop } from 'rxjs';
 import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
@@ -19,7 +18,6 @@ export class PayrollService {
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
   _clients: Observable<any> = null;
-  _payroll: Payroll;
   _employees: Observable<any> = null;
 
   constructor(private httpClient: HttpClient, private _sessionService: SessionService) {}
@@ -135,9 +133,6 @@ export class PayrollService {
     params = assigned !== undefined && assigned !== null ? params.set('assigned', assigned + '') : params;
     params = payroll !== undefined && payroll !== null ? params.set('payroll', payroll) : params;
     params = taxable !== undefined && taxable !== null ? params.set('taxable', taxable + '') : params;
-
-
-
     return this.httpClient.get<any>(`/api/v1/payroll/concepts/${type}/${id}`, {
       params: params
     });

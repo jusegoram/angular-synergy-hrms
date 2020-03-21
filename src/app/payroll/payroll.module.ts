@@ -22,8 +22,8 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { ExportBottomSheetComponent } from './components/manage/export-bottom-sheet/export-bottom-sheet.component';
-import { ManageComponent } from './components/manage/manage.component';
+import { ExportBottomSheetComponent } from './components/new-payroll/export-bottom-sheet/export-bottom-sheet.component';
+import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
 import { MainComponent } from './components/main/main.component';
 import { DetailComponent } from './components/detail/detail.component';
 import { FusionChartsModule } from 'angular-fusioncharts';
@@ -62,7 +62,7 @@ export function provideSwal() {
     PipeModule.forRoot()
   ],
   declarations: [
-    ManageComponent,
+    NewPayrollComponent,
     UploadComponent,
     ExportComponent,
     PayslipsComponent,

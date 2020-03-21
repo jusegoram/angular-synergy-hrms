@@ -998,7 +998,8 @@ router.get("/concepts/:type/:id", (req, res) => {
         }
       });
   };
-  let bonus = () => {
+  let bonus = (taxable) => {
+    query.taxable = taxable;
     Bonus.find(query)
       .lean()
       .exec((err, doc) => {
@@ -1017,10 +1018,10 @@ router.get("/concepts/:type/:id", (req, res) => {
       otherpays();
       break;
       case "taxablebonus":
-        bonus();
+        bonus(true);
       break;
       case "non-taxablebonus":
-        bonus();
+        bonus(false);
       break;
       case "finalpayments":
         otherpays();
