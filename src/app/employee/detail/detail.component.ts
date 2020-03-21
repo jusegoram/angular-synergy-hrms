@@ -238,7 +238,10 @@ export class DetailComponent implements OnInit {
   openTransferDialog(): void {
     const dialogRef = this.dialog.open(TransferDialogComponent, {
       width: '700px',
-      data: {status: this.mainForm.value.status}
+      data: {status: this.mainForm.value.status, 
+             selectedClient: this.companyForm.value.client,
+             selectedCampaign: this.companyForm.value.campaign
+            }
     });
 
     dialogRef.afterClosed().subscribe(result => {

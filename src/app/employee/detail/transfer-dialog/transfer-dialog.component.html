@@ -1,27 +1,75 @@
 <div style="width: 100%; max-height: 800px; overflow-y: scroll !important; overflow-x: hidden !important;">
   <mat-card-header>
-    <mat-card-title fxLayout="row" fxLayoutAlign="center center"> <mat-icon>warning</mat-icon><span class="align-text-icon">STATUS CHANGE TRACKER</span>  </mat-card-title>
-    <mat-card-subtitle>Status change tracker is a ticket that will be sent to the HR department</mat-card-subtitle>
+    <mat-card-title fxLayout="row" fxLayoutAlign="center center"> <mat-icon>warning</mat-icon><span class="align-text-icon">TRANSFER TRACKER</span>  </mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <mat-vertical-stepper linear="true">
-      <mat-step label="Tracker">
+    <form [formGroup]="transferFom">
+      <mat-vertical-stepper linear="true" >
+        <mat-step label="Tracker">
+          <div fxLayout="column">
+              <mat-form-field appearance="outline">
+                <mat-label>Old Client</mat-label>
+                <input matInput formControlName="oldClient" placeholder="First Name" readonly="true">
+              </mat-form-field>
 
-      </mat-step>
-      <mat-step label="Supervisor Signature">
+              <mat-form-field appearance="outline">
+                <mat-label>Old Campaign</mat-label>
+                <input matInput formControlName="oldCampaign" placeholder="First Name" readonly="true">
+              </mat-form-field>
 
-      </mat-step>
-      <mat-step label="Manager Signature">
+              <mat-form-field appearance="outline" fxFlex="100%">
+                  <mat-label>New Client</mat-label>
+                  <mat-select placeholder="Client" (selectionChange)="setCampaigns()" formControlName="newClient">
+                    <mat-option *ngFor="let client of clients" [value]="client?.name">
+                      {{client.name}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="newClientHasError">Must select new client (*)</mat-error>
+              </mat-form-field>
+            
+              <mat-form-field appearance="outline" fxFlex="100%">
+                <mat-label>New Campaign</mat-label>
+                <mat-select placeholder="Campaign" formControlName="newCampaign">
+                  <mat-option *ngFor="let campaign of campaigns" [value]="campaign?.name">
+                    {{campaign.name | titlecase}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="newCampaignHasError">Must select new campaign (*)</mat-error>
+              </mat-form-field>
 
-      </mat-step>
-    </mat-vertical-stepper>
+          </div>
+        </mat-step>
+        <mat-step label="Effective date">
+          <mat-form-field  appearance='outline' style="width: 100%;">
+            <mat-label>Effective date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName='effectiveDate' placeholder="MM/DD/YYYY">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="effectiveDateHasError">Effective date required (*)</mat-error>
+          </mat-form-field>
+        </mat-step>
+        <!--Manager signature-->
+        <mat-step label="Manager Signature">
+          <div fxLayout='column' fxLayoutAlign="center center" style="width: 100%;">
+            <mat-error *ngIf="transferFom.invalid">This signature is required (*)</mat-error>
+            <signature-field #managerSignature formControlName='managerSignature'></signature-field>
+            <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+              <button mat-button color='warn' (click)="managerSignature.clear()">CLEAR</button>
+              <button mat-button color='primary' (click)="managerSignature.off()">DONE</button>
+            </div>
+          </div>
+        </mat-step>
+      </mat-vertical-stepper>
+    </form>
+
+    
 
 
     <p><b>Note:</b> The transfer process can take up to <b>3 DAYS</b> and is the <b>official process</b> to request an transfer from one campaign to the other or fix incorrect campaign information. </p>
   </mat-card-content>
 
   <mat-card-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-    <button mat-button color='warn' cdkFocusInitial >CANCEL</button>
-    <button mat-button color='primary' >SEND REQUEST</button>
+    <button mat-button color='warn' cdkFocusInitial (click)="onCancelClick()">CANCEL</button>
+    <button mat-button color='primary' [disabled]="transferFom.invalid" >SEND REQUEST</button>
   </mat-card-actions>
 </div>
