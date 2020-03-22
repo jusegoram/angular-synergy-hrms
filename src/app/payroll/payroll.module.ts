@@ -1,3 +1,4 @@
+import { PayslipDialogComponent } from './components/payslips/payslip-dialog/payslip-dialog.component';
 import { PayedPayrollsComponent } from './components/main/payed-payrolls/payed-payrolls.component';
 import { NonFinalizedPayrollsComponent } from './components/main/non-finalized-payrolls/non-finalized-payrolls.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
@@ -78,6 +79,7 @@ export function provideSwal() {
     ConceptVerificationComponent,
     EditPayrollDetailComponent,
     EditPayrollDetailVacationsComponent,
+    PayslipDialogComponent,
     ],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef, CurrencyPipe, DatePipe,
     {
@@ -91,6 +93,7 @@ export function provideSwal() {
       multi: true
     }],
     entryComponents: [
+      PayslipDialogComponent,
       ExportBottomSheetComponent,
       EditPayrollDetailComponent
     ]

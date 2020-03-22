@@ -6,7 +6,12 @@
         <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px" style='width: 100%'>
             <mat-form-field appearance='outline'>
                 <mat-select placeholder="Placeholder" [(ngModel)]="selectedConceptForVerification" name="item">
-                    <mat-option *ngFor="let item of concepts" [value]="item.name" (click)='getUnverifiedConcepts()'>
+                    <mat-option
+                    *ngFor="let item of concepts"
+                    [value]="item.name"
+                    (click)='getUnverifiedConcepts()'
+                    (onSelectionChange)='getUnverifiedConcepts()'
+                    >
                         {{item.name}}
                     </mat-option>
                 </mat-select>
@@ -104,7 +109,12 @@
     <mat-card-content>
         <mat-form-field appearance='outline'>
             <mat-select placeholder="Placeholder" [(ngModel)]="selectedconceptForVerified" name="item">
-                <mat-option *ngFor="let item of concepts" [value]="item.name" (click)='getVerifiedConcepts()'>
+                <mat-option
+                *ngFor="let item of concepts"
+                [value]="item.name"
+                (click)='getVerifiedConcepts()'
+                (onSelectionChange)='getVerifiedConcepts()'
+                >
                     {{item.name}}
                 </mat-option>
             </mat-select>

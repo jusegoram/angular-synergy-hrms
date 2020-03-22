@@ -3,8 +3,9 @@
         <mat-toolbar-row>
           <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
             <mat-card-subtitle>PAYED PAYROLLS STATS</mat-card-subtitle>
-            <div>
+            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="5px">
               <button mat-button color='primary' (click)="loadPayedPayrolls()">REFRESH</button>
+              <app-payslips [payrollRun]='exportInfo' *ngIf="statsRows && doughnutChartData"></app-payslips>
               <button mat-flat-button *ngIf="statsRows && doughnutChartData" color='primary' (click)="export()">EXPORT</button>
             </div>
           </div>

@@ -31,7 +31,8 @@
                 *ngFor="let employee of filteredEmployees | async"
                 [value]="employee.fullSearchName"
                 (click)="setEmployee(employee)"
-              >
+                (onSelectionChange)="setEmployee(employee)"
+                >
                 {{ employee.fullSearchName }}
               </mat-option>
             </mat-autocomplete>

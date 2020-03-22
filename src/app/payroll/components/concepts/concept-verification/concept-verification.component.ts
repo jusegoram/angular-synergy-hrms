@@ -145,7 +145,7 @@ export class ConceptVerificationComponent implements OnInit {
     this.snackbar.open(message, action, {duration: 10 * 1000});
   }
   refresh() {
-    this.getVerifiedConcepts();
+    this.getUnverifiedConcepts();
     this.getVerifiedConcepts();
   }
 }
