@@ -1,5 +1,5 @@
 import { PayrollService } from './../../services/payroll.service';
-import { Payroll } from './../manage/Payroll';
+import { Payroll } from '../new-payroll/Payroll';
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';

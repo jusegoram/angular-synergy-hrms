@@ -358,5 +358,32 @@ export class EmployeeService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post('/api/v1/employee/shift/updates', body, {headers: headers});
   }
-}
+ /**@todo: feat/hr-module
+  * @function saveTracker
+  * @param {hr-tracker} tracker
+  *
+  * @function deleteTracker
+  * @param {hr-tracker} tracker._id
+  *
+  * @function getTracker
+  * @param {hr-tracker} employee || employeeId
+  *
+  * employeeId: from employee-mains
+  * employee: _id of employee-mains
+  * requestDate: 3 days after current date
+  * state: default 0 - means 'Open'
+  * tracker: Object from trackerSchema
+  * creation fingerprint: current user decodedToken
+  * verificationFingerprint: current hr module user who fulfills the tracker
+*/
 
+saveTracker(){
+// TODO: feat/hr-module
+}
+deleteTracker(){
+  // TODO: feat/hr-module
+}
+getTracker(){
+  // TODO: feat/hr-module
+}
+}

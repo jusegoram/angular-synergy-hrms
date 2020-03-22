@@ -42,7 +42,7 @@ router.post('/login', function(req, res, next) {
         rights: user.rights,
       }, RSA_KEY, {
         algorithm: 'RS256',
-        expiresIn: '1h',
+        expiresIn: '3h',
       });
       res.status(200).json({
           idToken: token,

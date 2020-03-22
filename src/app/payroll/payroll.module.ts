@@ -1,3 +1,6 @@
+import { PayslipDialogComponent } from './components/payslips/payslip-dialog/payslip-dialog.component';
+import { PayedPayrollsComponent } from './components/main/payed-payrolls/payed-payrolls.component';
+import { NonFinalizedPayrollsComponent } from './components/main/non-finalized-payrolls/non-finalized-payrolls.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { EditPayrollDetailVacationsComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail-vacations/edit-payroll-detail-vacations.component';
 
@@ -20,11 +23,10 @@ import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import { TokenInterceptor } from '../token-interceptor.service';
 import { AuthenticationService } from '../authentication.service';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { ExportBottomSheetComponent } from './components/manage/export-bottom-sheet/export-bottom-sheet.component';
-import { ManageComponent } from './components/manage/manage.component';
+import { ExportBottomSheetComponent } from './components/new-payroll/export-bottom-sheet/export-bottom-sheet.component';
+import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
 import { MainComponent } from './components/main/main.component';
 import { DetailComponent } from './components/detail/detail.component';
-import { PayDialogComponent } from './components/main/pay/pay.component';
 import { FusionChartsModule } from 'angular-fusioncharts';
 import * as FusionCharts from 'fusioncharts';
 import * as ExcelExport from 'fusioncharts/fusioncharts.excelexport';
@@ -61,21 +63,23 @@ export function provideSwal() {
     PipeModule.forRoot()
   ],
   declarations: [
-    ManageComponent,
+    NewPayrollComponent,
     UploadComponent,
     ExportComponent,
     PayslipsComponent,
     ExportBottomSheetComponent,
     MainComponent,
     DetailComponent,
-    PayDialogComponent,
     ConceptsComponent,
     TimeOffRequestsComponent,
     NewConceptComponent,
     FinalizedPayrollsComponent,
+    NonFinalizedPayrollsComponent,
+    PayedPayrollsComponent,
     ConceptVerificationComponent,
     EditPayrollDetailComponent,
     EditPayrollDetailVacationsComponent,
+    PayslipDialogComponent,
     ],
   providers: [ PayrollService, DetailResolver, TitleCasePipe, MinuteSecondsPipe, CdkColumnDef, CurrencyPipe, DatePipe,
     {
@@ -89,8 +93,8 @@ export function provideSwal() {
       multi: true
     }],
     entryComponents: [
+      PayslipDialogComponent,
       ExportBottomSheetComponent,
-      PayDialogComponent,
       EditPayrollDetailComponent
     ]
 })

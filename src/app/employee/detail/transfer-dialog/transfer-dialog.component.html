@@ -26,7 +26,7 @@
                   </mat-select>
                   <mat-error *ngIf="newClientHasError">Must select new client (*)</mat-error>
               </mat-form-field>
-            
+
               <mat-form-field appearance="outline" fxFlex="100%">
                 <mat-label>New Campaign</mat-label>
                 <mat-select placeholder="Campaign" formControlName="newCampaign">
@@ -36,7 +36,7 @@
                 </mat-select>
                 <mat-error *ngIf="newCampaignHasError">Must select new campaign (*)</mat-error>
               </mat-form-field>
-
+              <!-- TODO: feat/hr-module - add textarea for the reason field in the hr-tracker model -->
           </div>
         </mat-step>
         <mat-step label="Effective date">
@@ -62,7 +62,7 @@
       </mat-vertical-stepper>
     </form>
 
-    
+
 
 
     <p><b>Note:</b> The transfer process can take up to <b>3 DAYS</b> and is the <b>official process</b> to request an transfer from one campaign to the other or fix incorrect campaign information. </p>

@@ -1,5 +1,4 @@
 import { TrackersComponent } from './trackers/trackers.component';
-import { TimeOffComponent } from './time-off/time-off.component';
 import { HrService } from './hr.service';
 import { HrRoutingModule } from './hr.routing';
 import { NgModule } from '@angular/core';
@@ -24,7 +23,6 @@ import { AuthenticationService } from '../authentication.service';
 
   ],
   declarations: [
-    TimeOffComponent,
     TrackersComponent
   ],
   entryComponents: [],
