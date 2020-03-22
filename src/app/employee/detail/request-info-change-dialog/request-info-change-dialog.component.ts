@@ -56,6 +56,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
   onProceedClick(): void {
     this.dialogRef.close(true);
   }
+  
   onCancelClick(): void {
     this.dialogRef.close();
   }

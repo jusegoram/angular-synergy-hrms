@@ -24,8 +24,9 @@ export class CertifyDialogComponent {
   }
 
   onProceedClick(): void {
-    this.dialogRef.close(true);
+    this.dialogRef.close();
   }
+
   onCancelClick(): void {
     this.dialogRef.close();
   }
