@@ -1,3 +1,5 @@
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { PayrollService } from './../../../services/payroll.service';
@@ -18,6 +20,12 @@ export class NewConceptComponent implements OnInit {
   bonuses: PayrollConcept[];
   deductions: PayrollConcept[];
   otherPayments: PayrollConcept[];
+  columns = [];
+  rows = new Array();
+  ColumnMode = ColumnMode;
+  messages = {
+    emptyMessage: 'PLEASE SELECT AN EMPLOYEE AND A CONCEPT TYPE TO LOAD INFO.',
+  };
 
   conceptTypeList = [{
     type: 'Taxable Bonus',
@@ -69,7 +77,7 @@ export class NewConceptComponent implements OnInit {
   }
 ];
 
-  conceptFromGroup: FormGroup;
+  conceptFormGroup: FormGroup;
   employeeList: any;
   employeeConcepts: any;
   selectedEmployee: any;
@@ -80,12 +88,21 @@ export class NewConceptComponent implements OnInit {
     public fb: FormBuilder,
     private sessionService: SessionService,
     private payrollService: PayrollService,
-    private snackbar: MatSnackBar) { }
+    private snackbar: MatSnackBar,
+    private currency: CurrencyPipe,
+    private _datePipe: DatePipe) { }
 
   ngOnInit() {
+    this.columns = [
+      {name: 'CONCEPT', prop: 'type'},
+      {name: 'REASON', prop: 'reason'},
+      {name: 'AMOUNT', prop: 'amount', pipe: this.currency},
+      {name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe()},
+      {name: 'VERIFIED', prop: 'verified'},
+    ]
     this.getEmployees();
     this.buildForm();
-    this.filteredEmployees = this.conceptFromGroup.controls['employee'].valueChanges
+    this.filteredEmployees = this.conceptFormGroup.controls['employee'].valueChanges
     .pipe(
       startWith(''),
       map(value => {
@@ -99,9 +116,11 @@ export class NewConceptComponent implements OnInit {
   isMaternity = (concept) => concept === 'Maternity';
   isCSL = (concept) => concept === 'Certify Sick Leave';
   isTaxableBonus = (type) => type === 'Taxable Bonus';
-
+  datePipe(){
+    return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')};
+  }
   buildForm() {
-    this.conceptFromGroup = this.fb.group({
+    this.conceptFormGroup = this.fb.group({
       employee: ['', Validators.required],
       type: ['', Validators.required],
       concept: ['', Validators.required],
@@ -114,10 +133,21 @@ export class NewConceptComponent implements OnInit {
       doctorName: []
     });
   }
-
+  resetForm(){
+    this.conceptFormGroup.controls.type.reset();
+    this.conceptFormGroup.controls.concept.reset();
+    this.conceptFormGroup.controls.amount.reset();
+    this.conceptFormGroup.controls.date.reset();
+    this.conceptFormGroup.controls.from.reset();
+    this.conceptFormGroup.controls.to.reset();
+    this.conceptFormGroup.controls.diagnosis.reset();
+    this.conceptFormGroup.controls.institution.reset();
+    this.conceptFormGroup.controls.doctorName.reset();
+  }
   populateTable(data) {
-    this.employeeConcepts = null;
-    this.employeeConcepts = new MatTableDataSource(data);
+    // this.employeeConcepts = null;
+    // this.employeeConcepts = new MatTableDataSource(data);
+    this.rows = data;
   }
   getEmployees() {
     this.payrollService.getEmployees().subscribe(result => {
@@ -129,9 +159,7 @@ export class NewConceptComponent implements OnInit {
     });
   }
   refreshTable(event) {
-    const data = this.employeeConcepts.data;
-    data.push(event);
-    this.employeeConcepts.data = data;
+    this.populateTable([event]);
   }
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
@@ -139,9 +167,10 @@ export class NewConceptComponent implements OnInit {
   }
   setEmployee(employee: Employee) {
     this.selectedEmployee = employee;
+    this.resetForm();
   }
   onAddConcept() {
-    const form = this.conceptFromGroup.value;
+    const form = this.conceptFormGroup.value;
     const employee = this.selectedEmployee;
     const newConcept = new PayrollConcept(
       form.type.type,
@@ -175,7 +204,9 @@ export class NewConceptComponent implements OnInit {
       false,
       this.isTaxableBonus(form.type.type)
       );
-    this.saveConcept(newConcept);
+    this.saveConcept(newConcept).then(resolved => {
+      this.resetForm();
+    });
   }
 
   calculateDaysDiff(from, to) {
@@ -187,7 +218,7 @@ export class NewConceptComponent implements OnInit {
   }
 
   getConcepts() {
-    const form = this.conceptFromGroup.value;
+    const form = this.conceptFormGroup.value;
     const query = {
       type: form.type.type,
       id: this.selectedEmployee._id,
@@ -205,10 +236,14 @@ export class NewConceptComponent implements OnInit {
     });
   }
   saveConcept(concept) {
-    this.payrollService.saveConcept(concept).subscribe(res => {
-      this.refreshTable(res);
-      this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
+    return new Promise((resolve, reject) => {
+      this.payrollService.saveConcept(concept).subscribe(res => {
+        this.refreshTable(res);
+        this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
+        resolve();
+      });
     });
+
   }
   openSnackbar(message, button) {
     this.snackbar.open(message, button, {duration: 10 * 1000});

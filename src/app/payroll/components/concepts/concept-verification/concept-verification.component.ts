@@ -2,8 +2,9 @@ import { SessionService } from './../../../../session/session.service';
 import { PayrollService } from './../../../services/payroll.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-concept-verification',
@@ -11,6 +12,8 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./concept-verification.component.scss']
 })
 export class ConceptVerificationComponent implements OnInit {
+  @ViewChild('confirmSwal') private confirmSwal: SwalComponent;
+  @ViewChild('successSwal') private successSwal: SwalComponent;
   displayedColumns = ['select', 'employee', 'type', 'concept', 'amount', 'date', 'action'];
   verfiedTableColumns = ['employee', 'type', 'concept', 'amount', 'date', 'verified', ];
   selection = new SelectionModel(true, []);
@@ -20,7 +23,9 @@ export class ConceptVerificationComponent implements OnInit {
   selectedconceptForVerified = 'Deduction';
   concepts = [
     {name: 'Deduction'},
-    {name: 'Other Payments'}
+    {name: 'Other Payments'},
+    {name: 'Taxable Bonus'},
+    {name: 'Non-Taxable Bonus'},
   ];
   constructor(
     private payrollService: PayrollService,
@@ -97,22 +102,22 @@ export class ConceptVerificationComponent implements OnInit {
         opts.id = selection.map(i => i._id);
         this.payrollService.updateConcept(opts).subscribe((res) => {
           this.refresh();
-          this.openSnackbar('The Concepts have been verified, thank you', 'Great!');
+          this.successSwal.fire().then((e) => {});
         }, error => {
-          this.openSnackbar('Woops, an ERROR happened during the verification', 'Try Again');
+          this.confirmSwal.fire().then((e) => {});
         });
       } else {
-        this.openSnackbar('Sorry, you cant verify your own concepts, ask an accounting teammate', 'Ok, sorry');
+        this.confirmSwal.fire().then((e) => {});
         return null;}
     } else {
       if (single.creationFingerprint === verificationFingerprint) {
-        this.openSnackbar('Sorry, you cant VERIFY your own concepts, ask an accounting teammate', 'Ok, sorry');
+        this.confirmSwal.fire().then((e) => {});
         return null;
       } else {
         opts.id.push(single._id);
         this.payrollService.updateConcept(opts).subscribe((res) => {
           this.refresh();
-          this.openSnackbar('The Concepts have been verified, thank you', 'Great!');
+          this.successSwal.fire().then((e) => {});
         }, error => {
           this.openSnackbar('Woops, an ERROR happened during the verification', 'Try Again');
         });
@@ -140,7 +145,7 @@ export class ConceptVerificationComponent implements OnInit {
     this.snackbar.open(message, action, {duration: 10 * 1000});
   }
   refresh() {
-    this.getVerifiedConcepts();
+    this.getUnverifiedConcepts();
     this.getVerifiedConcepts();
   }
 }
