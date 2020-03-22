@@ -20,7 +20,7 @@ export class AuthenticationService {
           // do stuff with response if you want
         }
       }, (err: any) => {
-          if (err instanceof HttpErrorResponse){
+          if (err instanceof HttpErrorResponse) {
             if (err.status === 401) {
             // redirect to the login route
             // or show a modal

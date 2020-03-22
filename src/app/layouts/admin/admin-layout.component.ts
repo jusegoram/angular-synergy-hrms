@@ -51,14 +51,14 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     }));
     this.matIconRegistry.addSvgIcon(
       `icon-white`,
-      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../assets/images/icon-white.svg")
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../../../assets/images/icon-white.svg')
     );
   }
 
   ngOnInit(): void {
     this.menuItems.getActiveMenus().subscribe((menu) => {
       this.menus = menu.map(item => {
-        if(item.type === 'link'){
+        if (item.type === 'link') {
           item.state = decodeURI(item.state);
           item.state = item.state.split('/');
           item.state.unshift('/');        }

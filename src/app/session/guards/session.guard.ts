@@ -47,7 +47,7 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
         if (!data) {
           answer = false;
           this.router.navigateByUrl('/signin');
-        }else {
+        } else {
           answer = true;
         }
     });

@@ -38,6 +38,6 @@ export class StatusDialogComponent implements AfterViewInit {
   }
 
 
-  onCancelClick(){}
-  onProceedClick(){}
+  onCancelClick() {}
+  onProceedClick() {}
 }

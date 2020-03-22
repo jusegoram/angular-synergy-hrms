@@ -91,7 +91,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     const day = d.getDay();
     // Prevent Saturday and Sunday from being selected.
     return day === 0 || day === 1 || day === 6;
-  };
+  }
 
   onEdit(item) {
     item.readonly = !item.readonly;
@@ -119,13 +119,13 @@ export class ShiftComponent implements OnInit, OnChanges {
     } else {
       const shiftDate = moment(item.date),
         now = moment();
-      //FIXME: CHANGE IS AFTER TO IS BEFORE.
+      // FIXME: CHANGE IS AFTER TO IS BEFORE.
       if (shiftDate.isBefore(now, 'day')) {
         this.openSB(
           `Woops! An Error ocurred: You can't modify the shift of a day in the past`
         );
       } else {
-        if(item.shiftStartTime === 0 && item.shiftEndTime === 0){ item.shiftScheduledBreakAndLunch = 0; }
+        if (item.shiftStartTime === 0 && item.shiftEndTime === 0) { item.shiftScheduledBreakAndLunch = 0; }
         this._employeeService.updateEmployeeShift(item).subscribe(result => {
           if (result) {
             item.readonly = !item.readonly;
@@ -148,9 +148,9 @@ export class ShiftComponent implements OnInit, OnChanges {
   }
 
   onPageChange(e) {
-    if(this.dataSource.data.length > 0) {
+    if (this.dataSource.data.length > 0) {
       const currentDSIndex = e.pageIndex * e.pageSize;
-      let currentPage = [];
+      const currentPage = [];
       for (let i = 0; i < e.pageSize; i++) {
         currentPage.push(this.dataSource.data[currentDSIndex + i]);
       }
@@ -172,9 +172,9 @@ export class ShiftComponent implements OnInit, OnChanges {
       totaled.mm = arr.reduce((p, c) => p + c.mm, 0);
       totaled.ss = arr.reduce((p, c) => p + c.ss, 0);
       const time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-      let hrs = ~~(time / 3600);
-      let mins = ~~((time % 3600) / 60);
-      let secs = ~~time % 60;
+      const hrs = ~~(time / 3600);
+      const mins = ~~((time % 3600) / 60);
+      const secs = ~~time % 60;
       let ret = '';
 
       if (hrs > 0) {
@@ -223,7 +223,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       if (splitted[1].length > 1) {
         return minutes;
       }
-    }else {
+    } else {
       if (time.length > 5) {
         this.openSB(`Woops! An Error ocurred:
         One of the time fields has an error,

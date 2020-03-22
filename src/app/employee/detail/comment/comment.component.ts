@@ -68,7 +68,7 @@ export class CommentComponent implements OnInit {
       this.employeeService.saveComment(com).subscribe(data => {
         this.populateTable(data);
       }, error => {});
-    }else {
+    } else {
       const com = new EmployeeComment(
         this.editCommentId,
         this.employee.employeeId.toString(10),

@@ -24,7 +24,7 @@ export class AvatarComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.imageData
+    this.imageData;
     this.loadAvatar(this.id);
     this.getPermission();
   }
@@ -39,7 +39,7 @@ export class AvatarComponent implements OnInit {
       url: this.URL + '?id=' + this.id,
       isHTML5: true,
       authTokenHeader: 'Authorization',
-      authToken: 'JWT '+this.sessionService.jwtHelper.tokenGetter()
+      authToken: 'JWT ' + this.sessionService.jwtHelper.tokenGetter()
     });
     this.employeeService.clearAvatar(this.id);
     this.uploader.onCompleteItem = () => {
@@ -50,8 +50,8 @@ export class AvatarComponent implements OnInit {
     let blob;
     this.employeeService.cachedAvatar(id).subscribe(
       (response) => {
-        if(response.type === 'text/plain') {
-          this.imageData = '/assets/images/default-avatar.png'
+        if (response.type === 'text/plain') {
+          this.imageData = '/assets/images/default-avatar.png';
         } else {
           blob = response;
         const urlCreator = window.URL;

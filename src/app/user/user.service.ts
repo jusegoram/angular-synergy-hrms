@@ -9,7 +9,7 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  //TODO:
+  // TODO:
 
   updateUser(query) {
     const body = JSON.stringify(query);

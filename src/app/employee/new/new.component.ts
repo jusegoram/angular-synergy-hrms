@@ -70,7 +70,7 @@ export class NewComponent implements OnInit {
       this.mainForm.value.status,
       this.mainForm.value.gender,
       this.mainForm.value.middleName
-      )
+      );
     this.employeeService.saveEmployee(employee).subscribe(
       (result) => {
         this.router.navigateByUrl('/employee/detail?id=' + result['_id']);

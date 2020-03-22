@@ -31,7 +31,7 @@ export class ContentComponent implements OnInit {
   }
   onSave() {
     this.menuItem.save(this.selectedMenu);
-    this.snackbar.open('New Menu Item was created', 'Great! Thanks.', {duration: 500})
+    this.snackbar.open('New Menu Item was created', 'Great! Thanks.', {duration: 500});
     this.createSelectedItems();
   }
   onAdd() {

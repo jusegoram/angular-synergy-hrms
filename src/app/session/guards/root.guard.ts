@@ -8,7 +8,7 @@ export class RootGuard implements CanLoad, CanActivate {
   canLoad(): boolean {
     if (this.checkLogin()) {
       return true;
-    }else {
+    } else {
       this.router.navigate(['/signin']);
     }
   }
@@ -16,7 +16,7 @@ export class RootGuard implements CanLoad, CanActivate {
   canActivate(): boolean {
     if (this.checkLogin()) {
       return true;
-    }else {
+    } else {
       this.router.navigate(['/signin']);
     }
   }

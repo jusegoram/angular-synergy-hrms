@@ -3,17 +3,32 @@
     <mat-card-title fxLayout="row" fxLayoutAlign="center center"> <mat-icon>warning</mat-icon><span class="align-text-icon">CERTIFY TRAINING TRACKER</span>  </mat-card-title>
     <mat-card-subtitle>Certify training tracker is a ticket that will be sent to the HR department</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content [formGroup]="certifyForm">
     <mat-vertical-stepper linear="true">
+
+      <!--tracker info-->
       <mat-step label="Tracker">
-
+        <mat-form-field  appearance='outline' style="width: 100%;">
+          <mat-label>Certification date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName='certificationDate' placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="certificationDateHasError">Certification date required (*)</mat-error>
+        </mat-form-field>
       </mat-step>
-      <mat-step label="Supervisor Signature">
 
-      </mat-step>
+      <!--Manager signature-->
       <mat-step label="Manager Signature">
-
+        <div fxLayout='column' fxLayoutAlign="center center" style="width: 100%;">
+          <mat-error *ngIf="certifyForm.invalid">This signature is required (*)</mat-error>
+          <signature-field #managerSignature formControlName='managerSignature'></signature-field>
+          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+            <button mat-button color='warn' (click)="managerSignature.clear()">CLEAR</button>
+            <button mat-button color='primary' (click)="managerSignature.off()">DONE</button>
+          </div>
+        </div>
       </mat-step>
+
     </mat-vertical-stepper>
 
 
@@ -21,8 +36,8 @@
   </mat-card-content>
 
   <mat-card-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-    <button mat-button color='warn' cdkFocusInitial >CANCEL</button>
-    <button mat-button color='primary' >SEND REQUEST</button>
+    <button mat-button color='warn' cdkFocusInitial (click)="onCancelClick()" >CANCEL</button>
+    <button mat-button color='primary' [disabled]="certifyForm.invalid" >SEND REQUEST</button>
   </mat-card-actions>
 </div>
 

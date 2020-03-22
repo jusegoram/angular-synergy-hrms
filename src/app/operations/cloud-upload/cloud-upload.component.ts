@@ -10,7 +10,7 @@ import { OperationsService } from '../operations.service';
   templateUrl: './cloud-upload.component.html',
   styleUrls: ['./cloud-upload.component.scss']
 })
-export class CloudUploadComponent{
+export class CloudUploadComponent {
   auth: any;
   uploader: FileUploader;
   hoursUploader: FileUploader;
@@ -123,8 +123,8 @@ export class CloudUploadComponent{
     this._operationsService.getTemplate(template.value).subscribe(
       (data: BlobPart) => {
         this.openSnackBar('Download started', 'thanks');
-        let a = document.createElement('a');
-        let blob = new Blob([data], { type: 'text/csv' }),
+        const a = document.createElement('a');
+        const blob = new Blob([data], { type: 'text/csv' }),
           url = window.URL.createObjectURL(blob);
 
         a.href = url;

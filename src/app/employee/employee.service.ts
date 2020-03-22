@@ -74,7 +74,7 @@ export class EmployeeService {
   getClient(contextFilter?: string[]): Observable<any> {
     if (!this._clients) {
       let params;
-      if(contextFilter && contextFilter.length > 0) {
+      if (contextFilter && contextFilter.length > 0) {
          params = new HttpParams().set('clients', JSON.stringify(contextFilter));
       }
       this._clients = this.httpClient.get<any>('/api/v1/admin/employee/client' , { params: params }).pipe(
@@ -325,16 +325,16 @@ export class EmployeeService {
     return this.sessionService.getRights();
   }
 
-  getDecodedToken(){
+  getDecodedToken() {
     return this.sessionService.decodeToken();
   }
 
   deletePosition(position: any) {
-    let url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`;
+    const url = `/api/v1/employee/position?id=${position._id}&employee=${position.employee}`;
     return this.httpClient.delete(url);
   }
   deleteShift(shift: any) {
-    let url = `/api/v1/employee/shift?id=${shift._id}&employee=${shift.employee}`;
+    const url = `/api/v1/employee/shift?id=${shift._id}&employee=${shift.employee}`;
     return this.httpClient.delete(url);
   }
 

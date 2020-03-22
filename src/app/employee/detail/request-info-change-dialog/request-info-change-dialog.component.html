@@ -1,3 +1,30 @@
-<p>
-  request-info-change-dialog works!
-</p>
+<div style="width: 100%; max-height: 800px; overflow-y: scroll !important; overflow-x: hidden !important;">
+  <mat-card-header>
+    <mat-card-title fxLayout="row" fxLayoutAlign="center center"> <mat-icon>warning</mat-icon><span class="align-text-icon">REQUEST INFO CHANGE</span>  </mat-card-title>
+    <mat-card-subtitle></mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content [formGroup]="requestInfoForm">
+    <mat-vertical-stepper linear="true">
+      <mat-step label="Step 1">
+        <section class="info-type-fields fields-wrapper">
+          <h5>Choose at least one option:</h5>
+          <mat-checkbox class="info-type-field" formControlName="mainInfo">Main Info</mat-checkbox>
+          <mat-checkbox class="info-type-field" formControlName="companyInfo">Company Info</mat-checkbox>
+          <mat-checkbox class="info-type-field" formControlName="personalInfo">Personal Info</mat-checkbox>
+          <mat-checkbox class="info-type-field" formControlName="positionInfo">Position Info</mat-checkbox>
+        </section>
+      </mat-step>
+      <mat-step label="Step 2">
+        <mat-form-field class="issue-description-field-wrapper" appearance="fill">
+          <mat-label>Issue's description</mat-label>
+          <textarea matInput placeholder="Description" formControlName="issueDescription"></textarea>
+          <mat-error *ngIf="issueDescriptionHasError">a brief description about the issue required (*)</mat-error>
+        </mat-form-field>
+      </mat-step>
+    </mat-vertical-stepper>
+  </mat-card-content>
+  <mat-card-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+    <button mat-button color='warn' cdkFocusInitial (click)="onCancelClick()" >CANCEL</button>
+    <button mat-button color='primary' [disabled]="requestInfoForm.invalid" >SEND REQUEST</button>
+  </mat-card-actions>
+</div>

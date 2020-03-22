@@ -22,7 +22,7 @@ export class RecentActivitiesComponent implements OnInit {
 
   uploadsPage = 0;
   uploadsLength = 0;
-  uploadsLimit=  5;
+  uploadsLimit =  5;
   uploadsPageSizeOptions: number[] = [5, 10, 25, 100];
 
 
