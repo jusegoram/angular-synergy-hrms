@@ -7,7 +7,7 @@ var trackerSchema = new Schema({
         effectiveDate: { type: Date },
         absenteeism: {
             firstChance: {
-                date: { type: Date},
+                date: { type: Date },
                 time: { type: String },
                 reason: {type: String },
             },
@@ -22,9 +22,9 @@ var trackerSchema = new Schema({
                 reason: {type: String },
             }
         },
-        supervisorSignature: { type: mongoose.Types.BinData},
-        managerSignature: { type: mongoose.Types.BinData},
-        employeeSignature: { type: mongoose.Types.BinData},
+        supervisorSignature: { type: mongoose.Schema.Types.Buffer},
+        managerSignature: { type: mongoose.Schema.Types.Buffer},
+        employeeSignature: { type: mongoose.Schema.Types.Buffer},
     },
     transfer: {
         effectiveDate: { type: Date },
@@ -33,14 +33,14 @@ var trackerSchema = new Schema({
         newClient: {type: String },
         newCampaign: {type: String },
         reason: {type: String },
-        managerSignature: { type: mongoose.Types.BinData },
+        managerSignature: { type: mongoose.Schema.Types.Buffer },
     },
     certifyTraining: {
         certificationDate: {type: Date},
         client: {type: String },
         campaign: {type: String},
         reason: { type: String },
-        managerSignature: { type: mongoose.Types.BinData },
+        managerSignature: { type: mongoose.Schema.Types.Buffer },
     },
     infoChangeRequest: {
         mainInfo: {type: Boolean},
@@ -53,13 +53,13 @@ var trackerSchema = new Schema({
 
 var schema = new Schema({
     employeeId: {type: String},
-    employee: { type: mongoose.Types.ObjectId},
+    employee: { type: mongoose.Schema.Types.ObjectId},
     requestDate: {type: Date},
     createdDate: { type: Date, default: Date.now },
     state: {type: Number, default: 0},
     tracker: {type: trackerSchema},
-    creationFingerprint: { type: mongoose.Types.ObjectId},
-    verificationFingerprint: { type: mongoose.Types.ObjectId},
+    creationFingerprint: { type: mongoose.Schema.Types.ObjectId},
+    verificationFingerprint: { type: mongoose.Schema.Types.ObjectId},
 });
 
 module.exports = mongoose.model('hr-tracker', schema);
