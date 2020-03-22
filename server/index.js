@@ -32,6 +32,7 @@ const appUserRoutes = require('./routes/app/user/user');
 const appPayrollRoutes = require('./routes/app/payroll/payroll');
 const appOpsRoutes = require('./routes/app/operations/operations');
 const appOpsUploadRoutes = require('./routes/app/operations/upload');
+const appHrTrackersRoutes = require('./routes/app/hr/trackers');
 
 // DB connection through Mongoose
 const app = express();
@@ -83,6 +84,7 @@ app.use('/api/v1/payroll', authentication.authentication, appPayrollRoutes);
 app.use('/api/v1/operations', authentication.authentication, appOpsRoutes);
 app.use('/api/v1/operations/upload', authentication.authentication, appOpsUploadRoutes);
 
+app.use('/api/v1/hr/trackers', authentication.authentication, appHrTrackersRoutes);
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.
