@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {environment} from '../../../../environments/environment';
-import { FileUploader } from 'ng2-file-upload';
+import {FileUploader} from 'ng2-file-upload';
 
 @Component({
   selector: 'app-upload',

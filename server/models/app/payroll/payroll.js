@@ -200,6 +200,7 @@ let PayrollSchema = new Schema({
   employeeOtherpays: { type: [OtherPaySchema] }, //needs an update after save
   employeeFinalPayment: {type: [OtherPaySchema]}, //Implement | almost done
   employeeMaternities: { type: [OtherPaySchema] },
+  employeeCompassionate: { type: [OtherPaySchema] },
   employeeCSL: { type: [OtherPaySchema] },
   employeeBonus: { type: [BonusSchema] },
   positionName: { type: String },
@@ -222,6 +223,7 @@ let PayrollSchema = new Schema({
   totalOtherPays: { type: mongoose.Schema.Types.Decimal128 }, //needs an update after save
   totalFinalPayments: { type: mongoose.Schema.Types.Decimal128 }, //implement | almost done
   totalMaternities: { type: mongoose.Schema.Types.Decimal128 },
+  totalCompassionate: { type: mongoose.Schema.Types.Decimal128 },
   totalCSL: { type: mongoose.Schema.Types.Decimal128 },
   totalOvertime: { type: Number },
   totalOvertimePay: { type: PayrollPayment },

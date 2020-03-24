@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Observable, interval } from 'rxjs';
-import { EmployeeHours } from '../employee/Employee';
-import { publishReplay, refCount, map, share} from 'rxjs/operators';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '../session/session.service';
+import {Injectable} from '@angular/core';
+import {interval, Observable} from 'rxjs';
+import {EmployeeHours} from '../employee/Employee';
+import {map, publishReplay, refCount, share} from 'rxjs/operators';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {SessionService} from '../session/session.service';
 
 @Injectable({
   providedIn: 'root'

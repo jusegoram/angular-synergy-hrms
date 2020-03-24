@@ -1,10 +1,9 @@
-import { PayrollService } from './../../services/payroll.service';
-import { Payroll } from '../new-payroll/Payroll';
+import {PayrollService} from './../../services/payroll.service';
+import {Payroll} from '../new-payroll/Payroll';
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 
 @Injectable()
 export class DetailResolver implements Resolve<Payroll> {

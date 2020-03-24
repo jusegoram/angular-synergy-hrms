@@ -1,6 +1,6 @@
-import { Directive, Input } from '@angular/core';
-import { Validator, NG_VALIDATORS, AbstractControl, ValidationErrors } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {Directive, Input} from '@angular/core';
+import {AbstractControl, NG_VALIDATORS, ValidationErrors, Validator} from '@angular/forms';
+import {Subscription} from 'rxjs';
 
 @Directive({
 // tslint:disable-next-line:directive-selector

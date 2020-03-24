@@ -1,6 +1,6 @@
-import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit, Input } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, Input, OnInit} from '@angular/core';
+import {EmployeeService} from '../../employee.service';
 import * as XLSX from 'xlsx';
 
 @Component({

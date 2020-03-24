@@ -1,16 +1,15 @@
-
 import {filter} from 'rxjs/operators';
-import { Menu } from './../../shared/menu-items/menu-items';
-import { Component, NgZone, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { MenuItems } from '../../shared/menu-items/menu-items';
-import { Subscription } from 'rxjs';
+import {Menu} from './../../shared/menu-items/menu-items';
+import {Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {MenuItems} from '../../shared/menu-items/menu-items';
+import {Subscription} from 'rxjs';
 
 
-import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '../../session/session.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material/icon';
+import {PerfectScrollbarConfigInterface, PerfectScrollbarDirective} from 'ngx-perfect-scrollbar';
+import {SessionService} from '../../session/session.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 

@@ -1,11 +1,11 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 
-import { MenuItems } from './menu-items/menu-items';
-import { AccordionAnchorDirective, AccordionLinkDirective, AccordionDirective } from './accordion';
-import { ToggleFullscreenDirective } from './fullscreen/toggle-fullscreen.directive';
+import {MenuItems} from './menu-items/menu-items';
+import {AccordionAnchorDirective, AccordionDirective, AccordionLinkDirective} from './accordion';
+import {ToggleFullscreenDirective} from './fullscreen/toggle-fullscreen.directive';
 import {HttpClientModule} from '@angular/common/http';
-import { SignatureFieldComponent } from './signature-field/signature-field.component';
-import { SignaturePadModule } from 'angular2-signaturepad';
+import {SignatureFieldComponent} from './signature-field/signature-field.component';
+import {SignaturePadModule} from 'angular2-signaturepad';
 
 @NgModule({
 

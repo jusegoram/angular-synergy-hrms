@@ -1,12 +1,12 @@
-import { MinuteSecondsPipe } from './../../../../shared/pipes/minute-seconds.pipe';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, OnInit, Inject, Input, NgZone } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '../../../services/payroll.service';
+import {MinuteSecondsPipe} from './../../../../shared/pipes/minute-seconds.pipe';
+import {ColumnMode, SelectionType} from '@swimlane/ngx-datatable';
+import {CurrencyPipe, DatePipe} from '@angular/common';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {PayrollService} from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { ChartData, Datum } from '../../../../shared/ChartData';
+import {ChartData, Datum} from '../../../../shared/ChartData';
 
 @Component({
   selector: 'app-payed-payrolls',
@@ -82,9 +82,6 @@ export class PayedPayrollsComponent implements OnInit {
     return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')}
 }
 
-  sendPayslips(payId) {
-    this._payrollService.sendPayslipts(payId).subscribe(res => {});
-  }
   loadPayedPayrolls() {
     this._payrollService.getPayroll('', '', '', true).subscribe(result => {
       this.rows = result;

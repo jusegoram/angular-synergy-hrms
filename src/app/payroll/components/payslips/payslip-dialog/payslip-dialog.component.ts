@@ -1,9 +1,11 @@
-import { FormControl } from '@angular/forms';
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { startWith, map } from 'rxjs/operators';
-import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
-import { MinuteSecondsPipe } from '../../../../shared/pipes/minute-seconds.pipe';
+import {FormControl} from '@angular/forms';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {map, startWith} from 'rxjs/operators';
+import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
+import {MinuteSecondsPipe} from '../../../../shared/pipes/minute-seconds.pipe';
+import {PayrollService} from '../../../services/payroll.service';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-payslip-dialog',
@@ -11,6 +13,8 @@ import { MinuteSecondsPipe } from '../../../../shared/pipes/minute-seconds.pipe'
   styleUrls: ['./payslip-dialog.component.scss']
 })
 export class PayslipDialogComponent implements OnInit {
+  @ViewChild('sentSwal', { static: false }) sentSwal: SwalComponent;
+  @ViewChild('downloadSwal', { static: false }) downloadSwal: SwalComponent;
   myControl: FormControl;
   filteredEmployees: any;
   allEmployees: any;
@@ -19,6 +23,7 @@ export class PayslipDialogComponent implements OnInit {
     private _exportasService: ExportAsService,
     public dialogRef: MatDialogRef<PayslipDialogComponent>,
     private minutesSecondsPipe: MinuteSecondsPipe,
+    private _payrollService: PayrollService,
     @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit() {
@@ -45,8 +50,6 @@ export class PayslipDialogComponent implements OnInit {
   onDownload() {
     this.saveToPdf();
   }
-  onDownloadAll() {
-  }
   saveToPdf() {
     const config: ExportAsConfig = {
       type: 'pdf',
@@ -56,10 +59,24 @@ export class PayslipDialogComponent implements OnInit {
       }
     };
     this._exportasService.save(config, `${this.employeePayslip.fullSearchName}`).subscribe(() => {
+      this.downloadSwal.fire().then(fired => {});
   });
   }
   transform(hrs) {
     const result = this.minutesSecondsPipe.transform(hrs);
     return result;
+  }
+  onSend() {
+    const { employeeId, payment_Id } = this.employeePayslip;
+    this._payrollService.sendPayslips(employeeId, payment_Id).subscribe(result => {
+    this.sentSwal.fire().then(fired => {});
+    });
+  }
+  onSendAll() {
+    const { payment_Id } = this.data[0];
+    this._payrollService.sendPayslips('all', payment_Id).subscribe(result => {
+      this.sentSwal.fire().then(fired => {});
+    });
+    console.log(this.data[0]);
   }
 }

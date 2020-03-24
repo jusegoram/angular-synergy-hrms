@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../admin.service';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { Employee } from '../../employee/Employee';
-import { FormControl } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {AdminService} from '../admin.service';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {Employee} from '../../employee/Employee';
+import {FormControl} from '@angular/forms';
+
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',

@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false --watch",
+    "start": "node server",
+    "build": "ng build --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "prod": "ng build --prod --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "build:prod": "ng build --prod --optimization=false --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "test": "ng test",

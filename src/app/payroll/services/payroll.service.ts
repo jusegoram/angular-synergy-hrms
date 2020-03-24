@@ -1,8 +1,8 @@
-import { SessionService } from './../../session/session.service';
-import { Injectable } from '@angular/core';
-import { Observable, noop } from 'rxjs';
-import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
-import { map, publishReplay, refCount } from 'rxjs/operators';
+import {SessionService} from './../../session/session.service';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {map, publishReplay, refCount} from 'rxjs/operators';
 
 @Injectable()
 export class PayrollService {
@@ -28,24 +28,12 @@ export class PayrollService {
   getDecodedToken() {
     return this._sessionService.decodeToken();
   }
-
-  sendPayslipts(payId) {
-    const body = {
-      payId: payId
-    };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/payroll/payslips', body, {
-      headers: headers
-    });
-  }
-
-  getPayslip(employee, payId) {
+  sendPayslips(employee, payId) {
     const params = new HttpParams().set('payId', payId);
     return this.httpClient.get<any>(`/api/v1/payroll/payslips/${employee}`, {
       params: params
     });
   }
-
   getReport(query: any): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });

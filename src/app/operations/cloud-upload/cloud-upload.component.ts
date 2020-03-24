@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-import { environment } from '../../../environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from '../operations.service';
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../environments/environment';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {OperationsService} from '../operations.service';
 
 @Component({
   selector: 'app-cloud-upload',

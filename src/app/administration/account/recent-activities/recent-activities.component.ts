@@ -1,7 +1,7 @@
-import { PageEvent } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from './../../admin.service';
-import { Component, OnInit } from '@angular/core';
+import {PageEvent} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import {AdminService} from './../../admin.service';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-recent-activities',

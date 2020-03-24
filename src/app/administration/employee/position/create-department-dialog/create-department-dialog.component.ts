@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { EditDialogComponent } from '../../workpattern/edit-dialog/edit-dialog.component';
-import { Department } from '../../models/positions-models';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Department} from '../../models/positions-models';
 
 @Component({
   selector: 'app-create-department-dialog',

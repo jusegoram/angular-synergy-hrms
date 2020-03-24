@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {EmployeeService} from '../employee.service';
 import {Employee} from '../Employee';
-import { Router } from '../../../../node_modules/@angular/router';
+import {Router} from '../../../../node_modules/@angular/router';
 
 @Component({
   selector: 'new',

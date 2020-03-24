@@ -1,15 +1,14 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { PayrollService } from './../../../services/payroll.service';
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { PayrollConcept } from '../Concepts';
-import { SessionService } from '../../../../session/session.service';
-import { Employee } from '../../../../employee/Employee';
-import { startWith, map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import {CurrencyPipe, DatePipe} from '@angular/common';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {PayrollService} from './../../../services/payroll.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PayrollConcept} from '../Concepts';
+import {SessionService} from '../../../../session/session.service';
+import {Employee} from '../../../../employee/Employee';
+import {map, startWith} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-new-concept',
@@ -113,7 +112,7 @@ export class NewConceptComponent implements OnInit {
   isNotice =  (concept) => concept === 'Notice Payment';
   isSeverance =  (concept) => concept === 'Severance';
   isCompassionateLeave =  (concept) => concept === 'Compassionate Leave';
-  isMaternity = (concept) => concept === 'Maternity';
+  isMaternity = (concept) => concept === 'Maternity Leave';
   isCSL = (concept) => concept === 'Certify Sick Leave';
   isTaxableBonus = (type) => type === 'Taxable Bonus';
   datePipe(){
@@ -249,5 +248,5 @@ export class NewConceptComponent implements OnInit {
     this.snackbar.open(message, button, {duration: 10 * 1000});
   }
 
-  // TODO: upload bulk, api is ready to take bulk.
+  // TODO: upload bulk, api is ready to take bulk
 }

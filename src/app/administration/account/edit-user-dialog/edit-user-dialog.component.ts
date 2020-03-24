@@ -1,20 +1,14 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AdminService } from '../../admin.service';
-import { OnInit, ViewChild, ElementRef, ɵConsole } from '@angular/core';
-import { Component, Inject } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { getMatIconFailedToSanitizeUrlError } from '@angular/material/icon';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators
-} from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Employee } from '../../../employee/Employee';
-import { startWith, map } from 'rxjs/operators';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {AdminService} from '../../admin.service';
+import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {Employee} from '../../../employee/Employee';
+import {map, startWith} from 'rxjs/operators';
+
 @Component({
   selector: 'app-edit-user-dialog',
   templateUrl: './edit-user-dialog.component.html',

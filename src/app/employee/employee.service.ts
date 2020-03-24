@@ -1,14 +1,19 @@
 import {
-  Employee, EmployeeCompany, EmployeePayroll,
-  EmployeePersonal, EmployeePosition, EmployeeFamily,
+  Employee,
+  EmployeeAttrition,
   EmployeeComment,
-  EmployeeAttrition} from './Employee';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { publishReplay, refCount, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { SessionService } from '../session/session.service';
+  EmployeeCompany,
+  EmployeeFamily,
+  EmployeePayroll,
+  EmployeePersonal,
+  EmployeePosition
+} from './Employee';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, publishReplay, refCount} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {SessionService} from '../session/session.service';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {

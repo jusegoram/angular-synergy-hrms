@@ -20,15 +20,24 @@
   </mat-form-field>
   <div class='pa-1' fxLayout="row" fxLayoutAlign="space-around center" LayoutGap="20px">
     <button mat-button (click)="onDownload()">DOWNLOAD</button>
-    <button mat-button  disabled='true'>SEND PAYSLIP</button>
+    <button mat-button (click)="onSend()">SEND PAYSLIP</button>
   </div>
   <mat-divider>
   </mat-divider>
   <h3>BULK</h3>
   <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="20px">
-    <button mat-button (click)="onDownloadAll()">DOWNLOAD ALL</button>
-    <button mat-button disabled='true'>SEND ALL</button>
+    <button mat-button (click)="onSendAll()">SEND ALL</button>
   </div>
+  <swal #downloadSwal
+        title='GREAT!'
+        text='Your download will begin in a few seconds'
+        icon = 'success'
+  ></swal>
+  <swal #sentSwal
+        title= 'EMAIL SENT!'
+        text= "The emails will finish sending in a couple of minutes"
+        icon='success'
+  ></swal>
   <mat-card *ngIf="employeePayslip" class="hidden template">
     <style>
       /* body {

@@ -1,11 +1,11 @@
-import { User } from './User';
-import { Injectable } from '@angular/core';
+import {User} from './User';
+import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { shareReplay, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {shareReplay, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');

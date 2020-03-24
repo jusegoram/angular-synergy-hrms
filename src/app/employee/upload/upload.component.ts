@@ -1,13 +1,11 @@
-import { SessionService } from './../../session/session.service';
-import { EmployeeService } from './../employee.service';
+import {EmployeeService} from './../employee.service';
 ///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import { Component } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
 // const URL = '/api/';
-import { environment } from '../../../environments/environment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
+import {environment} from '../../../environments/environment';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({

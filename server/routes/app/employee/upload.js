@@ -641,7 +641,7 @@ function parseShift(shift) {
           }
           if (doc) {
             let matrix =  doc.position.slice(-1)[0]? doc.position.slice(-1)[0].position.positionId: null;
-            let hourlyRate =  doc.position.slice(-1)[0]? (parseInt(doc.position.slice(-1)[0].position.baseWage, 10) * 12 / 26 / 90): 0;
+            let hourlyRate =  doc.position.slice(-1)[0]? (parseInt(doc.position.slice(-1)[0].position.baseWage, 10) * 12 / 52 / 45): 0;
             let positionName =  doc.position.slice(-1)[0]? doc.position.slice(-1)[0].position.name: null;
 
             let shiftDate, start, end;

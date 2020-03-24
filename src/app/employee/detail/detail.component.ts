@@ -1,21 +1,17 @@
-import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
-import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
-import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
-import { StatusDialogComponent } from './status-dialog/status-dialog.component';
-import { SessionService } from '../../session/session.service';
-import { Component, OnInit, OnChanges, SimpleChanges} from '@angular/core';
-import { EmployeeService } from '../employee.service';
-import { ActivatedRoute } from '@angular/router';
+import {RequestInfoChangeDialogComponent} from './request-info-change-dialog/request-info-change-dialog.component';
+import {CertifyDialogComponent} from './certify-dialog/certify-dialog.component';
+import {TransferDialogComponent} from './transfer-dialog/transfer-dialog.component';
+import {StatusDialogComponent} from './status-dialog/status-dialog.component';
+import {Component, OnInit} from '@angular/core';
+import {EmployeeService} from '../employee.service';
+import {ActivatedRoute} from '@angular/router';
 import {Employee, EmployeeCompany, Position} from '../Employee';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
-import { Client } from '../../administration/employee/models/positions-models';
-import { DatePipe, AsyncPipe } from '@angular/common';
-import { async } from '@angular/core/testing';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {DatePipe} from '@angular/common';
 
- @Component ({
+@Component ({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss']

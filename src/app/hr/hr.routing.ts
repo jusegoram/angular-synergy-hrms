@@ -1,7 +1,7 @@
-import { TimeOffComponent } from './time-off/time-off.component';
-import { TrackersComponent } from './trackers/trackers.component';
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {TimeOffComponent} from './time-off/time-off.component';
+import {TrackersComponent} from './trackers/trackers.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 export const routes: Routes = [
   {

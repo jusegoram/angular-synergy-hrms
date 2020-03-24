@@ -1,6 +1,4 @@
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { PayrollConcept } from './Concepts';
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-concepts',

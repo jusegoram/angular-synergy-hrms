@@ -1,12 +1,12 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule, CanActivate } from '@angular/router';
-import { DetailResolver} from './detail/detail.resolver';
-import { DetailComponent } from './detail/detail.component';
-import { UploadComponent } from './upload/upload.component';
-import { ManageComponent } from './manage/manage.component';
-import { ReportComponent } from './report/report.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {DetailResolver} from './detail/detail.resolver';
+import {DetailComponent} from './detail/detail.component';
+import {UploadComponent} from './upload/upload.component';
+import {ManageComponent} from './manage/manage.component';
+import {ReportComponent} from './report/report.component';
 import {NewComponent} from './new/new.component';
-import { CommonModule } from '@angular/common';
+
 export const routes: Routes = [
   {
     path: '',

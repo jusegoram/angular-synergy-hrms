@@ -1,5 +1,5 @@
-import { PayrollRow } from "./PayrollRow";
-import * as moment from "moment";
+import {PayrollRow} from './PayrollRow';
+import * as moment from 'moment';
 
 export class Payroll {
 

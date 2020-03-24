@@ -1,10 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Employee, EmployeeComment} from '../../Employee';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '../../../session/session.service';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {EmployeeService} from '../../employee.service';
+import {SessionService} from '../../../session/session.service';
 
 @Component({
   selector: 'comment-info',
