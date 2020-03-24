@@ -84,7 +84,8 @@ app.use('/api/v1/payroll', authentication.authentication, appPayrollRoutes);
 app.use('/api/v1/operations', authentication.authentication, appOpsRoutes);
 app.use('/api/v1/operations/upload', authentication.authentication, appOpsUploadRoutes);
 
-app.use('/api/v1/hr/trackers', authentication.authentication, appHrTrackersRoutes);
+app.use('/api/test/hr/trackers', appHrTrackersRoutes);
+
 //TODO: Add mobile route managament for future android and ios app.
 /**
  * @description: Mobile app Express api routes.

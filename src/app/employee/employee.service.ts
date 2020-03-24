@@ -9,6 +9,8 @@ import { publishReplay, refCount, map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { SessionService } from '../session/session.service';
+import { Tracker } from '../shared/models/tracker';
+import { HrTracker } from '../shared/models/hr-tracker';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {
@@ -377,7 +379,7 @@ export class EmployeeService {
   * verificationFingerprint: current hr module user who fulfills the tracker
 */
 
-saveTracker(){
+saveTracker(hrTracker: HrTracker){
 // TODO: feat/hr-module
 }
 deleteTracker(){
