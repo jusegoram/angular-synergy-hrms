@@ -11,6 +11,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { SessionService } from '../session/session.service';
 import { Tracker } from '../shared/models/tracker';
 import { HrTracker } from '../shared/models/hr-tracker';
+import { API } from '../../environments/environment';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {
@@ -377,15 +378,26 @@ export class EmployeeService {
   * tracker: Object from trackerSchema
   * creation fingerprint: current user decodedToken
   * verificationFingerprint: current hr module user who fulfills the tracker
-*/
+  */
 
-saveTracker(hrTracker: HrTracker){
-// TODO: feat/hr-module
-}
-deleteTracker(){
-  // TODO: feat/hr-module
-}
-getTracker(){
-  // TODO: feat/hr-module
-}
+  saveTracker(hrTracker: HrTracker){
+    // TODO: feat/hr-module
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(API.TRACKERS, hrTracker , {headers}).toPromise();
+  }
+
+  deleteTracker(employeeId:string){
+    // TODO: feat/hr-module
+    return this.httpClient.delete(API.TRACKER(employeeId)).toPromise();
+  }
+
+  getTracker(employeeId:string){
+    // TODO: feat/hr-module
+    return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
+  }
+
+  getTrackers(){
+    // TODO: feat/hr-module
+    return this.httpClient.get(API.TRACKERS).toPromise();
+  }
 }
