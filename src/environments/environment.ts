@@ -9,3 +9,10 @@ export const environment = {
    apiUrl: 'http://localhost:3000/api/v1'
   // siteUri: 'https://synergy.rccbpo.com'
 };
+
+export const API = {
+  TRACKERS: '/api/test/hr/trackers',
+  TRACKER: (id:string)=>{
+    return '/api/test/hr/trackers/'+id;
+  }
+};

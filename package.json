@@ -11,6 +11,7 @@
     "build:prod": "ng build --prod --optimization=false --build-optimizer --vendor-chunk --aot --output-hashing all --extract-css true --source-map false --named-chunks false",
     "test": "ng test",
     "lint": "ng lint",
+    "lint-fix": "ng lint com.rccbpo.synergy --fix",
     "e2e": "ng e2e",
     "update:packages": "node wipe-dependencies.js && rm -rf node_modules && npm update --save-dev && npm update --save"
   },
