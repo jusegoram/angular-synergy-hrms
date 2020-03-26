@@ -6,26 +6,39 @@ interface Absenteeism {
   thirdChance: Chance;
 }
 
-interface SupervisorSignature {
-  type: string;
-  data: number[];
-}
-
-interface ManagerSignature {
-  type: string;
-  data: number[];
-}
-
-interface EmployeeSignature {
-  type: string;
-  data: number[];
-}
-
 export interface Tracker {
-  absenteeism: Absenteeism;
-  newStatus: string;
-  effectiveDate: Date;
-  supervisorSignature: SupervisorSignature;
-  managerSignature: ManagerSignature;
-  employeeSignature: EmployeeSignature;
+  statusChange?: {
+    absenteeism: Absenteeism;
+    newStatus: string;
+    effectiveDate: Date;
+    supervisorSignature: string;
+    managerSignature: string;
+    employeeSignature: string;
+  };
+
+  transfer?: {
+    effectiveDate: Date;
+    oldClient: string;
+    oldCampaign: string;
+    newClient: string;
+    newCampaign: string;
+    reason: string;
+    managerSignature: string;
+  };
+
+  certifyTraining?: {
+    certificationDate: Date;
+    client: string;
+    campaign: string;
+    reason: string;
+    managerSignature: string;
+  };
+
+  infoChangeRequest?: {
+    mainInfo: boolean;
+    companyInfo: boolean;
+    personalInfo: boolean;
+    positionInfo: boolean;
+    reason: string;
+  };
 }

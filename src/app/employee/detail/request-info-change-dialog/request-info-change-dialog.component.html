@@ -25,6 +25,6 @@
   </mat-card-content>
   <mat-card-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
     <button mat-button color='warn' cdkFocusInitial (click)="onCancelClick()" >CANCEL</button>
-    <button mat-button color='primary' [disabled]="requestInfoForm.invalid" >SEND REQUEST</button>
+    <button mat-button color='primary' [disabled]="requestInfoForm.invalid" (click)="onProceedClick(requestInfoForm.value)" >SEND REQUEST</button>
   </mat-card-actions>
 </div>

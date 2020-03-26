@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { Client } from '../../administration/employee/models/positions-models';
 import { DatePipe, AsyncPipe } from '@angular/common';
 import { async } from '@angular/core/testing';
+import { HrTracker } from '../../shared/models/hr-tracker';
 
  @Component ({
   selector: 'app-detail',
@@ -36,6 +37,7 @@ export class DetailComponent implements OnInit {
  reaptimes: any[];
  genders: any[];
  statusChange = false;
+ hrTracker:HrTracker;
  helpMessage = `
   HELPING TOOLTIP:
   \u2022\STATUS\xA0TRACKER\xA0:\xA0Every time an employee's status
@@ -104,6 +106,7 @@ export class DetailComponent implements OnInit {
        );
      }
      this.setCampaigns();
+     this.setHrTracker();
    }
 
    transformDate(date: Date) {
@@ -269,15 +272,31 @@ export class DetailComponent implements OnInit {
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
       width: '700px',
-      data: {status: this.mainForm.value.status}
+      data: {status: this.mainForm.value.status, hrTracker: this.hrTracker}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
+      if (!result.status) {
         this.mainForm.patchValue({status: this.employee.status.toLowerCase()});
       } else {
         this.statusChange = result;
       }
+
+      if(result.message){
+        this.snackBar.open(result.message, 'OK', {
+          duration: 3000,
+          horizontalPosition: 'end'
+        });  
+      }
+      
     });
+  }
+  
+  setHrTracker(){
+    this.hrTracker={
+      employee: this.employee._id,
+      employeeId: this.employee._id,
+      state: 0
+    };
   }
 }
