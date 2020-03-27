@@ -28,10 +28,10 @@ $font-size-h5: 1.25rem !default;
 $font-size-h6: 1rem !default;
 
 $headings-margin-bottom: (1rem / 2) !default;
-$headings-font-family:   inherit !default;
-$headings-font-weight:   400 !default;
-$headings-line-height:   1.1 !default;
-$headings-color:         inherit !default;
+$headings-font-family: inherit !default;
+$headings-font-weight: 400 !default;
+$headings-line-height: 1.1 !default;
+$headings-color: inherit !default;
 
 //
 // Radius
@@ -43,33 +43,44 @@ $border-radius-small: 1px !default;
 //
 // Spacing
 //
-$spacer:   1rem !default;
+$spacer: 1rem !default;
 $spacer-x: $spacer !default;
 $spacer-y: $spacer !default;
 $spacers: (
   0: (
     x: 0,
-    y: 0
+    y: 0,
   ),
   xs: (
-    x: ($spacer-x / 1.8),
-    y: ($spacer-y / 1.8)
+    x: (
+      $spacer-x / 1.8,
+    ),
+    y: (
+      $spacer-y / 1.8,
+    ),
   ),
   1: (
     x: $spacer-x,
-    y: $spacer-y
+    y: $spacer-y,
   ),
   2: (
-    x: ($spacer-x * 1.5),
-    y: ($spacer-y * 1.5)
+    x: (
+      $spacer-x * 1.5,
+    ),
+    y: (
+      $spacer-y * 1.5,
+    ),
   ),
   3: (
-    x: ($spacer-x * 3),
-    y: ($spacer-y * 3)
-  )
+    x: (
+      $spacer-x * 3,
+    ),
+    y: (
+      $spacer-y * 3,
+    ),
+  ),
 ) !default;
 $border-width: 1px !default;
-
 
 // Media queries breakpoints
 // --------------------------------------------------
@@ -80,17 +91,16 @@ $border-width: 1px !default;
 // adapting to different screen sizes, for use in media queries.
 $grid-breakpoints: (
   // Extra small screen / phone
-  xs: 0,
+    xs: 0,
   // Small screen / phone
-  sm: 600px,
+    sm: 600px,
   // Medium screen / tablet
-  md: 960px,
+    md: 960px,
   // Large screen / desktop
-  lg: 1280px,
+    lg: 1280px,
   // Extra large screen / wide desktop
-  xl: 1920px
+    xl: 1920px
 ) !default;
-
 
 // Grid containers
 //
@@ -99,9 +109,5 @@ $container-max-widths: (
   sm: 576px,
   md: 720px,
   lg: 940px,
-  xl: 1140px
+  xl: 1140px,
 ) !default;
-
-
-
-

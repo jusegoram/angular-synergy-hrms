@@ -30,19 +30,19 @@
   @include transform(rotate($deg));
 }
 
-@mixin translate($x: 0, $y:0) {
+@mixin translate($x: 0, $y: 0) {
   @include transform(translate($x, $y));
 }
 
-@mixin translate3d($x: 0, $y:0, $z:0) {
+@mixin translate3d($x: 0, $y: 0, $z: 0) {
   @include transform(translate3d($x, $y, $z));
 }
 
-@mixin scale($x: 0, $y:0) {
+@mixin scale($x: 0, $y: 0) {
   @include transform(scale($x, $y));
 }
 
-@mixin scale3d($x: 0, $y:0, $z:0) {
+@mixin scale3d($x: 0, $y: 0, $z: 0) {
   @include transform(scale3d($x, $y, $z));
 }
 
@@ -76,7 +76,7 @@
   transition-delay: $delay;
 }
 
-@mixin transition-duration($duration: .2s) {
+@mixin transition-duration($duration: 0.2s) {
   -moz-transition-duration: $duration;
   transition-duration: $duration;
 }
@@ -96,6 +96,6 @@
   user-select: $argument;
 }
 
-@mixin opacity($opacity: .5) {
+@mixin opacity($opacity: 0.5) {
   opacity: $opacity;
 }

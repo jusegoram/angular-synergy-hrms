@@ -21,7 +21,7 @@
   "DATEPICKER": "cueilleur",
   "EXPANSION": "Expansion",
   "RADIO": "Radio",
-  "TOOLBAR": "Barre d'outils",    
+  "TOOLBAR": "Barre d'outils",
   "LISTS": "Listes",
   "GRID": "La grille",
   "PROGRESS": "La progression",
@@ -33,7 +33,7 @@
   "SNACKBAR": "Snackbar",
   "DIALOG": "Dialog",
   "TABLE": "Table",
-  
+
   "FORMS": "Formes",
   "EDITOR": "Editeur",
   "VALIDATION": "Validation",
@@ -55,7 +55,7 @@
   "DETAIL": "vue détaillée",
 
   "TASKBOARD": "Taskboard",
-  
+
   "CHARTS": "Graphiques",
 
   "MAPS": "Cartes",
@@ -78,6 +78,6 @@
   "FORGOT": "Forgot",
   "LOCKSCREEN": "Lockscreen",
   "ERROR": "Error",
-  
+
   "DOCS": "Docs"
 }

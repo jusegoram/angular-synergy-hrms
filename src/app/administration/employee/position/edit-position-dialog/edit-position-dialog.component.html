@@ -1,16 +1,21 @@
 <mat-dialog-content>
-
-<mat-form-field>
-  <input matInput placeholder="Position ID" [(ngModel)]="data.positionId">
-</mat-form-field>
-<mat-form-field>
-  <input matInput placeholder="Name" [(ngModel)]="data.name">
-</mat-form-field>
-<mat-form-field>
-  <input matInput placeholder="Wage" [(ngModel)]="data.baseWage">
-</mat-form-field>
-
+  <mat-form-field>
+    <input matInput placeholder="Position ID" [(ngModel)]="data.positionId" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Name" [(ngModel)]="data.name" />
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Wage" [(ngModel)]="data.baseWage" />
+  </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button color="primary" [mat-dialog-close]="data" matTooltip="Save changes to database"><mat-icon>save</mat-icon>&nbsp; SAVE</button>
+  <button
+    mat-button
+    color="primary"
+    [mat-dialog-close]="data"
+    matTooltip="Save changes to database"
+  >
+    <mat-icon>save</mat-icon>&nbsp; SAVE
+  </button>
 </mat-dialog-actions>

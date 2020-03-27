@@ -1,23 +1,29 @@
-import {Router} from '@angular/router';
-import {DatePipe} from '@angular/common';
-import {PayrollService} from '../../services/payroll.service';
+import { Router } from "@angular/router";
+import { DatePipe } from "@angular/common";
+import { PayrollService } from "../../services/payroll.service";
 
-import {AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
-import {MatBottomSheet} from '@angular/material/bottom-sheet';
-import * as moment from 'moment';
-import {ExportBottomSheetComponent} from './export-bottom-sheet/export-bottom-sheet.component';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {
+  AbstractControl,
+  FormControl,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
+import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
+import { MatBottomSheet } from "@angular/material/bottom-sheet";
+import * as moment from "moment";
+import { ExportBottomSheetComponent } from "./export-bottom-sheet/export-bottom-sheet.component";
+import { ColumnMode } from "@swimlane/ngx-datatable";
+import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
 
 @Component({
-  selector: 'app-manage',
-  templateUrl: './new-payroll.component.html',
-  styleUrls: ['./new-payroll.component.scss']
+  selector: "app-manage",
+  templateUrl: "./new-payroll.component.html",
+  styleUrls: ["./new-payroll.component.scss"],
 })
 export class NewPayrollComponent implements OnInit {
-  @ViewChild('myTable', { static: false }) table: any;
-  @ViewChild('successSwal') private successSwal: SwalComponent;
+  @ViewChild("myTable", { static: false }) table: any;
+  @ViewChild("successSwal") private successSwal: SwalComponent;
 
   socialSecurityTable: any[];
 
@@ -25,20 +31,20 @@ export class NewPayrollComponent implements OnInit {
   rows = [];
   ColumnMode = ColumnMode;
 
-  payrollType = new FormControl('', [Validators.required]);
-  fromDate = new FormControl('', [
-    this.dateMinimum(moment().add(-21, 'days')),
-    Validators.required
+  payrollType = new FormControl("", [Validators.required]);
+  fromDate = new FormControl("", [
+    this.dateMinimum(moment().add(-21, "days")),
+    Validators.required,
   ]);
-  toDate = new FormControl('', [
+  toDate = new FormControl("", [
     this.dateMaximum(this.fromDate.value),
-    Validators.required
+    Validators.required,
   ]);
   holidays = [];
   lastPayrollSettings: any;
   currentPayrollSettings: any;
   socialTableDisplayedColumns: string[] = [];
-  displayedColumns = ['employeeId'];
+  displayedColumns = ["employeeId"];
   calculating = false;
   hours: any[];
   overtime: any[];
@@ -58,18 +64,17 @@ export class NewPayrollComponent implements OnInit {
     private zone: NgZone
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   dateFilterFrom = (d: Date): boolean => {
     let statement = true;
     switch (this.payrollType.value) {
-      case 'BI-WEEKLY':
+      case "BI-WEEKLY":
         const day = d.getDay();
-          // Prevent Saturday and Sunday from being selected.
+        // Prevent Saturday and Sunday from being selected.
         statement = day === 1;
         break;
-      case 'SEMIMONTHLY':
+      case "SEMIMONTHLY":
         statement = true;
         break;
       default:
@@ -77,17 +82,17 @@ export class NewPayrollComponent implements OnInit {
         break;
     }
     return statement;
-  }
+  };
 
   dateFilterTo = (d: Date): boolean => {
     let statement = true;
     switch (this.payrollType.value) {
-      case 'BI-WEEKLY':
+      case "BI-WEEKLY":
         const day = d.getDay();
-          // Prevent Saturday and Sunday from being selected.
+        // Prevent Saturday and Sunday from being selected.
         statement = day === 0;
         break;
-      case 'SEMIMONTHLY':
+      case "SEMIMONTHLY":
         statement = true;
         break;
       default:
@@ -95,10 +100,10 @@ export class NewPayrollComponent implements OnInit {
         break;
     }
     return statement;
-  }
+  };
 
   isValid() {
-    console.log('executed');
+    console.log("executed");
     return this.payrollType.valid && this.fromDate.valid && this.toDate.valid;
   }
 
@@ -160,15 +165,14 @@ export class NewPayrollComponent implements OnInit {
   // }
 
   loadPayrollType(payroll, from: Date, to: Date) {
-    const fromDate = moment(from).format('MM-DD-YYYY').toString();
-    const toDate = moment(to).format('MM-DD-YYYY').toString();
+    const fromDate = moment(from).format("MM-DD-YYYY").toString();
+    const toDate = moment(to).format("MM-DD-YYYY").toString();
     this._payrollService
       .createPayroll(payroll, fromDate, toDate)
       .subscribe((result: any) => {
         this.chartDataSource = this.mapChartData(result.stats);
         this.pieCharDataSource = this.mapPieCharData(result.payroll);
         this.rows = [...result.payroll];
-
       });
   }
 
@@ -176,44 +180,40 @@ export class NewPayrollComponent implements OnInit {
     if (!data || data.length === 0) {
       return;
     }
-    const categories = data[0].categories.map(cat => {
-      return {label: this._datePipe.transform(new Date(cat), 'MM/dd/yyyy')};
+    const categories = data[0].categories.map((cat) => {
+      return { label: this._datePipe.transform(new Date(cat), "MM/dd/yyyy") };
     });
-    const mapped = data.map(i => {
+    const mapped = data.map((i) => {
       return {
         seriesname: i.seriesname.toUpperCase(),
         data: i.data,
       };
     });
-      return {
+    return {
       chart: {
-        caption: 'Hours Records Client/Day',
-        subcaption: 'UNIT: HOUR RECORDS',
-        numbersuffix: '',
-        showsum: '1',
-        plottooltext:
-          '$label has <b>$dataValue</b> records for $seriesName',
-        theme: 'fusion',
-        drawcrossline: '1',
-        exportEnabled: '1'
-
+        caption: "Hours Records Client/Day",
+        subcaption: "UNIT: HOUR RECORDS",
+        numbersuffix: "",
+        showsum: "1",
+        plottooltext: "$label has <b>$dataValue</b> records for $seriesName",
+        theme: "fusion",
+        drawcrossline: "1",
+        exportEnabled: "1",
       },
       categories: [
         {
-          category: [
-            ...categories
-          ]
-        }
+          category: [...categories],
+        },
       ],
-      dataset: mapped
+      dataset: mapped,
     };
   }
 
   mapPieCharData(data) {
-    const clientSet = new Set(data.map(i => i.employeeCompany.client));
+    const clientSet = new Set(data.map((i) => i.employeeCompany.client));
     const returnData = [];
     clientSet.forEach((client: string) => {
-      const value = data.filter(i => i.employeeCompany.client === client);
+      const value = data.filter((i) => i.employeeCompany.client === client);
       returnData.push({
         label: client.toUpperCase(),
         value: value.length,
@@ -221,23 +221,19 @@ export class NewPayrollComponent implements OnInit {
     });
     return {
       chart: {
-        caption: 'Total Bi-Weekly Employees',
-        centerLabelBold: '1',
-        showpercentvalues: '0',
-        defaultCenterLabel: 'Total B/W Employees: ' + data.length,
-        aligncaptionwithcanvas: '0',
-        captionpadding: '0',
-        decimals: '1',
-        plottooltext:
-          '<b>$percentValue</b> of Employees are on <b>$label</b>',
-        centerlabel: '$label |$value',
-        theme: 'fusion',
-        exportEnabled: '1'
-
+        caption: "Total Bi-Weekly Employees",
+        centerLabelBold: "1",
+        showpercentvalues: "0",
+        defaultCenterLabel: "Total B/W Employees: " + data.length,
+        aligncaptionwithcanvas: "0",
+        captionpadding: "0",
+        decimals: "1",
+        plottooltext: "<b>$percentValue</b> of Employees are on <b>$label</b>",
+        centerlabel: "$label |$value",
+        theme: "fusion",
+        exportEnabled: "1",
       },
-      data: [
-       ...returnData
-      ]
+      data: [...returnData],
     };
   }
 
@@ -245,16 +241,15 @@ export class NewPayrollComponent implements OnInit {
     this.zone.run(() => {
       // TODO: can filter the array based on what is picked for future feature.
     });
-}
-initialized($event) {
-  this.chartObj = $event.chart;
-  this.attachEvent();
-}
-attachEvent() {
-  this.handler = this.dataplotClickHandler.bind(this);
-  this.chartObj.addEventListener('dataplotClick', this.handler);
-}
-
+  }
+  initialized($event) {
+    this.chartObj = $event.chart;
+    this.attachEvent();
+  }
+  attachEvent() {
+    this.handler = this.dataplotClickHandler.bind(this);
+    this.chartObj.addEventListener("dataplotClick", this.handler);
+  }
 
   // onLoadBonus(e) {
   //   const files = e.target.files,
@@ -281,67 +276,79 @@ attachEvent() {
   // }
 
   dateMinimum(date: moment.Moment): ValidatorFn {
-    const FORMAT_DATE = 'DD/MM/YYYY';
+    const FORMAT_DATE = "DD/MM/YYYY";
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value == null) { return null; }
+      if (control.value == null) {
+        return null;
+      }
 
       const controlDate = moment(control.value, FORMAT_DATE);
-      if (!controlDate.isValid()) { return null; }
+      if (!controlDate.isValid()) {
+        return null;
+      }
 
       const validationDate = date;
       return controlDate.isAfter(validationDate)
         ? null
         : {
-            'date-minimum': {
-              'date-minimum': validationDate.format(FORMAT_DATE),
-              actual: controlDate.format(FORMAT_DATE)
-            }
+            "date-minimum": {
+              "date-minimum": validationDate.format(FORMAT_DATE),
+              actual: controlDate.format(FORMAT_DATE),
+            },
           };
     };
   }
 
   dateMaximum(date: string): ValidatorFn {
-    const FORMAT_DATE = 'DD/MM/YYYY';
+    const FORMAT_DATE = "DD/MM/YYYY";
     return (control: AbstractControl): ValidationErrors | null => {
-      if (control.value == null) { return null; }
+      if (control.value == null) {
+        return null;
+      }
 
       const controlDate = moment(control.value, FORMAT_DATE);
-      if (!controlDate.isValid()) { return null; }
+      if (!controlDate.isValid()) {
+        return null;
+      }
 
       const validationDate = moment(this.fromDate.value, FORMAT_DATE).add(
         7,
-        'days'
+        "days"
       );
       return controlDate.isBefore(validationDate)
         ? null
         : {
-            'date-max': {
-              'date-max': validationDate.format(FORMAT_DATE),
-              actual: controlDate.format(FORMAT_DATE)
-            }
+            "date-max": {
+              "date-max": validationDate.format(FORMAT_DATE),
+              actual: controlDate.format(FORMAT_DATE),
+            },
           };
     };
   }
 
   saveToDatabase(payroll, from, to) {
-    const
-      createdBy = this._payrollService.getUser(),
+    const createdBy = this._payrollService.getUser(),
       fromDate = moment(from).toDate(),
       toDate = moment(to).toDate();
-    this._payrollService.savePayroll({fromDate: fromDate, toDate: toDate, createdBy: createdBy, type: payroll[0].payrollType}).subscribe(
-      result => {
-        this.successSwal.fire().then(e => {});
-        this.router.navigate(['payroll', 'main']);
-      }
-    );
+    this._payrollService
+      .savePayroll({
+        fromDate: fromDate,
+        toDate: toDate,
+        createdBy: createdBy,
+        type: payroll[0].payrollType,
+      })
+      .subscribe((result) => {
+        this.successSwal.fire().then((e) => {});
+        this.router.navigate(["payroll", "main"]);
+      });
   }
   toggleExpandRow(row) {
-    console.log('Toggled Expand Row!', row);
+    console.log("Toggled Expand Row!", row);
     this.table.rowDetail.toggleExpandRow(row);
   }
 
   onDetailToggle(event) {
-    console.log('Detail Toggled', event);
+    console.log("Detail Toggled", event);
   }
 
   // saveConcepts(){

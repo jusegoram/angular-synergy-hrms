@@ -1,13 +1,11 @@
-
 mat-form-field {
   margin: 6px;
   width: 100%;
-
 }
 
-.container{
-    margin: 5px;
+.container {
+  margin: 5px;
 }
 .fill-remaining-space {
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}

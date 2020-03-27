@@ -1,10 +1,10 @@
 table.greyGridTable {
-  border: 2px solid #FFFFFF;
+  border: 2px solid #ffffff;
   width: 100%;
   text-align: center;
   border-collapse: collapse;
 }
- table.greyGridTable th {
+table.greyGridTable th {
   background: #f2f2f2;
   position: sticky;
   top: 0;
@@ -20,11 +20,11 @@ table.greyGridTable td {
 table.greyGridTable tbody td {
   font-size: 16px;
 }
-table.greyGridTable tr:nth-child(4n+4) {
+table.greyGridTable tr:nth-child(4n + 4) {
   border-top: 1px solid #5d5d5d;
   background: #f2f2f2;
 }
-table.greyGridTable tr:nth-child(4n+5) {
+table.greyGridTable tr:nth-child(4n + 5) {
   background: #f2f2f2;
   border-bottom: 1px solid #5d5d5d;
 }
@@ -50,17 +50,18 @@ table.greyGridTable tfoot td {
   font-size: 14px;
 }
 div.wrapper {
-  overflow:hidden;
+  overflow: hidden;
   overflow-y: scroll;
   overflow-x: scroll;
   height: 500px; // change this to desired height
 }
 
-td.timeframe, th.time-header{
+td.timeframe,
+th.time-header {
   background: #f2f2f2;
   position: sticky;
   left: 0;
-  visibility:visible;
+  visibility: visible;
   font-size: 18px;
   font-weight: bold;
   color: #333333;

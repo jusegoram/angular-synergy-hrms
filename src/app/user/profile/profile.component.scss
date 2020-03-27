@@ -1,6 +1,5 @@
 @import "../../../assets/styles/scss/material.variables";
 
-
 $mat-toolbar-height-desktop: 150px !default;
 $mat-toolbar-height-mobile-portrait: 142px !default;
 $mat-toolbar-height-mobile-landscape: 136px !default;
@@ -20,7 +19,7 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
     margin-top: -($mat-toolbar-height-mobile-landscape);
   }
 }
-.container{
+.container {
   width: 690px;
   margin: 0 auto;
 }

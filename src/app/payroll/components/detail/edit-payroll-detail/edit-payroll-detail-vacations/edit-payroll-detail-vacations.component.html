@@ -18,36 +18,39 @@
         style="margin-left: 0px; margin-top: -10px;"
         color="primary"
         (click)="confirmValue(row)"
-        [disabled]='row.verified'
+        [disabled]="row.verified"
       >
         <mat-icon>check</mat-icon>
       </button>
-      <swal #confirmSwal
-      title='WARNING'
-      text='You can&apos;t verify your own vacation concepts, please ask one of your accounting teammates'
-      icon = 'warning'
+      <swal
+        #confirmSwal
+        title="WARNING"
+        text="You can't verify your own vacation concepts, please ask one of your accounting teammates"
+        icon="warning"
       ></swal>
-      <swal #successSwal
-      title= 'SAVED'
-      text= "The payroll will refresh once you close the edit dialog."
-      icon='success'
+      <swal
+        #successSwal
+        title="SAVED"
+        text="The payroll will refresh once you close the edit dialog."
+        icon="success"
       ></swal>
       <button
         mat-icon-button
         style="margin-left: 0px; margin-top: -10px;"
         color="warn"
-        [disabled]='row.verified'
-        [swal]='deleteSwal'
+        [disabled]="row.verified"
+        [swal]="deleteSwal"
       >
         <mat-icon>delete</mat-icon>
       </button>
-      <swal #deleteSwal
-      title= 'Are you sure?'
-      text= "You won't be able to revert this!"
-      icon='question'
-      [showCancelButton]="true"
-      [focusCancel]="true"
-      (confirm)="deleteValue(row, rowIndex)"
+      <swal
+        #deleteSwal
+        title="Are you sure?"
+        text="You won't be able to revert this!"
+        icon="question"
+        [showCancelButton]="true"
+        [focusCancel]="true"
+        (confirm)="deleteValue(row, rowIndex)"
       ></swal>
     </div>
   </ng-template>
@@ -94,17 +97,18 @@
     </button>
     <mat-error
       *ngIf="
-      vacationsForm.controls['from'].hasError('required') && vacationsForm.controls['from'].touched||
-      vacationsForm.controls['to'].hasError('required') && vacationsForm.controls['to'].touched||
-      vacationsForm.controls['amount'].hasError('required') && vacationsForm.controls['amount'].touched
-      ">
+        (vacationsForm.controls['from'].hasError('required') &&
+          vacationsForm.controls['from'].touched) ||
+        (vacationsForm.controls['to'].hasError('required') &&
+          vacationsForm.controls['to'].touched) ||
+        (vacationsForm.controls['amount'].hasError('required') &&
+          vacationsForm.controls['amount'].touched)
+      "
+    >
       * The <i>FROM</i> and <i>TO</i> fields represent the dates the person went
       and will come back from vacations. <br />
       * The <i>AMOUNT</i> field represents the amount in <i>MONEY $</i> to pay
       the employee.
     </mat-error>
-
   </div>
-
-
 </div>

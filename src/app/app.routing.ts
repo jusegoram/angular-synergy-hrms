@@ -1,82 +1,94 @@
-import {Routes} from '@angular/router';
+import { Routes } from "@angular/router";
 
-import {AdminLayoutComponent} from './layouts/admin/admin-layout.component';
-import {AuthLayoutComponent} from './layouts/auth/auth-layout.component';
-import {SessionGuard} from './session/guards/session.guard';
+import { AdminLayoutComponent } from "./layouts/admin/admin-layout.component";
+import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
+import { SessionGuard } from "./session/guards/session.guard";
 
 export const AppRoutes: Routes = [
   {
-    path: '',
+    path: "",
     component: AdminLayoutComponent,
     children: [
       {
-        path: 'main',
+        path: "main",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./dashboard/dashboard.module").then((m) => m.DashboardModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'employee',
+        path: "employee",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./employee/employee.module').then(m => m.EmployeeModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./employee/employee.module").then((m) => m.EmployeeModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'training',
+        path: "training",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./training/training.module').then(m => m.TrainingModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./training/training.module").then((m) => m.TrainingModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'operations',
+        path: "operations",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./operations/operations.module').then(m => m.OperationsModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./operations/operations.module").then(
+            (m) => m.OperationsModule
+          ),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'payroll',
+        path: "payroll",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./payroll/payroll.module').then(m => m.PayrollModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./payroll/payroll.module").then((m) => m.PayrollModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'hr',
+        path: "hr",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./hr/hr.module').then(m => m.HrModule),
-        canLoad: [SessionGuard]
+        loadChildren: () => import("./hr/hr.module").then((m) => m.HrModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'admin',
+        path: "admin",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./administration/admin.module').then(m => m.AdminModule),
-        canLoad: [SessionGuard]
+        loadChildren: () =>
+          import("./administration/admin.module").then((m) => m.AdminModule),
+        canLoad: [SessionGuard],
       },
       {
-        path: 'user',
+        path: "user",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./user/user.module').then(m => m.UserModule),
-        canLoad: [SessionGuard]
-      }
-    ]
+        loadChildren: () =>
+          import("./user/user.module").then((m) => m.UserModule),
+        canLoad: [SessionGuard],
+      },
+    ],
   },
   {
-    path: '',
+    path: "",
     component: AuthLayoutComponent,
-    children: [{
-      path: '',
-      loadChildren: () => import('./session/session.module').then(m => m.SessionModule)
-    }]
+    children: [
+      {
+        path: "",
+        loadChildren: () =>
+          import("./session/session.module").then((m) => m.SessionModule),
+      },
+    ],
   },
   {
-    path: '**',
-    redirectTo: '404'
-  }
+    path: "**",
+    redirectTo: "404",
+  },
 ];

@@ -1,19 +1,41 @@
-<div style="width: 100%; max-height: 800px; overflow-y: scroll !important; overflow-x: hidden !important;">
+<div
+  style="
+    width: 100%;
+    max-height: 800px;
+    overflow-y: scroll !important;
+    overflow-x: hidden !important;
+  "
+>
   <mat-card-header>
-    <mat-card-title fxLayout="row" fxLayoutAlign="center center"> <mat-icon>warning</mat-icon><span class="align-text-icon">CERTIFY TRAINING TRACKER</span>  </mat-card-title>
-    <mat-card-subtitle>Certify training tracker is a ticket that will be sent to the HR department</mat-card-subtitle>
+    <mat-card-title fxLayout="row" fxLayoutAlign="center center">
+      <mat-icon>warning</mat-icon
+      ><span class="align-text-icon">CERTIFY TRAINING TRACKER</span>
+    </mat-card-title>
+    <mat-card-subtitle
+      >Certify training tracker is a ticket that will be sent to the HR
+      department</mat-card-subtitle
+    >
   </mat-card-header>
   <mat-card-content [formGroup]="certifyForm">
     <mat-vertical-stepper linear="true">
-
       <!--tracker info-->
       <mat-step label="Tracker">
-        <mat-form-field  appearance='outline' style="width: 100%;">
+        <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Certification date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName='certificationDate' placeholder="MM/DD/YYYY">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="certificationDate"
+            placeholder="MM/DD/YYYY"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="certificationDateHasError">Certification date required (*)</mat-error>
+          <mat-error *ngIf="certificationDateHasError"
+            >Certification date required (*)</mat-error
+          >
         </mat-form-field>
       </mat-step>
       <!-- TODO: feat/hr-module - add client and campaign fields to allow hr to know which campaign the employee is certified for -->
@@ -21,25 +43,47 @@
 
       <!--Manager signature-->
       <mat-step label="Manager Signature">
-        <div fxLayout='column' fxLayoutAlign="center center" style="width: 100%;">
-          <mat-error *ngIf="certifyForm.invalid">This signature is required (*)</mat-error>
-          <signature-field #managerSignature formControlName='managerSignature'></signature-field>
+        <div
+          fxLayout="column"
+          fxLayoutAlign="center center"
+          style="width: 100%;"
+        >
+          <mat-error *ngIf="certifyForm.invalid"
+            >This signature is required (*)</mat-error
+          >
+          <signature-field
+            #managerSignature
+            formControlName="managerSignature"
+          ></signature-field>
           <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
-            <button mat-button color='warn' (click)="managerSignature.clear()">CLEAR</button>
-            <button mat-button color='primary' (click)="managerSignature.off()">DONE</button>
+            <button mat-button color="warn" (click)="managerSignature.clear()">
+              CLEAR
+            </button>
+            <button mat-button color="primary" (click)="managerSignature.off()">
+              DONE
+            </button>
           </div>
         </div>
       </mat-step>
-
     </mat-vertical-stepper>
 
-
-    <p><b>Note:</b> The certification process can take up to <b>3 DAYS</b> and is the <b>official process</b> to request the certification from training to production or fix incorrect position information. </p>
+    <p>
+      <b>Note:</b> The certification process can take up to <b>3 DAYS</b> and is
+      the <b>official process</b> to request the certification from training to
+      production or fix incorrect position information.
+    </p>
   </mat-card-content>
 
-  <mat-card-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-    <button mat-button color='warn' cdkFocusInitial (click)="onCancelClick()" >CANCEL</button>
-    <button mat-button color='primary' [disabled]="certifyForm.invalid" >SEND REQUEST</button>
+  <mat-card-actions
+    fxLayout="row"
+    fxLayoutAlign="center center"
+    fxLayoutGap="20px"
+  >
+    <button mat-button color="warn" cdkFocusInitial (click)="onCancelClick()">
+      CANCEL
+    </button>
+    <button mat-button color="primary" [disabled]="certifyForm.invalid">
+      SEND REQUEST
+    </button>
   </mat-card-actions>
 </div>
-

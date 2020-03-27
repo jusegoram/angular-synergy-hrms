@@ -9,171 +9,288 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div>
-      <form class="form" [formGroup]="myForm" id="personalForm" (ngSubmit)="onSubmit()">
+      <form
+        class="form"
+        [formGroup]="myForm"
+        id="personalForm"
+        (ngSubmit)="onSubmit()"
+      >
         <table>
-          <tr fxLayout.xs='column'>
+          <tr fxLayout.xs="column">
             <td>
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Birth Date</mat-label>
-                    <input matInput formControlName="birthDate" placeholder="MM/DD/YYYY" [matDatepicker]="bdayPicker"
-                      (focus)="bdayPicker.open()" [readonly]="!this.authorization.edit">
-                    <mat-datepicker #bdayPicker></mat-datepicker>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Birth Date</mat-label>
+                <input
+                  matInput
+                  formControlName="birthDate"
+                  placeholder="MM/DD/YYYY"
+                  [matDatepicker]="bdayPicker"
+                  (focus)="bdayPicker.open()"
+                  [readonly]="!this.authorization.edit"
+                />
+                <mat-datepicker #bdayPicker></mat-datepicker>
+              </mat-form-field>
             </td>
             <td colspan="2">
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Birth Place (District)</mat-label>
-                    <mat-select placeholder="Birth Place (District)" formControlName="birthPlaceDis">
-                      <mat-option *ngFor="let district of districts" [value]="district.value">
-                        {{district.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Birth Place (District)</mat-label>
+                <mat-select
+                  placeholder="Birth Place (District)"
+                  formControlName="birthPlaceDis"
+                >
+                  <mat-option
+                    *ngFor="let district of districts"
+                    [value]="district.value"
+                  >
+                    {{ district.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </td>
             <td>
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Birth Place (Town)</mat-label>
-                    <mat-select placeholder="Birth Place (Town)" formControlName="birthPlaceTow">
-                      <mat-option *ngFor="let town of towns" [value]="town.value">
-                        {{town.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Birth Place (Town)</mat-label>
+                <mat-select
+                  placeholder="Birth Place (Town)"
+                  formControlName="birthPlaceTow"
+                >
+                  <mat-option *ngFor="let town of towns" [value]="town.value">
+                    {{ town.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </td>
           </tr>
 
-          <tr fxLayout.xs='column'>
+          <tr fxLayout.xs="column">
             <td colspan="2">
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Marital Status</mat-label>
-                    <mat-select placeholder="Marital Status" formControlName="maritalStatus">
-                      <mat-option *ngFor="let status of marStatus" [value]="status.value">
-                        {{status.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Marital Status</mat-label>
+                <mat-select
+                  placeholder="Marital Status"
+                  formControlName="maritalStatus"
+                >
+                  <mat-option
+                    *ngFor="let status of marStatus"
+                    [value]="status.value"
+                  >
+                    {{ status.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </td>
             <td colspan="2">
-              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                  <mat-label>Amount of Children</mat-label>
-                  <mat-select placeholder="Children" formControlName="amountOfChildren">
-                    <mat-option *ngFor="let i of children" [value]="i.id">
-                      {{i.id}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-          </td>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Amount of Children</mat-label>
+                <mat-select
+                  placeholder="Children"
+                  formControlName="amountOfChildren"
+                >
+                  <mat-option *ngFor="let i of children" [value]="i.id">
+                    {{ i.id }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </td>
           </tr>
-          <tr fxLayout.xs='column'>
+          <tr fxLayout.xs="column">
             <td>
-                <mat-form-field appearance="outline">
-                    <mat-label>Home Address</mat-label>
-                    <input matInput formControlName="address" placeholder="Home Address" [readonly]="!this.authorization.edit">
-                  </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Home Address</mat-label>
+                <input
+                  matInput
+                  formControlName="address"
+                  placeholder="Home Address"
+                  [readonly]="!this.authorization.edit"
+                />
+              </mat-form-field>
             </td>
             <td colspan="2">
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Home Address (District)</mat-label>
-                    <mat-select placeholder="District" formControlName="district" >
-                      <mat-option *ngFor="let district of districts" [value]="district.value">
-                        {{district.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Home Address (District)</mat-label>
+                <mat-select placeholder="District" formControlName="district">
+                  <mat-option
+                    *ngFor="let district of districts"
+                    [value]="district.value"
+                  >
+                    {{ district.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </td>
             <td>
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Home Address (Town)</mat-label>
-                    <mat-select placeholder="Town" formControlName="town">
-                      <mat-option *ngFor="let town of towns" [value]="town.value">
-                        {{town.name}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Home Address (Town)</mat-label>
+                <mat-select placeholder="Town" formControlName="town">
+                  <mat-option *ngFor="let town of towns" [value]="town.value">
+                    {{ town.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
             </td>
           </tr>
           <tr>
             <td colspan="4">
-                <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                    <mat-label>Last Home Address Update</mat-label>
-                    <input matInput formControlName="addressDate" placeholder="MM/DD/YYYY" [matDatepicker]="addressPicker"
-                      (focus)="addressPicker.open()" [readonly]="!this.authorization.edit">
-                    <mat-datepicker #addressPicker ></mat-datepicker>
-                  </mat-form-field>
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Last Home Address Update</mat-label>
+                <input
+                  matInput
+                  formControlName="addressDate"
+                  placeholder="MM/DD/YYYY"
+                  [matDatepicker]="addressPicker"
+                  (focus)="addressPicker.open()"
+                  [readonly]="!this.authorization.edit"
+                />
+                <mat-datepicker #addressPicker></mat-datepicker>
+              </mat-form-field>
             </td>
           </tr>
-          <tr fxLayout.xs='column'>
+          <tr fxLayout.xs="column">
             <td colspan="2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Phone Number (Cel)</mat-label>
-                    <input matInput formControlName="celNumber" type="tel" pattern="[0-9]{3}-[0-9]{4}" placeholder="600-0000" [readonly]="!this.authorization.edit">
-                  </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Phone Number (Cel)</mat-label>
+                <input
+                  matInput
+                  formControlName="celNumber"
+                  type="tel"
+                  pattern="[0-9]{3}-[0-9]{4}"
+                  placeholder="600-0000"
+                  [readonly]="!this.authorization.edit"
+                />
+              </mat-form-field>
             </td>
             <td colspan="2">
-                <mat-form-field appearance="outline">
-                    <mat-label>Phone Number (Tel)</mat-label>
-                    <input matInput formControlName="telNumber" type="tel" pattern="[0-9]{3}-[0-9]{4}" placeholder="600-0000" [readonly]="!this.authorization.edit">
-
-                  </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Phone Number (Tel)</mat-label>
+                <input
+                  matInput
+                  formControlName="telNumber"
+                  type="tel"
+                  pattern="[0-9]{3}-[0-9]{4}"
+                  placeholder="600-0000"
+                  [readonly]="!this.authorization.edit"
+                />
+              </mat-form-field>
             </td>
           </tr>
-          <tr fxLayout.xs='column'>
-              <td colspan="2">
-                  <mat-form-field appearance="outline">
-                    <mat-label>Email Address</mat-label>
-                      <input matInput formControlName="emailAddress" placeholder="email@provider.com" [readonly]="!this.authorization.edit">
-                    </mat-form-field>
-
-              </td>
+          <tr fxLayout.xs="column">
             <td colspan="2">
-              <mat-form-field appearance="outline" [ngClass]="{'readonly-wrapper': !this.authorization.edit}">
-                  <mat-label>Last Email Update</mat-label>
-                <input matInput formControlName="emailDate" placeholder="MM/DD/YYYY"
-                  [matDatepicker]="emailPicker" (focus)="emailPicker.open()" [readonly]="!this.authorization.edit">
+              <mat-form-field appearance="outline">
+                <mat-label>Email Address</mat-label>
+                <input
+                  matInput
+                  formControlName="emailAddress"
+                  placeholder="email@provider.com"
+                  [readonly]="!this.authorization.edit"
+                />
+              </mat-form-field>
+            </td>
+            <td colspan="2">
+              <mat-form-field
+                appearance="outline"
+                [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
+              >
+                <mat-label>Last Email Update</mat-label>
+                <input
+                  matInput
+                  formControlName="emailDate"
+                  placeholder="MM/DD/YYYY"
+                  [matDatepicker]="emailPicker"
+                  (focus)="emailPicker.open()"
+                  [readonly]="!this.authorization.edit"
+                />
                 <mat-datepicker #emailPicker></mat-datepicker>
               </mat-form-field>
             </td>
-
           </tr>
           <tr>
             <td colspan="4" align="right">
-              <button mat-button color="primary" class="button" [disabled]="!this.myForm.valid" *ngIf="this.authorization.edit">
+              <button
+                mat-button
+                color="primary"
+                class="button"
+                [disabled]="!this.myForm.valid"
+                *ngIf="this.authorization.edit"
+              >
                 <mat-icon>save</mat-icon>&nbsp; SAVE
               </button>
             </td>
           </tr>
         </table>
-
       </form>
-
 
       <mat-card-subtitle> HOBBIES </mat-card-subtitle>
 
-      <table mat-table [dataSource]="hobbiesDataSource" class ="hobbyClass">
+      <table mat-table [dataSource]="hobbiesDataSource" class="hobbyClass">
         <ng-container matColumnDef="hobbyTitle">
-          <th mat-header-cell *matHeaderCellDef> Hobby </th>
-          <td mat-cell *matCellDef="let row"> {{row.hobbyTitle}} </td>
+          <th mat-header-cell *matHeaderCellDef>Hobby</th>
+          <td mat-cell *matCellDef="let row">{{ row.hobbyTitle }}</td>
         </ng-container>
 
         <ng-container matColumnDef="hobbyComment">
-            <th mat-header-cell *matHeaderCellDef> Description </th>
-            <td mat-cell *matCellDef="let row"> {{row.hobbyComment}} </td>
-          </ng-container>
-        <tr mat-header-row *matHeaderRowDef="['hobbyTitle', 'hobbyComment']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['hobbyTitle', 'hobbyComment'];"></tr>
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let row">{{ row.hobbyComment }}</td>
+        </ng-container>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="['hobbyTitle', 'hobbyComment']"
+        ></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['hobbyTitle', 'hobbyComment']"
+        ></tr>
       </table>
       <div [formGroup]="hobbiesForm" fxLayout="column" fxLayoutGap="5px">
         <mat-form-field appearance="fill">
-            <mat-label>Hobby Title</mat-label>
-          <input matInput placeholder="Hobby Title" formControlName="hobbyTitle">
+          <mat-label>Hobby Title</mat-label>
+          <input
+            matInput
+            placeholder="Hobby Title"
+            formControlName="hobbyTitle"
+          />
         </mat-form-field>
 
         <mat-form-field appearance="fill">
-            <mat-label>Description</mat-label>
-          <textarea matInput placeholder="Description" formControlName="hobbyComment"></textarea>
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            placeholder="Description"
+            formControlName="hobbyComment"
+          ></textarea>
         </mat-form-field>
 
-        <button mat-button color="primary" class="button" (click)="onAddHobby()" [disabled]="!this.hobbiesForm.valid" *ngIf="this.authorization.edit">
+        <button
+          mat-button
+          color="primary"
+          class="button"
+          (click)="onAddHobby()"
+          [disabled]="!this.hobbiesForm.valid"
+          *ngIf="this.authorization.edit"
+        >
           <mat-icon>add</mat-icon>&nbsp; ADD HOBBY
         </button>
       </div>

@@ -6,7 +6,7 @@ $mat-toolbar-height-mobile-landscape: 126px !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);
-  width: 100%
+  width: 100%;
 }
 
 @media ($mat-xsmall) and (orientation: portrait) {
@@ -38,7 +38,7 @@ mat-card {
   border-radius: 5px;
   background: #cfd8dc;
 }
-.table{
+.table {
   border: 1px solid #cfd8dc;
   border-radius: 5px;
   width: 100% !important;

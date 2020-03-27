@@ -3,7 +3,7 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
 /*
  * Container style
  */
- .ps {
+.ps {
   overflow: hidden !important;
   overflow-anchor: none;
   -ms-overflow-style: none;
@@ -17,8 +17,8 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
 .ps__rail-x {
   display: none;
   opacity: 0;
-  transition: background-color .2s linear, opacity .2s linear;
-  -webkit-transition: background-color .2s linear, opacity .2s linear;
+  transition: background-color 0.2s linear, opacity 0.2s linear;
+  -webkit-transition: background-color 0.2s linear, opacity 0.2s linear;
   height: 15px;
   /* there must be 'bottom' or 'top' for ps__rail-x */
   bottom: 0px;
@@ -29,8 +29,8 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
 .ps__rail-y {
   display: none;
   opacity: 0;
-  transition: background-color .2s linear, opacity .2s linear;
-  -webkit-transition: background-color .2s linear, opacity .2s linear;
+  transition: background-color 0.2s linear, opacity 0.2s linear;
+  -webkit-transition: background-color 0.2s linear, opacity 0.2s linear;
   width: 15px;
   /* there must be 'right' or 'left' for ps__rail-y */
   right: 0;
@@ -67,8 +67,8 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
 .ps__thumb-x {
   background-color: $ps-bar-container-hover-bg;
   border-radius: 6px;
-  transition: background-color .2s linear, height .2s ease-in-out;
-  -webkit-transition: background-color .2s linear, height .2s ease-in-out;
+  transition: background-color 0.2s linear, height 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, height 0.2s ease-in-out;
   height: 6px;
   /* there must be 'bottom' for ps__thumb-x */
   bottom: 2px;
@@ -79,8 +79,8 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
 .ps__thumb-y {
   background-color: $ps-bar-container-hover-bg;
   border-radius: 6px;
-  transition: background-color .2s linear, width .2s ease-in-out;
-  -webkit-transition: background-color .2s linear, width .2s ease-in-out;
+  transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  -webkit-transition: background-color 0.2s linear, width 0.2s ease-in-out;
   width: 6px;
   /* there must be 'right' for ps__thumb-y */
   right: 2px;
@@ -113,25 +113,24 @@ $ps-bar-container-hover-bg: rgba(0, 0, 0, 0.582) !default;
   }
 }
 
-
 .ps__rail-y {
   right: 0;
-  left: auto!important;
+  left: auto !important;
 }
 
 .ps__thumb-y {
   right: 2px;
-  left: auto!important;
+  left: auto !important;
 }
 
 [dir="rtl"] {
   .ps__rail-y {
-    right: auto!important;
-    left: 0!important;
+    right: auto !important;
+    left: 0 !important;
   }
-  
+
   .ps__thumb-y {
-    right: auto!important;
-    left: 2px!important;
+    right: auto !important;
+    left: 2px !important;
   }
 }

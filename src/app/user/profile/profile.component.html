@@ -1,47 +1,77 @@
-<mat-toolbar class="header"  color="primary">
+<mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-      <span>Profile Management</span>
+    <span>Profile Management</span>
   </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-    </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
 </mat-toolbar>
 <div class="mat-card-top pa-1">
   <mat-card class="container pa-1">
-      <mat-card-header>
-        <mat-card-title><h3>Hey, welcome {{name}}</h3></mat-card-title>
-        <mat-card-subtitle>Here you can manage your profile</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content [formGroup]="changePwdForm">
+    <mat-card-header>
+      <mat-card-title
+        ><h3>Hey, welcome {{ name }}</h3></mat-card-title
+      >
+      <mat-card-subtitle>Here you can manage your profile</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content [formGroup]="changePwdForm">
+      <h5 class="mat-h5">Change Password</h5>
+      <mat-divider [inset]="true"> </mat-divider>
+      <h6 class="mat-h6">Fill in the fields to unlock the save button</h6>
+      <mat-form-field appearance="fill">
+        <input
+          matInput
+          placeholder="Enter your old password"
+          [type]="hide ? 'password' : 'text'"
+          formControlName="oldPassword"
+        />
+        <mat-icon matSuffix (click)="hide = !hide">{{
+          hide ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </mat-form-field>
 
-        <h5 class="mat-h5">Change Password</h5>
-        <mat-divider
-          [inset]="true">
-        </mat-divider>
-        <h6 class="mat-h6"> Fill in the fields to unlock the save button </h6>
-        <mat-form-field appearance="fill">
-            <input matInput placeholder="Enter your old password" [type]="hide ? 'password' : 'text'" formControlName="oldPassword">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-        </mat-form-field>
-
-        <h5 class="mat-h5">New Password</h5>
-        <mat-form-field appearance="fill">
-            <input matInput placeholder="Enter New password" [type]="hide ? 'password' : 'text'" formControlName="newPassword">
-            <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-          </mat-form-field>
-          &nbsp;
-          <mat-form-field appearance="fill" (click)='verifyPassword()'>
-              <input matInput placeholder="Confirm New password" [type]="hide ? 'password' : 'text'" formControlName="confirmPassword">
-              <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility' : 'visibility_off'}}</mat-icon>
-            </mat-form-field>
-            <mat-error *ngIf="changePwdForm.controls['oldPassword'].errors?.required">Your current password is required</mat-error>
-            <mat-error *ngIf="changePwdForm.controls['newPassword'].errors?.minlength">Password must be at least 10 characters</mat-error>
-            <mat-error *ngIf="changePwdForm.controls['confirmPassword'].errors?.mismatch">Password does not match the confirm password</mat-error>
-          </mat-card-content>
-      <mat-card-actions>
-        <button mat-button (click)="onSubmitPwdChange()" [disabled]="changePwdForm.invalid"><mat-icon>save</mat-icon>
-           &nbsp; SAVE</button>
-      </mat-card-actions>
-    </mat-card>
+      <h5 class="mat-h5">New Password</h5>
+      <mat-form-field appearance="fill">
+        <input
+          matInput
+          placeholder="Enter New password"
+          [type]="hide ? 'password' : 'text'"
+          formControlName="newPassword"
+        />
+        <mat-icon matSuffix (click)="hide = !hide">{{
+          hide ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </mat-form-field>
+      &nbsp;
+      <mat-form-field appearance="fill" (click)="verifyPassword()">
+        <input
+          matInput
+          placeholder="Confirm New password"
+          [type]="hide ? 'password' : 'text'"
+          formControlName="confirmPassword"
+        />
+        <mat-icon matSuffix (click)="hide = !hide">{{
+          hide ? "visibility" : "visibility_off"
+        }}</mat-icon>
+      </mat-form-field>
+      <mat-error *ngIf="changePwdForm.controls['oldPassword'].errors?.required"
+        >Your current password is required</mat-error
+      >
+      <mat-error *ngIf="changePwdForm.controls['newPassword'].errors?.minlength"
+        >Password must be at least 10 characters</mat-error
+      >
+      <mat-error
+        *ngIf="changePwdForm.controls['confirmPassword'].errors?.mismatch"
+        >Password does not match the confirm password</mat-error
+      >
+    </mat-card-content>
+    <mat-card-actions>
+      <button
+        mat-button
+        (click)="onSubmitPwdChange()"
+        [disabled]="changePwdForm.invalid"
+      >
+        <mat-icon>save</mat-icon> &nbsp; SAVE
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>

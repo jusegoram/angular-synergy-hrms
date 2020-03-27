@@ -1,6 +1,5 @@
 @import "../../../assets/styles/scss/material.variables";
 
-
 $mat-toolbar-height-desktop: 138px !default;
 $mat-toolbar-height-mobile-portrait: 130px !default;
 $mat-toolbar-height-mobile-landscape: 122px !default;
@@ -25,23 +24,21 @@ $mat-toolbar-height-mobile-landscape: 122px !default;
 
 mat-form-field {
   margin: 6px;
-
 }
 
-
-.myForm{
+.myForm {
   width: 45%;
 }
 
-.employeeCard{
+.employeeCard {
   width: 50%;
 }
 
-.container{
+.container {
   width: 690px;
   margin: 0 auto;
 }
-.container2{
+.container2 {
   width: 690px;
 }
 .full-width {

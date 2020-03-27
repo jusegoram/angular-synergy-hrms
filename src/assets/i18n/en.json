@@ -20,7 +20,7 @@
   "DATEPICKER": "Datepicker",
   "EXPANSION": "Expansion",
   "RADIO": "Radio",
-  "TOOLBAR": "Toolbar",    
+  "TOOLBAR": "Toolbar",
   "LISTS": "Lists",
   "GRID": "Grid",
   "PROGRESS": "Progress",
@@ -69,7 +69,7 @@
   "USER": "User",
   "BLANK": "Blank",
   "PRICING": "Pricing",
-  
+
   "SESSION": "Session",
   "404": "404",
   "SIGNIN": "Signin",
@@ -77,6 +77,6 @@
   "FORGOT": "Forgot",
   "LOCKSCREEN": "Lockscreen",
   "ERROR": "Error",
-  
+
   "DOCS": "Docs"
 }

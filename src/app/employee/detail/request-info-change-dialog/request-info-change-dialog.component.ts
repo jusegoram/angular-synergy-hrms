@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from "@angular/core";
 import {
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA
+  MAT_DIALOG_DATA,
 } from "@angular/material/dialog";
 import {
   FormGroup,
@@ -10,14 +10,14 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-  FormControl
+  FormControl,
 } from "@angular/forms";
 import { EmployeeService } from "../../employee.service";
 import { HrTracker } from "../../../shared/models/hr-tracker";
 @Component({
   selector: "app-request-info-change-dialog",
   templateUrl: "./request-info-change-dialog.component.html",
-  styleUrls: ["./request-info-change-dialog.component.scss"]
+  styleUrls: ["./request-info-change-dialog.component.scss"],
 })
 export class RequestInfoChangeDialogComponent implements OnInit {
   requestInfoForm: FormGroup;
@@ -25,7 +25,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
     "mainInfo",
     "companyInfo",
     "personalInfo",
-    "positionInfo"
+    "positionInfo",
   ];
 
   constructor(
@@ -41,7 +41,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
       companyInfo: [false],
       personalInfo: [false],
       positionInfo: [false],
-      issueDescription: ["", [Validators.required, this.emptyFieldValidator]]
+      issueDescription: ["", [Validators.required, this.emptyFieldValidator]],
     });
 
     this.requestInfoForm.setValidators(this.infoTypeFieldsValidator());
@@ -77,7 +77,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
         companyInfo,
         personalInfo,
         positionInfo,
-        issueDescription
+        issueDescription,
       } = formValues;
       let hrTracker: HrTracker = this.data.hrTracker;
       hrTracker.tracker = {
@@ -86,17 +86,23 @@ export class RequestInfoChangeDialogComponent implements OnInit {
           companyInfo,
           personalInfo,
           positionInfo,
-          reason: issueDescription
-        }
+          reason: issueDescription,
+        },
       };
       const response = await this.employeeService.saveTracker(hrTracker);
-      this.dialogRef.close({state:true, message: 'Request info change send successfully'});
+      this.dialogRef.close({
+        state: true,
+        message: "Request info change send successfully",
+      });
     } catch (error) {
-      this.dialogRef.close({state:false, message: 'We couldn\'t send your request. Try again later.'});
+      this.dialogRef.close({
+        state: false,
+        message: "We couldn't send your request. Try again later.",
+      });
     }
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({state:false, message: ''});
+    this.dialogRef.close({ state: false, message: "" });
   }
 }

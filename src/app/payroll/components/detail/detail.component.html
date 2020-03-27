@@ -17,7 +17,7 @@
     fxLayoutAlign="start start"
     fxLayoutGap="5px"
   >
-    <div style="height: 400px; width:100%">
+    <div style="height: 400px; width: 100%;">
       <fusioncharts
         [width]="width"
         [height]="height"
@@ -28,7 +28,7 @@
       >
       </fusioncharts>
     </div>
-    <div style="height: 400px; width:100%">
+    <div style="height: 400px; width: 100%;">
       <fusioncharts
         [width]="widthBar"
         [height]="heightBar"
@@ -47,7 +47,7 @@
     fxLayoutGap="20px"
   >
     <div
-      style="width: 50%"
+      style="width: 50%;"
       fxLayout="column"
       fxLayoutAlign="center center"
       fxLayoutGap="5px"
@@ -55,7 +55,7 @@
       <h3>Total Payroll Stats</h3>
       <div class="table">
         <table
-          style="width: 100%"
+          style="width: 100%;"
           mat-table
           #table
           [dataSource]="totalTableDataSource"
@@ -77,7 +77,7 @@
       </div>
     </div>
     <div
-      style="width: 50%"
+      style="width: 50%;"
       fxLayout="column"
       fxLayoutAlign="center center"
       fxLayoutGap="5px"
@@ -85,7 +85,7 @@
       <h3>{{ this.barChartData.chart.caption }}</h3>
       <div class="table">
         <table
-          style="width: 100%"
+          style="width: 100%;"
           mat-table
           #table
           [dataSource]="clientTableDataSource"
@@ -111,12 +111,18 @@
 
 <ng-template #viewEmployees>
   <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
-    <mat-form-field appearance='outline'>
+    <mat-form-field appearance="outline">
       <mat-label>SEARCH</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="...">
+      <input matInput (keyup)="applyFilter($event)" placeholder="..." />
     </mat-form-field>
-    <button mat-flat-button (click)="stepper.next()" color='accent' *ngIf="!payroll[0].isFinalized"
-    >FINALIZE</button>
+    <button
+      mat-flat-button
+      (click)="stepper.next()"
+      color="accent"
+      *ngIf="!payroll[0].isFinalized"
+    >
+      FINALIZE
+    </button>
   </div>
 
   <ngx-datatable
@@ -131,10 +137,7 @@
     [scrollbarV]="true"
     [limit]="14"
   >
-    <ngx-datatable-row-detail
-      rowHeight="150"
-      #myDetailRow
-    >
+    <ngx-datatable-row-detail rowHeight="150" #myDetailRow>
       <ng-template
         let-row="row"
         let-expanded="expanded"
@@ -180,8 +183,9 @@
                   </td>
                   <td>
                     {{
-                      (row.totalTrainingRegularPay?.totalPayed)["$numberDecimal"]
-                        | currency: "$"
+                      (row.totalTrainingRegularPay?.totalPayed)[
+                        "$numberDecimal"
+                      ] | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -242,8 +246,9 @@
                   </td>
                   <td>
                     {{
-                      (row.totalSystemHolidayX1Pay?.totalPayed)["$numberDecimal"]
-                        | currency: "$"
+                      (row.totalSystemHolidayX1Pay?.totalPayed)[
+                        "$numberDecimal"
+                      ] | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -252,7 +257,8 @@
                     <strong
                       >TRA:
                       {{
-                        row.totalTrainingHolidayX1Pay?.hours * 60 | minutesHours
+                        row.totalTrainingHolidayX1Pay?.hours * 60
+                          | minutesHours
                       }}@{{
                         row.totalTrainingHolidayX1Pay?.rate?.$numberDecimal
                           | currency: ""
@@ -271,7 +277,9 @@
                   <td>
                     <strong
                       >TOS:
-                      {{ row.totalTosHolidayX1Pay?.hours * 60 | minutesHours }}@{{
+                      {{
+                        row.totalTosHolidayX1Pay?.hours * 60 | minutesHours
+                      }}@{{
                         (row.totalTosHolidayX1Pay?.rate)["$numberDecimal"]
                           | currency: ""
                       }}</strong
@@ -307,8 +315,9 @@
                   </td>
                   <td>
                     {{
-                      (row.totalSystemHolidayX2Pay?.totalPayed)["$numberDecimal"]
-                        | currency: "$"
+                      (row.totalSystemHolidayX2Pay?.totalPayed)[
+                        "$numberDecimal"
+                      ] | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -317,7 +326,8 @@
                     <strong
                       >TRA:
                       {{
-                        row.totalTrainingHolidayX2Pay?.hours * 60 | minutesHours
+                        row.totalTrainingHolidayX2Pay?.hours * 60
+                          | minutesHours
                       }}@{{
                         row.totalTrainingHolidayX2Pay?.rate?.$numberDecimal
                           | currency: ""
@@ -336,7 +346,9 @@
                   <td>
                     <strong
                       >TOS:
-                      {{ row.totalTosHolidayX2Pay?.hours * 60 | minutesHours }}@{{
+                      {{
+                        row.totalTosHolidayX2Pay?.hours * 60 | minutesHours
+                      }}@{{
                         (row.totalTosHolidayX2Pay?.rate)["$numberDecimal"]
                           | currency: ""
                       }}</strong
@@ -413,7 +425,8 @@
                   <td><strong>EMP-CON</strong></td>
                   <td>
                     {{
-                      row.ssEmployeeContribution["$numberDecimal"] | currency: "$"
+                      row.ssEmployeeContribution["$numberDecimal"]
+                        | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -421,7 +434,8 @@
                   <td><strong>*RCC-CON</strong></td>
                   <td>
                     {{
-                      row.ssEmployerContribution["$numberDecimal"] | currency: "$"
+                      row.ssEmployerContribution["$numberDecimal"]
+                        | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -446,7 +460,8 @@
                   </td>
                   <td>
                     {{
-                      row.grossBeforeCSLPayment["$numberDecimal"] | currency: "$"
+                      row.grossBeforeCSLPayment["$numberDecimal"]
+                        | currency: "$"
                     }}
                   </td>
                 </tr>
@@ -466,13 +481,13 @@
                       NET PAYMENT
                     </strong>
                   </td>
-                  <td>{{ row.netPayment["$numberDecimal"] | currency: "$" }}</td>
+                  <td>
+                    {{ row.netPayment["$numberDecimal"] | currency: "$" }}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-
         </div>
       </ng-template>
     </ngx-datatable-row-detail>
@@ -495,13 +510,13 @@
           [title]="'EXPAND DETAILS'"
           (click)="toggleExpandRow(row)"
         >
-        <ng-container *ngIf="!expanded; else elseTemplate">
-          <mat-icon>arrow_right</mat-icon>
-        </ng-container>
-        <ng-template #elseTemplate>
-          <mat-icon>arrow_drop_down</mat-icon>
-        </ng-template>
-      </button>
+          <ng-container *ngIf="!expanded; else elseTemplate">
+            <mat-icon>arrow_right</mat-icon>
+          </ng-container>
+          <ng-template #elseTemplate>
+            <mat-icon>arrow_drop_down</mat-icon>
+          </ng-template>
+        </button>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column
@@ -598,16 +613,25 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="editPayrollRecord(row)"><mat-icon>edit</mat-icon>EDIT</button>
-          <button mat-menu-item *ngIf="!row.isPayed" [swal]='deleteSwal' color='warn'><mat-icon>delete</mat-icon>REMOVE</button>
+          <button mat-menu-item (click)="editPayrollRecord(row)">
+            <mat-icon>edit</mat-icon>EDIT
+          </button>
+          <button
+            mat-menu-item
+            *ngIf="!row.isPayed"
+            [swal]="deleteSwal"
+            color="warn"
+          >
+            <mat-icon>delete</mat-icon>REMOVE
+          </button>
           <swal
-          #deleteSwal
-          title="ARE YOU SURE"
-          text='You can&apos;t undo a deleted payroll record'
-          icon='question'
-          [showCancelButton]="true"
-          [focusCancel]="true"
-          (confirm)="deletePayrollRecord(row)"
+            #deleteSwal
+            title="ARE YOU SURE"
+            text="You can't undo a deleted payroll record"
+            icon="question"
+            [showCancelButton]="true"
+            [focusCancel]="true"
+            (confirm)="deletePayrollRecord(row)"
           >
           </swal>
         </mat-menu>
@@ -626,35 +650,52 @@
           <ng-template [ngTemplateOutlet]="viewEmployees"></ng-template>
         </mat-step>
         <mat-step label="FINALIZE">
-          <div class='pa-2' fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="15px">
-            <h2> INFORMATION INTEGRITY AGREEMENT </h2>
+          <div
+            class="pa-2"
+            fxLayout="column"
+            fxLayoutAlign="center center"
+            fxLayoutGap="15px"
+          >
+            <h2>INFORMATION INTEGRITY AGREEMENT</h2>
             <h3 style="width: 500px; overflow: fit-content;">
-              Through this agreement, I <u>{{this.user.name}}</u> declare that the information in this payroll is trustworthy.
-              This payroll has been throughly checked to <i>identify</i>, and <i>remove</i> any kind of fraud or hour manipulation.
-              <strong> If a fraud was discovered in the future: I, {{this.user.name}}, am held responsible of reviewing and approving this payroll. </strong>
+              Through this agreement, I <u>{{ this.user.name }}</u> declare that
+              the information in this payroll is trustworthy. This payroll has
+              been throughly checked to <i>identify</i>, and <i>remove</i> any
+              kind of fraud or hour manipulation.
+              <strong>
+                If a fraud was discovered in the future: I,
+                {{ this.user.name }}, am held responsible of reviewing and
+                approving this payroll.
+              </strong>
             </h3>
 
             <h3>NO MORE EDITING IS ALLOWED BEYOND THIS POINT</h3>
-            <mat-card-subtitle>Synergy Team - If you understand the responsability held upon you by finalizing this payroll please click the FINALIZE button below.</mat-card-subtitle>
-            <button mat-raised-button color='warn' [swal]='finalizeSwal'>FINALIZE PAYROLL</button>
+            <mat-card-subtitle
+              >Synergy Team - If you understand the responsability held upon you
+              by finalizing this payroll please click the FINALIZE button
+              below.</mat-card-subtitle
+            >
+            <button mat-raised-button color="warn" [swal]="finalizeSwal">
+              FINALIZE PAYROLL
+            </button>
             <swal
-            #finalizeSwal
-            title="ARE YOU SURE"
-            text='Remember, no editing is allowed beyond this point. Furthermore, you can only finalize payrolls that have been payed. To FINALIZE click on OK'
-            icon='question'
-            [showCancelButton]="true"
-            [focusCancel]="true"
-            (confirm)="finalize()"
+              #finalizeSwal
+              title="ARE YOU SURE"
+              text="Remember, no editing is allowed beyond this point. Furthermore, you can only finalize payrolls that have been payed. To FINALIZE click on OK"
+              icon="question"
+              [showCancelButton]="true"
+              [focusCancel]="true"
+              (confirm)="finalize()"
             >
             </swal>
             <swal
-            #failedFinalizeSwal
-            title="OH NO!"
-            text='You can&apos;t finalize a payroll until its payed'
-            icon='error'
-            [showCancelButton]="true"
-            [focusCancel]="true"
-            (confirm)="finalize()"
+              #failedFinalizeSwal
+              title="OH NO!"
+              text="You can't finalize a payroll until its payed"
+              icon="error"
+              [showCancelButton]="true"
+              [focusCancel]="true"
+              (confirm)="finalize()"
             >
             </swal>
           </div>

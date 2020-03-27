@@ -18,7 +18,7 @@
   }
   &.striped {
     .datatable-row-odd {
-      background: mat-color($background, 'hover');
+      background: mat-color($background, "hover");
     }
   }
   &.scroll-vertical {
@@ -36,14 +36,13 @@
       &.active:hover,
       &.active:hover .datatable-row-group {
         background-color: darken(mat-color($primary), 2%);
-        color: #FFF;
-
+        color: #fff;
       }
 
       &.active:focus,
       &.active:focus .datatable-row-group {
         background-color: darken(mat-color($primary), 4%);
-        color: #FFF;
+        color: #fff;
       }
     }
   }
@@ -52,12 +51,12 @@
     .datatable-body-row {
       &:hover,
       &:hover .datatable-row-group {
-        background: mat-color($background, 'hover');
+        background: mat-color($background, "hover");
       }
 
       &:focus,
       &:focus .datatable-row-group {
-        background-color: darken(mat-color($background, 'hover'), 2%);;
+        background-color: darken(mat-color($background, "hover"), 2%);
       }
     }
   }
@@ -66,12 +65,12 @@
     .datatable-body-cell {
       &:hover,
       &:hover .datatable-row-group {
-        background: mat-color($background, 'hover');
+        background: mat-color($background, "hover");
       }
 
       &:focus,
       &:focus .datatable-row-group {
-        background-color: darken(mat-color($background, 'hover'), 2%);;
+        background-color: darken(mat-color($background, "hover"), 2%);
       }
 
       &.active,
@@ -82,13 +81,13 @@
       &.active:hover,
       &.active:hover .datatable-row-group {
         background-color: darken(mat-color($primary), 2%);
-        color: #FFF;
+        color: #fff;
       }
 
       &.active:focus,
       &.active:focus .datatable-row-group {
         background-color: darken(mat-color($primary), 4%);
-        color: #FFF;
+        color: #fff;
       }
     }
   }
@@ -96,12 +95,12 @@
   /**
    * Shared Styles
    */
-  .empty-row{
-     padding: .85rem 1.2rem;
+  .empty-row {
+    padding: 0.85rem 1.2rem;
   }
 
-  .loading-row{
-     padding: .85rem 1.2rem;
+  .loading-row {
+    padding: 0.85rem 1.2rem;
   }
 
   /**
@@ -111,12 +110,12 @@
     border-bottom: 1px solid mat-color($foreground, divider);
 
     .datatable-header-cell {
-      padding: .85rem 1.2rem;
+      padding: 0.85rem 1.2rem;
       color: rgba(mat-color($foreground, base), 0.87);
       vertical-align: middle;
 
       &.longpress {
-        color:#00E676;
+        color: #00e676;
       }
 
       &.dragging {
@@ -127,7 +126,7 @@
     }
 
     .resize-handle {
-      border-right:solid 1px mat-color($foreground, divider);
+      border-right: solid 1px mat-color($foreground, divider);
     }
   }
 
@@ -142,7 +141,7 @@
 
     .datatable-body-row {
       .datatable-body-cell {
-        padding: .85rem 1.2rem;
+        padding: 0.85rem 1.2rem;
         box-sizing: border-box;
         max-height: 100%;
         display: flex;
@@ -162,10 +161,10 @@
 
     .progress-linear {
       .container {
-        background-color: rgb(170,209,249);
+        background-color: rgb(170, 209, 249);
 
         .bar {
-          background-color: rgb(16,108,200);
+          background-color: rgb(16, 108, 200);
         }
       }
     }
@@ -181,12 +180,12 @@
       li {
         vertical-align: middle;
 
-        &.disabled a{
+        &.disabled a {
           color: rgba(0, 0, 0, 0.26) !important;
           background-color: transparent !important;
         }
 
-        &.active a{
+        &.active a {
           background: mat-color($primary);
           color: white;
           font-weight: $font-weight-base;
@@ -201,7 +200,7 @@
   color: mat-color($dark-foreground, base);
   &.striped {
     .datatable-row-odd {
-      background: mat-color($dark-background, 'hover');
+      background: mat-color($dark-background, "hover");
     }
   }
 
@@ -229,12 +228,12 @@
     .datatable-body-row {
       &:hover,
       &:hover .datatable-row-group {
-        background: mat-color($dark-background, 'hover');
+        background: mat-color($dark-background, "hover");
       }
 
       &:focus,
       &:focus .datatable-row-group {
-        background-color: darken(mat-color($dark-background, 'hover'), 2%);;
+        background-color: darken(mat-color($dark-background, "hover"), 2%);
       }
     }
   }
@@ -243,12 +242,12 @@
     .datatable-body-cell {
       &:hover,
       &:hover .datatable-row-group {
-        background: mat-color($dark-background, 'hover');
+        background: mat-color($dark-background, "hover");
       }
 
       &:focus,
       &:focus .datatable-row-group {
-        background-color: darken(mat-color($dark-background, 'hover'), 2%);;
+        background-color: darken(mat-color($dark-background, "hover"), 2%);
       }
 
       &.active,
@@ -268,8 +267,10 @@
     }
   }
 
-  .datatable-header .datatable-row-left, .datatable-body .datatable-row-left,
-  .datatable-header .datatable-row-right, .datatable-body .datatable-row-right {
+  .datatable-header .datatable-row-left,
+  .datatable-body .datatable-row-left,
+  .datatable-header .datatable-row-right,
+  .datatable-body .datatable-row-right {
     background-color: rgba(73, 73, 73, 1);
   }
 
@@ -284,7 +285,7 @@
     }
 
     .resize-handle {
-      border-right:solid 1px mat-color($dark-foreground, divider);
+      border-right: solid 1px mat-color($dark-foreground, divider);
     }
   }
 
@@ -296,13 +297,13 @@
 
     .datatable-pager {
       li {
-        &.disabled a{
+        &.disabled a {
           color: rgba(255, 255, 255, 0.26) !important;
         }
         a {
           color: mat-color($dark-foreground, base);
         }
-        &.active a{
+        &.active a {
           background: mat-color($dark-primary);
         }
       }
@@ -310,18 +311,21 @@
   }
 }
 
-[dir=rtl] {
+[dir="rtl"] {
   .ngx-datatable.material .datatable-header .datatable-header-cell {
     text-align: right;
   }
-  .ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
+  .ngx-datatable.material
+    .datatable-body
+    .datatable-body-row
+    .datatable-body-cell {
     text-align: right;
   }
-  .ngx-datatable.material .empty-row{
-     text-align: right;
+  .ngx-datatable.material .empty-row {
+    text-align: right;
   }
-  .ngx-datatable.material .loading-row{
-     text-align: right;
+  .ngx-datatable.material .loading-row {
+    text-align: right;
   }
   .ngx-datatable .datatable-footer .datatable-pager {
     text-align: left;

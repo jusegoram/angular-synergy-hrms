@@ -3,7 +3,6 @@
     <span>Operations Reports & Downloads</span>
     <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
-
 </mat-toolbar>
 <mat-tab-group backgroundColor="primary">
   <mat-tab label="MATRIX">
@@ -18,14 +17,12 @@
   <mat-tab label="HOURS">
     <report-hours></report-hours>
   </mat-tab>
-
 </mat-tab-group>
 <mat-table style="visibility: hidden;">
-    <ng-container matColumnDef="employeeId">
-        <mat-header-cell *matHeaderCellDef> Employee ID </mat-header-cell>
-        <mat-cell *matCellDef="let element"></mat-cell>
-      </ng-container>
-    <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns2;">
-    </mat-row>
+  <ng-container matColumnDef="employeeId">
+    <mat-header-cell *matHeaderCellDef> Employee ID </mat-header-cell>
+    <mat-cell *matCellDef="let element"></mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedColumns2"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns2"> </mat-row>
 </mat-table>

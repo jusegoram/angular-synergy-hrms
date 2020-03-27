@@ -2,11 +2,6 @@
 @include angular-material-theme($theme);
 
 // Dark Theme
-.app-dark {  
+.app-dark {
   @include angular-material-theme($dark-theme);
 }
-
-
-
-
-

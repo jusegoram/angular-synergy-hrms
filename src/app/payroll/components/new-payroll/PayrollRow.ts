@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import * as moment from "moment";
 
 export class PayrollRow {
   // these properties are needed for object creation and are gotten from DB.
@@ -51,23 +51,23 @@ export class PayrollRow {
   totalRegularHoursPay: any = {
     hours: 0,
     rate: 0,
-    totalPayed: 0
+    totalPayed: 0,
   }; // MAX 45
 
   totalHolidayHoursPayX2: any = {
     hours: 0,
     rate: 0,
-    totalPayed: 0
+    totalPayed: 0,
   };
   totalHolidayHoursPayX1: any = {
     hours: 0,
     rate: 0,
-    totalPayed: 0
+    totalPayed: 0,
   };
   totalOvertimeHoursPay: any = {
     hours: 0,
     rate: 0,
-    totalPayed: 0
+    totalPayed: 0,
   };
 
   totalBonusPay = 0;
@@ -142,19 +142,21 @@ export class PayrollRow {
 
   checkHours(arr: any[]): boolean {
     const uniqueArray = arr
-      .map(function(date) {
+      .map(function (date) {
         return date.getTime();
       })
-      .filter(function(date, i, array) {
+      .filter(function (date, i, array) {
         return array.indexOf(date) === i;
       })
-      .map(function(time) {
+      .map(function (time) {
         return new Date(time);
       });
 
     if (uniqueArray.length < arr.length) {
       return false;
-    } else {return true; }
+    } else {
+      return true;
+    }
   }
 
   calculateHolidays(holidayList: any[]) {
@@ -164,15 +166,15 @@ export class PayrollRow {
           const hourDate = this.hours[i].date;
           const momentHourDate = moment(hourDate);
           for (let e = 0; e < holidayList.length; e++) {
-            const holidayDate = moment(holidayList[e].date).add('days', 1);
-            if (moment(momentHourDate).isSame(moment(holidayDate), 'date')) {
+            const holidayDate = moment(holidayList[e].date).add("days", 1);
+            if (moment(momentHourDate).isSame(moment(holidayDate), "date")) {
               this.hours[i].holidayRate = holidayList[e].rate;
               this.holiday.push(this.hours[i]);
             }
           }
           if (i === this.hours.length - 1) {
             this.deleteHolidayRateHours(this.holiday);
-            this.calculateHolidayPayment().then(result => {
+            this.calculateHolidayPayment().then((result) => {
               res();
             });
           }
@@ -183,9 +185,9 @@ export class PayrollRow {
   }
 
   deleteHolidayRateHours(list: any[]) {
-    list.forEach(list => {
-      this.hours = this.hours.filter(i => {
-        return !moment(i.date).isSame(moment(list.date), 'date');
+    list.forEach((list) => {
+      this.hours = this.hours.filter((i) => {
+        return !moment(i.date).isSame(moment(list.date), "date");
       });
     });
   }
@@ -193,28 +195,35 @@ export class PayrollRow {
     if (holidayList.length > 0) {
       for (let i = 0; i < holidayList.length; i++) {
         const element = holidayList[i];
-        if (date.isSame(moment(element.date), 'day')) {
+        if (date.isSame(moment(element.date), "day")) {
           return true;
-        } else {return false; }
+        } else {
+          return false;
+        }
       }
-    } else {return false; }
+    } else {
+      return false;
+    }
   }
   calculateHolidayPayment(): Promise<any> {
     return new Promise((res, rej) => {
       const totalX2 = {
         hours: 0,
         rate: 2 * this.hourlyRate,
-        totalPayed: 0
+        totalPayed: 0,
       };
       const totalX1 = {
         hours: 0,
         rate: 1.5 * this.hourlyRate,
-        totalPayed: 0
+        totalPayed: 0,
       };
       if (this.holiday.length > 0) {
         for (let i = 0; i < this.holiday.length; i++) {
           const day = this.holiday[i];
-          const time = day.systemHours.hh * 3600 + day.systemHours.mm * 60 + day.systemHours.ss;
+          const time =
+            day.systemHours.hh * 3600 +
+            day.systemHours.mm * 60 +
+            day.systemHours.ss;
           const value = time / 3600;
           if (parseInt(day.holidayRate, 10) === 2) {
             totalX2.hours = totalX2.hours + value;
@@ -240,8 +249,9 @@ export class PayrollRow {
       const sum = 0;
       for (let i = 0; i < dif; i++) {
         const localizedDate = this.fromDate;
-        localizedDate.add(i, 'days').toDate();
-        const dayOfWeek = localizedDate.day() === 0 ? 6 : localizedDate.day() - 1 ;
+        localizedDate.add(i, "days").toDate();
+        const dayOfWeek =
+          localizedDate.day() === 0 ? 6 : localizedDate.day() - 1;
 
         if (
           this.employeeShift !== null &&
@@ -253,7 +263,7 @@ export class PayrollRow {
             (shiftElement.endTime - shiftElement.startTime) / 60;
           this.regularHours = this.regularHours - hoursWorked;
         }
-        localizedDate.subtract(i, 'days').toDate();
+        localizedDate.subtract(i, "days").toDate();
         this.wage = this.regularHours * this.hourlyRate;
       }
       res();
@@ -261,7 +271,9 @@ export class PayrollRow {
   }
   calculateSystemHours() {
     return new Promise((res, rej) => {
-      if (this.hours.length > 7) { rej(this); }
+      if (this.hours.length > 7) {
+        rej(this);
+      }
       const totaled = this.calculateTotalHours(this.hours);
       this.totalSystemHours = totaled;
 
@@ -273,7 +285,7 @@ export class PayrollRow {
       const obj = {
         hours: hh,
         rate: this.hourlyRate,
-        totalPayed: hh * this.hourlyRate
+        totalPayed: hh * this.hourlyRate,
       };
       this.totalRegularHoursPay = obj;
       res();
@@ -288,18 +300,18 @@ export class PayrollRow {
         const hrs = ~~(time / 3600);
         const mins = ~~((time % 3600) / 60);
         const secs = ~~time % 60;
-        let ret = '';
+        let ret = "";
         if (hrs > 0) {
-          ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+          ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
         }
 
-        ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-        ret += '' + secs;
+        ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+        ret += "" + secs;
         this.totalOvertimeHoursPay = {
           valueString: ret,
           hours: this.overtime,
           rate: this.overtimeRate,
-          totalPayed: this.overtime * this.overtimeRate
+          totalPayed: this.overtime * this.overtimeRate,
         };
       }
       res();
@@ -309,7 +321,7 @@ export class PayrollRow {
   calculateTotalOtherpay() {
     return new Promise((res, rej) => {
       if (this.otherpay.length > 0) {
-        if (this.otherpay.length === 1 ) {
+        if (this.otherpay.length === 1) {
           this.totalOtherpay = this.otherpay[0].amount;
           res(this.totalOtherpay);
         }
@@ -382,18 +394,20 @@ export class PayrollRow {
     return new Promise((res, rej) => {
       const earnings = this.grossWage;
       if (earnings > 500) {
-          let value;
-          for (let i = 0; i < incometaxTable.length; i++) {
-            const tax = incometaxTable[i];
-            const earn = Math.round(100 * earnings) / 100;
-            if (earn >= tax.fromAmount && earn < tax.toAmount + 0.1) {
-              value = tax;
-              break;
-            }
+        let value;
+        for (let i = 0; i < incometaxTable.length; i++) {
+          const tax = incometaxTable[i];
+          const earn = Math.round(100 * earnings) / 100;
+          if (earn >= tax.fromAmount && earn < tax.toAmount + 0.1) {
+            value = tax;
+            break;
           }
-          if (!value) { console.log(value); }
-          this.incomeTax = value.taxAmount;
-          res(value);
+        }
+        if (!value) {
+          console.log(value);
+        }
+        this.incomeTax = value.taxAmount;
+        res(value);
       } else {
         this.incomeTax = 0;
         res(0);
@@ -429,7 +443,7 @@ export class PayrollRow {
   }
 
   calculatePayrollRow(socialTable, holidayTable, incometaxTable) {
-    if (this.payrollType.toLowerCase() === 'bi-weekly') {
+    if (this.payrollType.toLowerCase() === "bi-weekly") {
       const tasks = [
         this.calculateHolidays(holidayTable),
         this.calculateRegularHours(holidayTable),
@@ -441,53 +455,54 @@ export class PayrollRow {
         this.calculateTotalDeductions(),
         this.calculateTotalSocialSecurity(socialTable),
         this.calculateTotalIncomeTax(incometaxTable),
-        this.calculateTotalPayment()
+        this.calculateTotalPayment(),
       ];
       return tasks
         .reduce((promiseChain, currentTask) => {
           return promiseChain.then((chainResults: any) =>
-            currentTask.then(currentResult => [...chainResults, currentResult])
+            currentTask.then((currentResult) => [
+              ...chainResults,
+              currentResult,
+            ])
           );
         }, Promise.resolve([]))
-        .then(arrayOfResults => {
-        });
-    } else if (this.payrollType.toLowerCase() === 'semimonthly') {
+        .then((arrayOfResults) => {});
+    } else if (this.payrollType.toLowerCase() === "semimonthly") {
       return null;
     } else {
       return null;
     }
-
   }
 
-    calculateConceptsGrossAndNet(socialTable, incometaxTable) {
-      console.log('invoked');
-      const tasks = [
-        this.calculateTotalBonuses(),
+  calculateConceptsGrossAndNet(socialTable, incometaxTable) {
+    console.log("invoked");
+    const tasks = [
+      this.calculateTotalBonuses(),
       this.calculateTotalOtherpay(),
       this.calculateGrossWage(),
       this.calculateTotalDeductions(),
       this.calculateTotalSocialSecurity(socialTable),
       this.calculateTotalIncomeTax(incometaxTable),
-      this.calculateTotalPayment()
-      ];
-      return tasks
+      this.calculateTotalPayment(),
+    ];
+    return tasks
       .reduce((promiseChain, currentTask) => {
         return promiseChain.then((chainResults: any) =>
-          currentTask.then(currentResult => [...chainResults, currentResult])
+          currentTask.then((currentResult) => [...chainResults, currentResult])
         );
       }, Promise.resolve([]))
-      .then(arrayOfResults => {
-      }).catch(error => {
+      .then((arrayOfResults) => {})
+      .catch((error) => {
         console.log(error);
       });
-    }
+  }
 
   calculateTotalHours(arr: any[]) {
     if (arr.length > 0) {
       const totaled: any = {
         hh: Number,
         mm: Number,
-        ss: Number
+        ss: Number,
       };
       totaled.hh = arr.reduce((p, c) => p + c.systemHours.hh, 0);
       totaled.mm = arr.reduce((p, c) => p + c.systemHours.mm, 0);
@@ -499,20 +514,20 @@ export class PayrollRow {
       const hrs = ~~(time / 3600);
       const mins = ~~((time % 3600) / 60);
       const secs = ~~time % 60;
-      let ret = '';
+      let ret = "";
 
       if (hrs > 0) {
-        ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
+        ret += "" + hrs + ":" + (mins < 10 ? "0" : "");
       }
 
-      ret += '' + mins + ':' + (secs < 10 ? '0' : '');
-      ret += '' + secs;
+      ret += "" + mins + ":" + (secs < 10 ? "0" : "");
+      ret += "" + secs;
       const correctedTotal = {
         hh: hrs,
         mm: mins,
         ss: secs,
         value: time / 3600,
-        valueString: ret
+        valueString: ret,
       };
       return correctedTotal;
     } else {
@@ -521,7 +536,7 @@ export class PayrollRow {
         mm: 0,
         ss: 0,
         value: 0,
-        valueString: '00:00:00'
+        valueString: "00:00:00",
       };
       return finished;
     }

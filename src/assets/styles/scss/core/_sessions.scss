@@ -27,7 +27,7 @@
 .lockscreen-avatar {
   position: relative;
   display: block;
-  margin: -75px auto 0!important;
+  margin: -75px auto 0 !important;
 }
 
 .lockscreen-wrapper {
@@ -53,7 +53,7 @@
     top: 100%;
     left: 50%;
     border: solid transparent;
-    content: '';
+    content: "";
     height: 0;
     width: 0;
     position: absolute;

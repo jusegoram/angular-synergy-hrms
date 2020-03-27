@@ -1,21 +1,21 @@
 .example-container {
-    display: block;
-    width: 100% !important;
-  }
+  display: block;
+  width: 100% !important;
+}
 
-  .mat-table {
-    overflow: hidden;
-  }
+.mat-table {
+  overflow: hidden;
+}
 
-  .mat-header-cell.mat-sort-header-sorted {
-    color: black;
-  }
-  .example-header {
-    min-height: 64px;
-    padding: 8px 24px 0;
-  }
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
 
-  @import "../../../assets/styles/scss/material.variables";
+@import "../../../assets/styles/scss/material.variables";
 
 $mat-toolbar-height-desktop: 150px !default;
 $mat-toolbar-height-mobile-portrait: 142px !default;

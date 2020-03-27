@@ -1,15 +1,15 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Employee, EmployeeComment} from '../../Employee';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatTableDataSource} from '@angular/material/table';
-import {EmployeeService} from '../../employee.service';
-import {SessionService} from '../../../session/session.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { Employee, EmployeeComment } from "../../Employee";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatTableDataSource } from "@angular/material/table";
+import { EmployeeService } from "../../employee.service";
+import { SessionService } from "../../../session/session.service";
 
 @Component({
-  selector: 'comment-info',
-  templateUrl: './comment.component.html',
-  styleUrls: ['./comment.component.scss']
+  selector: "comment-info",
+  templateUrl: "./comment.component.html",
+  styleUrls: ["./comment.component.scss"],
 })
 export class CommentComponent implements OnInit {
   @Input() employee: Employee;
@@ -19,24 +19,25 @@ export class CommentComponent implements OnInit {
   employeeComment: any;
   editCommentId: string;
   editCommentDate: Date;
-  displayedColumns = ['comment', 'by', 'date'];
+  displayedColumns = ["comment", "by", "date"];
   public commentForm: FormGroup;
   userFullName: any;
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
     private employeeService: EmployeeService,
-    private sessionService: SessionService) { }
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
     this.employeeComment = this.employee.comments;
     this.populateTable(this.employeeComment);
     this.buildForms();
-    this.userFullName = this.sessionService.getName().split(' ');
+    this.userFullName = this.sessionService.getName().split(" ");
   }
   buildForms() {
     this.commentForm = this.fb.group({
-      comment: ['']
+      comment: [""],
     });
   }
 
@@ -45,29 +46,33 @@ export class CommentComponent implements OnInit {
       const data = this.dataSource.data;
       data.push(event);
       this.dataSource.data = data;
-    } else { this.dataSource = new MatTableDataSource(event); }
+    } else {
+      this.dataSource = new MatTableDataSource(event);
+    }
   }
-  editComment() {
-
-  }
+  editComment() {}
   onSubmit() {
     const current = this.commentForm.value;
     const user = this.sessionService.getId();
     if (!this.isEdit) {
       const com = new EmployeeComment(
-        '',
+        "",
         this.employee.employeeId.toString(10),
         current.comment,
         new Date(),
         {
-          _id : user,
-          firstName : this.userFullName[0],
-          lastName : this.userFullName[this.userFullName.length - 1]
+          _id: user,
+          firstName: this.userFullName[0],
+          lastName: this.userFullName[this.userFullName.length - 1],
         },
-        this.employee._id );
-      this.employeeService.saveComment(com).subscribe(data => {
-        this.populateTable(data);
-      }, error => {});
+        this.employee._id
+      );
+      this.employeeService.saveComment(com).subscribe(
+        (data) => {
+          this.populateTable(data);
+        },
+        (error) => {}
+      );
     } else {
       const com = new EmployeeComment(
         this.editCommentId,
@@ -75,15 +80,17 @@ export class CommentComponent implements OnInit {
         current.comment,
         this.editCommentDate,
         {
-          _id : user,
-          firstName : this.userFullName[0],
-          lastName : this.userFullName[this.userFullName.length - 1]
+          _id: user,
+          firstName: this.userFullName[0],
+          lastName: this.userFullName[this.userFullName.length - 1],
         },
         this.employee._id
-    );
-     this.employeeService.updateComment(com).subscribe(data => {}, error => {});
+      );
+      this.employeeService.updateComment(com).subscribe(
+        (data) => {},
+        (error) => {}
+      );
     }
-
   }
   clearForm() {
     this.commentForm.reset();

@@ -1,46 +1,79 @@
+<mat-dialog-content> </mat-dialog-content>
 
-<mat-dialog-content>
-  </mat-dialog-content>
+<mat-card-header>
+  <mat-card-title>Create New Work Pattern</mat-card-title>
+  <mat-card-subtitle>Please fill-in all the fields</mat-card-subtitle>
+</mat-card-header>
+<mat-card-content>
+  <table>
+    <tr>
+      <td>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="Work Pattern Name"
+            [(ngModel)]="data.name"
+          />
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="From (hh:mm)"
+            (keyup)="setStart($event.target.value)"
+          />
+        </mat-form-field>
+      </td>
+      <td style="font-weight: bold;">-</td>
+      <td>
+        <mat-form-field appearance="outline">
+          <input
+            matInput
+            placeholder="To (hh:mm)"
+            (keyup)="setEnd($event.target.value)"
+          />
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
 
-    <mat-card-header>
-      <mat-card-title>Create New Work Pattern</mat-card-title>
-      <mat-card-subtitle>Please fill-in all the fields</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-        <table>
-          <tr>
-            <td><mat-form-field appearance="outline">
-              <input matInput placeholder="Work Pattern Name" [(ngModel)]="data.name">
-            </mat-form-field></td>
-          </tr>
-          <tr>
-            <td>
-                <mat-form-field appearance="outline">
-                    <input matInput placeholder="From (hh:mm)" (keyup)="setStart($event.target.value)">
-                  </mat-form-field>
-            </td>
-            <td style="font-weight: bold">-</td>
-           <td>
-              <mat-form-field appearance="outline">
-                  <input matInput placeholder="To (hh:mm)" (keyup)="setEnd($event.target.value)">
-                </mat-form-field>
-           </td>
-          </tr>
-        </table>
-
-        <h6 class="mat-h6">Please select all the days off for this work pattern</h6>
-        <mat-button-toggle-group multiple>
-            <mat-button-toggle (click)="setDayOff(0)" value="0">Monday</mat-button-toggle>
-            <mat-button-toggle (click)="setDayOff(1)" value="1">Tuesday</mat-button-toggle>
-            <mat-button-toggle (click)="setDayOff(2)" value="2">Wednesday</mat-button-toggle>
-            <mat-button-toggle (click)="setDayOff(3)" value="3">Thursday</mat-button-toggle>
-        </mat-button-toggle-group>
-        <mat-button-toggle-group multiple>
-            <mat-button-toggle (click)="setDayOff(4)" value="4">Friday</mat-button-toggle>
-            <mat-button-toggle (click)="setDayOff(5)" value="5">Saturday</mat-button-toggle>
-            <mat-button-toggle (click)="setDayOff(6)" value="6">Sunday</mat-button-toggle>
-        </mat-button-toggle-group>
-    </mat-card-content>
-  <mat-dialog-actions>
-       <button mat-button color="primary" [mat-dialog-close]="data" matTooltip="Save work pattern to database"> <mat-icon>save</mat-icon>&nbsp; SAVE</button>
-  </mat-dialog-actions>
+  <h6 class="mat-h6">Please select all the days off for this work pattern</h6>
+  <mat-button-toggle-group multiple>
+    <mat-button-toggle (click)="setDayOff(0)" value="0"
+      >Monday</mat-button-toggle
+    >
+    <mat-button-toggle (click)="setDayOff(1)" value="1"
+      >Tuesday</mat-button-toggle
+    >
+    <mat-button-toggle (click)="setDayOff(2)" value="2"
+      >Wednesday</mat-button-toggle
+    >
+    <mat-button-toggle (click)="setDayOff(3)" value="3"
+      >Thursday</mat-button-toggle
+    >
+  </mat-button-toggle-group>
+  <mat-button-toggle-group multiple>
+    <mat-button-toggle (click)="setDayOff(4)" value="4"
+      >Friday</mat-button-toggle
+    >
+    <mat-button-toggle (click)="setDayOff(5)" value="5"
+      >Saturday</mat-button-toggle
+    >
+    <mat-button-toggle (click)="setDayOff(6)" value="6"
+      >Sunday</mat-button-toggle
+    >
+  </mat-button-toggle-group>
+</mat-card-content>
+<mat-dialog-actions>
+  <button
+    mat-button
+    color="primary"
+    [mat-dialog-close]="data"
+    matTooltip="Save work pattern to database"
+  >
+    <mat-icon>save</mat-icon>&nbsp; SAVE
+  </button>
+</mat-dialog-actions>

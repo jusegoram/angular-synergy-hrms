@@ -1,7 +1,26 @@
-<div class="app mat-typography" [dir]="dir" [ngClass]="{'app-dark': dark, 'boxed': boxed, 'collapsed-sidebar': collapseSidebar, 'compact-sidebar': compactSidebar, 'side-panel-opened': sidePanelOpened, 'side-panel-closed': !sidePanelOpened }">
+<div
+  class="app mat-typography"
+  [dir]="dir"
+  [ngClass]="{
+    'app-dark': dark,
+    boxed: boxed,
+    'collapsed-sidebar': collapseSidebar,
+    'compact-sidebar': compactSidebar,
+    'side-panel-opened': sidePanelOpened,
+    'side-panel-closed': !sidePanelOpened
+  }"
+>
   <mat-toolbar class="main-header" color="primary">
-    <button style="height: 48px !important; width: 48px !important;" (click)="sidemenu.toggle()" mat-icon-button matTooltip="Open menu">
-      <mat-icon style="height: 48px !important; width: 48px !important;" svgIcon="icon-white"></mat-icon>
+    <button
+      style="height: 48px !important; width: 48px !important;"
+      (click)="sidemenu.toggle()"
+      mat-icon-button
+      matTooltip="Open menu"
+    >
+      <mat-icon
+        style="height: 48px !important; width: 48px !important;"
+        svgIcon="icon-white"
+      ></mat-icon>
     </button>
     <div class="branding">
       <div class="logo"></div>
@@ -15,7 +34,11 @@
     <button appToggleFullscreen mat-icon-button>
       <mat-icon>fullscreen</mat-icon>
     </button>
-    <button (click)="end.toggle()" mat-icon-button class="ml-xs overflow-visible">
+    <button
+      (click)="end.toggle()"
+      mat-icon-button
+      class="ml-xs overflow-visible"
+    >
       <mat-icon>notifications</mat-icon>
       <!-- <span class="notification-label"></span> -->
     </button>
@@ -39,46 +62,109 @@
   </mat-toolbar>
 
   <mat-sidenav-container class="app-inner">
-    <mat-sidenav #sidemenu class="sidebar-panel" id="sidebar-panel" [mode]="isOver() ? 'over' : 'side'" [opened]="!isOver()"
-      (open)="sidePanelOpened = true" (close)="sidePanelOpened = false" (mouseover)="menuMouseOver()" (mouseout)="menuMouseOut()"
-      [perfectScrollbar]="config" [disabled]="mediaMatcher.matches">
+    <mat-sidenav
+      #sidemenu
+      class="sidebar-panel"
+      id="sidebar-panel"
+      [mode]="isOver() ? 'over' : 'side'"
+      [opened]="!isOver()"
+      (open)="sidePanelOpened = true"
+      (close)="sidePanelOpened = false"
+      (mouseover)="menuMouseOver()"
+      (mouseout)="menuMouseOut()"
+      [perfectScrollbar]="config"
+      [disabled]="mediaMatcher.matches"
+    >
       <mat-nav-list appAccordion class="navigation" (click)="updatePS()">
-        <mat-list-item appAccordionLink *ngFor="let menuitem of menus" group="{{menuitem.state}}">
-          <a appAccordionToggle class="relative" [routerLink]="menuitem.state" *ngIf="menuitem.type === 'link'">
+        <mat-list-item
+          appAccordionLink
+          *ngFor="let menuitem of menus"
+          group="{{ menuitem.state }}"
+        >
+          <a
+            appAccordionToggle
+            class="relative"
+            [routerLink]="menuitem.state"
+            *ngIf="menuitem.type === 'link'"
+          >
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name }}</span>
             <span fxFlex></span>
-            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <span
+              class="menu-badge mat-{{ badge.type }}"
+              *ngFor="let badge of menuitem.badge"
+              >{{ badge.value }}</span
+            >
           </a>
-          <a appAccordionToggle class="relative" href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
+          <a
+            appAccordionToggle
+            class="relative"
+            href="{{ menuitem.state }}"
+            *ngIf="menuitem.type === 'extLink'"
+          >
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name }}</span>
             <span fxFlex></span>
-            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <span
+              class="menu-badge mat-{{ badge.type }}"
+              *ngFor="let badge of menuitem.badge"
+              >{{ badge.value }}</span
+            >
           </a>
-          <a appAccordionToggle class="relative" href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
+          <a
+            appAccordionToggle
+            class="relative"
+            href="{{ menuitem.state }}"
+            target="_blank"
+            *ngIf="menuitem.type === 'extTabLink'"
+          >
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name }}</span>
             <span fxFlex></span>
-            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <span
+              class="menu-badge mat-{{ badge.type }}"
+              *ngFor="let badge of menuitem.badge"
+              >{{ badge.value }}</span
+            >
           </a>
-          <a appAccordionToggle class="relative" href="javascript:;" *ngIf="menuitem.type === 'sub'">
+          <a
+            appAccordionToggle
+            class="relative"
+            href="javascript:;"
+            *ngIf="menuitem.type === 'sub'"
+          >
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name }}</span>
             <span fxFlex></span>
-            <span class="menu-badge mat-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
+            <span
+              class="menu-badge mat-{{ badge.type }}"
+              *ngFor="let badge of menuitem.badge"
+              >{{ badge.value }}</span
+            >
             <mat-icon class="menu-caret">arrow_drop_down</mat-icon>
           </a>
           <mat-nav-list class="sub-menu" *ngIf="menuitem.type === 'sub'">
-            <mat-list-item *ngFor="let childitem of menuitem.children" routerLinkActive="open">
-              <a [routerLink]="['/', menuitem.state, childitem.state ]" class="relative">{{ childitem.name }}</a>
+            <mat-list-item
+              *ngFor="let childitem of menuitem.children"
+              routerLinkActive="open"
+            >
+              <a
+                [routerLink]="['/', menuitem.state, childitem.state]"
+                class="relative"
+                >{{ childitem.name }}</a
+              >
             </mat-list-item>
           </mat-nav-list>
-
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
-    <mat-sidenav #end position="end" class="chat-panel" mode="over" opened="false">
+    <mat-sidenav
+      #end
+      position="end"
+      class="chat-panel"
+      mode="over"
+      opened="false"
+    >
       <mat-tab-group [selectedIndex]="1" mat-stretch-tabs>
         <mat-tab>
           <ng-template matTabLabel>Today</ng-template>
@@ -86,35 +172,42 @@
             <mat-list class="pt-1 pb-1">
               <mat-list-item>
                 <div fxLayout="column">
-                  <h1 class="ma-0">{{ today | date:'EEEE' }}</h1>
+                  <h1 class="ma-0">{{ today | date: "EEEE" }}</h1>
                   <h3 class="mat-text-muted ma-0">
-                    <span>{{ today | date:'dd' }}</span>&nbsp;
-                    <span>{{ today | date:'MMMM' }}</span>
+                    <span>{{ today | date: "dd" }}</span
+                    >&nbsp;
+                    <span>{{ today | date: "MMMM" }}</span>
                   </h3>
                 </div>
               </mat-list-item>
             </mat-list>
             <mat-nav-list>
               <mat-divider></mat-divider>
-              <h3 mat-subheader class="text-uppercase font-weight-bold">Weather</h3>
+              <h3 mat-subheader class="text-uppercase font-weight-bold">
+                Weather
+              </h3>
               <mat-list-item>
-                <a matLine href="javascript:;">{{ today | date:'shortTime' }}</a>
-                <p matLine class="mat-text-muted">{{weather?.name}}</p>
+                <a matLine href="javascript:;">{{
+                  today | date: "shortTime"
+                }}</a>
+                <p matLine class="mat-text-muted">{{ weather?.name }}</p>
                 <span class="mat-h1 mr-1">
                   <span [ngClass]="weatherIcon"></span>
                 </span>
-                <span class="mat-h1">{{tempFahrenheit}}°F</span>
+                <span class="mat-h1">{{ tempFahrenheit }}°F</span>
               </mat-list-item>
               <mat-divider></mat-divider>
             </mat-nav-list>
           </div>
         </mat-tab>
-
       </mat-tab-group>
     </mat-sidenav>
-    <div [perfectScrollbar]="config" [disabled]="mediaMatcher.matches" style="width: 100%;">
+    <div
+      [perfectScrollbar]="config"
+      [disabled]="mediaMatcher.matches"
+      style="width: 100%;"
+    >
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-container>
-
 </div>

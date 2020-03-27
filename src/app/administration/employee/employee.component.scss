@@ -19,22 +19,22 @@ $mat-toolbar-height-mobile-landscape: 112px !default;
     margin-top: -($mat-toolbar-height-mobile-landscape);
   }
 }
-.form{
-    margin: 10px;
-    max-height: 250px;
-    display: flex;
-    flex: 0 0 50%;
-   align-items: center;
-   justify-content: center;
-   flex-flow: column wrap;
-   align-content: stretch;
+.form {
+  margin: 10px;
+  max-height: 250px;
+  display: flex;
+  flex: 0 0 50%;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
+  align-content: stretch;
 }
 
-.container{
+.container {
   width: 1150px;
   margin: 0 auto;
 }
-.container2{
+.container2 {
   width: 1150px;
   margin: 0 auto;
   margin-bottom: 20px;

@@ -11,118 +11,194 @@
     <div class="example-container">
       <div class="example-header">
         <mat-form-field appearance="fill">
-          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="Filter"
+          />
         </mat-form-field>
       </div>
       <mat-table #table [dataSource]="dataSource" matSort>
-
         <ng-container matColumnDef="client">
           <mat-header-cell *matHeaderCellDef>Client</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.client}} </mat-cell>
+          <mat-cell *matCellDef="let element"> {{ element.client }} </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="positionId">
           <mat-header-cell *matHeaderCellDef>Position ID</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.position?.positionId}} </mat-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.position?.positionId }}
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="department">
           <mat-header-cell *matHeaderCellDef>Department</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.department}} </mat-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.department }}
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="position">
           <mat-header-cell *matHeaderCellDef>Position</mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.position?.name}} </mat-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.position?.name }}
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="startDate">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.startDate | date: 'MM/dd/yyyy'}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Start Date
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.startDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="endDate">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> End Date </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.endDate| date: 'MM/dd/yyyy'}} </mat-cell>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            End Date
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element.endDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
         </ng-container>
 
         <ng-container matColumnDef="action">
-          <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openEditDialog(element)"><mat-icon>create</mat-icon> Edit</button>
-            <button mat-menu-item (click)="deletePosition(element)"><mat-icon color="warn">delete</mat-icon> Delete</button>
-          </mat-menu>
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            Action
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="openEditDialog(element)">
+                <mat-icon>create</mat-icon> Edit
+              </button>
+              <button mat-menu-item (click)="deletePosition(element)">
+                <mat-icon color="warn">delete</mat-icon> Delete
+              </button>
+            </mat-menu>
           </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
       </mat-table>
       <ng-container *ngIf="dataSource.data.length === 0">
-          <div style=" width:20%; margin-right:auto; margin-left: auto; margin-top: 25px">
+        <div
+          style="
+            width: 20%;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 25px;
+          "
+        >
           No Positions Available
-          </div>
-        </ng-container>
+        </div>
+      </ng-container>
       <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15]">
       </mat-paginator>
     </div>
     <ng-container *ngIf="this.authorization.create">
       <div [formGroup]="positionForm" fxLayout.xs="column">
-        <table style='width: 100%'>
+        <table style="width: 100%;">
           <tr fxLayout.xs="column">
-            <td colspan=2>
-                <mat-form-field appearance="outline">
-                    <mat-label>Client</mat-label>
-                  <mat-select placeholder="Client" formControlName="client">
-                    <mat-option *ngFor="let client of clients" [value]="client.name">{{client.name}}</mat-option>
-                  </mat-select>
-                  <mat-error> Client is required</mat-error>
-                </mat-form-field>
-            </td>
-            <td colspan=2>
-                <mat-form-field appearance="outline">
-                    <mat-label>Department</mat-label>
-                  <mat-select placeholder="Department" (selectionChange)="setPositions($event.value.positions)"
-                    formControlName="department">
-                    <mat-option *ngFor="let department of departments" [value]="department">{{department.name}}</mat-option>
-                  </mat-select>
-                  <mat-error> Position's department is required</mat-error>
-                </mat-form-field>
-            </td>
-          <td colspan=2>
+            <td colspan="2">
               <mat-form-field appearance="outline">
-                  <mat-label>Position</mat-label>
-                <mat-select placeholder="Position" (selectionChange)="position = $event.value" formControlName="position">
-                  <mat-option *ngFor="let position of positions" [value]="position">{{position.name + ' - (' + position.positionId +')' }}</mat-option>
+                <mat-label>Client</mat-label>
+                <mat-select placeholder="Client" formControlName="client">
+                  <mat-option
+                    *ngFor="let client of clients"
+                    [value]="client.name"
+                    >{{ client.name }}</mat-option
+                  >
+                </mat-select>
+                <mat-error> Client is required</mat-error>
+              </mat-form-field>
+            </td>
+            <td colspan="2">
+              <mat-form-field appearance="outline">
+                <mat-label>Department</mat-label>
+                <mat-select
+                  placeholder="Department"
+                  (selectionChange)="setPositions($event.value.positions)"
+                  formControlName="department"
+                >
+                  <mat-option
+                    *ngFor="let department of departments"
+                    [value]="department"
+                    >{{ department.name }}</mat-option
+                  >
+                </mat-select>
+                <mat-error> Position's department is required</mat-error>
+              </mat-form-field>
+            </td>
+            <td colspan="2">
+              <mat-form-field appearance="outline">
+                <mat-label>Position</mat-label>
+                <mat-select
+                  placeholder="Position"
+                  (selectionChange)="position = $event.value"
+                  formControlName="position"
+                >
+                  <mat-option
+                    *ngFor="let position of positions"
+                    [value]="position"
+                    >{{
+                      position.name + " - (" + position.positionId + ")"
+                    }}</mat-option
+                  >
                 </mat-select>
                 <mat-error> Position field is required</mat-error>
               </mat-form-field>
-          </td>
+            </td>
           </tr>
           <tr fxLayout.xs="column">
-            <td colspan=3>
-                <mat-form-field appearance="outline">
-                    <mat-label>Start</mat-label>
-                  <input matInput placeholder="Start" [matDatepicker]="startPicker" formControlName="start">
-                  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-                  <mat-datepicker #startPicker></mat-datepicker>
-                  <mat-error> Position's start date is required</mat-error>
-                </mat-form-field>
+            <td colspan="3">
+              <mat-form-field appearance="outline">
+                <mat-label>Start</mat-label>
+                <input
+                  matInput
+                  placeholder="Start"
+                  [matDatepicker]="startPicker"
+                  formControlName="start"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="startPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+                <mat-error> Position's start date is required</mat-error>
+              </mat-form-field>
             </td>
-            <td colspan=3>
-                <mat-form-field appearance="outline">
-                    <mat-label>End</mat-label>
-                  <input matInput placeholder="End" [matDatepicker]="endPicker" formControlName="end">
-                  <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-                  <mat-datepicker #endPicker></mat-datepicker>
-                </mat-form-field>
+            <td colspan="3">
+              <mat-form-field appearance="outline">
+                <mat-label>End</mat-label>
+                <input
+                  matInput
+                  placeholder="End"
+                  [matDatepicker]="endPicker"
+                  formControlName="end"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="endPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
             </td>
           </tr>
         </table>
       </div>
       <div matTooltip="Please remember to fill in all the drop down menus.">
-        <button style="float: right;" mat-button color="primary" (click)="onAdd()" [disabled]="this.positionForm.invalid" >
+        <button
+          style="float: right;"
+          mat-button
+          color="primary"
+          (click)="onAdd()"
+          [disabled]="this.positionForm.invalid"
+        >
           <mat-icon>add</mat-icon>&nbsp; ADD POSITION
         </button>
       </div>

@@ -1,5 +1,7 @@
 <div class="pa-2">
-  <h1 style="width: 100%; text-align: center;">TIME NOW | {{ CurrentTime | async |date:'HH:mm:ss' }}</h1>
+  <h1 style="width: 100%; text-align: center;">
+    TIME NOW | {{ CurrentTime | async | date: "HH:mm:ss" }}
+  </h1>
   <mat-card class="pa-1">
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
       <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
@@ -103,9 +105,17 @@
     </mat-form-field>
     <ng-container *ngIf="this.results.length > 0; else elseTemplate">
       <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-        <button mat-button [matMenuTriggerFor]="menu" color='primary'>EXPORT</button>
+        <button mat-button [matMenuTriggerFor]="menu" color="primary">
+          EXPORT
+        </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="exportAs('png')" [swal]="['BOOM!','Ah di get it fih yu, wan sekant!', 'success']">IMAGE</button>
+          <button
+            mat-menu-item
+            (click)="exportAs('png')"
+            [swal]="['BOOM!', 'Ah di get it fih yu, wan sekant!', 'success']"
+          >
+            IMAGE
+          </button>
           <button mat-menu-item (click)="exportAs('xlsx')">EXCEL</button>
         </mat-menu>
       </div>
@@ -133,7 +143,7 @@
         fxLayout="column"
         fxLayoutAlign="space-around center"
         fxLayoutGap="10px"
-        style="height: 400px;width: 100%;"
+        style="height: 400px; width: 100%;"
       >
         <h3>Select the Matrix parameters, then click on <i>LOAD MATRIX</i></h3>
       </div>

@@ -1,28 +1,31 @@
-import {SessionService} from '../../session/session.service';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {AdminService} from '../admin.service';
-import {EditUserDialogComponent} from './edit-user-dialog/edit-user-dialog.component';
-
+import { SessionService } from "../../session/session.service";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { MatPaginator } from "@angular/material/paginator";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { AdminService } from "../admin.service";
+import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
 
 @Component({
-  selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  selector: "app-account",
+  templateUrl: "./account.component.html",
+  styleUrls: ["./account.component.scss"],
 })
 export class AccountComponent implements OnInit {
-
-  @ViewChild(MatPaginator , {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort , {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   dataSource;
 
-
-  displayedColumns = ['employee.employeeId', 'firstName', 'employee.status', 'role', 'details'];
+  displayedColumns = [
+    "employee.employeeId",
+    "firstName",
+    "employee.status",
+    "role",
+    "details",
+  ];
   constructor(
     private sessionService: SessionService,
     private adminService: AdminService,
@@ -35,7 +38,7 @@ export class AccountComponent implements OnInit {
 
   getRoleName(param) {
     const roles = this.adminService.userTypes;
-    const role = roles.filter(item => item.value === parseInt(param, 10));
+    const role = roles.filter((item) => item.value === parseInt(param, 10));
     return role[0].viewValue;
   }
   reload() {
@@ -44,21 +47,19 @@ export class AccountComponent implements OnInit {
   }
 
   getUsers() {
-    this.adminService.getUsers().subscribe(data => {
+    this.adminService.getUsers().subscribe((data) => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
   }
-  applyFilter(arg) {
-
-  }
+  applyFilter(arg) {}
   deleteUser(event) {
     this.adminService.deleteUser(event._id).subscribe(
-      data => {
+      (data) => {
         this.reload();
       },
-      error => {
+      (error) => {
         console.log(error);
       }
     );
@@ -66,18 +67,17 @@ export class AccountComponent implements OnInit {
 
   openEditDialog(user) {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
-      width: '500px',
+      width: "500px",
       data: user,
     });
 
-    dialogRef.afterClosed().subscribe( result => {
-      this.adminService.editUser(result).subscribe(resp => {
+    dialogRef.afterClosed().subscribe((result) => {
+      this.adminService.editUser(result).subscribe((resp) => {
         this.reload();
-        this.snackBar.open('User was edited successfully', 'thank you', {
-          duration: 2000
+        this.snackBar.open("User was edited successfully", "thank you", {
+          duration: 2000,
         });
       });
     });
   }
-
 }

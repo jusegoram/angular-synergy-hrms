@@ -1,15 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 
 @Component({
-  selector: 'app-trackers',
-  templateUrl: './trackers.component.html',
-  styleUrls: ['./trackers.component.scss']
+  selector: "app-trackers",
+  templateUrl: "./trackers.component.html",
+  styleUrls: ["./trackers.component.scss"],
 })
 export class TrackersComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

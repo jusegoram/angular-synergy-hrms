@@ -1,19 +1,16 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from "@angular/core";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class DashboardService {
   // private socket;
   // employeeDistribution = this.socket.fromEvent<object[]>('employeeDistribution')
   // employeeCount = this.socket.fromEvent<object>('employeeCount')
-
   // constructor(private socket: Socket) { }
-
   // getEmployeeDistribution(){
   //   this.socket.emit('getEmployeeDistribution');
   // }
-
   // getActiveEmployeeCount(){
   //   this.socket.emit('getActiveEmployeeCount');
   // }
@@ -33,7 +30,6 @@ export class DashboardService {
   //       this.socket.emit('message', JSON.stringify(data));
   //     },
   //   };
-
   //   return Subject.create(observer, observable);
   // }
 }

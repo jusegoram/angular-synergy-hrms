@@ -1,49 +1,91 @@
-<mat-toolbar class="header"  color="primary">
-    <mat-toolbar-row>
-        <span>Workforce Cloud Uploads</span>
-        <span class="fill-remaining-space"></span>
-    </mat-toolbar-row>
-    <mat-toolbar-row>
-    </mat-toolbar-row>
-    <mat-toolbar-row>
-      </mat-toolbar-row>
-  </mat-toolbar>
-  <ng-container *ngIf="auth && auth.upload; else elseTemplate">
-    <mat-card class="mat-card-top">
-      <div style="padding: 5px; padding-top: 15px">
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Workforce Cloud Uploads</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<ng-container *ngIf="auth && auth.upload; else elseTemplate">
+  <mat-card class="mat-card-top">
+    <div style="padding: 5px; padding-top: 15px;">
+      <mat-card-title>Download Template & Upload</mat-card-title>
+      <mat-card-subtitle>
+        <span>
+          Select the template > Download & fill > Select the upload type >
+          Select File & Upload</span
+        >
+      </mat-card-subtitle>
 
-            <mat-card-title>Download Template & Upload</mat-card-title>
-            <mat-card-subtitle> <span> Select the template > Download & fill > Select the upload type > Select File & Upload</span>
-            </mat-card-subtitle>
-
-          <mat-card-content fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="gappx">
-            <mat-form-field appearance="outline">
-              <mat-select placeholder="Upload Type" [(ngModel)]="templateSelected">
-                  <mat-option> SELECT TEMPLATE</mat-option>
-                <mat-option *ngFor="let option of templates" [value]="option.value" (click)="getTemplate(option)">
-                  {{option.text}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </mat-card-content>
-      </div>
+      <mat-card-content
+        fxLayout="column"
+        fxLayoutAlign="center start"
+        fxLayoutGap="gappx"
+      >
+        <mat-form-field appearance="outline">
+          <mat-select placeholder="Upload Type" [(ngModel)]="templateSelected">
+            <mat-option> SELECT TEMPLATE</mat-option>
+            <mat-option
+              *ngFor="let option of templates"
+              [value]="option.value"
+              (click)="getTemplate(option)"
+            >
+              {{ option.text }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </div>
     <mat-card-content>
-      <div  fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
-        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100"  class="pr-1">
+      <div fxLayout="row" fxLayoutWrap="wrap" fxLayoutAlign="start">
+        <div fxFlex.gt-sm="20" fxFlex.gt-xs="50" fxFlex="100" class="pr-1">
           <mat-form-field appearance="outline">
-            <mat-select placeholder="Upload Type" [(ngModel)]="selected" (selectionChange)="onSelectChange()" >
-              <mat-option *ngFor="let item of items" [value]="item"> {{item.viewValue}}</mat-option>
+            <mat-select
+              placeholder="Upload Type"
+              [(ngModel)]="selected"
+              (selectionChange)="onSelectChange()"
+            >
+              <mat-option *ngFor="let item of items" [value]="item">
+                {{ item.viewValue }}</mat-option
+              >
             </mat-select>
           </mat-form-field>
-          <h6 class="mt-0">Upload {{selected.viewValue.toLowerCase()}} information</h6>
+          <h6 class="mt-0">
+            Upload {{ selected.viewValue.toLowerCase() }} information
+          </h6>
 
-          <button mat-button color="primary" (click)="fileInput.click()" style="width: 100%"><mat-icon>attach_file</mat-icon> Select File..</button>
-            <span style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-                    <input type="file" #fileInput class="upload-button" ng2FileSelect [uploader]="uploader" multiple  /><br/>
-            </span>
+          <button
+            mat-button
+            color="primary"
+            (click)="fileInput.click()"
+            style="width: 100%;"
+          >
+            <mat-icon>attach_file</mat-icon> Select File..
+          </button>
+          <span
+            style="
+              visibility: hidden;
+              position: absolute;
+              overflow: hidden;
+              width: 0px;
+              height: 0px;
+              border: none;
+              margin: 0;
+              padding: 0;
+            "
+          >
+            <input
+              type="file"
+              #fileInput
+              class="upload-button"
+              ng2FileSelect
+              [uploader]="uploader"
+              multiple
+            /><br />
+          </span>
         </div>
         <div fxFlex.gt-sm="80" fxFlex.gt-xs="50" fxFlex="100">
-          <h4 class="mt-0"  fxLayout="row">
+          <h4 class="mt-0" fxLayout="row">
             <span fxFlex>Upload Files</span>
             <span>Queue length: {{ uploader?.queue?.length }}</span>
           </h4>
@@ -51,71 +93,140 @@
           <mat-table #table [dataSource]="dataSource">
             <ng-container matColumnDef="name">
               <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element?.file?.name}} </mat-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element?.file?.name }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="size">
-              <mat-header-cell *matHeaderCellDef > Size </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{ element?.file?.size/1024/1024 | number:'.2' }} MB </mat-cell>
+              <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element?.file?.size / 1024 / 1024 | number: ".2" }} MB
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="progress">
-              <mat-header-cell *matHeaderCellDef > Progress </mat-header-cell>
-              <mat-cell *matCellDef="let element"> <mat-progress-bar mode="determinate" value="{{element.progress}}"></mat-progress-bar> </mat-cell>
+              <mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <mat-progress-bar
+                  mode="determinate"
+                  value="{{ element.progress }}"
+                ></mat-progress-bar>
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="status">
-              <mat-header-cell *matHeaderCellDef > Status </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <span *ngIf="element.isSuccess"><mat-icon>check</mat-icon></span>
-                <span *ngIf="element.isCancel"><mat-icon>cancel</mat-icon></span>
+                <span *ngIf="element.isSuccess"
+                  ><mat-icon>check</mat-icon></span
+                >
+                <span *ngIf="element.isCancel"
+                  ><mat-icon>cancel</mat-icon></span
+                >
                 <span *ngIf="element.isError"><mat-icon>error</mat-icon></span>
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="action">
-              <mat-header-cell *matHeaderCellDef > Action </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
               <mat-cell *matCellDef="let element">
-                <button mat-icon-button mat-button-sm color="primary" type="button" (click)="element.upload(); refresh()" [disabled]="element.isReady || element.isUploading || element.isSuccess"><mat-icon>backup</mat-icon></button>
-                <button mat-icon-button mat-button-sm color="warn" type="button" (click)="element.cancel(); refresh()" [disabled]="!element.isUploading"><mat-icon>delete_outline</mat-icon></button>
-                <button mat-icon-button mat-button-sm color="accent" type="button" (click)="element.remove(); refresh()"><mat-icon>remove_circle_outline</mat-icon>
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="primary"
+                  type="button"
+                  (click)="element.upload(); refresh()"
+                  [disabled]="
+                    element.isReady || element.isUploading || element.isSuccess
+                  "
+                >
+                  <mat-icon>backup</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="warn"
+                  type="button"
+                  (click)="element.cancel(); refresh()"
+                  [disabled]="!element.isUploading"
+                >
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="accent"
+                  type="button"
+                  (click)="element.remove(); refresh()"
+                >
+                  <mat-icon>remove_circle_outline</mat-icon>
                 </button>
               </mat-cell>
             </ng-container>
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+            <mat-header-row
+              *matHeaderRowDef="displayedColumns"
+            ></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
           </mat-table>
 
           <div class="mb-1">
             <p>Progress:</p>
-            <mat-progress-bar mode="determinate" value="{{uploader.progress}}"></mat-progress-bar>
+            <mat-progress-bar
+              mode="determinate"
+              value="{{ uploader.progress }}"
+            ></mat-progress-bar>
           </div>
-          <button mat-button mat-button-sm color="primary" type="button"
-                  (click)="uploader.uploadAll(); refresh()" [disabled]="!uploader.getNotUploadedItems().length">Upload all</button>
-          <button mat-button mat-button-sm color="warn" type="button"
-                  (click)="uploader.cancelAll(); refresh()" [disabled]="!uploader.isUploading">Cancel all</button>
-          <button mat-button mat-button-sm color="accent" type="button"
-                  (click)="uploader.clearQueue(); refresh()" [disabled]="!uploader.queue.length">Remove all</button>
+          <button
+            mat-button
+            mat-button-sm
+            color="primary"
+            type="button"
+            (click)="uploader.uploadAll(); refresh()"
+            [disabled]="!uploader.getNotUploadedItems().length"
+          >
+            Upload all
+          </button>
+          <button
+            mat-button
+            mat-button-sm
+            color="warn"
+            type="button"
+            (click)="uploader.cancelAll(); refresh()"
+            [disabled]="!uploader.isUploading"
+          >
+            Cancel all
+          </button>
+          <button
+            mat-button
+            mat-button-sm
+            color="accent"
+            type="button"
+            (click)="uploader.clearQueue(); refresh()"
+            [disabled]="!uploader.queue.length"
+          >
+            Remove all
+          </button>
         </div>
       </div>
     </mat-card-content>
   </mat-card>
-  </ng-container>
-  <ng-template #elseTemplate>
-    <mat-card class="mat-card-top">
-      <mat-card-header>
-        <mat-card-title>NOTHING TO UPLOAD</mat-card-title>
-        <mat-card-subtitle>ACCESS DENIED</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <p>
-          We're so sorry, you need to have upload rights. If you need to upload please make an access request to your manager.
-        </p>
-        <p>- The Synergy Team</p>
-      </mat-card-content>
-      <mat-card-actions >
-        <button mat-button>OK</button>
-      </mat-card-actions>
-    </mat-card>
-  </ng-template>
-
+</ng-container>
+<ng-template #elseTemplate>
+  <mat-card class="mat-card-top">
+    <mat-card-header>
+      <mat-card-title>NOTHING TO UPLOAD</mat-card-title>
+      <mat-card-subtitle>ACCESS DENIED</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        We're so sorry, you need to have upload rights. If you need to upload
+        please make an access request to your manager.
+      </p>
+      <p>- The Synergy Team</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button>OK</button>
+    </mat-card-actions>
+  </mat-card>
+</ng-template>

@@ -82,7 +82,7 @@ body {
       height: 40px;
       .material-icons {
         font-size: 40px;
-        opacity: .2;
+        opacity: 0.2;
         transform: rotate(-5deg);
       }
     }
@@ -98,10 +98,11 @@ body {
       align-content: center;
       max-width: 100%;
       padding: $gutter;
-      [mat-card-widget-title], p {
+      [mat-card-widget-title],
+      p {
         margin: 0;
         padding: 0;
-        line-height: $headings-line-height!important;
+        line-height: $headings-line-height !important;
       }
     }
     .card-image-header {

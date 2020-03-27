@@ -1,50 +1,58 @@
-import {MatTableDataSource} from '@angular/material/table';
-import {AdminService} from './../../admin.service';
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Page} from '../../../shared/models/page';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {CurrencyPipe} from '@angular/common';
+import { MatTableDataSource } from "@angular/material/table";
+import { AdminService } from "./../../admin.service";
+import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { Page } from "../../../shared/models/page";
+import { ColumnMode } from "@swimlane/ngx-datatable";
+import { CurrencyPipe } from "@angular/common";
 
 @Component({
-  selector: 'app-social-security',
-  templateUrl: './social-security.component.html',
-  styleUrls: ['./social-security.component.scss']
+  selector: "app-social-security",
+  templateUrl: "./social-security.component.html",
+  styleUrls: ["./social-security.component.scss"],
 })
 export class SocialSecurityComponent implements OnInit {
-  @ViewChild('editCell', { static: true }) editCell: TemplateRef<any>;
+  @ViewChild("editCell", { static: true }) editCell: TemplateRef<any>;
 
   dataSource: MatTableDataSource<any>;
- columns: any[] = [];
+  columns: any[] = [];
   rows = new Array<any>();
   page = new Page();
   cache: any = {};
   ColumnMode = ColumnMode;
 
-  constructor(private _adminService: AdminService, private currencyPipe: CurrencyPipe) {
-  }
+  constructor(
+    private _adminService: AdminService,
+    private currencyPipe: CurrencyPipe
+  ) {}
 
   ngOnInit() {
     this.columns = [
-      { name: 'EARNINGS FROM', prop: 'fromEarnings', pipe: this.currencyPipe},
-      { name: 'TO', prop: 'toEarnings', pipe: this.currencyPipe},
-      { name: 'INSURABLE EARNINGS', prop: 'weeklyInsurableEarnings', pipe: this.currencyPipe},
-      { name: 'RCC', prop: 'employerContribution', pipe: this.currencyPipe},
-      { name: 'EMP', prop: 'employeeContribution', pipe: this.currencyPipe},
-      { name: 'TOTAL', prop: 'totalContribution', pipe: this.currencyPipe},
-     ];
-    this.columns.push({ name: '', cellTemplate: this.editCell, width: '50px'});
+      { name: "EARNINGS FROM", prop: "fromEarnings", pipe: this.currencyPipe },
+      { name: "TO", prop: "toEarnings", pipe: this.currencyPipe },
+      {
+        name: "INSURABLE EARNINGS",
+        prop: "weeklyInsurableEarnings",
+        pipe: this.currencyPipe,
+      },
+      { name: "RCC", prop: "employerContribution", pipe: this.currencyPipe },
+      { name: "EMP", prop: "employeeContribution", pipe: this.currencyPipe },
+      { name: "TOTAL", prop: "totalContribution", pipe: this.currencyPipe },
+    ];
+    this.columns.push({ name: "", cellTemplate: this.editCell, width: "50px" });
   }
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
     this.page.size = pageInfo.pageSize;
 
-    if (this.cache[this.page.pageNumber]) { return; }
+    if (this.cache[this.page.pageNumber]) {
+      return;
+    }
     this._adminService.getSoSec(this.page).subscribe((pagedData: any) => {
       this.page = {
         size: pagedData.limit,
         totalElements: pagedData.totalDocs,
         totalPages: 1,
-        pageNumber: pagedData.page - 1
+        pageNumber: pagedData.page - 1,
       };
 
       // calc start

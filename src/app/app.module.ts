@@ -1,31 +1,34 @@
-import {SessionGuard} from './session/guards/session.guard';
-import {SessionService} from './session/session.service';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {BrowserModule} from '@angular/platform-browser';
-import {MaterialSharedModule} from './shared/material.shared.module';
-import {PreloadAllModules, RouterModule} from '@angular/router';
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule} from 'ngx-perfect-scrollbar';
-import {BidiModule} from '@angular/cdk/bidi';
+import { SessionGuard } from "./session/guards/session.guard";
+import { SessionService } from "./session/session.service";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserModule } from "@angular/platform-browser";
+import { MaterialSharedModule } from "./shared/material.shared.module";
+import { PreloadAllModules, RouterModule } from "@angular/router";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
+import {
+  PERFECT_SCROLLBAR_CONFIG,
+  PerfectScrollbarConfigInterface,
+  PerfectScrollbarModule,
+} from "ngx-perfect-scrollbar";
+import { BidiModule } from "@angular/cdk/bidi";
 
-import {AppRoutes} from './app.routing';
-import {AppComponent} from './app.component';
-import {AdminLayoutComponent} from './layouts/admin/admin-layout.component';
-import {AuthLayoutComponent} from './layouts/auth/auth-layout.component';
-import {SharedModule} from './shared/shared.module';
-import {GuardDialogComponent} from './session/guards/guard-dialog/guard-dialog.component';
-import {RootGuard} from './session/guards/root.guard';
-import {TokenInterceptor} from './token-interceptor.service';
-import {AuthenticationService} from './authentication.service';
-
+import { AppRoutes } from "./app.routing";
+import { AppComponent } from "./app.component";
+import { AdminLayoutComponent } from "./layouts/admin/admin-layout.component";
+import { AuthLayoutComponent } from "./layouts/auth/auth-layout.component";
+import { SharedModule } from "./shared/shared.module";
+import { GuardDialogComponent } from "./session/guards/guard-dialog/guard-dialog.component";
+import { RootGuard } from "./session/guards/root.guard";
+import { TokenInterceptor } from "./token-interceptor.service";
+import { AuthenticationService } from "./authentication.service";
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
   wheelSpeed: 2,
   wheelPropagation: true,
-  minScrollbarLength: 20
+  minScrollbarLength: 20,
 };
 
 @NgModule({
@@ -39,8 +42,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
-    RouterModule.forRoot(AppRoutes,
-      {preloadingStrategy: PreloadAllModules}),
+    RouterModule.forRoot(AppRoutes, { preloadingStrategy: PreloadAllModules }),
     FormsModule,
     HttpClientModule,
     MaterialSharedModule,
@@ -58,15 +60,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
-      multi: true
+      multi: true,
     },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthenticationService,
-      multi: true
-    }
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [GuardDialogComponent]
+  entryComponents: [GuardDialogComponent],
 })
-export class AppModule { }
+export class AppModule {}

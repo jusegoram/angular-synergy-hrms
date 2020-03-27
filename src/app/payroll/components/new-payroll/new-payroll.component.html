@@ -5,7 +5,12 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <br />
-<div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+<div
+  class="container"
+  fxLayout="row"
+  fxLayoutAlign="start start"
+  fxLayoutGap="10px"
+>
   <mat-form-field appearance="outline">
     <mat-select placeholder="Type of Payroll" [formControl]="payrollType">
       <mat-option value="BI-WEEKLY">
@@ -20,19 +25,38 @@
   <div class="fill-remaining-space"></div>
   <mat-form-field appearance="outline">
     <mat-error>Please select a date that is less than 15 days old.</mat-error>
-    <input matInput [matDatepicker]="pickerFrom" [matDatepickerFilter]="dateFilterFrom" placeholder="Get from (mm/dd/yyyy)" [formControl]="fromDate">
+    <input
+      matInput
+      [matDatepicker]="pickerFrom"
+      [matDatepickerFilter]="dateFilterFrom"
+      placeholder="Get from (mm/dd/yyyy)"
+      [formControl]="fromDate"
+    />
     <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
     <mat-datepicker #pickerFrom></mat-datepicker>
   </mat-form-field>
   &nbsp;
   <mat-form-field appearance="outline">
-    <mat-error>Please select a date range that doesn't exceed 7 days.</mat-error>
-    <input matInput [matDatepicker]="pickerTo" [matDatepickerFilter]="dateFilterTo" placeholder="To (mm/dd/yyyy)" [formControl]="toDate">
+    <mat-error
+      >Please select a date range that doesn't exceed 7 days.</mat-error
+    >
+    <input
+      matInput
+      [matDatepicker]="pickerTo"
+      [matDatepickerFilter]="dateFilterTo"
+      placeholder="To (mm/dd/yyyy)"
+      [formControl]="toDate"
+    />
     <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
     <mat-datepicker #pickerTo></mat-datepicker>
   </mat-form-field>
 </div>
-<div class="container" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+<div
+  class="container"
+  fxLayout="row"
+  fxLayoutAlign="start start"
+  fxLayoutGap="gappx"
+>
   <!-- <button mat-button (click)="fileInput.click()" *ngIf="dataSource">
     <mat-icon>attach_money</mat-icon> LOAD BONUSES FROM FILE
   </button>
@@ -48,283 +72,525 @@
     <input type="file" #fileInput1 (change)="onLoadDeductions($event)" />
   </span> -->
 
-  <button mat-flat-button color="warn"
-    (click)="loadPayrollType(this.payrollType.value, this.fromDate.value, this.toDate.value)"
-    *ngIf="rows.length === 0">
+  <button
+    mat-flat-button
+    color="warn"
+    (click)="
+      loadPayrollType(
+        this.payrollType.value,
+        this.fromDate.value,
+        this.toDate.value
+      )
+    "
+    *ngIf="rows.length === 0"
+  >
     RUN PAYROLL
   </button>
 </div>
 <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
   <fusioncharts
-  *ngIf="chartDataSource && rows.length !== 0"
-  [width]="'45%'"
-  [height]="500"
-  [type]="'stackedcolumn2d'"
-  [dataFormat]="'json'"
-  [dataSource]="chartDataSource"
-  (legendItemClicked)="dataplotClickHandler($event)"
-  (initialized)="initialized($event)"
+    *ngIf="chartDataSource && rows.length !== 0"
+    [width]="'45%'"
+    [height]="500"
+    [type]="'stackedcolumn2d'"
+    [dataFormat]="'json'"
+    [dataSource]="chartDataSource"
+    (legendItemClicked)="dataplotClickHandler($event)"
+    (initialized)="initialized($event)"
   >
->
-</fusioncharts>
+    >
+  </fusioncharts>
 
-<fusioncharts
-*ngIf="rows.length !== 0"
-[width]="'45%'"
-[height]="500"
-[type]="'doughnut2d'"
-[dataFormat]="'json'"
-[dataSource]="pieCharDataSource"
->
-</fusioncharts>
+  <fusioncharts
+    *ngIf="rows.length !== 0"
+    [width]="'45%'"
+    [height]="500"
+    [type]="'doughnut2d'"
+    [dataFormat]="'json'"
+    [dataSource]="pieCharDataSource"
+  >
+  </fusioncharts>
 </div>
-<div style="width: 100%;"  *ngIf="rows.length !== 0">
+<div style="width: 100%;" *ngIf="rows.length !== 0">
   <div class="pa-1">
-    <h2 fxLayout="row" fxLayoutAlign="start start" fxLayout="row" fxLayoutAlign="start start">PAYROLL TABLE
+    <h2
+      fxLayout="row"
+      fxLayoutAlign="start start"
+      fxLayout="row"
+      fxLayoutAlign="start start"
+    >
+      PAYROLL TABLE
       <span class="fill-remaining-space"></span>
       <button mat-stroked-button color="warn" (click)="clearTable()">
-         CLEAR TABLE
+        CLEAR TABLE
       </button>
       <div>
-        <button mat-stroked-button [swal]='confirmSwal' >SAVE TO DATABASE</button>
+        <button mat-stroked-button [swal]="confirmSwal">
+          SAVE TO DATABASE
+        </button>
       </div>
     </h2>
-    <mat-card-subtitle>{{payrollType.value}} QUICK VIEW</mat-card-subtitle>
+    <mat-card-subtitle>{{ payrollType.value }} QUICK VIEW</mat-card-subtitle>
   </div>
   <ngx-datatable
-  #myTable
-  class="material fullscreen"
-  style="top: 0px; height: 850px;"
-  [columnMode]="ColumnMode.force"
-  headerHeight="50"
-  footerHeight="0"
-  [rowHeight]="50"
-  [scrollbarV]="true"
-  [scrollbarH]="true"
-  [rows]="rows"
-  *ngIf="rows.length !== 0"
->
-<ngx-datatable-row-detail rowHeight="240" #myDetailRow (toggle)="onDetailToggle($event)">
-  <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
-    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
-      <table class="greyGridTable">
-        <thead>
-          <th span='2'>REGULAR RATE HRS +</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>SYS: {{row.totalSystemRegularPay.hours*60 | minutesHours}}@{{row.totalSystemRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
-            <td>{{row.totalSystemRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TRA: {{row.totalTrainingRegularPay.hours*60 | minutesHours}}@{{row.totalTrainingRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
-            <td>{{row.totalTrainingRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TOS: {{row.totalTosRegularPay.hours*60 | minutesHours}}@{{row.totalTosRegularPay.rate['$numberDecimal'] |currency:''}}</strong></td>
-            <td>{{row.totalTosRegularPay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>OVERTIME: {{row.totalOvertimePay.hours*60 | minutesHours}}@{{row.totalOvertimePay.rate['$numberDecimal'] |currency:''}}</strong></td>
-            <td>{{row.totalOvertimePay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <table class="greyGridTable">
-        <thead>
-          <th span='2'>X1.5 HOLIDAY HRS +</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>SYS: {{row.totalSystemHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalSystemHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TRA: {{row.totalTrainingHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalTrainingHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TOS: {{row.totalTosHolidayX1Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX1Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalTosHolidayX1Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="greyGridTable">
-        <thead>
-          <th span='2'>X2 HOLIDAY HRS +</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>SYS: {{row.totalSystemHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalSystemHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalSystemHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TRA: {{row.totalTrainingHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTrainingHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalTrainingHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>TOS: {{row.totalTosHolidayX2Pay.hours*60 | minutesHours}}@{{row.totalTosHolidayX2Pay.rate['$numberDecimal'] |number:'0.2'}}</strong></td>
-            <td>{{row.totalTosHolidayX2Pay.totalPayed['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="wrapper">
-        <table class="greyGridTable">
-          <thead>
-            <th>OTHER PAYMENTS + </th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ops of row.employeeOtherpays">
-              <td><strong>{{ops.reason}}</strong></td>
-              <td>{{ops.amount |currency:'$'}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="wrapper">
-        <table class="greyGridTable">
-          <thead>
-            <th>PAYED LEAVES + </th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ops of row.employeeCSL">
-              <td><strong>{{ops.reason}}</strong></td>
-              <td>{{ops.amount|currency:'$'}}</td>
-            </tr>
-            <tr *ngFor="let ops of row.employeeMaternities">
-              <td><strong>{{ops.reason}}</strong></td>
-              <td>{{ops.amount|currency:'$'}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="wrapper">
-        <table class="greyGridTable">
-          <thead>
-            <th>DEDUCTIONS - </th>
-          </thead>
-          <tbody>
-            <tr *ngFor="let ops of row.employeeDeductions">
-              <td><strong>{{ops.reason}}</strong></td>
-              <td>{{ops.amount|currency:'$'}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <table class="greyGridTable">
-        <thead>
-          <th>SOCIAL & TAX - </th>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>EMP-CON.</strong></td>
-            <td>{{row.ssEmployeeContribution['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>*RCC-CON</strong></td>
-            <td>{{row.ssEmployerContribution['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>INCOME TAX</strong></td>
-            <td>{{row.incomeTax['$numberDecimal']|currency:'$'}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table class="greyGridTable">
-        <thead>
-          <th>TOTALS </th>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>
-              GROSS - CSL - MAT
-            </strong></td>
-            <td>{{row.grossBeforeCSLPayment['$numberDecimal'] | currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>
-              GROSS
-            </strong></td>
-            <td>{{row.grossPayment['$numberDecimal'] | currency:'$'}}</td>
-          </tr>
-          <tr>
-            <td><strong>
-              NET
-            </strong></td>
-            <td>{{row.netPayment['$numberDecimal']| currency:'$'}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </ng-template>
-</ngx-datatable-row-detail>
-<ngx-datatable-column
-[width]="50"
-[resizeable]="false"
-[sortable]="false"
-[draggable]="false"
-[canAutoResize]="false"
->
-<ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-  <a
-    href="javascript:void(0)"
-    [class.datatable-icon-right]="!expanded"
-    [class.datatable-icon-down]="expanded"
-    title="Expand/Collapse Row"
-    (click)="toggleExpandRow(row)"
+    #myTable
+    class="material fullscreen"
+    style="top: 0px; height: 850px;"
+    [columnMode]="ColumnMode.force"
+    headerHeight="50"
+    footerHeight="0"
+    [rowHeight]="50"
+    [scrollbarV]="true"
+    [scrollbarH]="true"
+    [rows]="rows"
+    *ngIf="rows.length !== 0"
   >
-  </a>
-</ng-template>
-</ngx-datatable-column>
-  <ngx-datatable-column name="Employee ID" [width]="50"></ngx-datatable-column>
-  <ngx-datatable-column name="Name" [width]="100" prop="employeeName"></ngx-datatable-column>
-  <ngx-datatable-column name="Client" [width]="30" prop="employeeCompany.client"></ngx-datatable-column>
-  <ngx-datatable-column name="Campaign" [width]="30" prop="employeeCompany.campaign"></ngx-datatable-column>
-  <ngx-datatable-column name="Hire Date" [width]="30" prop="employeeCompany.hireDate">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | date:'MM/dd/yyyy'}}
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Position" [width]="90" prop="positionName"></ngx-datatable-column>
-  <ngx-datatable-column name="Since" [width]="90" prop="employeePosition.startDate">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | date:'MM/dd/yyyy'}}
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Monthly Wage" [width]="50" prop="positionBaseWage">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | currency:'$'}}
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Weekly Wage" [width]="50" prop="positionBaseWage">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value*12/52| currency:'$'}}
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Gross Wage" [width]="50" prop="grossPayment.$numberDecimal">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | currency:'$'}}
-    </ng-template>
-  </ngx-datatable-column>
-  <ngx-datatable-column name="Net Wage" [width]="50" prop="netPayment.$numberDecimal">
-    <ng-template let-value="value" ngx-datatable-cell-template>
-      {{value | currency:'$'}}
-    </ng-template>
-  </ngx-datatable-column>
-</ngx-datatable>
-<swal #confirmSwal
-title= 'Ready to save?'
-text= "please click on the confirm button"
-icon='question'
-[showCancelButton]="true"
-[focusCancel]="true"
-(confirm)="saveToDatabase(this.rows, this.fromDate.value, this.toDate.value)"
-></swal>
-<swal #successSwal
-title= 'SAVED'
-text= "The payroll was saved succesfully!"
-icon='success'
-></swal>
-</div>
+    <ngx-datatable-row-detail
+      rowHeight="240"
+      #myDetailRow
+      (toggle)="onDetailToggle($event)"
+    >
+      <ng-template
+        let-row="row"
+        let-expanded="expanded"
+        ngx-datatable-row-detail-template
+      >
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="30px">
+          <table class="greyGridTable">
+            <thead>
+              <th span="2">REGULAR RATE HRS +</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong
+                    >SYS:
+                    {{ row.totalSystemRegularPay.hours * 60 | minutesHours }}@{{
+                      row.totalSystemRegularPay.rate["$numberDecimal"]
+                        | currency: ""
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalSystemRegularPay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TRA:
+                    {{
+                      row.totalTrainingRegularPay.hours * 60 | minutesHours
+                    }}@{{
+                      row.totalTrainingRegularPay.rate["$numberDecimal"]
+                        | currency: ""
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTrainingRegularPay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TOS:
+                    {{ row.totalTosRegularPay.hours * 60 | minutesHours }}@{{
+                      row.totalTosRegularPay.rate["$numberDecimal"]
+                        | currency: ""
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTosRegularPay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >OVERTIME:
+                    {{ row.totalOvertimePay.hours * 60 | minutesHours }}@{{
+                      row.totalOvertimePay.rate["$numberDecimal"] | currency: ""
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalOvertimePay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
+          <table class="greyGridTable">
+            <thead>
+              <th span="2">X1.5 HOLIDAY HRS +</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong
+                    >SYS:
+                    {{
+                      row.totalSystemHolidayX1Pay.hours * 60 | minutesHours
+                    }}@{{
+                      row.totalSystemHolidayX1Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalSystemHolidayX1Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TRA:
+                    {{
+                      row.totalTrainingHolidayX1Pay.hours * 60 | minutesHours
+                    }}@{{
+                      row.totalTrainingHolidayX1Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTrainingHolidayX1Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TOS:
+                    {{ row.totalTosHolidayX1Pay.hours * 60 | minutesHours }}@{{
+                      row.totalTosHolidayX1Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTosHolidayX1Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="greyGridTable">
+            <thead>
+              <th span="2">X2 HOLIDAY HRS +</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong
+                    >SYS:
+                    {{
+                      row.totalSystemHolidayX2Pay.hours * 60 | minutesHours
+                    }}@{{
+                      row.totalSystemHolidayX2Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalSystemHolidayX2Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TRA:
+                    {{
+                      row.totalTrainingHolidayX2Pay.hours * 60 | minutesHours
+                    }}@{{
+                      row.totalTrainingHolidayX2Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTrainingHolidayX2Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong
+                    >TOS:
+                    {{ row.totalTosHolidayX2Pay.hours * 60 | minutesHours }}@{{
+                      row.totalTosHolidayX2Pay.rate["$numberDecimal"]
+                        | number: "0.2"
+                    }}</strong
+                  >
+                </td>
+                <td>
+                  {{
+                    row.totalTosHolidayX2Pay.totalPayed["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="wrapper">
+            <table class="greyGridTable">
+              <thead>
+                <th>OTHER PAYMENTS +</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeOtherpays">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="wrapper">
+            <table class="greyGridTable">
+              <thead>
+                <th>PAYED LEAVES +</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeCSL">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+                <tr *ngFor="let ops of row.employeeMaternities">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="wrapper">
+            <table class="greyGridTable">
+              <thead>
+                <th>DEDUCTIONS -</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ops of row.employeeDeductions">
+                  <td>
+                    <strong>{{ ops.reason }}</strong>
+                  </td>
+                  <td>{{ ops.amount | currency: "$" }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <table class="greyGridTable">
+            <thead>
+              <th>SOCIAL & TAX -</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>EMP-CON.</strong></td>
+                <td>
+                  {{
+                    row.ssEmployeeContribution["$numberDecimal"] | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td><strong>*RCC-CON</strong></td>
+                <td>
+                  {{
+                    row.ssEmployerContribution["$numberDecimal"] | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td><strong>INCOME TAX</strong></td>
+                <td>{{ row.incomeTax["$numberDecimal"] | currency: "$" }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="greyGridTable">
+            <thead>
+              <th>TOTALS</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <strong>
+                    GROSS - CSL - MAT
+                  </strong>
+                </td>
+                <td>
+                  {{
+                    row.grossBeforeCSLPayment["$numberDecimal"] | currency: "$"
+                  }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    GROSS
+                  </strong>
+                </td>
+                <td>
+                  {{ row.grossPayment["$numberDecimal"] | currency: "$" }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>
+                    NET
+                  </strong>
+                </td>
+                <td>{{ row.netPayment["$numberDecimal"] | currency: "$" }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-template>
+    </ngx-datatable-row-detail>
+    <ngx-datatable-column
+      [width]="50"
+      [resizeable]="false"
+      [sortable]="false"
+      [draggable]="false"
+      [canAutoResize]="false"
+    >
+      <ng-template
+        let-row="row"
+        let-expanded="expanded"
+        ngx-datatable-cell-template
+      >
+        <a
+          href="javascript:void(0)"
+          [class.datatable-icon-right]="!expanded"
+          [class.datatable-icon-down]="expanded"
+          title="Expand/Collapse Row"
+          (click)="toggleExpandRow(row)"
+        >
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Employee ID"
+      [width]="50"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Name"
+      [width]="100"
+      prop="employeeName"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Client"
+      [width]="30"
+      prop="employeeCompany.client"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Campaign"
+      [width]="30"
+      prop="employeeCompany.campaign"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Hire Date"
+      [width]="30"
+      prop="employeeCompany.hireDate"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | date: "MM/dd/yyyy" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Position"
+      [width]="90"
+      prop="positionName"
+    ></ngx-datatable-column>
+    <ngx-datatable-column
+      name="Since"
+      [width]="90"
+      prop="employeePosition.startDate"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | date: "MM/dd/yyyy" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Monthly Wage"
+      [width]="50"
+      prop="positionBaseWage"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Weekly Wage"
+      [width]="50"
+      prop="positionBaseWage"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ (value * 12) / 52 | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Gross Wage"
+      [width]="50"
+      prop="grossPayment.$numberDecimal"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column
+      name="Net Wage"
+      [width]="50"
+      prop="netPayment.$numberDecimal"
+    >
+      <ng-template let-value="value" ngx-datatable-cell-template>
+        {{ value | currency: "$" }}
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  <swal
+    #confirmSwal
+    title="Ready to save?"
+    text="please click on the confirm button"
+    icon="question"
+    [showCancelButton]="true"
+    [focusCancel]="true"
+    (confirm)="
+      saveToDatabase(this.rows, this.fromDate.value, this.toDate.value)
+    "
+  ></swal>
+  <swal
+    #successSwal
+    title="SAVED"
+    text="The payroll was saved succesfully!"
+    icon="success"
+  ></swal>
+</div>

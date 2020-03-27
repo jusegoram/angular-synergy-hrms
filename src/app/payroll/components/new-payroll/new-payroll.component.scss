@@ -31,7 +31,7 @@ $mat-toolbar-height-mobile-landscape: 148px !default;
 }
 
 .socialTable {
-padding: 5px;
+  padding: 5px;
 }
 tr {
   padding-left: 10px;
@@ -56,7 +56,7 @@ table.greyGridTable {
   border-collapse: collapse;
   font-size: 12px;
 }
- th {
+th {
   background: #f2f2f2;
   position: sticky;
   top: 0;
@@ -72,7 +72,7 @@ div.wrapper::-webkit-scrollbar {
   width: 5px;
   height: 8px;
   background-color: #aaa;
-  }
-  div.wrapper::-webkit-scrollbar-thumb {
-    background: #000;
+}
+div.wrapper::-webkit-scrollbar-thumb {
+  background: #000;
 }

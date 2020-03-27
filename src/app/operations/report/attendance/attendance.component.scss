@@ -2,15 +2,13 @@
   width: 58px;
 }
 
-
 .mat-column-attendance
-.mat-column-action
-.mat-column-employeeId
-.mat-column-action{
+  .mat-column-action
+  .mat-column-employeeId
+  .mat-column-action {
   flex: 0 0 5px !important;
 }
 
-.mat-column-name
-.mat-column-shift{
+.mat-column-name .mat-column-shift {
   flex: 1 0 150px !important;
 }

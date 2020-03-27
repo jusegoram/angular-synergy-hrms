@@ -5,7 +5,10 @@
   max-width: 320px;
   width: 100%;
   overflow: hidden;
-  mat-tab-group, .mat-tab-body-wrapper, mat-tab-body, .mat-tab-body-content {
+  mat-tab-group,
+  .mat-tab-body-wrapper,
+  mat-tab-body,
+  .mat-tab-body-content {
     height: 100%;
   }
   .scroll {

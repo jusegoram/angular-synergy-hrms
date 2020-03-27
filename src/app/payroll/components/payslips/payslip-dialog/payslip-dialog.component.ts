@@ -1,20 +1,20 @@
-import {FormControl} from '@angular/forms';
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {map, startWith} from 'rxjs/operators';
-import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
-import {MinuteSecondsPipe} from '../../../../shared/pipes/minute-seconds.pipe';
-import {PayrollService} from '../../../services/payroll.service';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import { FormControl } from "@angular/forms";
+import { Component, Inject, OnInit, ViewChild } from "@angular/core";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { map, startWith } from "rxjs/operators";
+import { ExportAsConfig, ExportAsService } from "ngx-export-as";
+import { MinuteSecondsPipe } from "../../../../shared/pipes/minute-seconds.pipe";
+import { PayrollService } from "../../../services/payroll.service";
+import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
 
 @Component({
-  selector: 'app-payslip-dialog',
-  templateUrl: './payslip-dialog.component.html',
-  styleUrls: ['./payslip-dialog.component.scss']
+  selector: "app-payslip-dialog",
+  templateUrl: "./payslip-dialog.component.html",
+  styleUrls: ["./payslip-dialog.component.scss"],
 })
 export class PayslipDialogComponent implements OnInit {
-  @ViewChild('sentSwal', { static: false }) sentSwal: SwalComponent;
-  @ViewChild('downloadSwal', { static: false }) downloadSwal: SwalComponent;
+  @ViewChild("sentSwal", { static: false }) sentSwal: SwalComponent;
+  @ViewChild("downloadSwal", { static: false }) downloadSwal: SwalComponent;
   myControl: FormControl;
   filteredEmployees: any;
   allEmployees: any;
@@ -25,21 +25,23 @@ export class PayslipDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<PayslipDialogComponent>,
     private minutesSecondsPipe: MinuteSecondsPipe,
     private _payrollService: PayrollService,
-    @Inject(MAT_DIALOG_DATA) public data) { }
+    @Inject(MAT_DIALOG_DATA) public data
+  ) {}
 
   ngOnInit() {
     this.bulkPayslipSent = this.data[0].payslipSent ? true : false;
-    this.myControl = new FormControl('');
+    this.myControl = new FormControl("");
     this.allEmployees = this.data.map((item) => {
-      item.fullSearchName =  `(${item.employeeId}) ${item.firstName} ${item.middleName} ${item.lastName}`;
+      item.fullSearchName = `(${item.employeeId}) ${item.firstName} ${item.middleName} ${item.lastName}`;
       return item;
     });
-    this.filteredEmployees = this.myControl.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => {
-        return this.allEmployees ? this._filterEmployees(value) : this.allEmployees;
-       })
+    this.filteredEmployees = this.myControl.valueChanges.pipe(
+      startWith(""),
+      map((value) => {
+        return this.allEmployees
+          ? this._filterEmployees(value)
+          : this.allEmployees;
+      })
     );
   }
   setEmployee(e) {
@@ -47,22 +49,27 @@ export class PayslipDialogComponent implements OnInit {
   }
   _filterEmployees(value: string): any[] {
     const filterValue = value.toString().toLowerCase();
-    return this.allEmployees.filter(employee => employee['fullSearchName'].toLowerCase().includes(filterValue));
+    return this.allEmployees.filter((employee) =>
+      employee["fullSearchName"].toLowerCase().includes(filterValue)
+    );
   }
   onDownload() {
     this.saveToPdf();
   }
   saveToPdf() {
     const config: ExportAsConfig = {
-      type: 'pdf',
-      elementId: 'payslip',
+      type: "pdf",
+      elementId: "payslip",
       options: {
-         format: 'letter', orientation: 'portrait'
-      }
+        format: "letter",
+        orientation: "portrait",
+      },
     };
-    this._exportasService.save(config, `${this.employeePayslip.fullSearchName}`).subscribe(() => {
-      this.downloadSwal.fire().then(fired => {});
-  });
+    this._exportasService
+      .save(config, `${this.employeePayslip.fullSearchName}`)
+      .subscribe(() => {
+        this.downloadSwal.fire().then((fired) => {});
+      });
   }
   transform(hrs) {
     const result = this.minutesSecondsPipe.transform(hrs);
@@ -70,14 +77,16 @@ export class PayslipDialogComponent implements OnInit {
   }
   onSend() {
     const { employeeId, payment_Id } = this.employeePayslip;
-    this._payrollService.sendPayslips(employeeId, payment_Id).subscribe(result => {
-    this.sentSwal.fire().then(fired => {});
-    });
+    this._payrollService
+      .sendPayslips(employeeId, payment_Id)
+      .subscribe((result) => {
+        this.sentSwal.fire().then((fired) => {});
+      });
   }
   onSendAll() {
     const { payment_Id } = this.data[0];
-    this._payrollService.sendPayslips('all', payment_Id).subscribe(result => {
-      this.sentSwal.fire().then(fired => {});
+    this._payrollService.sendPayslips("all", payment_Id).subscribe((result) => {
+      this.sentSwal.fire().then((fired) => {});
     });
     this.dialogRef.close();
   }

@@ -1,14 +1,14 @@
-import {User} from './User';
-import {Injectable} from '@angular/core';
-import * as moment from 'moment';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {shareReplay, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
-import {environment} from '../../environments/environment';
-import {JwtHelperService} from '@auth0/angular-jwt';
+import { User } from "./User";
+import { Injectable } from "@angular/core";
+import * as moment from "moment";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { shareReplay, tap } from "rxjs/operators";
+import { Observable } from "rxjs";
+import { environment } from "../../environments/environment";
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 export function tokenGetter() {
-  return localStorage.getItem('id_token');
+  return localStorage.getItem("id_token");
 }
 @Injectable()
 export class SessionService {
@@ -18,32 +18,30 @@ export class SessionService {
   role: number;
   api = environment.apiUrl;
   url = environment.siteUri;
-  token = '';
+  token = "";
   jwtHelper = new JwtHelperService({
-    tokenGetter: tokenGetter
-
+    tokenGetter: tokenGetter,
   });
 
-  constructor(protected http: HttpClient) {
-
-  }
+  constructor(protected http: HttpClient) {}
   login(user: string, password: string) {
-    return this.http.post<User>(this.url + '/api/login', { user, password }).pipe(
-      tap(res => this.setSession(res)),
-      shareReplay()
-    );
-
+    return this.http
+      .post<User>(this.url + "/api/login", { user, password })
+      .pipe(
+        tap((res) => this.setSession(res)),
+        shareReplay()
+      );
   }
 
   private setSession(authResult) {
-    const expiresAt = moment().add(authResult.expiresIn, 'second');
-    localStorage.setItem('id_token', authResult.idToken);
-    localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+    const expiresAt = moment().add(authResult.expiresIn, "second");
+    localStorage.setItem("id_token", authResult.idToken);
+    localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()));
   }
 
   logout() {
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
+    localStorage.removeItem("id_token");
+    localStorage.removeItem("expires_at");
   }
 
   public isLoggedIn() {
@@ -55,14 +53,14 @@ export class SessionService {
   }
 
   getExpiration() {
-    const expiration = localStorage.getItem('expires_at');
+    const expiration = localStorage.getItem("expires_at");
     const expiresAt = JSON.parse(expiration);
     return moment(expiresAt);
   }
   signup(user: User) {
     const body = JSON.stringify(user);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.api + '/signup', body, { headers: headers });
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.http.post(this.api + "/signup", body, { headers: headers });
   }
   // permission() {
   //   if (this.isLoggedIn()) {
@@ -112,7 +110,6 @@ export class SessionService {
     this.auth = false;
   }
   getWeather() {
-    return this.http.get(this.api + '/weather');
+    return this.http.get(this.api + "/weather");
   }
-
 }

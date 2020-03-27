@@ -5,7 +5,7 @@
     position: relative;
     text-align: center;
     cursor: pointer;
-    background: rgba(0,0,0,.38);
+    background: rgba(0, 0, 0, 0.38);
     text-align: left;
     border-radius: $border-radius-base $border-radius-base 0 0;
     text-align: center;
@@ -59,8 +59,8 @@
     width: 100%;
     height: 100%;
     border-style: solid;
-    border-color: rgba(0,0,0,.38);
-    content: '';
+    border-color: rgba(0, 0, 0, 0.38);
+    content: "";
     transition: transform $transition-duration;
   }
 
@@ -68,7 +68,7 @@
     right: 0;
     bottom: 0;
     border-width: 0 45px 0 0;
-    transform: translate3d(45px,0,0);
+    transform: translate3d(45px, 0, 0);
   }
 
   figure figcaption,
@@ -116,15 +116,15 @@
     margin-bottom: $spacer;
     color: #fff;
     opacity: 0;
-    transform: translate3d(90px,0,0);
+    transform: translate3d(90px, 0, 0);
   }
 
   figure:hover figcaption::before {
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 
   figure:hover p a {
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
 
   figure:hover p a {

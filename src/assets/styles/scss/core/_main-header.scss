@@ -6,7 +6,7 @@ mat-toolbar {
     height: 40px;
     line-height: 24px;
   }
-  .toolbar-avatar img{
+  .toolbar-avatar img {
     width: 40px;
     border-radius: 50%;
   }
@@ -28,7 +28,7 @@ mat-toolbar {
   &.main-header {
     padding: 0 8px;
     position: relative;
-    box-shadow: 0 1px 8px rgba(0,0,0,.3);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
     z-index: 9;
     .branding {
       display: -webkit-box;
@@ -53,7 +53,7 @@ mat-toolbar {
     }
     .search-bar {
       .search-form {
-        background: rgba(255,255,255,1);
+        background: rgba(255, 255, 255, 1);
         position: relative;
         border-radius: $border-radius-large;
         margin-right: $gutter;
@@ -61,7 +61,7 @@ mat-toolbar {
         max-width: 800px;
         input {
           font-size: 1rem;
-          padding: .95rem .75rem;
+          padding: 0.95rem 0.75rem;
           z-index: 2;
           cursor: text;
           text-indent: 30px;
@@ -114,5 +114,3 @@ mat-toolbar {
     }
   }
 }
-
-

@@ -1,17 +1,14 @@
-<mat-toolbar class="header"  color="primary">
+<mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-      <span>New Employee</span>
-      <span class="fill-remaining-space"></span>
+    <span>New Employee</span>
+    <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
-  <mat-toolbar-row>
-  </mat-toolbar-row>
-  <mat-toolbar-row>
-    </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
 </mat-toolbar>
 <div class="mat-card-top pa-1">
-
   <div fxLayout="column" fxLayout.xs="column">
-    <mat-card class="main-info pa-2 ma-1" style="overflow-x:auto;">
+    <mat-card class="main-info pa-2 ma-1" style="overflow-x: auto;">
       <mat-card-title>
         Main Information
       </mat-card-title>
@@ -19,84 +16,156 @@
         Fill > Create Employee > Redirect to Employee's profile.
       </mat-card-subtitle>
       <form [formGroup]="mainForm" id="mainForm" (ngSubmit)="onSubmit()">
-        <div >
-            <table style="width: 80%; margin-left: auto; margin-right: auto">
-                <tr>
-                  <td colspan="4">
-                      <mat-slide-toggle formControlName="idToggle" color="primary" matTooltip="Manually Assign Employee ID"> Employee ID</mat-slide-toggle>
-                      <mat-form-field class="fill-remaining-space" *ngIf="!mainForm.value.idToggle" appearance="outline">
-                        <mat-label>Employee ID</mat-label>
-                        <input matInput formControlName="employeeId"  placeholder="Enter Employee ID">
-                      </mat-form-field>
+        <div>
+          <table style="width: 80%; margin-left: auto; margin-right: auto;">
+            <tr>
+              <td colspan="4">
+                <mat-slide-toggle
+                  formControlName="idToggle"
+                  color="primary"
+                  matTooltip="Manually Assign Employee ID"
+                >
+                  Employee ID</mat-slide-toggle
+                >
+                <mat-form-field
+                  class="fill-remaining-space"
+                  *ngIf="!mainForm.value.idToggle"
+                  appearance="outline"
+                >
+                  <mat-label>Employee ID</mat-label>
+                  <input
+                    matInput
+                    formControlName="employeeId"
+                    placeholder="Enter Employee ID"
+                  />
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label>First Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="firstName"
+                    placeholder="John"
+                  />
+                  <mat-error
+                    >First name is required to create a new Employee in the
+                    synergy system</mat-error
+                  >
+                </mat-form-field>
+              </td>
+              <td colspan="2">
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label>Middle Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="middleName"
+                    placeholder="Michael"
+                  />
+                </mat-form-field>
+              </td>
+              <td>
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label>Last Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="lastName"
+                    placeholder="Doe"
+                  />
+                  <mat-error
+                    >Last name is required to create a new Employee in the
+                    synergy system</mat-error
+                  >
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label>Gender</mat-label>
+                  <mat-select
+                    formControlName="gender"
+                    placeholder="Male / Female"
+                  >
+                    <mat-option
+                      *ngFor="let gender of genders"
+                      [value]="gender.value"
+                    >
+                      {{ gender.viewValue | titlecase }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </td>
+              <td colspan="2">
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label>Status</mat-label>
+                  <mat-select
+                    formControlName="status"
+                    placeholder="Active / Resignation / etc..."
+                  >
+                    <mat-option *ngFor="let item of items" [value]="item.value">
+                      {{ item.viewValue | titlecase }}</mat-option
+                    >
+                  </mat-select>
+                </mat-form-field>
+              </td>
+            </tr>
 
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                      <mat-form-field class="fill-remaining-space" appearance="outline">
-                          <mat-label>First Name</mat-label>
-                          <input matInput formControlName="firstName" placeholder="John">
-                          <mat-error>First name is required to create a new Employee in the synergy system</mat-error>
-                        </mat-form-field>
-                  </td>
-                  <td colspan="2">
-                      <mat-form-field class="fill-remaining-space" appearance="outline">
-                          <mat-label>Middle Name</mat-label>
-                        <input matInput formControlName="middleName" placeholder="Michael">
-                      </mat-form-field>
-                  </td>
-                  <td>
-                      <mat-form-field class="fill-remaining-space" appearance="outline">
-                          <mat-label>Last Name</mat-label>
-                          <input matInput formControlName="lastName" placeholder="Doe">
-                          <mat-error>Last name is required to create a new Employee in the synergy system</mat-error>
-                        </mat-form-field>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="2">
-                      <mat-form-field class="fill-remaining-space" appearance="outline">
-                        <mat-label>Gender</mat-label>
-                          <mat-select formControlName="gender" placeholder="Male / Female" >
-                            <mat-option *ngFor="let gender of genders" [value]="gender.value"> {{gender.viewValue | titlecase}}</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                  </td>
-                  <td colspan="2">
-                      <mat-form-field class="fill-remaining-space" appearance="outline">
-                          <mat-label>Status</mat-label>
-                          <mat-select formControlName="status" placeholder="Active / Resignation / etc...">
-                            <mat-option *ngFor="let item of items" [value]="item.value"> {{item.viewValue | titlecase}}</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                  </td>
-                </tr>
-
-                <tr>
-                  <td colspan="4">
-                      <mat-form-field  class="fill-remaining-space" appearance="outline">
-                          <mat-label> Social Security No.</mat-label>
-                          <input matInput formControlName="socialSecurity" placeholder="Social Security No.">
-                          <mat-error>Social Security Number is required to create a new Employee in the synergy system</mat-error>
-                        </mat-form-field>
-                  </td>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <button mat-button class="fill-remaining-space" color="primary" form="mainForm" [disabled]="!mainForm.valid" matTooltip="After CREATE EMPLOYEE we will take you to the Employee's profile" matTooltipPosition="after">&nbsp; <mat-icon>person_add</mat-icon> &nbsp; CREATE EMPLOYEE &nbsp;</button>
-                    </td>
-                </tr>
-              </table>
+            <tr>
+              <td colspan="4">
+                <mat-form-field
+                  class="fill-remaining-space"
+                  appearance="outline"
+                >
+                  <mat-label> Social Security No.</mat-label>
+                  <input
+                    matInput
+                    formControlName="socialSecurity"
+                    placeholder="Social Security No."
+                  />
+                  <mat-error
+                    >Social Security Number is required to create a new Employee
+                    in the synergy system</mat-error
+                  >
+                </mat-form-field>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="4">
+                <button
+                  mat-button
+                  class="fill-remaining-space"
+                  color="primary"
+                  form="mainForm"
+                  [disabled]="!mainForm.valid"
+                  matTooltip="After CREATE EMPLOYEE we will take you to the Employee's profile"
+                  matTooltipPosition="after"
+                >
+                  &nbsp; <mat-icon>person_add</mat-icon> &nbsp; CREATE EMPLOYEE
+                  &nbsp;
+                </button>
+              </td>
+            </tr>
+          </table>
         </div>
-
-
-
-
-
-
-
-
       </form>
-
-      </mat-card>
+    </mat-card>
+  </div>
 </div>

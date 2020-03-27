@@ -8,126 +8,213 @@
         EXPAND
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <div class=pa-1 fxLayout="column">
-        <div class="pa-1" fxLayout="column">
-          <div class="filter">
-            <mat-form-field appearance="fill">
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-            </mat-form-field>
-          </div>
+    <div class="pa-1" fxLayout="column">
+      <div class="pa-1" fxLayout="column">
+        <div class="filter">
+          <mat-form-field appearance="fill">
+            <input
+              matInput
+              (keyup)="applyFilter($event.target.value)"
+              placeholder="Filter"
+            />
+          </mat-form-field>
+        </div>
         <mat-table #table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.referenceName }}
+            </mat-cell>
+          </ng-container>
 
-            <ng-container matColumnDef="name">
-                <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.referenceName}} </mat-cell>
-              </ng-container>
+          <ng-container matColumnDef="relationship">
+            <mat-header-cell *matHeaderCellDef>Relationship</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.relationship }}
+            </mat-cell>
+          </ng-container>
 
-            <ng-container matColumnDef="relationship">
-                <mat-header-cell *matHeaderCellDef>Relationship</mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.relationship}} </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="celNumber">
-              <mat-header-cell *matHeaderCellDef>Cellphone</mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.celNumber}} </mat-cell>
-            </ng-container>
+          <ng-container matColumnDef="celNumber">
+            <mat-header-cell *matHeaderCellDef>Cellphone</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.celNumber }}
+            </mat-cell>
+          </ng-container>
 
           <ng-container matColumnDef="telNumber">
             <mat-header-cell *matHeaderCellDef>Telephone</mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.telNumber}} </mat-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.telNumber }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="emailAddress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.emailAddress}} </mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Email
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.emailAddress }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="address">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Address </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.address}} </mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Address
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.address }}
+            </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="comment">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> Comment </mat-header-cell>
-            <mat-cell *matCellDef="let element"> <p [ngClass]="expandedComment ? 'noExpandedComment' : 'expandedComment'"> {{element.comment}} </p>  <button mat-icon-button (click)="onExpandComment()"><mat-icon>expand_more</mat-icon></button></mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Comment
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <p
+                [ngClass]="
+                  expandedComment ? 'noExpandedComment' : 'expandedComment'
+                "
+              >
+                {{ element.comment }}
+              </p>
+              <button mat-icon-button (click)="onExpandComment()">
+                <mat-icon>expand_more</mat-icon>
+              </button></mat-cell
+            >
           </ng-container>
 
           <ng-container matColumnDef="edit">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Edit </mat-header-cell>
-              <mat-cell *matCellDef="let element"><button mat-icon-button  disabled=true (click)="editReference(element._id)"><mat-icon>border_color</mat-icon></button> </mat-cell>
-            </ng-container>
+            <mat-header-cell *matHeaderCellDef mat-sort-header>
+              Edit
+            </mat-header-cell>
+            <mat-cell *matCellDef="let element"
+              ><button
+                mat-icon-button
+                disabled="true"
+                (click)="editReference(element._id)"
+              >
+                <mat-icon>border_color</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
 
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
         </mat-table>
-        <mat-paginator #paginator
-        [pageSize]="5"
-        [pageSizeOptions]="[5, 10, 15]">
+        <mat-paginator
+          #paginator
+          [pageSize]="5"
+          [pageSizeOptions]="[5, 10, 15]"
+        >
         </mat-paginator>
-        </div>
+      </div>
       <div class="pa-1" fxLayout="column">
         <div fxLayout.xs="column" [formGroup]="familyForm">
-          <table style="width: 100%">
+          <table style="width: 100%;">
             <tr fxLayout.xs="column">
-              <td colspan=3 >
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contact's Name</mat-label>
-                    <input matInput placeholder="Contact Name" formControlName="name">
-                  </mat-form-field>
+              <td colspan="3">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contact's Name</mat-label>
+                  <input
+                    matInput
+                    placeholder="Contact Name"
+                    formControlName="name"
+                  />
+                </mat-form-field>
               </td>
-              <td colspan=3>
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contact's Relationship</mat-label>
-                    <mat-select placeholder="Placeholder" formControlName="relationship" name="item">
-                      <mat-option *ngFor="let item of familyRelationships" [value]="item.value">
-                        {{item.viewValue}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
+              <td colspan="3">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contact's Relationship</mat-label>
+                  <mat-select
+                    placeholder="Placeholder"
+                    formControlName="relationship"
+                    name="item"
+                  >
+                    <mat-option
+                      *ngFor="let item of familyRelationships"
+                      [value]="item.value"
+                    >
+                      {{ item.viewValue }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               </td>
             </tr>
             <tr fxLayout.xs="column">
-              <td colspan=2>
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contact's Phone Number (Cel)</mat-label>
-                      <input matInput placeholder="600-0000" formControlName="celNumber" type="tel"  pattern="[0-9]{3}-[0-9]{4}">
-                    </mat-form-field>
+              <td colspan="2">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contact's Phone Number (Cel)</mat-label>
+                  <input
+                    matInput
+                    placeholder="600-0000"
+                    formControlName="celNumber"
+                    type="tel"
+                    pattern="[0-9]{3}-[0-9]{4}"
+                  />
+                </mat-form-field>
               </td>
-              <td colspan=2>
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contat's Phone Number (Tel)</mat-label>
-                      <input matInput placeholder="600-0000" formControlName="telNumber"  type="tel"  pattern="[0-9]{3}-[0-9]{4}">
-                    </mat-form-field>
+              <td colspan="2">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contat's Phone Number (Tel)</mat-label>
+                  <input
+                    matInput
+                    placeholder="600-0000"
+                    formControlName="telNumber"
+                    type="tel"
+                    pattern="[0-9]{3}-[0-9]{4}"
+                  />
+                </mat-form-field>
               </td>
-              <td colspan=2>
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contact's Email Address</mat-label>
-                      <input matInput placeholder="email@provider.com" formControlName="emailAddress">
-                    </mat-form-field>
+              <td colspan="2">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contact's Email Address</mat-label>
+                  <input
+                    matInput
+                    placeholder="email@provider.com"
+                    formControlName="emailAddress"
+                  />
+                </mat-form-field>
               </td>
             </tr>
             <tr fxLayout.xs="column">
-              <td colspan=6>
-                  <mat-form-field class="form" appearance="outline">
-                      <mat-label>Contact's Home Address</mat-label>
-                      <input matInput placeholder="123 Example St. Belize City" formControlName="address">
-                    </mat-form-field>
+              <td colspan="6">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>Contact's Home Address</mat-label>
+                  <input
+                    matInput
+                    placeholder="123 Example St. Belize City"
+                    formControlName="address"
+                  />
+                </mat-form-field>
               </td>
             </tr>
           </table>
-      </div>
-      <div [formGroup]="familyForm" style="width: 100%">
+        </div>
+        <div [formGroup]="familyForm" style="width: 100%;">
           <mat-form-field appearance="fill" class="form">
-              <mat-label>Family member comments</mat-label>
-            <textarea matInput placeholder="Comments on family member"  formControlName="comment"></textarea>
+            <mat-label>Family member comments</mat-label>
+            <textarea
+              matInput
+              placeholder="Comments on family member"
+              formControlName="comment"
+            ></textarea>
           </mat-form-field>
-      </div>
-      <div fxLayout="row" fxLayout.xs="column">
-          <div fxFlex="95%" fxFlexFill>
-          </div>
-          <button mat-button color="primary" (click)="onSubmit()" [disabled]="!this.familyForm.valid"><mat-icon>{{this.isEdit?'check_circle':'add_circle'}}</mat-icon> &nbsp; {{this.isEdit?'EDIT CONTACT ':'ADD CONTACT '}} &nbsp;</button>
-      </div>
-
+        </div>
+        <div fxLayout="row" fxLayout.xs="column">
+          <div fxFlex="95%" fxFlexFill></div>
+          <button
+            mat-button
+            color="primary"
+            (click)="onSubmit()"
+            [disabled]="!this.familyForm.valid"
+          >
+            <mat-icon>{{
+              this.isEdit ? "check_circle" : "add_circle"
+            }}</mat-icon>
+            &nbsp; {{ this.isEdit ? "EDIT CONTACT " : "ADD CONTACT " }} &nbsp;
+          </button>
+        </div>
       </div>
     </div>
   </mat-expansion-panel>

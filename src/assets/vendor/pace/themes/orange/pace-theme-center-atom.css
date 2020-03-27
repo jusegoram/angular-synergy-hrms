@@ -70,7 +70,7 @@
 .pace .pace-activity {
   border-radius: 50%;
   border: 5px solid #eb7a55;
-  content: ' ';
+  content: " ";
   display: block;
   position: absolute;
   top: 0;
@@ -82,7 +82,7 @@
 .pace .pace-activity:after {
   border-radius: 50%;
   border: 5px solid #eb7a55;
-  content: ' ';
+  content: " ";
   display: block;
   position: absolute;
   top: -5px;
@@ -99,7 +99,7 @@
 .pace .pace-activity:before {
   border-radius: 50%;
   border: 5px solid #eb7a55;
-  content: ' ';
+  content: " ";
   display: block;
   position: absolute;
   top: -5px;
@@ -114,18 +114,34 @@
 }
 
 @-webkit-keyframes pace-theme-center-atom-spin {
-  0%   { -webkit-transform: rotate(0deg) }
-  100% { -webkit-transform: rotate(359deg) }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
 }
 @-moz-keyframes pace-theme-center-atom-spin {
-  0%   { -moz-transform: rotate(0deg) }
-  100% { -moz-transform: rotate(359deg) }
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
 }
 @-o-keyframes pace-theme-center-atom-spin {
-  0%   { -o-transform: rotate(0deg) }
-  100% { -o-transform: rotate(359deg) }
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
 }
 @keyframes pace-theme-center-atom-spin {
-  0%   { transform: rotate(0deg) }
-  100% { transform: rotate(359deg) }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
 }

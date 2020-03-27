@@ -1,19 +1,19 @@
-import {AdminService} from '../../admin.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router} from '@angular/router';
-import {SessionService} from '../../../session/session.service';
-import {Employee} from './../../../employee/Employee';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {User} from '../../../session/User';
+import { AdminService } from "../../admin.service";
+import { MatDialog } from "@angular/material/dialog";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { Router } from "@angular/router";
+import { SessionService } from "../../../session/session.service";
+import { Employee } from "./../../../employee/Employee";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Component, OnInit } from "@angular/core";
+import { Observable } from "rxjs";
+import { map, startWith } from "rxjs/operators";
+import { User } from "../../../session/User";
 
 @Component({
-  selector: 'adm-create-user',
-  templateUrl: './create-user.component.html',
-  styleUrls: ['./create-user.component.scss']
+  selector: "adm-create-user",
+  templateUrl: "./create-user.component.html",
+  styleUrls: ["./create-user.component.scss"],
 })
 export class CreateUserComponent implements OnInit {
   items = [];
@@ -29,21 +29,21 @@ export class CreateUserComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private adminService: AdminService,
-  ) { }
+    private adminService: AdminService
+  ) {}
 
   ngOnInit() {
     this.items = this.adminService.userTypes;
-    this.adminService.getEmployees().subscribe(data => {
-      data.map(item => {
+    this.adminService.getEmployees().subscribe((data) => {
+      data.map((item) => {
         item.fullSearchName =
-          '(' +
+          "(" +
           item.employeeId +
-          ') ' +
+          ") " +
           item.firstName +
-          ' ' +
+          " " +
           item.middleName +
-          ' ' +
+          " " +
           item.lastName;
       });
       this.employees = data;
@@ -56,26 +56,26 @@ export class CreateUserComponent implements OnInit {
       username: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [
         Validators.required,
-        Validators.minLength(10)
+        Validators.minLength(10),
       ]),
-      confirmPassword: new FormControl(null, Validators.required)
+      confirmPassword: new FormControl(null, Validators.required),
     });
     this.employeeCtrl.setValidators(Validators.required);
     this.filteredEmployees = this.employeeCtrl.valueChanges.pipe(
-      startWith(''),
-      map(value => {
+      startWith(""),
+      map((value) => {
         return this.employees ? this._filterEmployees(value) : this.employees;
       })
     );
   }
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
-    return this.employees.filter(employee => {
-      return employee['fullSearchName'].toLowerCase().includes(filterValue);
+    return this.employees.filter((employee) => {
+      return employee["fullSearchName"].toLowerCase().includes(filterValue);
     });
   }
   verifyPassword() {
-    this.myForm.valueChanges.subscribe(field => {
+    this.myForm.valueChanges.subscribe((field) => {
       if (this.myForm.value.password !== this.myForm.value.confirmPassword) {
         this.myForm.controls.confirmPassword.setErrors({ mismatch: true });
       } else {
@@ -98,7 +98,7 @@ export class CreateUserComponent implements OnInit {
     return this.selectedEmployee;
   }
   onSubmit() {
-    const log: object = { date: new Date(), log: 'User Creation' };
+    const log: object = { date: new Date(), log: "User Creation" };
     const user = new User(
       this.myForm.value.username,
       this.myForm.value.password,
@@ -107,30 +107,30 @@ export class CreateUserComponent implements OnInit {
       this.myForm.value.middleName,
       this.myForm.value.lastName,
       new Date(),
-      this.getEmployee()['_id'], // Employee _id
+      this.getEmployee()["_id"], // Employee _id
       log
     );
     this.sessionService.signup(user).subscribe(
-      data => this.snackResponse(data),
-      error => this.snackResponse()
+      (data) => this.snackResponse(data),
+      (error) => this.snackResponse()
     );
     this.myForm.reset();
-    this.router.navigateByUrl('/admin/permissions');
+    this.router.navigateByUrl("/admin/permissions");
   }
 
   snackResponse(param?) {
     if (!param) {
       this.snackBar.open(
-        'There was an error creating the user, please contact the IT department',
-        'OK',
+        "There was an error creating the user, please contact the IT department",
+        "OK",
         {
-          duration: 2000
+          duration: 2000,
         }
       );
       return null;
     } else {
-      this.snackBar.open('User was created successfully', 'thank you', {
-        duration: 2000
+      this.snackBar.open("User was created successfully", "thank you", {
+        duration: 2000,
       });
       return null;
     }

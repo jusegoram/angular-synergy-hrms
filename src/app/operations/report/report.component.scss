@@ -22,26 +22,26 @@ $mat-toolbar-height-mobile-portrait: 222px !default;
 $mat-toolbar-height-mobile-landscape: 214px !default;
 
 .mat-card-top {
-margin-top: -($mat-toolbar-height-desktop);
+  margin-top: -($mat-toolbar-height-desktop);
 }
 
 @media ($mat-xsmall) and (orientation: portrait) {
-.mat-card-top {
-  margin-top: -($mat-toolbar-height-mobile-portrait);
-}
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
 }
 
 @media ($mat-small) and (orientation: landscape) {
-.mat-card-top {
-  margin-top: -($mat-toolbar-height-mobile-landscape);
-}
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
 }
 
 .header {
-width: 100% !important;
+  width: 100% !important;
 }
 .fill-remaining-space {
-flex: 1 1 auto;
+  flex: 1 1 auto;
 }
 .mat-column-action {
   flex: 0 0 15px;
