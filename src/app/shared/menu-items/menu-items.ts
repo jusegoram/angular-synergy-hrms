@@ -66,12 +66,12 @@ const MENUITEMS = [
 
 @Injectable()
 export class MenuItems {
-  Uri = environment.siteUri;
+  api = environment.apiUrl;
   constructor(private sessionService: SessionService, private http: HttpClient) {
 
   }
   getActiveMenus() {
-      return this.http.get<Array<Menu>>('/api/v1/admin/menu');
+      return this.http.get<Array<Menu>>(this.api + '/admin/menu');
   }
 // TODO: fix Add method to add new menu items
   add(param: Menu) {
@@ -94,17 +94,17 @@ export class MenuItems {
   addMenu(param: Menu) {
     const body = param ;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.post('/api/v1/admin/menu', body, { headers: headers });
+    return this.http.post(this.api + '/admin/menu', body, { headers: headers });
   }
   saveMenu(param: Menu) {
     const body = JSON.stringify(param);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('name', param.name);
-    return this.http.put('/api/v1/admin/menu', body, { headers: headers, params: params });
+    return this.http.put(this.api + '/admin/menu', body, { headers: headers, params: params });
   }
   deleteMenu(param: Menu) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('name', param.name);
-    return this.http.delete('/api/v1/admin/menu', { headers: headers, params: params });
+    return this.http.delete(this.api + '/admin/menu', { headers: headers, params: params });
   }
 }

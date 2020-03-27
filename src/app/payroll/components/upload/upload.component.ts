@@ -8,9 +8,9 @@ import {FileUploader} from 'ng2-file-upload';
   styleUrls: ['./upload.component.scss']
 })
 export class UploadComponent {
-
+  api = environment.apiUrl
   selected = '/upload';
-  URL = environment.siteUri + '/api/v1/employee/payroll/upload';
+  URL = this.api + '/employee/payroll/upload';
 
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['text/csv'],

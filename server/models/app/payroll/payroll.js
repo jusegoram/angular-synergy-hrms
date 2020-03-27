@@ -155,6 +155,7 @@ let PayrollSchema = new Schema({
   socialSecurity:{ type: String },
   status:{ type: String },
   onFinalPayment: { type: Boolean },
+  payslipSent: { type: Boolean, default: false},
   employeeCompany: {
     client: { type: String },
     campaign: { type: String },

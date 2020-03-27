@@ -1,23 +1,21 @@
 let ejs = require("ejs");
 let moment = require("moment");
-
+let juice = require("juice");
 module.exports = (
   employeePayslip
 ) => {
   let parsed = JSON.parse(JSON.stringify(employeePayslip));
-  return ejs.render(`
+  return juice(ejs.render(`
+<!DOCTYPE html>
+<html>
   <style>
       body {
       background: #f0f0f0;
-      width: 100vw;
-      height: 100vh;
       display: flex;
       justify-content: center;
       padding: 20px;
       height: 100%;
       }
-
-      @import url('https://fonts.googleapis.com/css?family=Roboto:200,300,400,600,700');
 
       * {
       font-family: 'Roboto', sans-serif;
@@ -26,8 +24,8 @@ module.exports = (
       }
 
       #payslip {
-      width: calc( 8.5in - 80px );
-      height: calc( 11in - 60px );
+      width: 8.5in;
+      height: 11in;
       background: #fff;
       padding: 30px 40px;
       }
@@ -160,6 +158,7 @@ module.exports = (
       background: rgba(0, 0, 0, 0.04);
       }
 </style>
+<body>
       <div id="payslip">
       <%
        toCurrency = function(value){
@@ -172,7 +171,7 @@ module.exports = (
       <div id="scope">
       <div class="scope-entry">
         <div class="title">PAY RUN</div>
-        <div class="value"><%=moment(element.paymentDate).format('MMM Do, YYYY') %></div>
+        <div class="value"><%=moment(element.paymentDate).format('MMM Do, YYYY') %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
       </div>
       <div class="scope-entry">
         <div class="title">PAY PERIOD</div>
@@ -191,43 +190,43 @@ module.exports = (
         </div>
         <div class="details">
           <div class="entry">
-            <div class="label">Employee ID</div>
+            <div class="label">Employee ID&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%= element.employeeId %></div>
           </div>
           <div class="entry">
-            <div class="label">Hourly Rate</div>
+            <div class="label">Hourly Rate&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%=toCurrency(element.positionHourlyRate['$numberDecimal']) %></div>
           </div>
           <div class="entry">
-            <div class="label">Company Name</div>
+            <div class="label">Company Name&nbsp;&nbsp;&nbsp;</div>
             <div class="value">RCC BPO</div>
           </div>
           <div class="entry">
-            <div class="label">Date Hired</div>
+            <div class="label">Date Hired&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%=moment(element.employeeCompany.hireDate).format('MMM Do, YYYY')  %></div>
           </div>
           <div class="entry">
-            <div class="label">Position</div>
+            <div class="label">Position&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%= element.positionName %></div>
           </div>
           <div class="entry">
-            <div class="label">Payroll Cycle</div>
+            <div class="label">Payroll Cycle&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%= element.payrollType === 'BI-WEEKLY'? 'WEEKLY' : 'SEMIMONTHLY' %></div>
           </div>
           <div class="entry">
-            <div class="label">Cost Center</div>
+            <div class="label">Cost Center&nbsp;&nbsp;&nbsp;</div>
             <div class="value">Employee Payroll</div>
           </div>
           <div class="entry">
-            <div class="label">TIN</div>
+            <div class="label">TIN&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%= element.employeePayroll.TIN %></div>
           </div>
           <div class="entry">
-            <div class="label">SSN</div>
+            <div class="label">SSN&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%= element.employeeSSN %></div>
           </div>
           <div class="entry">
-            <div class="label">Prepared by</div>
+            <div class="label">Prepared by&nbsp;&nbsp;&nbsp;</div>
             <div class="value">Finance Department</div>
           </div>
         </div>
@@ -241,7 +240,7 @@ module.exports = (
         <div class="contributions">
           <div class="title">Employer Contribution</div>
           <div class="entry">
-            <div class="label">SSS</div>
+            <div class="label">SSS&nbsp;&nbsp;&nbsp;</div>
             <div class="value"><%=toCurrency(element.ssEmployerContribution['$numberDecimal'])%></div>
           </div>
         </div>
@@ -504,9 +503,12 @@ module.exports = (
         </div>
       </div>
       </div>
+      </body>
+      </html>
     `, {
     element: parsed,
-    moment: moment,
-  });
+    moment: moment
+  }
+  ));
 };
 

@@ -4,11 +4,13 @@ import {EmployeeHours} from '../employee/Employee';
 import {map, publishReplay, refCount, share} from 'rxjs/operators';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {SessionService} from '../session/session.service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OperationsService {
+  api = environment.apiUrl;
   _employeeHours: Observable<Array<EmployeeHours>>;
   _clients: Observable<any>;
   _departments: Observable<any>;
@@ -32,7 +34,7 @@ export class OperationsService {
 
   getDepartment(): Observable<any> {
     if (!this._departments) {
-      this._departments = this.httpClient.get<any>('/api/v1/admin/payroll/department').pipe(
+      this._departments = this.httpClient.get<any>(this.api + '/admin/payroll/department').pipe(
         publishReplay(1),
         refCount()
       );
@@ -42,14 +44,14 @@ export class OperationsService {
   getHours(query): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/operations/hour', body, {
+    return this.httpClient.post(this.api + '/operations/hour', body, {
       headers: headers
     });
   }
   getKpis(query): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/operations/kpi', body, {
+    return this.httpClient.post(this.api + '/operations/kpi', body, {
       headers: headers
     });
   }
@@ -61,12 +63,12 @@ export class OperationsService {
       .set('endTime', query.endTime)
       .set('client', query.client)
       .set('campaign', query.campaign);
-    return this.httpClient.get('/api/v1/operations/attendance', {params: params});
+    return this.httpClient.get(this.api + '/operations/attendance', {params: params});
   }
 
   getAttendanceHistory(employeeId, fromDate, toDate) {
     const params = new HttpParams().set('employeeId', employeeId).set('fromDate', fromDate).set('toDate', toDate);
-    return this.httpClient.get('/api/v1/employee/shift', { params: params });
+    return this.httpClient.get(this.api + '/employee/shift', { params: params });
   }
   getMatrix(client, campaign, from, to, positions) {
     const params = new HttpParams()
@@ -75,7 +77,7 @@ export class OperationsService {
       .set('client', client)
       .set('campaign', campaign)
       .set('positions', JSON.stringify(positions));
-    return this.httpClient.get('/api/v1/operations/matrix', {params: params});
+    return this.httpClient.get(this.api + '/operations/matrix', {params: params});
   }
   getClient(): Observable<any> {
     const contextFilter = this.getDecodedToken().clients;
@@ -85,7 +87,7 @@ export class OperationsService {
     }
     if (!this._clients) {
       this._clients = this.httpClient
-        .get<any>('/api/v1/admin/employee/client', { params: params })
+        .get<any>(this.api + '/admin/employee/client', { params: params })
         .pipe(
           map(data => {
             this.clients = data;
@@ -101,7 +103,7 @@ export class OperationsService {
   saveHours(hours: EmployeeHours[]) {
     const body = JSON.stringify(hours);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post('/api/v1/operations/hours', body, {
+    return this.httpClient.post(this.api + '/operations/hours', body, {
       headers: headers
     });
   }
@@ -109,7 +111,7 @@ export class OperationsService {
     this._employeeHours = null;
   }
   getTemplate(templateUrl) {
-    return this.httpClient.get(templateUrl, { responseType: 'blob' });
+    return this.httpClient.get(this.api + templateUrl, { responseType: 'blob' });
   }
   tokenGetter() {
     return 'JWT ' + localStorage.getItem('id_token');

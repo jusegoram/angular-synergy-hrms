@@ -81,7 +81,7 @@ export class DetailComponent implements OnInit {
      this.positions = this.employee.position;
      if (!this.positions[0]) {
        this.latestPos = new Position();
-     }else {
+     } else {
       const i = this.positions.length - 1;
       this.latestPos = this.positions[i];
      }

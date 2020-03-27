@@ -26,7 +26,7 @@
   </mat-divider>
   <h3>BULK</h3>
   <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="20px">
-    <button mat-button (click)="onSendAll()">SEND ALL</button>
+    <button mat-button (click)="onSendAll()" [disabled]="bulkPayslipSent">SEND ALL</button>
   </div>
   <swal #downloadSwal
         title='GREAT!'
@@ -34,8 +34,8 @@
         icon = 'success'
   ></swal>
   <swal #sentSwal
-        title= 'EMAIL SENT!'
-        text= "The emails will finish sending in a couple of minutes"
+        title= 'EMAIL SENDING'
+        text= "The emails will finish sending in 5 minutes"
         icon='success'
   ></swal>
   <mat-card *ngIf="employeePayslip" class="hidden template">

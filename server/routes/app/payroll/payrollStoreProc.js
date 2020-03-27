@@ -736,6 +736,7 @@ let GetPayedPayroll = (id) => [
       _id: "$employee",
       employee: {$first: "$employee"},
       payment_Id: {$first: "$payment_Id"},
+      payslipSent: {$first: "$payslipSent"},
       payrolls: { $addToSet: "$payroll_Id"},
       fromDate: { $last: "$fromDate" },
       toDate: { $first: "$toDate" },

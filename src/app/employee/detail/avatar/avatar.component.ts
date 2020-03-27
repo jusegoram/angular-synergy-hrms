@@ -13,9 +13,10 @@ import {FileUploader} from 'ng2-file-upload';
 export class AvatarComponent implements OnInit {
   @Input() id: string;
   @Input() authorization: any;
+  api = environment.apiUrl;
   imageData: any = '/assets/images/default-avatar.png';
-  selected = '/api/v1/employee/upload/avatars';
-  URL = environment.siteUri + this.selected;
+  selected = '/employee/upload/avatars';
+  URL = this.api + this.selected;
   public uploader: FileUploader = new FileUploader({
     allowedMimeType: ['image/jpeg'],
     url: this.URL,
@@ -24,7 +25,6 @@ export class AvatarComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.imageData
     this.loadAvatar(this.id);
     this.getPermission();
   }

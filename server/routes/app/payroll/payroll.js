@@ -15,17 +15,19 @@ let sendEmail = require("../../../utils/sendEmail");
 let payslipTemplate = require("../../../static/payslipTemplate");
 let adminPayroll = require("../../../models/administration/administration-payroll");
 let [
-  GetEmployeesShiftAndConcepts, GetEmployeeHoursStats, GetPayedPayroll, GetPayedPayrolls, GetPayedPayrollsStats
+  GetEmployeesShiftAndConcepts,
+  GetEmployeeHoursStats,
+  GetPayedPayroll,
+  GetPayedPayrolls,
+  GetPayedPayrollsStats,
 ] = require("../payroll/payrollStoreProc");
-
-
 
 let getPayrolls = (type, finalizedBoolean) => {
   return new Promise((resolve, reject) => {
     let or;
     if (type === "") {
       or = {
-        $or: [{ payrollType: "BI-WEEKLY" }, { payrollType: "SEMIMONTHLY" }]
+        $or: [{ payrollType: "BI-WEEKLY" }, { payrollType: "SEMIMONTHLY" }],
       };
     } else {
       or = { $or: [{ payrollType: type }] };
@@ -44,11 +46,11 @@ let getPayrolls = (type, finalizedBoolean) => {
           totalPayed: { $sum: "$netPayment" },
           totalTaxes: { $sum: "$incomeTax" },
           totalCompanyContributions: { $sum: "$ssEmployerContribution" },
-          totalEmployeeContributions: { $sum: "$ssEmployeeContribution" }
-        }
+          totalEmployeeContributions: { $sum: "$ssEmployeeContribution" },
+        },
       },
       { $sort: { fromDate: -1 } },
-      { $limit: 53 }
+      { $limit: 53 },
     ])
       .allowDiskUse(true)
       .exec((err, doc) => {
@@ -57,14 +59,14 @@ let getPayrolls = (type, finalizedBoolean) => {
       });
   });
 };
-var getPayrollDetail = id => {
+var getPayrollDetail = (id) => {
   return new Promise((resolve, reject) => {
     Payroll.aggregate([
       { $match: { payroll_Id: mongoose.Types.ObjectId(id) } },
       {
         $group: {
           _id: {
-            client: "$employeeCompany.client"
+            client: "$employeeCompany.client",
           },
           campaigns: { $addToSet: "$employeeCompany.campaign" },
           employeesAmount: { $sum: 1 },
@@ -74,32 +76,32 @@ var getPayrollDetail = id => {
           totalRegularHours: { $sum: "$totalSystemRegularPay.hours" },
           totalRegularHoursPay: { $sum: "$totalSystemRegularPay.totalPayed" },
           totalOvertimeHours: {
-            $sum: "$totalOvertimePay.hours"
+            $sum: "$totalOvertimePay.hours",
           },
           totalOvertimeHoursPay: {
-            $sum: "$totalOvertimePay.totalPayed"
+            $sum: "$totalOvertimePay.totalPayed",
           },
           totalHolidayHoursX2: {
-            $sum: "$totalSystemHolidayX2Pay.hours"
+            $sum: "$totalSystemHolidayX2Pay.hours",
           },
           totalHolidayHoursX2Pay: {
-            $sum: "$totalSystemHolidayX2Pay.totalPayed"
+            $sum: "$totalSystemHolidayX2Pay.totalPayed",
           },
           totalHolidayHoursX1: {
-            $sum: "$totalSystemHolidayX1Pay.hours"
+            $sum: "$totalSystemHolidayX1Pay.hours",
           },
           totalHolidayHoursX1Pay: {
-            $sum: "$totalSystemHolidayX1Pay.totalPayed"
+            $sum: "$totalSystemHolidayX1Pay.totalPayed",
           },
           totalBonus: { $sum: "$totalBonus" },
           totalOtherpay: { $sum: "$totalOtherPays" },
           totalCompanyContributions: {
-            $sum: "$ssEmployerContribution"
+            $sum: "$ssEmployerContribution",
           },
           totalEmployeeContributions: {
-            $sum: "$ssEmployeeContribution"
-          }
-        }
+            $sum: "$ssEmployeeContribution",
+          },
+        },
       },
       {
         $addFields: {
@@ -111,19 +113,19 @@ var getPayrollDetail = id => {
           totalBonus: { $toDouble: "$totalBonus" },
           totalOtherpay: { $toDouble: "$totalOtherpay" },
           totalCompanyContributions: {
-            $toDouble: "$totalCompanyContributions"
+            $toDouble: "$totalCompanyContributions",
           },
           totalEmployeeContributions: {
-            $toDouble: "$totalEmployeeContributions"
+            $toDouble: "$totalEmployeeContributions",
           },
           totalTaxes: { $toDouble: "$totalTaxes" },
 
           totalWeeklyWages: {
-            $divide: [{ $multiply: [{ $sum: "$totalMonthlyWages" }, 12] }, 52]
-          }
-        }
+            $divide: [{ $multiply: [{ $sum: "$totalMonthlyWages" }, 12] }, 52],
+          },
+        },
       },
-      { $sort: { "_id.client": 1 } }
+      { $sort: { "_id.client": 1 } },
     ]).exec((err, doc) => {
       if (err) console.log(err);
       if (doc) {
@@ -132,7 +134,7 @@ var getPayrollDetail = id => {
           .exec((e, d) => {
             resolve({
               stats: doc,
-              payroll: d
+              payroll: d,
             });
           });
       }
@@ -141,14 +143,12 @@ var getPayrollDetail = id => {
 };
 var getPayedRuns = () => {
   return new Promise((resolve, reject) => {
-    Payroll.aggregate([
-      ...GetPayedPayrolls()
-       ])
-         .allowDiskUse(true)
-         .exec((err, doc) => {
-           if (err) reject(err);
-           else resolve(doc);
-         });
+    Payroll.aggregate([...GetPayedPayrolls()])
+      .allowDiskUse(true)
+      .exec((err, doc) => {
+        if (err) reject(err);
+        else resolve(doc);
+      });
   });
 };
 router.get("/new", (req, res) => {
@@ -156,30 +156,30 @@ router.get("/new", (req, res) => {
   let from = req.query.from;
   let to = req.query.to;
   Employee.aggregate(GetEmployeesShiftAndConcepts(type, from, to, "", ""))
-  .allowDiskUse()
+    .allowDiskUse()
     .exec((err, result) => {
       Employee.aggregate([...GetEmployeeHoursStats(type, from, to)], (e, r) => {
         if (e) res.status(400).json(e);
-        else res.status(200).json({payroll:result, stats: r});
+        else res.status(200).json({ payroll: result, stats: r });
       });
     });
 });
 
 router.get("/", (req, res) => {
-  const { id, type, finalized, payed} = req.query;
+  const { id, type, finalized, payed } = req.query;
   let finalizedBoolean = finalized === "true" ? true : false;
   if (id === "all") {
     getPayrolls(type, finalizedBoolean)
-      .then(doc => res.status(200).json(doc))
-      .catch(err => res.status(400).json(err));
+      .then((doc) => res.status(200).json(doc))
+      .catch((err) => res.status(400).json(err));
   } else if (payed === "true") {
     getPayedRuns()
-      .then(doc => res.status(200).json(doc))
-      .catch(err => res.status(400).json(err));
-  } else if (id !== "" && id !== "undefinded" && id !== undefined){
+      .then((doc) => res.status(200).json(doc))
+      .catch((err) => res.status(400).json(err));
+  } else if (id !== "" && id !== "undefinded" && id !== undefined) {
     getPayrollDetail(id)
-      .then(doc => res.status(200).json(doc))
-      .catch(err => res.status(400).json(err));
+      .then((doc) => res.status(200).json(doc))
+      .catch((err) => res.status(400).json(err));
   }
 });
 router.post("/", (req, res) => {
@@ -189,19 +189,19 @@ router.post("/", (req, res) => {
   const conceptMatch = {
     date: {
       $gte: moment(from).toDate(),
-      $lte: moment(to).toDate()
+      $lte: moment(to).toDate(),
     },
     payed: false,
     verified: true,
-    payroll: { $exists: false }
+    payroll: { $exists: false },
   };
   const hoursMatch = {
     date: {
       $gte: moment(from).toDate(),
-      $lte: moment(to).toDate()
+      $lte: moment(to).toDate(),
     },
     payed: false,
-    payroll: { $exists: false }
+    payroll: { $exists: false },
   };
 
   Payroll.find({
@@ -209,8 +209,8 @@ router.post("/", (req, res) => {
       { $and: [{ fromDate: { $gte: from } }, { fromDate: { $lte: to } }] },
       { $and: [{ toDate: { $gte: from } }, { toDate: { $lte: to } }] },
       { $and: [{ fromDate: { $gte: from } }, { toDate: { $lte: to } }] },
-      { $and: [{ fromDate: { $lte: from } }, { toDate: { $gte: to } }] }
-    ]
+      { $and: [{ fromDate: { $lte: from } }, { toDate: { $gte: to } }] },
+    ],
   })
     .limit(10)
     .lean()
@@ -224,7 +224,7 @@ router.post("/", (req, res) => {
         if (doc.length > 0) {
           res.status(400).json({
             message: "The payroll you are trying to create already exists.",
-            err: doc
+            err: doc,
           });
         } else {
           let id = new mongoose.Types.ObjectId();
@@ -232,37 +232,35 @@ router.post("/", (req, res) => {
             $set: {
               payroll: id,
               assigned: true,
-            }
+            },
           };
-          Employee.aggregate(
-            [
-              ...GetEmployeesShiftAndConcepts(
+          Employee.aggregate([
+            ...GetEmployeesShiftAndConcepts(
               payroll.type,
               moment(from).format("MM-DD-YYYY").toString(),
               moment(to).format("MM-DD-YYYY").toString(),
               id,
-              payroll.createdBy),
-              { $merge : { into : "payrolls" } }
-            ]).exec((err, result) => {
-              if (err)
-                res
-                  .status(400)
-                  .json({ message: "Error while creating payroll", err: err });
-              else {
-                Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                  Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                    Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
-                      Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
-                        res
-                          .status(200)
-                          .json({
-                            message: "Great!, the payroll got saved",
-                          })
-                      )
+              payroll.createdBy
+            ),
+            { $merge: { into: "payrolls" } },
+          ]).exec((err, result) => {
+            if (err)
+              res
+                .status(400)
+                .json({ message: "Error while creating payroll", err: err });
+            else {
+              Deduction.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                Bonus.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                  Otherpay.updateMany(conceptMatch, setPayrollId, (e, d) =>
+                    Hours.updateMany(hoursMatch, setPayrollId, (e, d) =>
+                      res.status(200).json({
+                        message: "Great!, the payroll got saved",
+                      })
                     )
                   )
-                );
-              }
+                )
+              );
+            }
           });
         }
       }
@@ -270,36 +268,36 @@ router.post("/", (req, res) => {
 });
 var getPayedPayrollDetails = (payment_Id) => {
   return new Promise((resolve, reject) => {
-    Payroll.aggregate([
-      ...GetPayedPayroll(payment_Id)
-    ]).exec((err, doc) => {
-      if(err) reject(err);
+    Payroll.aggregate([...GetPayedPayroll(payment_Id)]).exec((err, doc) => {
+      if (err) reject(err);
       else resolve(doc);
     });
   });
 };
 var getPayedPayrollStats = (payment_Id) => {
-return new Promise((resolve, reject) => {
-  Payroll.aggregate([
-    ...GetPayedPayrollsStats(payment_Id)
-  ]).exec((err, doc) => {
-    if(err) reject(err);
-      else resolve(doc);
+  return new Promise((resolve, reject) => {
+    Payroll.aggregate([...GetPayedPayrollsStats(payment_Id)]).exec(
+      (err, doc) => {
+        if (err) reject(err);
+        else resolve(doc);
+      }
+    );
   });
-});
 };
 router.get("/:payment_Id/details", (req, res) => {
-  let {payment_Id} = req.params;
-   getPayedPayrollStats(payment_Id)
-   .then(stats => {
-     getPayedPayrollDetails(payment_Id)
-     .then(details => {
-       res.status(200).json({stats: stats, details: details});
-     }).catch(e => res.status(200).json({stats: stats, details: e}));
-   }).catch(e => res.status(400).json({message: "error", err: e}));
+  let { payment_Id } = req.params;
+  getPayedPayrollStats(payment_Id)
+    .then((stats) => {
+      getPayedPayrollDetails(payment_Id)
+        .then((details) => {
+          res.status(200).json({ stats: stats, details: details });
+        })
+        .catch((e) => res.status(200).json({ stats: stats, details: e }));
+    })
+    .catch((e) => res.status(400).json({ message: "error", err: e }));
 });
-let getSSAndTaxes = grossPayment => {
-  if(grossPayment > 1213) grossPayment = 1213.30;
+let getSSAndTaxes = (grossPayment) => {
+  if (grossPayment > 1213) grossPayment = 1213.3;
   return new Promise((resolve, reject) => {
     adminPayroll.SocialTable.aggregate([
       {
@@ -309,20 +307,19 @@ let getSSAndTaxes = grossPayment => {
               {
                 $and: [
                   { $lte: ["$fromEarnings", grossPayment] },
-                  { $gte: ["$toEarnings", grossPayment] }
-                ]
+                  { $gte: ["$toEarnings", grossPayment] },
+                ],
               },
               {
                 $and: [
                   { $lte: ["$fromEarnings", grossPayment] },
                   { $gte: [grossPayment, 460] },
-                  { $eq: ["$toEarnings", 460] }
-                ]
-              }
-            ]
-          }
+                  { $eq: ["$toEarnings", 460] },
+                ],
+              },
+            ],
+          },
         },
-
       },
       {
         $lookup: {
@@ -330,31 +327,31 @@ let getSSAndTaxes = grossPayment => {
           pipeline: [
             {
               $match: {
-                  $expr:
-                  {
-                    $and:
-                    [
-                      { $lte: [ "$fromAmount",  grossPayment ] },
-                      { $gte: [ {$sum: ["$toAmount", 0.09]}, grossPayment ] }
-                    ]
-                  }
-                }
+                $expr: {
+                  $and: [
+                    { $lte: ["$fromAmount", grossPayment] },
+                    { $gte: [{ $sum: ["$toAmount", 0.09] }, grossPayment] },
+                  ],
+                },
+              },
             },
           ],
-          as: "incomeTax"
+          as: "incomeTax",
         },
       },
-      { $project: {
-        _id: 0 ,
-        ssEmployeeContribution: "$employeeContribution",
-        ssEmployerContribution: "$employerContribution",
-        incomeTax: {$arrayElemAt: [ "$incomeTax.taxAmount", 0]},
-      }}
+      {
+        $project: {
+          _id: 0,
+          ssEmployeeContribution: "$employeeContribution",
+          ssEmployerContribution: "$employerContribution",
+          incomeTax: { $arrayElemAt: ["$incomeTax.taxAmount", 0] },
+        },
+      },
     ]).exec((err, doc) => {
       if (err) reject(err);
       else {
         let [single] = doc;
-        if(grossPayment < 500) single.incomeTax = 0;
+        if (grossPayment < 500) single.incomeTax = 0;
         resolve(single);
       }
     });
@@ -362,65 +359,124 @@ let getSSAndTaxes = grossPayment => {
 };
 let assignVac = (element, payrollRecordId) => {
   return new Promise((resolve, reject) => {
-    if( element.verified === true){
-      Otherpay.find({_id: element._id}, (error, concept) => {
+    if (element.verified === true) {
+      Otherpay.find({ _id: element._id }, (error, concept) => {
         if (error) reject(error);
         else {
-
-          Payroll.findOneAndUpdate({_id: payrollRecordId}, [
-            {$set: { employeeOtherpays: { $concatArrays: [ "$employeeOtherpays", concept ] } } },
-            {$set: { totalOtherPays: {$sum: "$employeeOtherpays.amount"}}},
-            {$set: {
-              grossBeforeCSLPayment: {
-                $sum:
-                [
-                  "$totalSystemRegularPay.totalPayed", "$totalTrainingRegularPay.totalPayed", "$totalTosRegularPay.totalPayed",
-                  "$totalSystemHolidayX1Pay.totalPayed", "$totalTrainingHolidayX1Pay.totalPayed" ,"$totalTosHolidayX1Pay.totalPayed",
-                  "$totalSystemHolidayX2Pay.totalPayed", "$totalTrainingHolidayX2Pay.totalPayed", "$totalTosHolidayX2Pay.totalPayed",
-                  "$totalOvertimePay.totalPayed",
-                  "$totalOtherPays",
-                ]
+          Payroll.findOneAndUpdate(
+            { _id: payrollRecordId },
+            [
+              {
+                $set: {
+                  employeeOtherpays: {
+                    $concatArrays: ["$employeeOtherpays", concept],
+                  },
+                },
               },
-              grossPayment: {
-                $sum:
-                [
-                  "$totalSystemRegularPay.totalPayed", "$totalTrainingRegularPay.totalPayed", "$totalTosRegularPay.totalPayed",
-                  "$totalSystemHolidayX1Pay.totalPayed", "$totalTrainingHolidayX1Pay.totalPayed" ,"$totalTosHolidayX1Pay.totalPayed",
-                  "$totalSystemHolidayX2Pay.totalPayed", "$totalTrainingHolidayX2Pay.totalPayed", "$totalTosHolidayX2Pay.totalPayed",
-                  "$totalOvertimePay.totalPayed",
-                  "$totalOtherPays", "$totalMaternities", "$totalCSL"
-                ]
-              }
-            }},
-          ], { new: true }).exec((err, payroll) => {
-                  let gross = parseFloat(payroll.grossBeforeCSLPayment.toJSON()["$numberDecimal"]);
-                 getSSAndTaxes(gross).then(tax => {
-                  Payroll.updateOne({_id: payrollRecordId}, [
-                    {$set: {
-                      ssEmployeeContribution: {$convert: {input: tax.ssEmployeeContribution, to: "decimal"}},
-                      ssEmployerContribution: {$convert: {input: tax.ssEmployerContribution, to: "decimal"}},
-                      incomeTax: {$convert: {input: tax.incomeTax, to: "decimal"}},
-                    }},
-                    {
-                      $set: { netPayment: {$subtract: [{$subtract: [{$subtract: ["$grossPayment", "$ssEmployeeContribution"]}, "$incomeTax"]}, "$totalDeductions"]}}
-                    }
-                  ]).exec((err, doc) => {
-                    resolve(doc);
-                  });
-                 });
+              {
+                $set: { totalOtherPays: { $sum: "$employeeOtherpays.amount" } },
+              },
+              {
+                $set: {
+                  grossBeforeCSLPayment: {
+                    $sum: [
+                      "$totalSystemRegularPay.totalPayed",
+                      "$totalTrainingRegularPay.totalPayed",
+                      "$totalTosRegularPay.totalPayed",
+                      "$totalSystemHolidayX1Pay.totalPayed",
+                      "$totalTrainingHolidayX1Pay.totalPayed",
+                      "$totalTosHolidayX1Pay.totalPayed",
+                      "$totalSystemHolidayX2Pay.totalPayed",
+                      "$totalTrainingHolidayX2Pay.totalPayed",
+                      "$totalTosHolidayX2Pay.totalPayed",
+                      "$totalOvertimePay.totalPayed",
+                      "$totalOtherPays",
+                    ],
+                  },
+                  grossPayment: {
+                    $sum: [
+                      "$totalSystemRegularPay.totalPayed",
+                      "$totalTrainingRegularPay.totalPayed",
+                      "$totalTosRegularPay.totalPayed",
+                      "$totalSystemHolidayX1Pay.totalPayed",
+                      "$totalTrainingHolidayX1Pay.totalPayed",
+                      "$totalTosHolidayX1Pay.totalPayed",
+                      "$totalSystemHolidayX2Pay.totalPayed",
+                      "$totalTrainingHolidayX2Pay.totalPayed",
+                      "$totalTosHolidayX2Pay.totalPayed",
+                      "$totalOvertimePay.totalPayed",
+                      "$totalOtherPays",
+                      "$totalMaternities",
+                      "$totalCSL",
+                    ],
+                  },
+                },
+              },
+            ],
+            { new: true }
+          ).exec((err, payroll) => {
+            let gross = parseFloat(
+              payroll.grossBeforeCSLPayment.toJSON()["$numberDecimal"]
+            );
+            getSSAndTaxes(gross).then((tax) => {
+              Payroll.updateOne({ _id: payrollRecordId }, [
+                {
+                  $set: {
+                    ssEmployeeContribution: {
+                      $convert: {
+                        input: tax.ssEmployeeContribution,
+                        to: "decimal",
+                      },
+                    },
+                    ssEmployerContribution: {
+                      $convert: {
+                        input: tax.ssEmployerContribution,
+                        to: "decimal",
+                      },
+                    },
+                    incomeTax: {
+                      $convert: { input: tax.incomeTax, to: "decimal" },
+                    },
+                  },
+                },
+                {
+                  $set: {
+                    netPayment: {
+                      $subtract: [
+                        {
+                          $subtract: [
+                            {
+                              $subtract: [
+                                "$grossPayment",
+                                "$ssEmployeeContribution",
+                              ],
+                            },
+                            "$incomeTax",
+                          ],
+                        },
+                        "$totalDeductions",
+                      ],
+                    },
+                  },
+                },
+              ]).exec((err, doc) => {
+                resolve(doc);
+              });
+            });
           });
-      }});
-    }else{
+        }
+      });
+    } else {
       Otherpay.create(element, (error, concept) => {
         if (error) reject(error);
         else {
           resolve(concept);
-      }});
+        }
+      });
     }
-
   });
 };
-let assignFP = element => {
+let assignFP = (element) => {
   return new Promise((resolve, reject) => {});
 };
 let finalizePayroll = (payrollId, user) => {
@@ -430,10 +486,10 @@ let finalizePayroll = (payrollId, user) => {
         isFinalized: true,
         updatedAt: new Date(),
         updatedBy: user,
-      }
+      },
     };
-    Payroll.updateMany({payroll_Id: payrollId }, query).exec((err, doc) => {
-      if(err) reject(err);
+    Payroll.updateMany({ payroll_Id: payrollId }, query).exec((err, doc) => {
+      if (err) reject(err);
       else resolve(doc);
     });
   });
@@ -446,7 +502,7 @@ let payPayrolls = (ids, user) => {
         paymentDate: new Date(),
         isPayed: true,
         payedBy: user,
-      }
+      },
     };
     let parsedIds = JSON.parse(ids);
     let [id1, id2] = parsedIds;
@@ -465,9 +521,16 @@ let payPayrolls = (ids, user) => {
       { $set: { payed: true } },
       (err, raw) => {}
     );
-    Payroll.updateMany({payroll_Id: {$in: [mongoose.Types.ObjectId(id1),mongoose.Types.ObjectId(id2)]}}, query).exec((err, doc) => {
+    Payroll.updateMany(
+      {
+        payroll_Id: {
+          $in: [mongoose.Types.ObjectId(id1), mongoose.Types.ObjectId(id2)],
+        },
+      },
+      query
+    ).exec((err, doc) => {
       console.log(err);
-      if(err) reject(err);
+      if (err) reject(err);
       else resolve(doc);
     });
   });
@@ -476,23 +539,29 @@ let payPayrolls = (ids, user) => {
 // TODO: need to finish final payment
 router.put("/:payrollId", (req, res) => {
   let { body } = req;
-  let {payrollId} = req.params;
+  let { payrollId } = req.params;
   let { payrollRecordId, conceptType } = req.query;
   switch (conceptType) {
     case "FIN":
-      finalizePayroll(payrollId, body).then( result => {
-        res.status(200).json(result);
-      }).catch(e => res.status(400).json({message: "error", err: e}));
-    break;
-    case "VAC":
-      assignVac(body, payrollRecordId).then(result => {
-       res.status(200).json(result);
-      }).catch(err => res.status(400).json({message: "error", err: err}));
+      finalizePayroll(payrollId, body)
+        .then((result) => {
+          res.status(200).json(result);
+        })
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
       break;
-      case "PAY":
-      payPayrolls(payrollId, body).then( result => {
-        res.status(200).json(result);
-      }).catch(e => console.log(e));
+    case "VAC":
+      assignVac(body, payrollRecordId)
+        .then((result) => {
+          res.status(200).json(result);
+        })
+        .catch((err) => res.status(400).json({ message: "error", err: err }));
+      break;
+    case "PAY":
+      payPayrolls(payrollId, body)
+        .then((result) => {
+          res.status(200).json(result);
+        })
+        .catch((e) => console.log(e));
       break;
     case "FP":
       res.status(400);
@@ -508,7 +577,7 @@ router.post("/concepts", (req, res) => {
   let item = req.body;
   const date = new Date();
   const payId = new mongoose.Types.ObjectId().toString();
-  let mappedPayrollsId = item.payedPayrolls.map(i => i.payroll);
+  let mappedPayrollsId = item.payedPayrolls.map((i) => i.payroll);
   Otherpay.updateMany(
     { payroll: { $in: mappedPayrollsId } },
     { $set: { payed: true } },
@@ -528,8 +597,8 @@ router.post("/concepts", (req, res) => {
     {
       $or: [
         { _id: item.payedPayrolls[0].payroll },
-        { _id: item.payedPayrolls[1].payroll }
-      ]
+        { _id: item.payedPayrolls[1].payroll },
+      ],
     },
     { $set: { isPayed: true, payedDate: date, payId: payId } },
     (error, doc) => {
@@ -544,54 +613,55 @@ router.post("/concepts", (req, res) => {
 router.get("/payslips/:id", async (req, res) => {
   const { payId } = req.query;
   const { id } = req.params;
-    if(id === "all"){
-      Payroll.aggregate([...GetPayedPayroll(payId)]).exec((err, doc) => {
-        if(err) {
-          console.log(err);
-          res.status(400).json({message:"There was an error", err});
-        } else {
-          let sendAll = () => {
-            let allPromises = [];
-              for (let i = 0; i < doc.length; i++) {
-                const item = doc[i];
-                const html = payslipTemplate(item);
-                const email = sendEmail({
-                  recipient: "sgomez@rccbpo.com",
-                  subject: "RCC BPO | Checkout your payslip!",
-                  html: html,
-                });
-                  allPromises.push(email);
-              }
-              return allPromises;
-          };
-          Promise.all(sendAll()).then(results => {
-            res.status(200).json({message: "all emails are being sent", results});
-          }).catch(errors => res.status(400).json({message:"error sending bulk", errors}));
-        }
-      });
-    }else {
-      Payroll.aggregate(
-        [...GetPayedPayroll(payId)
-    ]).exec((err, doc) => {
-        const [item] = doc.filter(i => i.employeeId === parseInt(id, 10));
-        const html = payslipTemplate(item);
-        const email = sendEmail({
-          recipient: "sgomez@rccbpo.com",
-          subject: "RCC BPO | Checkout your payslip!",
+  if (id === "all") {
+    Payroll.aggregate([...GetPayedPayroll(payId)]).exec((err, doc) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json({ message: "There was an error", err });
+      } else {
+        res
+          .status(200)
+          .json({ message: "all emails are being sent", amount: doc.length });
+          let allEmails = [];
+          for (let i = 0; i < doc.length; i++) {
+            const item = doc[i];
+            const html = payslipTemplate(item);
+            allEmails.push({
+              recipient: "jseb16@gmail.com",
+              subject:
+                "RCC BPO | Hey " +
+                item.employeeName +
+                ", checkout your payslip!",
+              html: html,
+            });
+          }
+          try {
+                Payroll.updateMany({payment_id: mongoose.Types.ObjectId(payId)}, {payslipSent: true});
+                sendEmail(allEmails);
+          }catch (e) {
+            console.log(e);
+          }
+      }
+    });
+  } else {
+    res.status(200).json({message: "Email sent"});
+    Payroll.aggregate([...GetPayedPayroll(payId)]).exec((err, doc) => {
+      const [item] = doc.filter((i) => i.employeeId === parseInt(id, 10));
+      const html = payslipTemplate(item);
+      try{
+        sendEmail([{
+          recipient: "jseb16@gmail.com",
+          subject:
+            "RCC BPO | Hey " +
+            item.employeeName +
+            ", checkout your payslip!",
           html: html,
-        });
-        email.then(result => {
-            res.status(200).json({message : "ok", result});
-        }).catch(err => res.status(400).json({message:"error sending emails", err}));
-      // sendEmail().catch(err => {
-      //   if(err) {
-      //     console.log(err);
-      //   }else {
-      //     res.status(200).json({message: "Email sent"});
-      //   }
-      // });
-      });
-        }
+        }]);
+      }catch(e){
+        console.log(e);
+      }
+    });
+  }
 });
 router.get("/employees", (req, res) => {
   let id = req.query.id;
@@ -619,8 +689,8 @@ router.get("/employees", (req, res) => {
         "employees.netWage": 1,
         "employees.incomeTax": 1,
         fromDate: 1,
-        toDate: 1
-      }
+        toDate: 1,
+      },
     },
     { $sort: { fromDate: -1 } },
     {
@@ -643,8 +713,8 @@ router.get("/employees", (req, res) => {
             netWage: "$employees.netWage",
             incomeTax: "$employees.incomeTax",
             fromDate: "$fromDate",
-            toDate: "$toDate"
-          }
+            toDate: "$toDate",
+          },
         },
         weeks: { $sum: 1 },
         totalYearlyWage: { $sum: "$employees.employeePosition.wage" },
@@ -655,52 +725,49 @@ router.get("/employees", (req, res) => {
         yearlyVacations: { $push: "$employees.vacations" },
         yearlyDeductions: { $push: "$employees.deductions" },
         totalCompanyContributions: {
-          $sum: "$employees.socialSecurityEmployer"
+          $sum: "$employees.socialSecurityEmployer",
         },
         totalEmployeeContributions: {
-          $sum: "$employees.socialSecurityEmployee"
+          $sum: "$employees.socialSecurityEmployee",
         },
-        totalIncomeTax: { $sum: "$employees.incomeTax" }
-      }
+        totalIncomeTax: { $sum: "$employees.incomeTax" },
+      },
     },
-    { $limit: 53 }
+    { $limit: 53 },
   ]).exec((err, doc) => {
     if (err) res.status(400).json(err);
     res.status(200).json(doc);
   });
 });
 
-
-
-
 var saveDeductions = (concept) => {
   return new Promise((resolve, reject) => {
-    if(concept.length !== undefined && concept.length > 0) {
+    if (concept.length !== undefined && concept.length > 0) {
       let bulkCreate = [];
       for (let i = 0; i < concept.length; i++) {
         const element = concept[i];
         let query = {
           employee: element.employee,
           reason: element.reason,
-          date: element.date
+          date: element.date,
         };
         Deduction.find(query, (err, doc) => {
           if (err) reject(err);
-            else if (doc.length > 0) {
-              reject({ error: "duplicate" });
-            }else {
-              bulkCreate.push({insertOne: element});
-            }
+          else if (doc.length > 0) {
+            reject({ error: "duplicate" });
+          } else {
+            bulkCreate.push({ insertOne: element });
+          }
         });
       }
-      Deduction.bulkWrite(bulkCreate, {ordered: false})
-      .then(res => resolve({inserted: res.insertedCount}))
-      .catch(e => reject(e));
-    }else {
+      Deduction.bulkWrite(bulkCreate, { ordered: false })
+        .then((res) => resolve({ inserted: res.insertedCount }))
+        .catch((e) => reject(e));
+    } else {
       let find = {
         employee: concept.employee,
         reason: concept.reason,
-        date: concept.date
+        date: concept.date,
       };
       Deduction.find(find, (err, doc) => {
         if (err) reject(err);
@@ -718,32 +785,32 @@ var saveDeductions = (concept) => {
 };
 var saveOtherpayments = (concept) => {
   return new Promise((resolve, reject) => {
-    if(concept.length !== undefined && concept.length > 0) {
+    if (concept.length !== undefined && concept.length > 0) {
       let bulkCreate = [];
       for (let i = 0; i < concept.length; i++) {
         const element = concept[i];
         let find = {
           employee: element.employee,
           reason: element.reason,
-          date: element.date
+          date: element.date,
         };
         Otherpay.find(find, (err, doc) => {
           if (err) reject(err);
-            else if (doc.length > 0) {
-              reject({ error: "duplicate" });
-            }else {
-              bulkCreate.push({insertOne: element});
-            }
+          else if (doc.length > 0) {
+            reject({ error: "duplicate" });
+          } else {
+            bulkCreate.push({ insertOne: element });
+          }
         });
       }
-      Otherpay.bulkWrite(bulkCreate, {ordered: false})
-      .then(res => resolve({inserted: res.insertedCount}))
-      .catch(e => reject(e));
-    }else {
+      Otherpay.bulkWrite(bulkCreate, { ordered: false })
+        .then((res) => resolve({ inserted: res.insertedCount }))
+        .catch((e) => reject(e));
+    } else {
       let find = {
         employee: concept.employee,
         reason: concept.reason,
-        date: concept.date
+        date: concept.date,
       };
       Otherpay.find(find, (err, doc) => {
         if (err) reject(err);
@@ -761,32 +828,32 @@ var saveOtherpayments = (concept) => {
 };
 var saveBonus = (concept) => {
   return new Promise((resolve, reject) => {
-    if(concept.length !== undefined && concept.length > 0) {
+    if (concept.length !== undefined && concept.length > 0) {
       let bulkCreate = [];
       for (let i = 0; i < concept.length; i++) {
         const element = concept[i];
         let find = {
           employee: element.employee,
           reason: element.reason,
-          date: element.date
+          date: element.date,
         };
         Bonus.find(find, (err, doc) => {
           if (err) reject(err);
-            else if (doc.length > 0) {
-              reject({ error: "duplicate" });
-            }else {
-              bulkCreate.push({insertOne: element});
-            }
+          else if (doc.length > 0) {
+            reject({ error: "duplicate" });
+          } else {
+            bulkCreate.push({ insertOne: element });
+          }
         });
       }
-      Bonus.bulkWrite(bulkCreate, {ordered: false})
-      .then(res => resolve({inserted: res.insertedCount}))
-      .catch(e => reject(e));
-    }else {
+      Bonus.bulkWrite(bulkCreate, { ordered: false })
+        .then((res) => resolve({ inserted: res.insertedCount }))
+        .catch((e) => reject(e));
+    } else {
       let find = {
         employee: concept.employee,
         reason: concept.reason,
-        date: concept.date
+        date: concept.date,
       };
       Bonus.find(find, (err, doc) => {
         if (err) reject(err);
@@ -804,26 +871,35 @@ var saveBonus = (concept) => {
 };
 var saveFinalPayment = (concept) => {
   return new Promise((resolve, reject) => {
-    saveOtherpayments(concept).then(result => {
-      if(concept.length !== undefined && concept.length > 0 ) {
+    saveOtherpayments(concept).then((result) => {
+      if (concept.length !== undefined && concept.length > 0) {
         let bulkUpdate = [];
-          for (let i = 0; i < concept.length; i++) {
+        for (let i = 0; i < concept.length; i++) {
           const element = concept[i];
-            bulkCreate.push({updateOne: {
-              filter: {_id: element.employee},
-              update: { $set: {
-                onFinalPayment: true,
-              }}
-            }});
+          bulkCreate.push({
+            updateOne: {
+              filter: { _id: element.employee },
+              update: {
+                $set: {
+                  onFinalPayment: true,
+                },
+              },
+            },
+          });
+        }
+        Employee.bulkWrite(bulkUpdate, { ordered: false })
+          .then((res) => resolve({ updated: res.modifiedCount }))
+          .catch((e) => reject(e));
+      } else {
+        Employee.updateOne(
+          { _id: concept.employee },
+          {
+            $set: {
+              onFinalPayment: true,
+            },
           }
-          Employee.bulkWrite(bulkUpdate, {ordered: false})
-          .then(res => resolve({updated: res.modifiedCount}))
-          .catch(e => reject(e));
-      }else {
-        Employee.updateOne({_id: concept.employee}, { $set: {
-          onFinalPayment: true,
-        }}).exec((err, doc) => {
-          if(err) reject(err);
+        ).exec((err, doc) => {
+          if (err) reject(err);
           else resolve(result);
         });
       }
@@ -833,33 +909,41 @@ var saveFinalPayment = (concept) => {
 router.get("/concepts/:type/:id", (req, res) => {
   const { type, id } = req.params;
   const {
-    verified, payed, maternity,
-    csl, notice, severance,
-    compassionate, leaveWithoutPay,
-    vacations, assigned, payroll} = req.query;
+    verified,
+    payed,
+    maternity,
+    csl,
+    notice,
+    severance,
+    compassionate,
+    leaveWithoutPay,
+    vacations,
+    assigned,
+    payroll,
+  } = req.query;
 
   let query = new Object();
-  if(assigned === "true") {
+  if (assigned === "true") {
     query = {
       $or: [
         {
-          assigned: assigned === "true"
+          assigned: assigned === "true",
         },
         {
-          assigned: assigned === "true"
-        }
-      ]
+          assigned: assigned === "true",
+        },
+      ],
     };
-  }else {
+  } else {
     query = {
       $or: [
         {
-          assigned: false
+          assigned: false,
         },
         {
-          assigned: { $exists: false }
-        }
-      ]
+          assigned: { $exists: false },
+        },
+      ],
     };
   }
 
@@ -911,7 +995,6 @@ router.get("/concepts/:type/:id", (req, res) => {
     query["$or"][1].payroll = payroll;
   }
 
-
   let deductions = () => {
     Deduction.find(query)
       .lean()
@@ -952,20 +1035,20 @@ router.get("/concepts/:type/:id", (req, res) => {
     case "otherpayments":
       otherpays();
       break;
-      case "taxablebonus":
-        bonus(true);
+    case "taxablebonus":
+      bonus(true);
       break;
-      case "non-taxablebonus":
-        bonus(false);
+    case "non-taxablebonus":
+      bonus(false);
       break;
-      case "finalpayments":
-        otherpays();
+    case "finalpayments":
+      otherpays();
       break;
 
     default:
       res.status(400).json({
         error:
-          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
+          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept",
       });
       break;
   }
@@ -976,35 +1059,35 @@ router.post("/concepts/:type/:id", (req, res) => {
   switch (type.toLowerCase().replace(/\s+/g, "")) {
     case "deduction":
       saveDeductions(concept)
-      .then(doc => res.status(200).json(doc))
-      .catch(e => res.status(400).json({message: "error", err: e}));
-    break;
+        .then((doc) => res.status(200).json(doc))
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
+      break;
     case "otherpayments":
       saveOtherpayments(concept)
-      .then(doc => res.status(200).json(doc))
-      .catch(e => res.status(400).json({message: "error", err: e}));
-    break;
+        .then((doc) => res.status(200).json(doc))
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
+      break;
     case "taxablebonus":
       saveBonus(concept)
-      .then(doc => res.status(200).json(doc))
-      .catch(e => res.status(400).json({message: "error", err: e}));
-    break;
+        .then((doc) => res.status(200).json(doc))
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
+      break;
     case "non-taxablebonus":
       saveBonus(concept)
-      .then(doc => res.status(200).json(doc))
-      .catch(e => res.status(400).json({message: "error", err: e}));
-    break;
+        .then((doc) => res.status(200).json(doc))
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
+      break;
     case "finalpayments":
       saveFinalPayment(concept)
-      .then(doc => res.status(200).json(doc))
-      .catch(e => res.status(400).json({message: "error", err: e}));
-    break;
+        .then((doc) => res.status(200).json(doc))
+        .catch((e) => res.status(400).json({ message: "error", err: e }));
+      break;
     default:
       res.status(400).json({
         error:
-          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
+          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept",
       });
-    break;
+      break;
   }
 });
 router.put("/concepts/:type", (req, res) => {
@@ -1032,23 +1115,23 @@ router.put("/concepts/:type", (req, res) => {
   switch (type.toLowerCase().replace(/\s+/g, "")) {
     case "deduction":
       deductions();
-    break;
+      break;
     case "otherpayments":
       otherpays();
-    break;
+      break;
     case "taxablebonus":
       bonus();
-    break;
+      break;
     case "non-taxablebonus":
       bonus();
-    break;
+      break;
     case "finalpayments":
       otherpays();
-    break;
-        default:
+      break;
+    default:
       res.status(400).json({
         error:
-          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
+          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept",
       });
       break;
   }
@@ -1084,17 +1167,17 @@ router.delete("/concepts/:type", (req, res) => {
       break;
     case "taxablebonus":
       bonus();
-    break;
+      break;
     case "non-taxablebonus":
       bonus();
-    break;
+      break;
     case "finalpayments":
       otherpays();
-    break;
+      break;
     default:
       res.status(400).json({
         error:
-          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept"
+          type.toLowerCase().replace(/\s+/g, "") + " is not a valid concept",
       });
       break;
   }

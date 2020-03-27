@@ -19,6 +19,7 @@ export class PayslipDialogComponent implements OnInit {
   filteredEmployees: any;
   allEmployees: any;
   employeePayslip: any;
+  bulkPayslipSent = false;
   constructor(
     private _exportasService: ExportAsService,
     public dialogRef: MatDialogRef<PayslipDialogComponent>,
@@ -27,6 +28,7 @@ export class PayslipDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit() {
+    this.bulkPayslipSent = this.data[0].payslipSent ? true : false;
     this.myControl = new FormControl('');
     this.allEmployees = this.data.map((item) => {
       item.fullSearchName =  `(${item.employeeId}) ${item.firstName} ${item.middleName} ${item.lastName}`;
@@ -77,6 +79,6 @@ export class PayslipDialogComponent implements OnInit {
     this._payrollService.sendPayslips('all', payment_Id).subscribe(result => {
       this.sentSwal.fire().then(fired => {});
     });
-    console.log(this.data[0]);
+    this.dialogRef.close();
   }
 }
