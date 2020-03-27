@@ -31,7 +31,6 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
-nodemon.json
 .editorconfig
 /typings
 
