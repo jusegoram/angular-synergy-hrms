@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { PayrollService } from '../../services/payroll.service';
+import {Component, OnInit} from '@angular/core';
+import {PayrollService} from '../../services/payroll.service';
 import * as XLSX from 'xlsx';
-import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
 import moment from 'moment';
 
 

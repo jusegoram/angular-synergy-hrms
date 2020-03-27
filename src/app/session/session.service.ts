@@ -1,11 +1,11 @@
-import { User } from './User';
-import { Injectable } from '@angular/core';
+import {User} from './User';
+import {Injectable} from '@angular/core';
 import * as moment from 'moment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { shareReplay, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {shareReplay, tap} from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {environment} from '../../environments/environment';
+import {JwtHelperService} from '@auth0/angular-jwt';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -16,7 +16,8 @@ export class SessionService {
   _role: Observable<any>;
   auth: boolean;
   role: number;
-  Uri = environment.siteUri;
+  api = environment.apiUrl;
+  url = environment.siteUri;
   token = '';
   jwtHelper = new JwtHelperService({
     tokenGetter: tokenGetter
@@ -27,7 +28,7 @@ export class SessionService {
 
   }
   login(user: string, password: string) {
-    return this.http.post<User>('/login', { user, password }).pipe(
+    return this.http.post<User>(this.url + '/api/login', { user, password }).pipe(
       tap(res => this.setSession(res)),
       shareReplay()
     );
@@ -61,7 +62,7 @@ export class SessionService {
   signup(user: User) {
     const body = JSON.stringify(user);
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post('/api/v1/signup', body, { headers: headers });
+    return this.http.post(this.api + '/signup', body, { headers: headers });
   }
   // permission() {
   //   if (this.isLoggedIn()) {
@@ -111,7 +112,7 @@ export class SessionService {
     this.auth = false;
   }
   getWeather() {
-    return this.http.get('/api/v1/weather');
+    return this.http.get(this.api + '/weather');
   }
 
 }

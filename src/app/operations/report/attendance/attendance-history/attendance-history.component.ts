@@ -1,9 +1,9 @@
-import { OperationsService } from './../../../operations.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {OperationsService} from './../../../operations.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import moment from 'moment';
-import { MatPaginator } from '@angular/material/paginator';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-attendance-history',

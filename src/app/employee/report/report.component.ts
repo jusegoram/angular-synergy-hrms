@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { EmployeeService } from '../employee.service';
+import {Component, OnInit} from '@angular/core';
+import {EmployeeService} from '../employee.service';
 import * as XLSX from 'xlsx';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
 import moment from 'moment';
 
 @Component({

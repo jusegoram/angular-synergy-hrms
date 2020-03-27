@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { Employee, EmployeeAttrition } from '../../Employee';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '../../../session/session.service';
+import {Component, Input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {Employee, EmployeeAttrition} from '../../Employee';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {EmployeeService} from '../../employee.service';
+import {SessionService} from '../../../session/session.service';
 
 @Component({
   selector: 'attrition-info',

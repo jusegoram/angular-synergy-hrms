@@ -1,10 +1,10 @@
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from './../../operations.service';
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
+import {OperationsService} from './../../operations.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
 import moment from 'moment';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'report-attendance',

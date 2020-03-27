@@ -1,10 +1,8 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
-import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
-import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { SessionGuard } from './session/guards/session.guard';
-import { AppComponent } from './app.component';
-import { RootGuard } from './session/guards/root.guard';
+import {AdminLayoutComponent} from './layouts/admin/admin-layout.component';
+import {AuthLayoutComponent} from './layouts/auth/auth-layout.component';
+import {SessionGuard} from './session/guards/session.guard';
 
 export const AppRoutes: Routes = [
   {

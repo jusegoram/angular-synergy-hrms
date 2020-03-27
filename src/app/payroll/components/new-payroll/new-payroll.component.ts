@@ -1,27 +1,14 @@
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { MinuteSecondsPipe } from '../../../shared/pipes/minute-seconds.pipe';
-import { PayrollRow } from './PayrollRow';
-import { PayrollService } from '../../services/payroll.service';
+import {Router} from '@angular/router';
+import {DatePipe} from '@angular/common';
+import {PayrollService} from '../../services/payroll.service';
 
-import {
-  FormControl,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-  ValidatorFn
-} from '@angular/forms';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, NgZone } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import * as XLSX from 'xlsx';
+import {AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import * as moment from 'moment';
-import { Payroll } from './Payroll';
-import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import {ExportBottomSheetComponent} from './export-bottom-sheet/export-bottom-sheet.component';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-manage',

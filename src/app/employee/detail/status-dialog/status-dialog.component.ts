@@ -1,12 +1,8 @@
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { EmployeeService } from './../../employee.service';
-import { Component, Inject, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from '@angular/material/dialog';
-import { SignatureFieldComponent } from '../../../shared/signature-field/signature-field.component';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {EmployeeService} from './../../employee.service';
+import {AfterViewInit, Component, Inject, QueryList, ViewChildren} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {SignatureFieldComponent} from '../../../shared/signature-field/signature-field.component';
 
 @Component({
   selector: 'app-status-dialog',

@@ -1,13 +1,13 @@
-import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { OperationsService } from './../../operations.service';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {OperationsService} from './../../operations.service';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import moment from 'moment';
-import { Observable, Subscription } from 'rxjs';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { startWith, map } from 'rxjs/operators';
-import { MatChipInputEvent } from '@angular/material/chips';
+import {Observable, Subscription} from 'rxjs';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {map, startWith} from 'rxjs/operators';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'report-matrix',

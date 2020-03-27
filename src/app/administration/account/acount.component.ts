@@ -1,12 +1,12 @@
-import { SessionService } from '../../session/session.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort, Sort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '../admin.service';
-import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import {SessionService} from '../../session/session.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {AdminService} from '../admin.service';
+import {EditUserDialogComponent} from './edit-user-dialog/edit-user-dialog.component';
 
 
 @Component({

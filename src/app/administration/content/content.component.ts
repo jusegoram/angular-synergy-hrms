@@ -1,9 +1,6 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MenuItems, ChildrenItems } from './../../shared/menu-items/menu-items';
-import { Menu } from './../../shared/menu-items/menu-items';
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { noop } from 'rxjs';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Menu, MenuItems} from './../../shared/menu-items/menu-items';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-content',

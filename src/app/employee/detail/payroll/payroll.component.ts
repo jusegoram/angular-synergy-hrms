@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '../../../session/session.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
-import { Params, ActivatedRoute } from '@angular/router';
-import { EmployeePayroll} from '../../Employee';
+import {Component, Input, OnInit} from '@angular/core';
+import {EmployeeService} from '../../employee.service';
+import {SessionService} from '../../../session/session.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {EmployeePayroll} from '../../Employee';
 
 @Component({
   selector: 'payroll-info',

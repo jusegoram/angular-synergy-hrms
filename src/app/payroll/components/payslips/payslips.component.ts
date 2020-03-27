@@ -1,12 +1,6 @@
-import { PayslipDialogComponent } from './payslip-dialog/payslip-dialog.component';
-import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
-import { PayrollService } from './../../services/payroll.service';
-import { Component, OnInit, Input } from '@angular/core';
-import { ExportAsService, ExportAsConfig } from 'ngx-export-as';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatDialog } from '@angular/material/dialog';
+import {PayslipDialogComponent} from './payslip-dialog/payslip-dialog.component';
+import {Component, Input, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payslips',

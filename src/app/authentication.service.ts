@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
+import {Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest, HttpResponse} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 import {tap} from 'rxjs/operators';
-import { SessionService } from './session/session.service';
-import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
+import {SessionService} from './session/session.service';
+import {MatDialog} from '@angular/material/dialog';
+
 @Injectable({
   providedIn: 'root'
 })

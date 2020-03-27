@@ -1,12 +1,10 @@
-import { TitleCasePipe } from '@angular/common';
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '../../../session/session.service';
+import {TitleCasePipe} from '@angular/common';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {EmployeeService} from '../../employee.service';
 import {Employee, EmployeePersonal} from '../../Employee';
-import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { Params, ActivatedRoute } from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'personal-info',

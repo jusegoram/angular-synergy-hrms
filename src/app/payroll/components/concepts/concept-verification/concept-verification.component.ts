@@ -1,10 +1,10 @@
-import { SessionService } from './../../../../session/session.service';
-import { PayrollService } from './../../../services/payroll.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { SelectionModel } from '@angular/cdk/collections';
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import {SessionService} from './../../../../session/session.service';
+import {PayrollService} from './../../../services/payroll.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {SelectionModel} from '@angular/cdk/collections';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-concept-verification',

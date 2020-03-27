@@ -1,6 +1,6 @@
-import { SessionService } from '../session.service';
-import {  Router, CanLoad, CanActivate } from '@angular/router';
-import { Injectable } from '@angular/core';
+import {SessionService} from '../session.service';
+import {CanActivate, CanLoad, Router} from '@angular/router';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class RootGuard implements CanLoad, CanActivate {

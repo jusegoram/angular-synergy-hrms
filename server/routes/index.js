@@ -1,48 +1,49 @@
-let express = require('express');
+let express = require("express");
 let router = express.Router();
-var bcrypt = require('bcryptjs');
-var jwt = require('jsonwebtoken');
-var fs = require('fs');
-var path = require('path');
-let userLogs = require('../routes/services/userLogs');
-let UserLogs = userLogs.UserLogs;
-const RSA_KEY = fs.readFileSync(path.join(__dirname, './priv.key'));
+let bcrypt = require("bcryptjs");
+let jwt = require("jsonwebtoken");
+let fs = require("fs");
+let path = require("path");
 
-var User = require('../models/administration/administration-user');
+let RSA_KEY;
+RSA_KEY = fs.readFileSync(path.join(__dirname, "./priv.key"));
 
-router.get('/', function (req, res, next) {
-    res.render('index.html');
+let User = require("../models/administration/administration-user");
+
+router.get("/", function (req, res, next) {
+//    res.render("index.html");
+  res.status(404).send("WOOPS, this is not a valid route");
 });
 
 
-router.post('/login', function(req, res, next) {
-  User.findOneAndUpdate({username: req.body.user}, {$set: {lastLogin: new Date()}}, {new: true}).select('+password').exec(function(err, user) {
+router.post("/api/login", function(req, res, next) {
+  User.findOneAndUpdate({username: req.body.user}, {"$set": {lastLogin: new Date()}}, {new: true}).select("+password").exec(function(err, user) {
     if (err) {
         return res.status(500).json({
-            title: 'An error occurred',
+            title: "An error occurred",
             error: err
         });
     }else if (!user) {
         return res.status(401).json({
-            title: 'Login failed',
-            error: {message: 'Invalid login credentials'}
+            title: "Login failed",
+            error: {message: "Invalid login credentials"}
         });
     }else if (!bcrypt.compareSync(req.body.password, user.password)) {
         return res.status(401).json({
-            title: 'Login failed',
-            error: {message: 'Invalid login credentials'}
+            title: "Login failed",
+            error: {message: "Invalid login credentials"}
         });
     }else {
-      var token = jwt.sign({
+      let token = jwt.sign({
         userId: user._id.toString(),
-        name: user.firstName + (user.middleName? ' ' + user.middleName: '') + ' ' + user.lastName,
+        name: user.firstName + (user.middleName ? " " + user.middleName : "") + " " + user.lastName,
         role: user.role,
         pages: user.pages,
         clients: user.clients,
         rights: user.rights,
       }, RSA_KEY, {
-        algorithm: 'RS256',
-        expiresIn: '3h',
+        algorithm: "RS256",
+        expiresIn: "3h",
       });
       res.status(200).json({
           idToken: token,

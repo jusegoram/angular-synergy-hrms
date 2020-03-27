@@ -1,13 +1,9 @@
-import { SessionService } from './../../session/session.service';
-import { EmployeeService } from './../employee.service';
-/// <reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import { Component } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-// const URL = '/api/';
-import { environment } from '../../../environments/environment';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSnackBar } from '@angular/material/snack-bar';
-
+import {EmployeeService} from '../employee.service';
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../environments/environment';
+import {MatTableDataSource} from '@angular/material/table';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -19,43 +15,35 @@ export class UploadComponent {
   uploader: FileUploader;
   hoursUploader: FileUploader;
   dataSource: any;
-  hoursDataSource: any;
-  hasBaseDropZoneOver: boolean;
-  hasAnotherDropZoneOver: boolean;
   response: string;
   displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
-  public selected = {value: '/api/v1/employee/upload', viewValue: 'Employee Main'};
-  URL = environment.siteUri;
-   // http://localhost:3000/upload
+  public selected = {value: '/employee/upload', viewValue: 'Employee Main'};
+  api = environment.apiUrl;
   items = [
-    {value: '/api/v1/employee/upload', viewValue: 'Employee Main'},
-    {value: '/api/v1/employee/upload/company', viewValue: 'Employee Company'},
-    {value: '/api/v1/employee/upload/position', viewValue: 'Employee Position'},
-    {value: '/api/v1/employee/upload/shift', viewValue: 'Employee Shift'},
-    {value: '/api/v1/employee/upload/personal', viewValue: 'Employee Personal'},
-    {value: '/api/v1/employee/upload/personal/hobbies', viewValue: 'Employee Hobbies'},
-    {value: '/api/v1/employee/upload/payroll', viewValue: 'Employee Payroll'},
-    {value: '/api/v1/employee/upload/family', viewValue: 'Employee Family'},
-    {value: '/api/v1/employee/upload/education', viewValue: 'Employee Education'}
+    {value: '/employee/upload', viewValue: 'Employee Main'},
+    {value: '/employee/upload/company', viewValue: 'Employee Company'},
+    {value: '/employee/upload/position', viewValue: 'Employee Position'},
+    {value: '/employee/upload/shift', viewValue: 'Employee Shift'},
+    {value: '/employee/upload/personal', viewValue: 'Employee Personal'},
+    {value: '/employee/upload/personal/hobbies', viewValue: 'Employee Hobbies'},
+    {value: '/employee/upload/payroll', viewValue: 'Employee Payroll'},
+    {value: '/employee/upload/family', viewValue: 'Employee Family'},
+    {value: '/employee/upload/education', viewValue: 'Employee Education'}
   ];
 
   templates = [
-    {text: 'Main Information', value: '/api/v1/employee/template'},
-    {text: 'Personal Information', value: '/api/v1/employee/template/personal'},
-    {text: 'Hobbies Information', value: '/api/v1/employee/template/personal/hobbies'},
-    {text: 'Company Information', value: '/api/v1/employee/template/company'},
-    {text: 'Position Information', value: '/api/v1/employee/template/position'},
-    {text: 'Shift Information', value: '/api/v1/employee/template/shift'},
-    {text: 'Payroll Information', value: '/api/v1/employee/template/payroll'},
-    {text: 'Family Information', value: '/api/v1/employee/template/family'},
-    {text: 'Education Information', value: '/api/v1/employee/template/education'},
+    {text: 'Main Information', value: '/employee/template'},
+    {text: 'Personal Information', value: '/employee/template/personal'},
+    {text: 'Hobbies Information', value: '/employee/template/personal/hobbies'},
+    {text: 'Company Information', value: '/employee/template/company'},
+    {text: 'Position Information', value: '/employee/template/position'},
+    {text: 'Shift Information', value: '/employee/template/shift'},
+    {text: 'Payroll Information', value: '/employee/template/payroll'},
+    {text: 'Family Information', value: '/employee/template/family'},
+    {text: 'Education Information', value: '/employee/template/education'},
   ];
   templateSelected = '';
-  // public uploader: FileUploader = new FileUploader({
-  //   allowedMimeType: ['text/csv'],
-  //   url: this.URL,
-  //   isHTML5: true
-  // });
+
   auth: any;
   constructor (public snackBar: MatSnackBar, private _employeeService: EmployeeService) {
     this.setUploader();
@@ -68,7 +56,7 @@ export class UploadComponent {
   }
 
    setUploader() {
-     const setURL = this.URL + this.selected.value;
+     const setURL = this.api + this.selected.value;
     this.uploader = new FileUploader({
       url: setURL,
       allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
@@ -95,11 +83,11 @@ export class UploadComponent {
   refresh() {
     this.dataSource = new MatTableDataSource(this.uploader.queue);
   }
-  getTemplate(template) {
+  getTemplate(template: {text: string, value: string}) {
     this._employeeService.getTemplate(template.value).subscribe((data: BlobPart) => {
       this.openSnackBar('Download started', 'thanks');
-      let a = document.createElement('a');
-      let blob = new Blob([data], {type: 'text/csv' }),
+      const a = document.createElement('a');
+      const blob = new Blob([data], {type: 'text/csv' }),
       url = window.URL.createObjectURL(blob);
 
       a.href = url;

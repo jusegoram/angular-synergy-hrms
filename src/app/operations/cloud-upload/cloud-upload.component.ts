@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-import { environment } from '../../../environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from '../operations.service';
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../environments/environment';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {OperationsService} from '../operations.service';
 
 @Component({
   selector: 'app-cloud-upload',
@@ -11,14 +11,12 @@ import { OperationsService } from '../operations.service';
   styleUrls: ['./cloud-upload.component.scss']
 })
 export class CloudUploadComponent {
+  api = environment.apiUrl;
   auth: any;
   uploader: FileUploader;
   hoursUploader: FileUploader;
   dataSource: any;
   errorDataSource: any;
-  hoursDataSource: any;
-  hasBaseDropZoneOver: boolean;
-  hasAnotherDropZoneOver: boolean;
   response: string;
   errorTableColumns: string[] = [
     'employeeId',
@@ -30,17 +28,15 @@ export class CloudUploadComponent {
   ];
   displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
   public selected = {
-    value: '/api/v1/employee/upload/hours',
+    value: '/employee/upload/hours',
     viewValue: 'Employee Hours'
   };
-  URL = environment.siteUri;
-  // http://localhost:3000/upload
   items = [
-    { value: '/api/v1/operations/upload/hours', viewValue: 'Hours',  swal: [
+    { value: '/operations/upload/hours', viewValue: 'Hours',  swal: [
       'DON\'T FORGET THE SHIFT', 'If you haven\'t, please upload the shift first',
       'warning'
     ]},
-    { value: '/api/v1/operations/upload/kpi', viewValue: 'KPI\'s',  swal: [
+    { value: '/operations/upload/kpi', viewValue: 'KPI\'s',  swal: [
       'WAIT', 'Please double check the file you will upload to avoid introducing errors ',
       'warning'
     ]}
@@ -48,9 +44,9 @@ export class CloudUploadComponent {
 
   templates = [
     {
-      value: '/api/v1/operations/hourTemplate', viewValue: 'Hours Template',
+      value: '/operations/hourTemplate', viewValue: 'Hours Template',
     },
-    { value: '/api/v1/operations/kpiTemplate', viewValue: 'KPI Template' }
+    { value: '/operations/kpiTemplate', viewValue: 'KPI Template' }
   ];
   templateSelected = '';
   // public uploader: FileUploader = new FileUploader({
@@ -73,7 +69,7 @@ export class CloudUploadComponent {
   }
 
   setUploader() {
-    const setURL = this.URL + this.selected.value;
+    const setURL = this.api + this.selected.value;
     this.uploader = new FileUploader({
       url: setURL,
       allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
@@ -82,8 +78,8 @@ export class CloudUploadComponent {
       authToken: this._operationsService.tokenGetter()
     });
     this.refresh();
-    this.uploader.onAfterAddingFile = file => this.refresh();
-    this.uploader.onWhenAddingFileFailed = item =>
+    this.uploader.onAfterAddingFile = () => this.refresh();
+    this.uploader.onWhenAddingFileFailed = () =>
       this.openSnackBar(
         `Sorry, we are unable to process any other file formats.
      Please upload only CSV files`,

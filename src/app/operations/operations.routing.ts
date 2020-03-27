@@ -1,11 +1,10 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { CloudUploadComponent } from './cloud-upload/cloud-upload.component';
-import { ReportComponent } from './report/report.component';
-import { ManageComponent } from './manage/manage.component';
-import { DetailComponent } from '../employee/detail/detail.component';
-import { TimesheetComponent } from './report/timesheet/timesheet.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {CloudUploadComponent} from './cloud-upload/cloud-upload.component';
+import {ReportComponent} from './report/report.component';
+import {ManageComponent} from './manage/manage.component';
+
 const routes: Routes = [
   {
     path: '',

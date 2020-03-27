@@ -1,12 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { OperationsService } from '../operations.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeHours } from '../../employee/Employee';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import * as XLSX from 'xlsx';
-import moment from 'moment';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-report',

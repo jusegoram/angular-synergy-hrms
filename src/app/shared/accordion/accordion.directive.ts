@@ -1,10 +1,9 @@
-
 import {filter} from 'rxjs/operators';
-import { Directive, OnInit, AfterViewInit, AfterContentChecked } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import {AfterContentChecked, Directive} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
 
 
-import { AccordionLinkDirective } from './accordionlink.directive';
+import {AccordionLinkDirective} from './accordionlink.directive';
 
 @Directive({
   selector: '[appAccordion]',

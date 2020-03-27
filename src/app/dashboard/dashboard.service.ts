@@ -1,8 +1,4 @@
-import { environment } from './../../environments/environment';
-import { Injectable } from '@angular/core';
-import * as io from 'socket.io-client';
-import { Observable, Subject } from 'rxjs';
-import { Socket } from 'ngx-socket-io';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
