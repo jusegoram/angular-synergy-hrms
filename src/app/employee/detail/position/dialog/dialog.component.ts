@@ -7,7 +7,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
   styleUrls: ['./dialog.component.scss']
 })
 export class DialogComponent  {
-  result: boolean = false;
+  result = false;
   constructor(
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }

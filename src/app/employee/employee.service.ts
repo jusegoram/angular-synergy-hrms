@@ -1,19 +1,17 @@
 import {
-  Employee,
-  EmployeeAttrition,
+  Employee, EmployeeCompany, EmployeePayroll,
+  EmployeePersonal, EmployeePosition, EmployeeFamily,
   EmployeeComment,
-  EmployeeCompany,
-  EmployeeFamily,
-  EmployeePayroll,
-  EmployeePersonal,
-  EmployeePosition
-} from './Employee';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map, publishReplay, refCount} from 'rxjs/operators';
-import {environment} from '../../environments/environment';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {SessionService} from '../session/session.service';
+  EmployeeAttrition} from './Employee';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { publishReplay, refCount, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { SessionService } from '../session/session.service';
+import { Tracker } from '../shared/models/tracker';
+import { HrTracker } from '../shared/models/hr-tracker';
+import { API } from '../../environments/environment';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {
@@ -330,7 +328,7 @@ export class EmployeeService {
     return this.sessionService.getRights();
   }
 
-  getDecodedToken(){
+  getDecodedToken() {
     return this.sessionService.decodeToken();
   }
 
@@ -363,5 +361,43 @@ export class EmployeeService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(this.api + '/employee/shift/updates', body, {headers: headers});
   }
-}
+ /**@todo: feat/hr-module
+  * @function saveTracker
+  * @param {hr-tracker} tracker
+  *
+  * @function deleteTracker
+  * @param {hr-tracker} tracker._id
+  *
+  * @function getTracker
+  * @param {hr-tracker} employee || employeeId
+  *
+  * employeeId: from employee-mains
+  * employee: _id of employee-mains
+  * requestDate: 3 days after current date
+  * state: default 0 - means 'Open'
+  * tracker: Object from trackerSchema
+  * creation fingerprint: current user decodedToken
+  * verificationFingerprint: current hr module user who fulfills the tracker
+  */
 
+  saveTracker(hrTracker: HrTracker){
+    // TODO: feat/hr-module
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(API.TRACKERS, hrTracker , {headers}).toPromise();
+  }
+
+  deleteTracker(employeeId:string){
+    // TODO: feat/hr-module
+    return this.httpClient.delete(API.TRACKER(employeeId)).toPromise();
+  }
+
+  getTracker(employeeId:string){
+    // TODO: feat/hr-module
+    return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
+  }
+
+  getTrackers(){
+    // TODO: feat/hr-module
+    return this.httpClient.get(API.TRACKERS).toPromise();
+  }
+}

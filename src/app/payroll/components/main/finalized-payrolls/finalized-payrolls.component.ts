@@ -25,7 +25,7 @@ export class FinalizedPayrollsComponent implements OnInit, OnChanges {
   constructor(private _payrollService: PayrollService) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.refresh){
+    if (changes.refresh) {
       this.getData('all');
     }
   }

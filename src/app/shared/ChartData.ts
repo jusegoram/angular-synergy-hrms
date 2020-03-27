@@ -4,11 +4,11 @@
       subCaption?: string;
       showValues?: string;
       showPercentInTooltip?: string;
-      showPercentValues?: string
+      showPercentValues?: string;
       numberPrefix?: string;
       enableMultiSlicing?: string;
       theme?: string;
-      defaultcenterlabel?: string
+      defaultcenterlabel?: string;
   }
 
   export interface Datum {
@@ -21,7 +21,7 @@
       data: Datum[];
       constructor(
         chart: any,
-        data: Datum[]){
+        data: Datum[]) {
           this.chart = chart;
           this.data = data;
         }

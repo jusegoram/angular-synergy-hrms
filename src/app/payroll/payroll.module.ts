@@ -43,7 +43,7 @@ import {FinalizedPayrollsComponent} from './components/main/finalized-payrolls/f
 import {EditPayrollDetailComponent} from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
 
 
-FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport)
+FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
 }

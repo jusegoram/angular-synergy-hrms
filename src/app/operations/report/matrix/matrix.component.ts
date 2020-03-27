@@ -174,18 +174,18 @@ export class MatrixComponent implements OnInit, OnDestroy {
       return position['name'].toLowerCase().includes(filterValue);
     });
   }
-  exportAs(type){
+  exportAs(type) {
     const config: ExportAsConfig = {
       type: type,
       elementId: 'matrix',
-    }
+    };
     this._exportAsService.save(config, `${this.startOfWeek
       .format('MM-DD-YY')
       .toString()}_${this.endOfWeek
         .format('MM-DD-YY')
         .toString()}_MATRIX`).subscribe(() => {
 
-        })
+        });
   }
   ngOnDestroy() {
   }

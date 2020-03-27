@@ -15,15 +15,15 @@ export class ConceptsComponent implements OnInit {
   ngOnInit() {
   }
 
-  saveConcept(){
+  saveConcept() {
 
   }
 
-  editConcept(){
+  editConcept() {
 
   }
 
-  deleteConcept(){
+  deleteConcept() {
 
   }
 }

@@ -304,7 +304,7 @@ export class ExportComponent implements OnInit {
   }
 
   exportPayroll(element) {
-    if(this.payrollInfoToggle){
+    if (this.payrollInfoToggle) {
         if (typeof element.payroll !== 'undefined' && element.payroll !== null) {
           const payroll = element.payroll;
           const exportPayroll = {
@@ -314,7 +314,7 @@ export class ExportComponent implements OnInit {
             TIN: payroll.TIN,
             bankName: payroll.bankName,
             bankAccount: payroll.bankAccount,
-          }
+          };
           return exportPayroll;
         }
       } else {

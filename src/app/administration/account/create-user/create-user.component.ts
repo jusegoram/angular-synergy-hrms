@@ -128,7 +128,7 @@ export class CreateUserComponent implements OnInit {
         }
       );
       return null;
-    }else {
+    } else {
       this.snackBar.open('User was created successfully', 'thank you', {
         duration: 2000
       });

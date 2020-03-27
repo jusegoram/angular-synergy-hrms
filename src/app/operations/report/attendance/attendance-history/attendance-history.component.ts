@@ -10,7 +10,7 @@ import {MatPaginator} from '@angular/material/paginator';
   templateUrl: './attendance-history.component.html',
   styleUrls: ['./attendance-history.component.scss']
 })
-export class AttendanceHistoryComponent implements OnInit, OnChanges{
+export class AttendanceHistoryComponent implements OnInit, OnChanges {
   @Input() employee;
   @ViewChild('historyPaginator', { read: MatPaginator }) paginator: MatPaginator;
 
@@ -33,7 +33,7 @@ export class AttendanceHistoryComponent implements OnInit, OnChanges{
     this.dateRangeForm = this.fb.group({
       from: [moment().add(-14, 'days').toDate()],
       to: [moment().toDate()]
-    })
+    });
   }
   refreshData() {
     const {from, to} = this.dateRangeForm.value;

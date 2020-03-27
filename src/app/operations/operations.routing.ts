@@ -10,7 +10,7 @@ const routes: Routes = [
     path: '',
       children : [
          { path : 'dashboard', component : DashboardComponent },
-         //{ path: 'detail', component: DetailComponent},
+         // { path: 'detail', component: DetailComponent},
          { path : 'reports', component : ReportComponent },
          { path : 'upload', component : CloudUploadComponent},
          { path : 'manage',   component: ManageComponent},

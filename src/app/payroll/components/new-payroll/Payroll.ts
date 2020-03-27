@@ -39,12 +39,12 @@ export class Payroll {
   }
 
   public set employees(employees: any[]) {
-    let allPayrollRows = [];
+    const allPayrollRows = [];
     employees.forEach(e => {
       e.fromDate = this.fromDate;
       e.toDate = this.toDate;
       e.holidayList = this.holidayTable;
-      let newEmployee = new PayrollRow(
+      const newEmployee = new PayrollRow(
         e.employeeId,
         e.employee,
         e.firstName,
@@ -52,7 +52,7 @@ export class Payroll {
         e.lastName,
         e.socialSecurity,
         e.status,
-        e.personal? (e.personal.emailAddress?e.personal.emailAddress: ''): '',
+        e.personal ? (e.personal.emailAddress ? e.personal.emailAddress : '') : '',
         e.payrollType,
         e.hourlyRate,
         e.employeeName,
@@ -68,7 +68,7 @@ export class Payroll {
 
       if (allPayrollRows.length === employees.length) {
         this._employees = allPayrollRows.sort( (a, b) => {
-          return a.firstName.localeCompare(b.firstName)
+          return a.firstName.localeCompare(b.firstName);
         });
       }
     });
@@ -138,7 +138,7 @@ export class Payroll {
   }
 
   calculatePayroll() {
-    if(!this._isCalculating) {
+    if (!this._isCalculating) {
       this._isCalculating = true;
       for (let i = 0; i < this.employees.length; i++) {
         const employee: PayrollRow = this.employees[i];
@@ -146,36 +146,36 @@ export class Payroll {
         if (i === this.employees.length - 1) {
         }
       }
-    }else {
+    } else {
       return;
     }
   }
-  filterEmployeesError(){
+  filterEmployeesError() {
     return this.employees.filter(i => {
-      return
-    })
+      return;
+    });
   }
-  clearPayroll(){
+  clearPayroll() {
     this._isCalculating = false;
   }
   getEmployeeIds() {
     return this._employees.map(employee => employee.employeeId);
   }
 
-  getEmployeeById(id){
+  getEmployeeById(id) {
     return this._employees.find( employee => employee.employee === id);
   }
   joinEmployee(table, param) {
-    let arrayLength = this._employees.length;
+    const arrayLength = this._employees.length;
     for (let i = 0; i < arrayLength; i++) {
       const employee = this._employees[i];
-      if (param in employee === false) employee[param] = [];
+      if (param in employee === false) { employee[param] = []; }
       for (let e = 0; e < table.length; e++) {
         const item = table[e];
         if (employee.employee === item.employee) {
-          if(param === 'hours' && employee[param].length < 7) {
-            employee[param].push(item)
-          }else if( param !== 'hours') {
+          if (param === 'hours' && employee[param].length < 7) {
+            employee[param].push(item);
+          } else if ( param !== 'hours') {
             employee[param].push(item);
           }
         }
@@ -184,10 +184,10 @@ export class Payroll {
   }
 
   recalculateOnConceptsChange( employee: any) {
-    let foundEmployee = this.getEmployeeById(employee);
+    const foundEmployee = this.getEmployeeById(employee);
     foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);
   }
-  onCalculating(){
+  onCalculating() {
     return this._isCalculating;
   }
 }

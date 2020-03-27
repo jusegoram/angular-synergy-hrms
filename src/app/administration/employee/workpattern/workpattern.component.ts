@@ -17,7 +17,7 @@ export class WorkpatternComponent implements OnInit {
   public selectedshift: Workpattern;
   public editDialog;
   public newDialog;
-  edit: boolean = false;
+  edit = false;
   constructor(private _admService: AdminService, private snackBar: MatSnackBar, public dialog: MatDialog) {
 
   }

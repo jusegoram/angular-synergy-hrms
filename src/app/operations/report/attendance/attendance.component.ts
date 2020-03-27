@@ -25,7 +25,7 @@ export class AttendanceComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   // start >= 9:00 && <= 12:00
-  //start <= 9:00 && end <= 12:00
+  // start <= 9:00 && end <= 12:00
 
   ngOnInit() {
     this._operationsService.getClient().subscribe(result => this.clients = result);
@@ -64,7 +64,7 @@ export class AttendanceComponent implements OnInit {
       Campaign: ['', Validators.required],
     });
   }
-  onLoad(){
+  onLoad() {
     const v = this.queryForm.value;
     const query = {
       date: moment(v.On).format('MM/DD/YYYY').toString(),
@@ -75,11 +75,11 @@ export class AttendanceComponent implements OnInit {
     };
     this._operationsService.getAttendance(query).subscribe(result => {
       this.refreshTable(result);
-    })
+    });
   }
-  transformToMinutes(hh, mm){
+  transformToMinutes(hh, mm) {
     let minutes: number;
-    if(parseInt(hh, 10) < 25 && parseInt(mm, 10) < 60) {
+    if (parseInt(hh, 10) < 25 && parseInt(mm, 10) < 60) {
       minutes = parseInt(hh, 10) * 60 + parseInt(mm, 10);
       return minutes;
     }

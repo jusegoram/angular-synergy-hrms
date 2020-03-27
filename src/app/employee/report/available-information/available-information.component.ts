@@ -25,7 +25,7 @@ export class AvailableInformationComponent implements OnInit {
         this.isLoaded = true;
       }, error => {
         console.error(error);
-      })
+      });
       this.wb = XLSX.utils.book_new();
     }
   }
@@ -51,7 +51,7 @@ export class AvailableInformationComponent implements OnInit {
       const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(resolved);
       XLSX.utils.book_append_sheet(this.wb, main, 'exported-info');
       XLSX.writeFile(this.wb, 'export-info.xlsx');
-    }, rejected => { })
+    }, rejected => { });
   }
 
   onClear() {
@@ -62,8 +62,8 @@ export class AvailableInformationComponent implements OnInit {
 
   constructTableObj(arr: any[]) {
     return new Promise((resolve, reject) => {
-      let mapped = arr.map(item => {
-        let complementaryObject
+      const mapped = arr.map(item => {
+        let complementaryObject;
         switch (this.query.reportType) {
           case 'avatar':
             complementaryObject.avatar = false;
@@ -75,17 +75,17 @@ export class AvailableInformationComponent implements OnInit {
               delete item.company.employeeId;
               complementaryObject = item.company;
               break;
-            } else break;
+            } else { break; }
           case 'shift':
             if (item.shift !== null && item.shift !== undefined) {
               complementaryObject['Amount Of Shifts'] = item.shift && item.shift.length;
               break;
-            } else break;
+            } else { break; }
           case 'position':
             if (item.position !== null && item.position !== undefined) {
               complementaryObject['Amount Of Positions'] = item.position && item.position.length;
               break;
-            } else break;
+            } else { break; }
           case 'payroll':
             if (item.payroll !== null && item.payroll !== undefined) {
               delete item.payroll._id;
@@ -93,26 +93,26 @@ export class AvailableInformationComponent implements OnInit {
               delete item.payroll.employeeId;
               complementaryObject = item.payroll;
               break;
-            } else break;
+            } else { break; }
           case 'personal':
             if (item.personal !== null && item.personal !== undefined) {
               delete item.personal._id;
               delete item.personal.employee;
               delete item.personal.employeeId;
-              item.personal.hobbies = item.personal.hobbies !== null && item.personal.hobbies !== undefined ? item.personal.hobbies.length: 'MISSING HOBBIES';
+              item.personal.hobbies = item.personal.hobbies !== null && item.personal.hobbies !== undefined ? item.personal.hobbies.length : 'MISSING HOBBIES';
               complementaryObject = item.personal;
               break;
-            } else break;
+            } else { break; }
           case 'family':
             if (item.family !== null && item.family !== undefined) {
               complementaryObject['Amount of Contacts'] = item.family && item.family.length;
               break;
-            } else break;
+            } else { break; }
 
           default:
             break;
         }
-        let mappeditem = {
+        const mappeditem = {
           employeeId: item.employeeId,
           firstName: item.firstName,
           middleName: item.middleName,
@@ -125,7 +125,7 @@ export class AvailableInformationComponent implements OnInit {
         return mappeditem;
       });
       resolve(mapped);
-    })
+    });
   }
 
 

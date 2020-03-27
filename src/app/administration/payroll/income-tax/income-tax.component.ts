@@ -14,7 +14,7 @@ export class IncomeTaxComponent implements OnInit {
   @ViewChild('IncomeTaxEditCell', { static: true }) editCell: TemplateRef<any>;
 
   dataSource: MatTableDataSource<any>;
- columns: any[] = []
+ columns: any[] = [];
   rows = new Array<any>();
   page = new Page();
   cache: any = {};

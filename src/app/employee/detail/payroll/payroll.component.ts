@@ -72,7 +72,7 @@ export class PayrollComponent implements OnInit {
           });
         }
       );
-    }else {
+    } else {
       const update = new EmployeePayroll(
         this.payroll._id,
         this.payroll.employeeId,

@@ -7,14 +7,9 @@ import {SessionGuard} from './session/guards/session.guard';
 export const AppRoutes: Routes = [
   {
     path: '',
-    redirectTo: '/signin',
-    pathMatch: 'full'
-  },
-  {
-  path: '',
-  component: AdminLayoutComponent,
-      children: [
-        {
+    component: AdminLayoutComponent,
+    children: [
+      {
         path: 'main',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
@@ -71,17 +66,17 @@ export const AppRoutes: Routes = [
         canLoad: [SessionGuard]
       }
     ]
-},
-{
-  path: '',
-  component: AuthLayoutComponent,
-  children: [{
+  },
+  {
     path: '',
-    loadChildren: () => import('./session/session.module').then(m => m.SessionModule)
-  }]
-},
- {
-  path: '**',
-  redirectTo: '404'
-}
+    component: AuthLayoutComponent,
+    children: [{
+      path: '',
+      loadChildren: () => import('./session/session.module').then(m => m.SessionModule)
+    }]
+  },
+  {
+    path: '**',
+    redirectTo: '404'
+  }
 ];

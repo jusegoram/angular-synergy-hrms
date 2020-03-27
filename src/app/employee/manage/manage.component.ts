@@ -23,7 +23,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
   pagSize: any;
   filterValue;
   currentSortOrder;
-  displayedColumns = ['employeeId', 'firstName', 'socialSecurity','company.client', 'company.campaign', 'status', 'details'];
+  displayedColumns = ['employeeId', 'firstName', 'socialSecurity', 'company.client', 'company.campaign', 'status', 'details'];
   constructor(
     private employeeService: EmployeeService,
     private route: ActivatedRoute) {
@@ -41,7 +41,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         this.dataSource = new MatTableDataSource(this.employees);
           this.dataSource.paginator = this.paginator;
           this.dataSource.sortingDataAccessor = (item, property) => {
-            switch(property) {
+            switch (property) {
               case 'company.client': return item.company.client;
               case 'company.campaign': return item.company.campaign;
               default: return item[property];
@@ -54,7 +54,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         this.route.queryParams.subscribe(params => {
           this.pag = params['page'];
           this.pagSize = params['size'];
-          this.filterValue = params['filter']
+          this.filterValue = params['filter'];
          this.applyFilter(params['filter']);
           this.setSort(params['srtAct'], params['srtDir']);
           this.setPage(this.pag, this.pagSize);
@@ -67,7 +67,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         this.auth = this.employeeService.getAuth();
       }
       applyFilter(filter: string) {
-        if(filter){
+        if (filter) {
           filter = filter.trim(); // Remove whitespace
           filter = filter.toLowerCase(); // MatTableDataSource defaults to lowercase matches
           this.dataSource.filter = filter;
@@ -78,7 +78,7 @@ export class ManageComponent implements OnInit,  AfterViewInit {
         const eventid: string = event;
         if (!this.selectedEmployees.includes(eventid)) {
         this.selectedEmployees.push(eventid);
-        }else {
+        } else {
           const index = this.selectedEmployees.indexOf(eventid);
           this.selectedEmployees.splice(index, 1);
         }
@@ -102,31 +102,31 @@ export class ManageComponent implements OnInit,  AfterViewInit {
           this.paginator.previousPage();
       }
 
-      setSort(active, dir){
-        if(active !== '' && active !== 'undefined' && dir !== '' && dir !== 'undefined' ){
+      setSort(active, dir) {
+        if (active !== '' && active !== 'undefined' && dir !== '' && dir !== 'undefined' ) {
           this.dataSource.sort.active = active; this.dataSource.sort.direction = dir as SortDirection;
           this.dataSource.sort.sortChange.emit();
         }
       }
 
-      sortData(){
+      sortData() {
         this.paginator.nextPage();
         this.paginator.previousPage();
       }
       onPageChange(event) {
         const page = event.pageIndex;
         const size = event.pageSize;
-        const flt = this.filterValue? this.filterValue: '';
-        const srtAct = this.dataSource.sort.active?  this.dataSource.sort.active: 'employeeId';
-        const srtDir = this.dataSource.sort.direction? this.dataSource.sort.direction: '';
+        const flt = this.filterValue ? this.filterValue : '';
+        const srtAct = this.dataSource.sort.active ?  this.dataSource.sort.active : 'employeeId';
+        const srtDir = this.dataSource.sort.direction ? this.dataSource.sort.direction : '';
         window.history.pushState({}, '', `/employee/manage?page=${page}&size=${size}&filter=${flt}&srtAct=${srtAct}&srtDir=${srtDir}`);
       }
 
-      nextPage(){
+      nextPage() {
         this.paginator.nextPage();
       }
 
-      previousPage(){
+      previousPage() {
         this.paginator.previousPage();
       }
 }

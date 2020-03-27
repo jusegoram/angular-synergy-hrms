@@ -14,7 +14,7 @@ export class HolidaysComponent implements OnInit {
   @ViewChild('HolidayEditCell', { static: true }) editCell: TemplateRef<any>;
 
   dataSource: MatTableDataSource<any>;
- columns: any[] = []
+ columns: any[] = [];
   rows = new Array<any>();
   page = new Page();
   cache: any = {};
@@ -33,8 +33,8 @@ export class HolidaysComponent implements OnInit {
      ];
     this.columns.push({ name: '', cellTemplate: this.editCell, width: '50px'});
   }
-  datePipe(){
-      return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')}
+  datePipe() {
+      return {transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy')};
   }
   setPage(pageInfo) {
     console.log(pageInfo);

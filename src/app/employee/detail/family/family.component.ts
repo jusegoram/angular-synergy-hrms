@@ -102,9 +102,9 @@ export class FamilyComponent implements OnInit {
     this.isEdit = true;
   }
   onSubmit() {
-    let current = this.familyForm.value;
+    const current = this.familyForm.value;
     if (!this.isEdit) {
-      let ref = new EmployeeFamily (
+      const ref = new EmployeeFamily (
         '',
         this.employee.employeeId.toString(10),
         this.employee._id,
@@ -120,7 +120,7 @@ export class FamilyComponent implements OnInit {
           this.clearForm();
         }, error => {});
     } else {
-      let ref = new EmployeeFamily (
+      const ref = new EmployeeFamily (
         this.editReferenceId,
         this.employee.employeeId.toString(10),
         this.employee._id,
@@ -131,11 +131,11 @@ export class FamilyComponent implements OnInit {
         current.emailAddress,
         current.address,
         current.comment);
-        this.employeeService.updateFamily(ref).subscribe(data => {this.isEdit = false; this.clearForm();}, error => {});
+        this.employeeService.updateFamily(ref).subscribe(data => {this.isEdit = false; this.clearForm(); }, error => {});
     }
   }
 
-  onExpandComment(){
+  onExpandComment() {
     this.expandedComment = ! this.expandedComment;
   }
 }

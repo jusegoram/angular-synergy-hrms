@@ -15,8 +15,8 @@ import {AuthenticationService} from '../authentication.service';
 //import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 //import * as TimeSeries from 'fusioncharts/fusioncharts.timeseries';
 
-//const config: SocketIoConfig = { url: environment.apiUrl + '/dashboard', options: {} };
-//FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme, TimeSeries);
+// const config: SocketIoConfig = { url: environment.apiUrl + '/dashboard', options: {} };
+// FusionChartsModule.fcRoot(FusionCharts, Charts, Widgets, FusionTheme, TimeSeries);
 
 @NgModule({
   imports: [
@@ -24,7 +24,7 @@ import {AuthenticationService} from '../authentication.service';
     RouterModule.forChild(DashboardRoutes),
    // SocketIoModule.forRoot(config),
     MaterialSharedModule,
-    //FusionChartsModule
+    // FusionChartsModule
   ],
   declarations: [ DashboardComponent,
     ], providers: [
