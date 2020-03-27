@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {PayrollService} from './../../services/payroll.service';
 import {MinuteSecondsPipe} from './../../../shared/pipes/minute-seconds.pipe';
 import {MatTableDataSource} from '@angular/material/table';
-import {ChartData, Datum} from './../../../shared/ChartData';
+import {ChartData, Datum} from '../../../shared/models/ChartData';
 import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ColumnMode} from '@swimlane/ngx-datatable';

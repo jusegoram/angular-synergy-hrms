@@ -6,7 +6,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {PayrollService} from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import {ChartData, Datum} from '../../../../shared/ChartData';
+import {ChartData, Datum} from '../../../../shared/models/ChartData';
 
 @Component({
   selector: 'app-payed-payrolls',
