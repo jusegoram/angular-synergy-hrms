@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
-  siteUri: "https://synergy.rccbpo.com",
-  apiUrl: "https://synergy.rccbpo.com/api/v1",
+  siteUri: "https://beta.rccbpo.com",
+  apiUrl: "https://beta.rccbpo.com/api/v1",
 };
 
 export const API = {
