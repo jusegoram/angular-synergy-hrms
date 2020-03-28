@@ -45,6 +45,9 @@ export class StatusDialogComponent implements AfterViewInit {
 
   ngAfterViewInit() {}
 
-  onCancelClick() {}
   onProceedClick() {}
+  
+  onCancelClick(): void {
+    this.dialogRef.close();
+  }
 }

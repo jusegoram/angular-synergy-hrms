@@ -2,14 +2,16 @@ import { Component, Inject } from "@angular/core";
 import {
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA,
+  MAT_DIALOG_DATA
 } from "@angular/material/dialog";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { EmployeeService } from "../../employee.service";
+import { HrTracker } from "../../../shared/models/hr-tracker";
+import { CommonValidator } from "../../../shared/validators/common.validator";
 @Component({
   selector: "app-transfer-dialog",
   templateUrl: "./transfer-dialog.component.html",
-  styleUrls: ["./transfer-dialog.component.scss"],
+  styleUrls: ["./transfer-dialog.component.scss"]
 })
 export class TransferDialogComponent {
   transferFom: FormGroup;
@@ -35,15 +37,20 @@ export class TransferDialogComponent {
     return this.transferFom.get("newCampaign").invalid;
   }
 
+  get reasonHasError() {
+    return this.transferFom.get("reason").invalid;
+  }
+
   ngOnInit() {
     this.clients = this.employeeService.clients;
     this.transferFom = this.formBuilder.group({
+      reason: ["", [Validators.required, CommonValidator.emptyFieldValidator]],
       oldClient: [this.data.selectedClient],
       oldCampaign: [this.data.selectedCampaign],
       newClient: ["", Validators.required],
       newCampaign: ["", Validators.required],
       effectiveDate: [new Date(), Validators.required],
-      managerSignature: ["", Validators.required],
+      managerSignature: ["", Validators.required]
     });
     this.setCampaigns();
   }
@@ -51,18 +58,52 @@ export class TransferDialogComponent {
   setCampaigns() {
     if (this.clients) {
       const i = this.clients.findIndex(
-        (result) => result.name === this.transferFom.value.newClient
+        result => result.name === this.transferFom.value.newClient
       );
       if (i >= 0) {
         this.campaigns = this.clients[i].campaigns;
       }
     }
+    this.transferFom.get("newCampaign").setValue("");
   }
 
-  onProceedClick(): void {
-    this.dialogRef.close(true);
+  async onProceedClick(formValues: any) {
+    try {
+      let {
+        effectiveDate,
+        oldClient,
+        oldCampaign,
+        newClient,
+        newCampaign,
+        reason,
+        managerSignature
+      } = formValues;
+      let hrTracker: HrTracker = this.data.hrTracker;
+      hrTracker.tracker = {
+        transfer: {
+          effectiveDate,
+          oldClient,
+          oldCampaign,
+          newClient,
+          newCampaign,
+          reason,
+          managerSignature
+        }
+      };
+      const response = await this.employeeService.saveTracker(hrTracker);
+      this.dialogRef.close({
+        state: true,
+        message: "Transfer tracker info send successfully"
+      });
+    } catch (error) {
+      this.dialogRef.close({
+        state: false,
+        message: "We couldn't send your request. Try again later."
+      });
+    }
   }
+
   onCancelClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({ state: false, message: "" });
   }
 }

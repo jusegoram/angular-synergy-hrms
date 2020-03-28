@@ -38,8 +38,65 @@
           >
         </mat-form-field>
       </mat-step>
+      
       <!-- TODO: feat/hr-module - add client and campaign fields to allow hr to know which campaign the employee is certified for -->
+      <mat-step label="Client and campaign">
+        <div fxLayout="column">
+          <mat-form-field appearance="outline" fxFlex="100%">
+            <mat-label>Client</mat-label>
+            <mat-select
+              placeholder="Client"
+              (selectionChange)="setCampaigns()"
+              formControlName="newClient"
+            >
+              <mat-option
+                *ngFor="let client of clients"
+                [value]="client?.name"
+              >
+                {{ client.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="newClientHasError"
+              >Must select a client (*)</mat-error
+            >
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" fxFlex="100%">
+            <mat-label>New Campaign</mat-label>
+            <mat-select placeholder="Campaign" formControlName="newCampaign">
+              <mat-option
+                *ngFor="let campaign of campaigns"
+                [value]="campaign?.name"
+              >
+                {{ campaign.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="newCampaignHasError"
+              >Must select a campaign (*)</mat-error
+            >
+          </mat-form-field>
+        </div>
+        
+
+      </mat-step>
+
       <!-- TODO: feat/hr-module - add textarea for the reason field according to the hr-trackers model -->
+      <mat-step label="Reason">
+        <mat-form-field
+          class="issue-description-field-wrapper"
+          appearance="fill"
+        >
+          <mat-label>Issue's description</mat-label>
+          <textarea
+            matInput
+            placeholder="Description"
+            formControlName="reason"
+          ></textarea>
+          <mat-error *ngIf="reasonHasError"
+            >a brief description about the reason is required (*)</mat-error
+          >
+        </mat-form-field>
+      </mat-step>
 
       <!--Manager signature-->
       <mat-step label="Manager Signature">

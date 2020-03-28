@@ -14,6 +14,7 @@ import {
 } from "@angular/forms";
 import { EmployeeService } from "../../employee.service";
 import { HrTracker } from "../../../shared/models/hr-tracker";
+import { CommonValidator } from "../../../shared/validators/common.validator";
 @Component({
   selector: "app-request-info-change-dialog",
   templateUrl: "./request-info-change-dialog.component.html",
@@ -41,7 +42,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
       companyInfo: [false],
       personalInfo: [false],
       positionInfo: [false],
-      issueDescription: ["", [Validators.required, this.emptyFieldValidator]],
+      issueDescription: ["", [Validators.required, , CommonValidator.emptyFieldValidator]],
     });
 
     this.requestInfoForm.setValidators(this.infoTypeFieldsValidator());
@@ -61,13 +62,6 @@ export class RequestInfoChangeDialogComponent implements OnInit {
       });
       return invalid ? { "Select at least one info type option": true } : null;
     };
-  }
-
-  emptyFieldValidator(control: FormControl): any {
-    if (!control.value.trim()) {
-      return { "field should not be empty": true };
-    }
-    return null;
   }
 
   async onProceedClick(formValues: any) {

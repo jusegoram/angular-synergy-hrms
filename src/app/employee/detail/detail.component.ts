@@ -19,7 +19,7 @@ import { HrTracker } from "../../shared/models/hr-tracker";
 @Component({
   selector: "app-detail",
   templateUrl: "./detail.component.html",
-  styleUrls: ["./detail.component.scss"],
+  styleUrls: ["./detail.component.scss"]
 })
 export class DetailComponent implements OnInit {
   auth: any;
@@ -110,7 +110,7 @@ export class DetailComponent implements OnInit {
     this.company = this.employee.company;
     this.buildForms();
     if (!this.clients) {
-      this.employeeService.getClient().subscribe((data) => {
+      this.employeeService.getClient().subscribe(data => {
         this.clients = data;
         this.setCampaigns();
       });
@@ -134,7 +134,7 @@ export class DetailComponent implements OnInit {
       status: [this.employee.status.toLowerCase()],
       currentPosition: [this.latestPos.position.name],
       currentPositionId: [this.latestPos.position.positionId],
-      currentPositionDate: [this.transformDate(this.latestPos.startDate)],
+      currentPositionDate: [this.transformDate(this.latestPos.startDate)]
     });
     this.companyForm = this.fb.group({
       client: [this.company.client],
@@ -148,7 +148,7 @@ export class DetailComponent implements OnInit {
       terminationDate: [this.company.terminationDate],
       reapplicant: [this.company.reapplicant],
       reapplicantTimes: [this.company.reapplicantTimes],
-      bilingual: [this.company.bilingual],
+      bilingual: [this.company.bilingual]
     });
   }
   onSubmit() {
@@ -167,21 +167,21 @@ export class DetailComponent implements OnInit {
       console.log("execute status change");
     }
     this.employeeService.updateEmployee(employee).subscribe(
-      (data) => {
+      data => {
         this.snackBar.open(
           "Employee information updated successfully",
           "thank you",
           {
-            duration: 2000,
+            duration: 2000
           }
         );
       },
-      (error) => {
+      error => {
         this.snackBar.open(
           "Error updating information, please try again or notify the IT department",
           "Try again",
           {
-            duration: 2000,
+            duration: 2000
           }
         );
       }
@@ -208,44 +208,44 @@ export class DetailComponent implements OnInit {
     );
     if (!this.isNewCompany) {
       this.employeeService.updateCompany(employeeCompany).subscribe(
-        (data) => {
+        data => {
           this.snackBar.open(
             "Employee comapany information updated successfully",
             "Thank you",
             {
-              duration: 2000,
+              duration: 2000
             }
           );
         },
-        (error) => {
+        error => {
           this.snackBar.open(
             "Error updating information, please try again or notify the IT department",
             "Try again",
             {
-              duration: 2000,
+              duration: 2000
             }
           );
         }
       );
     } else {
       this.employeeService.saveCompany(employeeCompany).subscribe(
-        (data) => {
+        data => {
           this.snackBar.open(
             "Employee comapany information updated successfully",
             "Thank you",
             {
-              duration: 2000,
+              duration: 2000
             }
           );
           this.company = data;
           this.isNewCompany = false;
         },
-        (error) => {
+        error => {
           this.snackBar.open(
             "Error updating information, please try again or notify the IT department",
             "Try again",
             {
-              duration: 2000,
+              duration: 2000
             }
           );
         }
@@ -256,7 +256,7 @@ export class DetailComponent implements OnInit {
   setCampaigns() {
     if (this.clients) {
       const i = this.clients.findIndex(
-        (result) => result.name === this.companyForm.value.client
+        result => result.name === this.companyForm.value.client
       );
       if (i >= 0) {
         this.campaigns = this.clients[i].campaigns;
@@ -267,13 +267,13 @@ export class DetailComponent implements OnInit {
   openStatusDialog(): void {
     const dialogRef = this.dialog.open(StatusDialogComponent, {
       width: "700px",
-      data: { status: this.mainForm.value.status },
+      data: { status: this.mainForm.value.status }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
+          status: this.employee.status.toLowerCase()
         });
       } else {
         this.statusChange = result;
@@ -287,29 +287,37 @@ export class DetailComponent implements OnInit {
         status: this.mainForm.value.status,
         selectedClient: this.companyForm.value.client,
         selectedCampaign: this.companyForm.value.campaign,
-      },
+        hrTracker: this.hrTracker
+      }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result) {
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
+          status: this.employee.status.toLowerCase()
         });
       } else {
         this.statusChange = result;
+      }
+
+      if (result.message) {
+        this.snackBar.open(result.message, "OK", {
+          duration: 3000,
+          horizontalPosition: "end"
+        });
       }
     });
   }
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
       width: "700px",
-      data: { status: this.mainForm.value.status },
+      data: { status: this.mainForm.value.status }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (!result) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
+          status: this.employee.status.toLowerCase()
         });
       } else {
         this.statusChange = result;
@@ -319,13 +327,13 @@ export class DetailComponent implements OnInit {
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
       width: "700px",
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
+      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(result => {
       if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
+          status: this.employee.status.toLowerCase()
         });
       } else {
         this.statusChange = result;
@@ -334,7 +342,7 @@ export class DetailComponent implements OnInit {
       if (result.message) {
         this.snackBar.open(result.message, "OK", {
           duration: 3000,
-          horizontalPosition: "end",
+          horizontalPosition: "end"
         });
       }
     });
@@ -344,7 +352,7 @@ export class DetailComponent implements OnInit {
     this.hrTracker = {
       employee: this.employee._id,
       employeeId: this.employee._id,
-      state: 0,
+      state: 0
     };
   }
 }
