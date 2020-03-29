@@ -85,7 +85,7 @@ export class CertifyDialogComponent {
   }
 
   onCancelClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({ state: false, message: "" });
   }
 
   setCampaigns() {

@@ -9,9 +9,9 @@
       department</mat-card-subtitle
     >
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content [formGroup]="statusForm">
     <mat-vertical-stepper linear="true">
-      <mat-step label="Tracker" [formGroup]="form">
+      <mat-step label="Tracker">
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>New status</mat-label>
           <mat-select
@@ -26,7 +26,7 @@
         </mat-form-field>
         <mat-form-field appearance="outline" style="width: 100%;">
           <mat-label>Effective Date</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" />
+          <input matInput [matDatepicker]="picker" formControlName="effectiveDate" placeholder="MM/DD/YYYY" />
           <mat-datepicker-toggle
             matSuffix
             [for]="picker"
@@ -64,7 +64,7 @@
           </p>
           <mat-checkbox #absenteeism> DUE TO ABSENTEEISM</mat-checkbox>
           <ng-container *ngIf="absenteeism.checked">
-            <div [formGroup]="form">
+            <div>
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -97,7 +97,7 @@
               </mat-form-field>
             </div>
 
-            <div [formGroup]="form">
+            <div>
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -130,7 +130,7 @@
               </mat-form-field>
             </div>
 
-            <div [formGroup]="form">
+            <div>
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -193,13 +193,13 @@
           </p>
         </ng-template>
       </mat-step>
-      <mat-step label="Supervisor Signature" [formGroup]="form">
+      <mat-step label="Supervisor Signature">
         <div
           fxLayout="column"
           fxLayoutAlign="center center"
           style="width: 100%;"
         >
-          <mat-error *ngIf="this.form.invalid"
+          <mat-error *ngIf="statusForm.invalid"
             >This signature is required (*)</mat-error
           >
           <signature-field
@@ -224,13 +224,13 @@
           </div>
         </div>
       </mat-step>
-      <mat-step label="Manager Signature" [formGroup]="form">
+      <mat-step label="Manager Signature">
         <div
           fxLayout="column"
           fxLayoutAlign="center center"
           style="width: 100%;"
         >
-          <mat-error *ngIf="this.form.invalid"
+          <mat-error *ngIf="statusForm.invalid"
             >This signature is required (*)</mat-error
           >
           <signature-field
@@ -268,10 +268,10 @@
     <button
       mat-button
       color="primary"
-      (click)="onProceedClick()"
+      (click)="onProceedClick(statusForm.value, statusControl.value)"
       [disabled]="
         statusControl.invalid ||
-        form.invalid ||
+        statusForm.invalid ||
         statusControl.value === data.status
       "
     >
