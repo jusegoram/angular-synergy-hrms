@@ -311,16 +311,24 @@ export class DetailComponent implements OnInit {
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
       width: "700px",
-      data: { status: this.mainForm.value.status }
+      data: { status: this.mainForm.value.status,
+        hrTracker: this.hrTracker }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
+      if (!result.status) {
         this.mainForm.patchValue({
           status: this.employee.status.toLowerCase()
         });
       } else {
         this.statusChange = result;
+      }
+
+      if (result.message) {
+        this.snackBar.open(result.message, "OK", {
+          duration: 3000,
+          horizontalPosition: "end"
+        });
       }
     });
   }

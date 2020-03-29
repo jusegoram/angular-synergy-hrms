@@ -40,7 +40,7 @@
             <mat-select
               placeholder="Client"
               (selectionChange)="setCampaigns()"
-              formControlName="newClient"
+              formControlName="client"
             >
               <mat-option
                 *ngFor="let client of clients"
@@ -49,14 +49,14 @@
                 {{ client.name }}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="newClientHasError"
+            <mat-error *ngIf="clientHasError"
               >Must select a client (*)</mat-error
             >
           </mat-form-field>
   
           <mat-form-field appearance="outline" fxFlex="100%">
             <mat-label>New Campaign</mat-label>
-            <mat-select placeholder="Campaign" formControlName="newCampaign">
+            <mat-select placeholder="Campaign" formControlName="campaign">
               <mat-option
                 *ngFor="let campaign of campaigns"
                 [value]="campaign?.name"
@@ -64,7 +64,7 @@
                 {{ campaign.name | titlecase }}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="newCampaignHasError"
+            <mat-error *ngIf="campaignHasError"
               >Must select a campaign (*)</mat-error
             >
           </mat-form-field>
@@ -132,7 +132,7 @@
     <button mat-button color="warn" cdkFocusInitial (click)="onCancelClick()">
       CANCEL
     </button>
-    <button mat-button color="primary" [disabled]="certifyForm.invalid">
+    <button mat-button color="primary" [disabled]="certifyForm.invalid" (click)="onProceedClick(certifyForm.value)">
       SEND REQUEST
     </button>
   </mat-card-actions>
