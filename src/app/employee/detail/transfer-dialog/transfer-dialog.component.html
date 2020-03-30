@@ -1,11 +1,4 @@
-<div
-  style="
-    width: 100%;
-    max-height: 800px;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-  "
->
+<div class="wrapper">
   <mat-card-header>
     <mat-card-title fxLayout="row" fxLayoutAlign="center center">
       <mat-icon>warning</mat-icon
@@ -71,6 +64,20 @@
               >
             </mat-form-field>
             <!-- TODO: feat/hr-module - add textarea for the reason field in the hr-tracker model -->
+            <mat-form-field
+              class="issue-description-field-wrapper"
+              appearance="fill"
+            >
+              <mat-label>Reason's description</mat-label>
+              <textarea
+                matInput
+                placeholder="Description"
+                formControlName="reason"
+              ></textarea>
+              <mat-error *ngIf="reasonHasError"
+                >a brief description about the reason is required (*)</mat-error
+              >
+            </mat-form-field>
           </div>
         </mat-step>
         <mat-step label="Effective date">
@@ -146,7 +153,7 @@
     <button mat-button color="warn" cdkFocusInitial (click)="onCancelClick()">
       CANCEL
     </button>
-    <button mat-button color="primary" [disabled]="transferFom.invalid">
+    <button mat-button color="primary" [disabled]="transferFom.invalid" (click)="onProceedClick(transferFom.value)">
       SEND REQUEST
     </button>
   </mat-card-actions>

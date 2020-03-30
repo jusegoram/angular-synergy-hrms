@@ -13,7 +13,7 @@ export interface Tracker {
     effectiveDate: Date;
     supervisorSignature: string;
     managerSignature: string;
-    employeeSignature: string;
+    employeeSignature?: string;
   };
 
   transfer?: {

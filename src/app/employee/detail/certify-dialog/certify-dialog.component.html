@@ -1,11 +1,4 @@
-<div
-  style="
-    width: 100%;
-    max-height: 800px;
-    overflow-y: scroll !important;
-    overflow-x: hidden !important;
-  "
->
+<div class="wrapper">
   <mat-card-header>
     <mat-card-title fxLayout="row" fxLayoutAlign="center center">
       <mat-icon>warning</mat-icon
@@ -38,8 +31,65 @@
           >
         </mat-form-field>
       </mat-step>
+      
       <!-- TODO: feat/hr-module - add client and campaign fields to allow hr to know which campaign the employee is certified for -->
+      <mat-step label="Client and campaign">
+        <div fxLayout="column">
+          <mat-form-field appearance="outline" fxFlex="100%">
+            <mat-label>Client</mat-label>
+            <mat-select
+              placeholder="Client"
+              (selectionChange)="setCampaigns()"
+              formControlName="client"
+            >
+              <mat-option
+                *ngFor="let client of clients"
+                [value]="client?.name"
+              >
+                {{ client.name }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="clientHasError"
+              >Must select a client (*)</mat-error
+            >
+          </mat-form-field>
+  
+          <mat-form-field appearance="outline" fxFlex="100%">
+            <mat-label>New Campaign</mat-label>
+            <mat-select placeholder="Campaign" formControlName="campaign">
+              <mat-option
+                *ngFor="let campaign of campaigns"
+                [value]="campaign?.name"
+              >
+                {{ campaign.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="campaignHasError"
+              >Must select a campaign (*)</mat-error
+            >
+          </mat-form-field>
+        </div>
+        
+
+      </mat-step>
+
       <!-- TODO: feat/hr-module - add textarea for the reason field according to the hr-trackers model -->
+      <mat-step label="Reason">
+        <mat-form-field
+          class="issue-description-field-wrapper"
+          appearance="fill"
+        >
+          <mat-label>Issue's description</mat-label>
+          <textarea
+            matInput
+            placeholder="Description"
+            formControlName="reason"
+          ></textarea>
+          <mat-error *ngIf="reasonHasError"
+            >a brief description about the reason is required (*)</mat-error
+          >
+        </mat-form-field>
+      </mat-step>
 
       <!--Manager signature-->
       <mat-step label="Manager Signature">
@@ -82,7 +132,7 @@
     <button mat-button color="warn" cdkFocusInitial (click)="onCancelClick()">
       CANCEL
     </button>
-    <button mat-button color="primary" [disabled]="certifyForm.invalid">
+    <button mat-button color="primary" [disabled]="certifyForm.invalid" (click)="onProceedClick(certifyForm.value)">
       SEND REQUEST
     </button>
   </mat-card-actions>

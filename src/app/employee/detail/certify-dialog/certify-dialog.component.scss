@@ -1,3 +1,14 @@
-.mat-card-header {
-  justify-content: center;
+.wrapper {
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+  .mat-card-header {
+    justify-content: center;
+  }
+
+  .issue-description-field-wrapper {
+    width: 100%;
+    margin-top: 10px;
+  }
 }

@@ -10,8 +10,8 @@ export const environment = {
 };
 
 export const API = {
-  TRACKERS: "/api/test/hr/trackers",
+  TRACKERS: environment.siteUri+"/api/test/hr/trackers",
   TRACKER: (id: string) => {
-    return "/api/test/hr/trackers/" + id;
+    return environment.siteUri+"/api/test/hr/trackers/" + id;
   },
 };
