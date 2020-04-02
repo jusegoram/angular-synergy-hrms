@@ -10,3 +10,8 @@ export const API = {
     return "/api/test/hr/trackers/" + id;
   },
 };
+
+export const TRACKER_STATUS = {
+  PENDING: 0,
+  IN_PROGRESS: 1
+};
