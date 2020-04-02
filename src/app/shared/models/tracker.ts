@@ -14,6 +14,7 @@ export interface Tracker {
     supervisorSignature: string;
     managerSignature: string;
     employeeSignature?: string;
+    reason?:string;
   };
 
   transfer?: {

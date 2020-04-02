@@ -15,6 +15,7 @@ import { Client } from "../../administration/employee/models/positions-models";
 import { DatePipe, AsyncPipe } from "@angular/common";
 import { async } from "@angular/core/testing";
 import { HrTracker } from "../../shared/models/hr-tracker";
+import { TRACKER_STATUS } from "../../../environments/environment";
 
 @Component({
   selector: "app-detail",
@@ -364,9 +365,9 @@ export class DetailComponent implements OnInit {
 
   setHrTracker() {
     this.hrTracker = {
-      employee: this.employee._id,
+      employee: this.employee._id, //selected employee for track
       employeeId: this.employee._id,
-      state: 0
+      state: TRACKER_STATUS.PENDING
     };
   }
 }

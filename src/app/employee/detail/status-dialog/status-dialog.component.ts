@@ -42,7 +42,8 @@ export class StatusDialogComponent implements AfterViewInit {
     this.statusForm = fb.group({
       effectiveDate: [new Date(), Validators.required],
       supervisorSignature: ["", Validators.required],
-      managerSignature: ["", Validators.required]
+      managerSignature: ["", Validators.required],
+      reason: [""]
     });
   }
 
@@ -50,7 +51,7 @@ export class StatusDialogComponent implements AfterViewInit {
 
   async onProceedClick(formValues: any, newStatus: string) {
     try {
-      let { effectiveDate, supervisorSignature, managerSignature } = formValues;
+      let { effectiveDate, supervisorSignature, managerSignature, reason } = formValues;
       let hrTracker: HrTracker = this.data.hrTracker;
       hrTracker.tracker = {
         statusChange: {
@@ -58,7 +59,8 @@ export class StatusDialogComponent implements AfterViewInit {
           effectiveDate,
           absenteeism: null,
           supervisorSignature,
-          managerSignature
+          managerSignature,
+          reason
         }
       };
       console.log("data sent", hrTracker);
@@ -67,10 +69,11 @@ export class StatusDialogComponent implements AfterViewInit {
         state: true,
         message: "Status tracker send successfully"
       });
-    } catch (error) {
+    } catch (errorResponse) {
+      console.log("status dialog", errorResponse);
       this.dialogRef.close({
         state: false,
-        message: "We couldn't send your request. Try again later."
+        message: errorResponse.error.message
       });
     }
   }
