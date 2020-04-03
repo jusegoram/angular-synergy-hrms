@@ -5,6 +5,6 @@ export interface HrTracker {
   employee: string;
   requestDate?: Date;
   state: number;
-  creationFingerprint?: string;
+  creationFingerprint?: any;
   tracker?: Tracker;
 }

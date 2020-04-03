@@ -18,5 +18,6 @@ export const API = {
 
 export const TRACKER_STATUS = {
   PENDING: 0,
-  IN_PROGRESS: 1
+  IN_PROGRESS: 1,
+  DONE: 2
 };

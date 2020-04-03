@@ -16,6 +16,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SignatureFieldComponent } from "../../../shared/signature-field/signature-field.component";
 import { HrTracker } from "../../../shared/models/hr-tracker";
 import { CommonValidator } from "../../../shared/validators/common.validator";
+import moment from "moment";
 
 @Component({
   selector: "app-status-dialog",
@@ -40,9 +41,8 @@ export class StatusDialogComponent implements AfterViewInit {
     private employeeService: EmployeeService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    const today= new Date();
-    const currentTime= `${today.getHours()}:${today.getMinutes()}`;
-
+    const today= moment().toDate();
+    const currentTime= moment().format('HH:mm');    
     this.statusControl = new FormControl("", Validators.required);
     this.status = this._employeeService.status;
     this.statusForm = fb.group({
