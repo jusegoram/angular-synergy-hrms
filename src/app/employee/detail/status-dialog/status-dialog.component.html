@@ -62,9 +62,11 @@
             Will <u>add</u> him/her to the <b>FINAL PAYMENT LIST</b> and a
             <b>notification</b> will be sent to finance.
           </p>
-          <mat-checkbox #absenteeism> DUE TO ABSENTEEISM</mat-checkbox>
-          <ng-container *ngIf="absenteeism.checked">
-            <div>
+          <mat-checkbox formControlName="absenteeism"> DUE TO ABSENTEEISM</mat-checkbox>
+          
+          <ng-container *ngIf="isDueToabsenteeism"
+                        [formGroup]="statusAbsenteeismForm">
+            <div class="first-chance-fieldset" formGroupName="firstChance">
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -74,6 +76,7 @@
                   matInput
                   [matDatepicker]="ncns1"
                   placeholder="MM/DD/YYYY"
+                  formControlName="date"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -86,18 +89,22 @@
                 style="width: 100px !important;"
               >
                 <mat-label>Time</mat-label>
-                <input matInput placeholder="00:00" value="" />
+                <input matInput 
+                       placeholder="00:00" 
+                       type="time"
+                       formControlName="time"
+                       />
               </mat-form-field>
               <mat-form-field
                 appearance="fill"
                 style="width: 280px !important;"
               >
                 <mat-label>Reason</mat-label>
-                <input matInput placeholder="Reason" value="" />
+                <input matInput placeholder="Reason" value="" formControlName="reason"/>
               </mat-form-field>
             </div>
 
-            <div>
+            <div class="second-chance-fieldset" formGroupName="secondChance">
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -107,6 +114,7 @@
                   matInput
                   [matDatepicker]="ncns2"
                   placeholder="MM/DD/YYYY"
+                  formControlName="date"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -119,18 +127,21 @@
                 style="width: 100px !important;"
               >
                 <mat-label>Time</mat-label>
-                <input matInput placeholder="00:00" value="" />
+                <input matInput 
+                      placeholder="00:00"  
+                      type="time"
+                      formControlName="time"/>
               </mat-form-field>
               <mat-form-field
                 appearance="fill"
                 style="width: 280px !important;"
               >
                 <mat-label>Reason</mat-label>
-                <input matInput placeholder="Reason" value="" />
+                <input matInput placeholder="Reason" value="" formControlName="reason" />
               </mat-form-field>
             </div>
 
-            <div>
+            <div class="third-chance-fieldset" formGroupName="thirdChance">
               <mat-form-field
                 appearance="fill"
                 style="width: 170px !important;"
@@ -140,6 +151,7 @@
                   matInput
                   [matDatepicker]="ncns3"
                   placeholder="MM/DD/YYYY"
+                  formControlName="date"
                 />
                 <mat-datepicker-toggle
                   matSuffix
@@ -152,17 +164,23 @@
                 style="width: 100px !important;"
               >
                 <mat-label>Time</mat-label>
-                <input matInput placeholder="00:00" value="" />
+                <input matInput 
+                      placeholder="00:00"  
+                      type="time" 
+                      formControlName="time" />
               </mat-form-field>
               <mat-form-field
                 appearance="fill"
                 style="width: 280px !important;"
               >
                 <mat-label>Reason</mat-label>
-                <input matInput placeholder="Reason" value="" />
+                <input matInput 
+                      placeholder="Reason" 
+                      formControlName="reason" />
               </mat-form-field>
             </div>
-          </ng-container>
+          </ng-container> <!---->
+          
           <mat-form-field
             appearance="fill"
             style="width: 100%;"
@@ -269,14 +287,19 @@
     <button
       mat-button
       color="primary"
-      (click)="onProceedClick(statusForm.value, statusControl.value)"
+      (click)="onProceedClick(statusForm.value, statusAbsenteeismForm.value, statusControl.value)"
       [disabled]="
         statusControl.invalid ||
         statusForm.invalid ||
-        statusControl.value === data.status
+        statusControl.value === data.status || 
+        (isDueToabsenteeism && statusAbsenteeismForm.invalid)
       "
     >
       SEND REQUEST
     </button>
+
+    <!--<button mat-button cdkFocusInitial (click)="logDebug()">
+      DEBUG
+    </button>-->
   </mat-card-actions>
 </div>
