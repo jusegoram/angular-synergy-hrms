@@ -1,3 +1,70 @@
-<p>
-  trackers works!
-</p>
+<div class="wrapper">
+  <mat-toolbar class="header" color="primary">
+    <mat-toolbar-row>
+      <span>TRACKER INBOX</span>
+      <span class="fill-remaining-space"></span>
+    </mat-toolbar-row>
+    <mat-toolbar-row> </mat-toolbar-row>  
+  </mat-toolbar>
+  <div class="mat-card-top pa-2">
+    <ngx-datatable
+      class="material expandable expandable-datatable"
+      [rows]="data"      
+      [columnMode]="'flex'"
+      [loadingIndicator]="isLoading"
+      [headerHeight]="50"
+      [rowHeight]="60"
+      [limit]="10"
+      [footerHeight]="50"           
+      >
+      <ngx-datatable-column name="EMPLOYEE ID" [flexGrow]="2">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.employeeId }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="NAME" [flexGrow]="2" prop="employee">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.employee }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="TRACKER" [flexGrow]="1" >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.tracker | trackerType}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="SUBMITTED DATE" [flexGrow]="1" prop="requestDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.requestDate | amDateFormat: 'MM/DD/YYYY'}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="DEADLINE" [flexGrow]="1" prop="requestDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ (row?.requestDate) | amAdd: 3 : 'days' | amDateFormat: 'MM/DD/YYYY'}}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="STATUS" [flexGrow]="1" prop="state">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.state | trackerStatus | uppercase }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="SUBMITTED BY" [flexGrow]="2" prop="creationFingerprint.name">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.creationFingerprint?.name | uppercase }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="" [flexGrow]="2">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <button mat-button color="primary" (click)="saveAcceptedTrackerStatus(row)">
+            <mat-icon>save</mat-icon> ACCEPT
+          </button>
+          <a mat-button color="accent" 
+            [routerLink]="['/', 'employee', 'detail']"
+            [queryParams]="{ id: row.employeeId }">
+            <mat-icon>person</mat-icon> PROFILE
+          </a>
+        </ng-template>
+      </ngx-datatable-column>      
+    </ngx-datatable>
+    
+  </div>
+</div>

@@ -10,6 +10,11 @@ import { FileUploadModule } from "ng2-file-upload";
 import { FormsModule } from "@angular/forms";
 import { TokenInterceptor } from "../token-interceptor.service";
 import { AuthenticationService } from "../authentication.service";
+import { EmployeeService } from "../employee/employee.service";
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
+import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
+import { TrackerTypePipe } from './pipes/tracker-type.pipe';
+import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   imports: [
@@ -20,8 +25,10 @@ import { AuthenticationService } from "../authentication.service";
     HttpClientModule,
     FileUploadModule,
     FormsModule,
+    NgxDatatableModule,
+    MomentModule
   ],
-  declarations: [TrackersComponent],
+  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe],
   entryComponents: [],
   providers: [
     HrService,
@@ -37,6 +44,7 @@ import { AuthenticationService } from "../authentication.service";
       useClass: AuthenticationService,
       multi: true,
     },
+    EmployeeService
   ],
 })
 export class HrModule {}

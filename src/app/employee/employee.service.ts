@@ -497,8 +497,8 @@ export class EmployeeService {
     return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
   }
 
-  getTrackers() {
+  getTrackers():Promise<Array<HrTracker>> {
     // TODO: feat/hr-module
-    return this.httpClient.get(API.TRACKERS).toPromise();
+    return this.httpClient.get<Array<HrTracker>>(API.TRACKERS).toPromise();
   }
 }

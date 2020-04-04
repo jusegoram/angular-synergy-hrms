@@ -42,6 +42,7 @@
     "ng2-file-upload": "^1.4.0",
     "ng2-validation": "^4.2.0",
     "ngx-export-as": "^1.4.0",
+    "ngx-moment": "^3.5.0",
     "ngx-perfect-scrollbar": "^9.0.0",
     "ngx-socket-io": "^3.0.1",
     "npm": "^6.13.7",
