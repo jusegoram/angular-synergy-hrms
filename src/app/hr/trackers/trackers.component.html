@@ -14,6 +14,7 @@
       />
     </mat-form-field>
     <ngx-datatable
+      #trackerInboxTable
       class="material expandable expandable-datatable"
       [rows]="filteredData"      
       [columnMode]="'flex'"
@@ -22,7 +23,24 @@
       [rowHeight]="60"
       [limit]="10"
       [footerHeight]="50"           
-      >
+      >   
+      <ngx-datatable-column
+          [width]="50"
+          [resizeable]="false"
+          [sortable]="false"
+          [canAutoResize]="false"
+        >
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+          <a
+            href="javascript:void(0)"            
+            title="Expand/Collapse Row"
+            (click)="toggleExpandRow(row)"
+          >
+            <mat-icon [class.hidden]="!expanded">expand_less</mat-icon>
+            <mat-icon [class.hidden]="expanded">expand_more</mat-icon>
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
       <ngx-datatable-column name="EMPLOYEE ID" [flexGrow]="2">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.employeeId }}
@@ -70,6 +88,20 @@
           </a>
         </ng-template>
       </ngx-datatable-column>      
+     
+      <!-- Tracker details -->
+      <ngx-datatable-row-detail rowHeight="100" #myDetailRow>
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+          <div style="padding-left:35px;"
+               [ngSwitch]="row.tracker | trackerType">
+              <app-tracker-status-change-details *ngSwitchCase="'STATUS'" [trackerInfo]="row.tracker"></app-tracker-status-change-details>
+              <app-tracker-transfer-details *ngSwitchCase="'TRANSFER'" [trackerInfo]="row.tracker"></app-tracker-transfer-details>
+              <app-tracker-certify-training-details *ngSwitchCase="'CERTIFY'" [trackerInfo]="row.tracker"></app-tracker-certify-training-details>
+              <app-tracker-info-change-request-details *ngSwitchDefault [trackerInfo]="row.tracker"></app-tracker-info-change-request-details>
+          </div>
+        </ng-template>
+      </ngx-datatable-row-detail>
+
     </ngx-datatable>
     
   </div>

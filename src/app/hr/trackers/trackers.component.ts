@@ -12,7 +12,8 @@ import { debounceTime, map } from "rxjs/operators";
   styleUrls: ["./trackers.component.scss"],
 })
 export class TrackersComponent implements OnInit, AfterViewInit {
-  @ViewChild('inputFilter', {static: false}) inputFilter: any;
+  @ViewChild('trackerInboxTable', {static: false}) trackerInboxTable: any;
+  @ViewChild('inputFilter', {static: false}) inputFilter: any;  
   data:Array<HrTracker> = []; 
   filter='';
   isLoading=true;
@@ -58,6 +59,10 @@ export class TrackersComponent implements OnInit, AfterViewInit {
     }finally{
       this.isLoading=false;
     }
+  }
+
+  toggleExpandRow(row){
+    this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
   saveAcceptedTrackerStatus(hrTracker:HrTracker){
