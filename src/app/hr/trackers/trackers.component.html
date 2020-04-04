@@ -3,13 +3,19 @@
     <mat-toolbar-row>
       <span>TRACKER INBOX</span>
       <span class="fill-remaining-space"></span>
-    </mat-toolbar-row>
-    <mat-toolbar-row> </mat-toolbar-row>  
+    </mat-toolbar-row>  
   </mat-toolbar>
   <div class="mat-card-top pa-2">
+    <mat-form-field appearance="outline">
+      <input
+        #inputFilter
+        matInput          
+        placeholder="Filter"
+      />
+    </mat-form-field>
     <ngx-datatable
       class="material expandable expandable-datatable"
-      [rows]="data"      
+      [rows]="filteredData"      
       [columnMode]="'flex'"
       [loadingIndicator]="isLoading"
       [headerHeight]="50"
