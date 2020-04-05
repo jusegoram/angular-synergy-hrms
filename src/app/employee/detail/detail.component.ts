@@ -368,8 +368,11 @@ export class DetailComponent implements OnInit {
     console.log('decodeToken',this.sessionService.decodeToken());
     const {userId, name, role}=this.sessionService.decodeToken();
     this.hrTracker = {
-      employee: this.employee.firstName + " " + this.employee.middleName + " " + this.employee.lastName, //selected employee for track
-      employeeId: this.employee._id,
+      employee: {
+        _id: this.employee._id,
+        fullName: this.employee.firstName + " " + this.employee.middleName + " " + this.employee.lastName
+      },
+      employeeId: this.employee.employeeId.toString(),
       state: TRACKER_STATUS.PENDING,
       creationFingerprint: {userId, name, role}      
     };

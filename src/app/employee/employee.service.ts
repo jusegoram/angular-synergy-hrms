@@ -487,6 +487,14 @@ export class EmployeeService {
       .toPromise();
   }
 
+  updateTracker(hrTracker: Partial<HrTracker>) {
+    // TODO: feat/hr-module
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.httpClient
+      .put(API.TRACKER(hrTracker._id), hrTracker, { headers })
+      .toPromise();
+  }
+
   deleteTracker(employeeId: string) {
     // TODO: feat/hr-module
     return this.httpClient.delete(API.TRACKER(employeeId)).toPromise();

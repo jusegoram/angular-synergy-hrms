@@ -46,9 +46,9 @@
           {{ row?.employeeId }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="NAME" [flexGrow]="2" prop="employee">
+      <ngx-datatable-column name="NAME" [flexGrow]="2" prop="employee.fullName">
         <ng-template let-row="row" ngx-datatable-cell-template>
-          {{ row?.employee }}
+          {{ row?.employee.fullName }}
         </ng-template>
       </ngx-datatable-column>
       <ngx-datatable-column name="TRACKER" [flexGrow]="1" >
