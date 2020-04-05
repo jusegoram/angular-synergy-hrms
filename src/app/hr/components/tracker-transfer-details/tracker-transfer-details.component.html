@@ -14,6 +14,9 @@
     <mat-list-item>
         <strong>New campaign: </strong> &nbsp; {{ trackerInfo.transfer.newCampaign }}
     </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Manager Signature',trackerInfo.transfer.managerSignature)">Show Manager Signature</button>
+    </mat-list-item>
     <mat-list-item class="reason-wrapper">
         <div fxLayout="column">
             <strong>Reason: </strong>

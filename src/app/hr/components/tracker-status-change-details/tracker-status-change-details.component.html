@@ -36,4 +36,10 @@
             </p>  
         </div>              
     </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Manager Signature',trackerInfo.statusChange.managerSignature)">Show Manager Signature</button>
+    </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Supervisor Signature',trackerInfo.statusChange.supervisorSignature)">Show Supervisor Signature</button>
+    </mat-list-item>
 </mat-list>

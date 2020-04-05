@@ -19,6 +19,7 @@ import { TrackerTransferDetailsComponent } from './components/tracker-transfer-d
 import { TrackerCertifyTrainingDetailsComponent } from './components/tracker-certify-training-details/tracker-certify-training-details.component';
 import { TrackerInfoChangeRequestDetailsComponent } from './components/tracker-info-change-request-details/tracker-info-change-request-details.component';
 import { TrackerStatusChangeDetailsComponent } from './components/tracker-status-change-details/tracker-status-change-details.component';
+import { SignatureRenderModalComponent } from './components/signature-render-modal/signature-render-modal.component';
 
 @NgModule({
   imports: [
@@ -32,8 +33,8 @@ import { TrackerStatusChangeDetailsComponent } from './components/tracker-status
     NgxDatatableModule,
     MomentModule
   ],
-  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent],
-  entryComponents: [],
+  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent],
+  entryComponents: [SignatureRenderModalComponent],
   providers: [
     HrService,
     TitleCasePipe,

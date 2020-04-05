@@ -1,24 +1,23 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Tracker } from '../../../shared/models/tracker';
 import { Chance } from '../../../shared/models/chance';
+import { MatDialog } from '@angular/material/dialog';
+import { SignatureRenderModalComponent } from '../signature-render-modal/signature-render-modal.component';
 
 @Component({
   selector: 'app-tracker-status-change-details',
   templateUrl: './tracker-status-change-details.component.html',
   styleUrls: ['./tracker-status-change-details.component.scss']
 })
-export class TrackerStatusChangeDetailsComponent implements OnInit, OnChanges {
+export class TrackerStatusChangeDetailsComponent implements OnInit {
   @Input() trackerInfo: Tracker;  
-  constructor() { }
+  constructor(public dialog: MatDialog) { }
   
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void {
-    throw new Error("Method not implemented.");
-  }
-
   ngOnInit(): void {
   }  
 
   get chances():Array<{nth:string, details:Chance}>{
+    
     return [
       {
         nth: 'First',
@@ -34,4 +33,14 @@ export class TrackerStatusChangeDetailsComponent implements OnInit, OnChanges {
       }
     ];
   }
+
+  openSignatureRenderModal(title:string, signatureBase64:string){
+    this.dialog.open(SignatureRenderModalComponent,{
+      data: {
+        title,
+        signatureBase64
+      }
+    });
+  }
+
 }

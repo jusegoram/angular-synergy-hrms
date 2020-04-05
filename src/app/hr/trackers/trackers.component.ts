@@ -5,6 +5,7 @@ import { HrTracker } from "../../shared/models/hr-tracker";
 import moment from "moment";
 import { fromEvent } from "rxjs";
 import { debounceTime, map } from "rxjs/operators";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: "app-trackers",
@@ -66,7 +67,23 @@ export class TrackersComponent implements OnInit, AfterViewInit {
   }
 
   saveAcceptedTrackerStatus(hrTracker:HrTracker){
-    //this.employeeService.getTrackers
+    Swal.fire({
+      title: 'Confirmation',
+      text: 'Are you sure you want to accept this track?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'YES',
+      cancelButtonText: 'NO'
+    }).then((result) => {
+      if (result.value) {
+        /*Swal.fire(
+          'Done!',
+          'The tracker has been updated state to ACCEPTED.',
+          'success'
+        )*/
+        location.reload();      
+      } 
+    })
   }
 
   
