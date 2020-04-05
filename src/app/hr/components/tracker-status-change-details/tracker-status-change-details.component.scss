@@ -1,0 +1,19 @@
+.reason-wrapper{
+    height:auto;
+    .reason{
+        white-space: normal;
+    }
+}
+
+.absenteeism-list-wrapper{
+    height:auto;
+    .absenteeism-list-table{
+        background: white;
+        margin: 5px;
+        border-collapse: collapse;
+        td,th{
+            padding: 3px;
+            border: 1px solid grey;
+        }
+    }
+}
