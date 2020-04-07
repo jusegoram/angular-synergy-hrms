@@ -16,7 +16,7 @@ import { TRACKER_STATUS } from "../../../environments/environment";
 export class TrackersComponent implements OnInit, AfterViewInit {
   @ViewChild('trackerInboxTable', {static: false}) trackerInboxTable: any;
   @ViewChild('inputFilter', {static: false}) inputFilter: any;  
-  data:Array<HrTracker> = []; 
+  trackersInbox:Array<HrTracker> = []; 
   filter='';
   isLoading=true;
 
@@ -41,21 +41,21 @@ export class TrackersComponent implements OnInit, AfterViewInit {
   }
 
   get filteredData():Array<HrTracker>{
-    if(this.filter && this.data){
+    if(this.filter && this.trackersInbox){
       const filterNormalized= this.filter.toLowerCase();
-      return this.data.filter((item:HrTracker)=>{        
+      return this.trackersInbox.filter((item:HrTracker)=>{        
         return item.employeeId.includes(filterNormalized) ||
                item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
                item.creationFingerprint.name?.toLowerCase().includes(filterNormalized);
       });
     }
-    return this.data;
+    return this.trackersInbox;
   }
   
   async fetchTrackers(){
     try{
       const response=await this.employeeService.getTrackers();
-      this.data=  response;      
+      this.trackersInbox=  response;      
       console.log('TrackersComponent',response);
     }catch(error){
       console.log('TrackersComponent',error);
@@ -68,7 +68,7 @@ export class TrackersComponent implements OnInit, AfterViewInit {
     this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
-  saveAcceptedTrackerStatus(hrTracker:HrTracker){
+  saveAcceptedTrackerStatus(hrTracker:Partial<HrTracker>){
     Swal.fire({
       title: 'Confirmation',
       text: 'Are you sure you want to accept this track?',
@@ -78,13 +78,10 @@ export class TrackersComponent implements OnInit, AfterViewInit {
       cancelButtonText: 'NO'
     }).then(async (result) => {
       if (result.value) {
-        hrTracker.state= TRACKER_STATUS.IN_PROGRESS;
-        let { _id } = hrTracker;
+        //hrTracker.state= TRACKER_STATUS.IN_PROGRESS;
+        //let { _id } = hrTracker;
         try{
-          await this.employeeService.updateTracker({      
-            _id,    
-            state: TRACKER_STATUS.IN_PROGRESS
-          });
+          await this.employeeService.updateTracker(hrTracker);
           location.reload();
         }catch(error){
           Swal.fire(

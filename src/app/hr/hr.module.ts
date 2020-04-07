@@ -20,6 +20,8 @@ import { TrackerCertifyTrainingDetailsComponent } from './components/tracker-cer
 import { TrackerInfoChangeRequestDetailsComponent } from './components/tracker-info-change-request-details/tracker-info-change-request-details.component';
 import { TrackerStatusChangeDetailsComponent } from './components/tracker-status-change-details/tracker-status-change-details.component';
 import { SignatureRenderModalComponent } from './components/signature-render-modal/signature-render-modal.component';
+import { TrackersInboxTableComponent } from './components/trackers-inbox-table/trackers-inbox-table.component';
+import { AcceptedTrackersTableComponent } from './components/accepted-trackers-table/accepted-trackers-table.component';
 
 @NgModule({
   imports: [
@@ -33,7 +35,7 @@ import { SignatureRenderModalComponent } from './components/signature-render-mod
     NgxDatatableModule,
     MomentModule
   ],
-  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent],
+  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent, TrackersInboxTableComponent, AcceptedTrackersTableComponent],
   entryComponents: [SignatureRenderModalComponent],
   providers: [
     HrService,
