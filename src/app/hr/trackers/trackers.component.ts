@@ -53,13 +53,16 @@ export class TrackersComponent implements OnInit, AfterViewInit {
   }
 
   saveNewTrackerStatus(hrTracker:Partial<HrTracker>){
-    let status='accept';
+    let message='Are you sure you want to accept this track?';
     if(hrTracker.state==TRACKER_STATUS.DONE){
-      status='finish';
+      message=`By clicking on finish, I ${this.sessionService.getName()}, 
+               agree that the issue in this tracker has been resolved to the best of my ability. 
+              If for some reason I haven’t been able to resolve the issue I have escalated it to the synergy team`;
     }
+    
     Swal.fire({
       title: 'Confirmation',
-      text: 'Are you sure you want to '+status+' this track?',
+      text: message,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'YES',
