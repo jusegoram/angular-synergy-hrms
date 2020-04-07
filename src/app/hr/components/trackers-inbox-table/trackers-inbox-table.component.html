@@ -77,7 +77,7 @@
           </button>
           <a mat-button color="accent" 
             [routerLink]="['/', 'employee', 'detail']"
-            [queryParams]="{ id: row.employeeId }">
+            [queryParams]="{ id: row.employee._id }">
             <mat-icon>person</mat-icon> PROFILE
           </a>
         </ng-template>

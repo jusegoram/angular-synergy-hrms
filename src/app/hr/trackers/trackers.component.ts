@@ -7,6 +7,7 @@ import { fromEvent } from "rxjs";
 import { debounceTime, map } from "rxjs/operators";
 import Swal from 'sweetalert2';
 import { TRACKER_STATUS } from "../../../environments/environment";
+import { SessionService } from "../../session/session.service";
 
 @Component({
   selector: "app-trackers",
@@ -16,47 +17,30 @@ import { TRACKER_STATUS } from "../../../environments/environment";
 export class TrackersComponent implements OnInit, AfterViewInit {
   @ViewChild('trackerInboxTable', {static: false}) trackerInboxTable: any;
   @ViewChild('inputFilter', {static: false}) inputFilter: any;  
-  trackersInbox:Array<HrTracker> = []; 
-  filter='';
-  isLoading=true;
+  pendingTrackersInbox:Array<HrTracker> = []; 
+  inProgressTrackersInbox:Array<HrTracker> = [];   
+  isLoading=true;  
+  constructor(private employeeService:EmployeeService, private sessionService: SessionService) {}  
 
-  constructor(private employeeService:EmployeeService) {}  
-
-  ngOnInit() {
+  ngOnInit() {    
     this.fetchTrackers();
   }
 
   ngAfterViewInit(){
-    this.setUpInputFilter();
-  }
-
-  setUpInputFilter(){
-    fromEvent(this.inputFilter.nativeElement, 'keydown')    
-    .pipe(
-      debounceTime(300),
-      map( (event: any)=> event.target.value )
-    ).subscribe((value)=>{
-      this.filter= value.trim();
-    });
-  }
-
-  get filteredData():Array<HrTracker>{
-    if(this.filter && this.trackersInbox){
-      const filterNormalized= this.filter.toLowerCase();
-      return this.trackersInbox.filter((item:HrTracker)=>{        
-        return item.employeeId.includes(filterNormalized) ||
-               item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
-               item.creationFingerprint.name?.toLowerCase().includes(filterNormalized);
-      });
-    }
-    return this.trackersInbox;
+    
   }
   
   async fetchTrackers(){
     try{
-      const response=await this.employeeService.getTrackers();
-      this.trackersInbox=  response;      
-      console.log('TrackersComponent',response);
+      this.pendingTrackersInbox=await this.employeeService.getTrackers({
+        state: TRACKER_STATUS.PENDING
+      });
+      this.inProgressTrackersInbox=await this.employeeService.getTrackers({
+        state: TRACKER_STATUS.IN_PROGRESS+'.'+TRACKER_STATUS.DONE,
+        creationFingerprintUserId: this.sessionService.getId()
+      });
+      console.log('TrackersComponent - pending',this.pendingTrackersInbox);
+      console.log('TrackersComponent - in progress',this.inProgressTrackersInbox);
     }catch(error){
       console.log('TrackersComponent',error);
     }finally{
@@ -68,18 +52,20 @@ export class TrackersComponent implements OnInit, AfterViewInit {
     this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
-  saveAcceptedTrackerStatus(hrTracker:Partial<HrTracker>){
+  saveNewTrackerStatus(hrTracker:Partial<HrTracker>){
+    let status='accept';
+    if(hrTracker.state==TRACKER_STATUS.DONE){
+      status='finish';
+    }
     Swal.fire({
       title: 'Confirmation',
-      text: 'Are you sure you want to accept this track?',
+      text: 'Are you sure you want to '+status+' this track?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'YES',
       cancelButtonText: 'NO'
     }).then(async (result) => {
-      if (result.value) {
-        //hrTracker.state= TRACKER_STATUS.IN_PROGRESS;
-        //let { _id } = hrTracker;
+      if (result.value) {        
         try{
           await this.employeeService.updateTracker(hrTracker);
           location.reload();

@@ -505,9 +505,9 @@ export class EmployeeService {
     return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
   }
 
-  getTrackers():Promise<Array<HrTracker>> {
+  getTrackers(filters={}):Promise<Array<HrTracker>> {
     // TODO: feat/hr-module
-    return this.httpClient.get<Array<HrTracker>>(API.TRACKERS)
+    return this.httpClient.get<Array<HrTracker>>(API.TRACKERS,{ params:filters })
                         .pipe(
                           map((hrTrackers:Array<HrTracker>)=>{                            
                             return this.mapHrTrackersData(hrTrackers);
