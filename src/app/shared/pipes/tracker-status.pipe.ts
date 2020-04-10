@@ -7,7 +7,7 @@ import { TRACKER_STATUS_LABELS } from '../../../environments/environment';
 })
 export class TrackerStatusPipe implements PipeTransform {
 
-  transform(value: number, ...args: unknown[]): unknown {   
+  transform(value: number, ...args: unknown[]): string {   
     return TRACKER_STATUS_LABELS[value];
   }
 

@@ -3,7 +3,7 @@ import { HrTracker } from '../../../shared/models/hr-tracker';
 import { TRACKER_STATUS } from '../../../../environments/environment';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import Swal from 'sweetalert2';
+import moment from "moment";
 
 @Component({
   selector: 'app-trackers-inbox-table',
@@ -44,6 +44,10 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
       return this.data.filter((item:HrTracker)=>{        
         return item.employeeId.includes(filterNormalized) ||
                item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
+               item.trackerTypeName.toLowerCase().includes(filterNormalized) ||
+               item.stateName.toLowerCase().includes(filterNormalized) ||
+               item.requestDateFormatted.includes(filterNormalized) ||
+               item.deadlineDateFormatted.includes(filterNormalized) ||
                item.creationFingerprint.name?.toLowerCase().includes(filterNormalized);
       });
     }

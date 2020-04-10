@@ -17,6 +17,9 @@ import { SessionService } from "../session/session.service";
 import { Tracker } from "../shared/models/tracker";
 import { HrTracker } from "../shared/models/hr-tracker";
 import { API } from "../../environments/environment";
+import { TrackerStatusPipe } from "../shared/pipes/tracker-status.pipe";
+import { TrackerTypePipe } from "../shared/pipes/tracker-type.pipe";
+import moment from "moment";
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {}
@@ -77,7 +80,9 @@ export class EmployeeService {
 
   constructor(
     protected httpClient: HttpClient,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private trackerStatusPipe:TrackerStatusPipe, 
+    private trackerTypePipe:TrackerTypePipe
   ) {
     this.store = [];
   }
@@ -517,6 +522,11 @@ export class EmployeeService {
 
   private mapHrTrackersData(hrTrackers:Array<HrTracker>):Array<HrTracker>{
     return hrTrackers.map((hrTracker:HrTracker)=>{
+      hrTracker.stateName= this.trackerStatusPipe.transform(hrTracker.state);
+      hrTracker.trackerTypeName= this.trackerTypePipe.transform(hrTracker.tracker);
+      hrTracker.requestDateFormatted= moment(hrTracker.requestDate).format('MM/DD/YYYY') ;
+      hrTracker.deadlineDateFormatted= moment(hrTracker.requestDate).add(3, 'days').format('MM/DD/YYYY');
+
       if(hrTracker.tracker.certifyTraining){
         hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(hrTracker.tracker.certifyTraining.managerSignature);        
         return hrTracker;  
@@ -532,6 +542,7 @@ export class EmployeeService {
         hrTracker.tracker.transfer.managerSignature = this.bufferToBase64(hrTracker.tracker.transfer.managerSignature);
         return hrTracker;  
       }
+
       return hrTracker;
     });
   }

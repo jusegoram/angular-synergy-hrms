@@ -1,10 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
-import { Employee } from "../../employee/Employee";
 import { EmployeeService } from "../../employee/employee.service";
 import { HrTracker } from "../../shared/models/hr-tracker";
-import moment from "moment";
-import { fromEvent } from "rxjs";
-import { debounceTime, map } from "rxjs/operators";
 import Swal from 'sweetalert2';
 import { TRACKER_STATUS } from "../../../environments/environment";
 import { SessionService } from "../../session/session.service";

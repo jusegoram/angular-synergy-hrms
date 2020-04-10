@@ -34,6 +34,8 @@ import { TokenInterceptor } from "../token-interceptor.service";
 import { AuthenticationService } from "../authentication.service";
 import { AvailableInformationComponent } from "./report/available-information/available-information.component";
 import { PipeModule } from "./../shared/pipes/pipe/pipe.module";
+import { TrackerStatusPipe } from "../shared/pipes/tracker-status.pipe";
+import { TrackerTypePipe } from "../shared/pipes/tracker-type.pipe";
 
 @NgModule({
   imports: [
@@ -88,6 +90,8 @@ import { PipeModule } from "./../shared/pipes/pipe/pipe.module";
     DetailResolver,
     TitleCasePipe,
     DatePipe,
+    TrackerStatusPipe,
+    TrackerTypePipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

@@ -41,6 +41,10 @@ export class AcceptedTrackersTableComponent implements OnInit {
       return this.data.filter((item:HrTracker)=>{        
         return item.employeeId.includes(filterNormalized) ||
                item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
+               item.trackerTypeName.toLowerCase().includes(filterNormalized) ||
+               item.stateName.toLowerCase().includes(filterNormalized) ||
+               item.requestDateFormatted.includes(filterNormalized) ||
+               item.deadlineDateFormatted.includes(filterNormalized) ||
                item.creationFingerprint.name?.toLowerCase().includes(filterNormalized);
       });
     }

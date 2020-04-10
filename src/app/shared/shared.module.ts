@@ -10,6 +10,8 @@ import { ToggleFullscreenDirective } from "./fullscreen/toggle-fullscreen.direct
 import { HttpClientModule } from "@angular/common/http";
 import { SignatureFieldComponent } from "./signature-field/signature-field.component";
 import { SignaturePadModule } from "angular2-signaturepad";
+import { TrackerStatusPipe } from "./pipes/tracker-status.pipe";
+import { TrackerTypePipe } from "./pipes/tracker-type.pipe";
 
 @NgModule({
   declarations: [
@@ -18,6 +20,8 @@ import { SignaturePadModule } from "angular2-signaturepad";
     AccordionDirective,
     ToggleFullscreenDirective,
     SignatureFieldComponent,
+    TrackerStatusPipe,
+    TrackerTypePipe,
   ],
   imports: [HttpClientModule, SignaturePadModule],
   exports: [
@@ -26,7 +30,11 @@ import { SignaturePadModule } from "angular2-signaturepad";
     AccordionDirective,
     ToggleFullscreenDirective,
     SignatureFieldComponent,
+    TrackerStatusPipe,
+    TrackerTypePipe
   ],
-  providers: [MenuItems],
+  providers: [MenuItems,
+    TrackerStatusPipe,
+    TrackerTypePipe],
 })
 export class SharedModule {}

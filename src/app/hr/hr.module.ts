@@ -12,8 +12,6 @@ import { TokenInterceptor } from "../token-interceptor.service";
 import { AuthenticationService } from "../authentication.service";
 import { EmployeeService } from "../employee/employee.service";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
-import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
-import { TrackerTypePipe } from './pipes/tracker-type.pipe';
 import { MomentModule } from 'ngx-moment';
 import { TrackerTransferDetailsComponent } from './components/tracker-transfer-details/tracker-transfer-details.component';
 import { TrackerCertifyTrainingDetailsComponent } from './components/tracker-certify-training-details/tracker-certify-training-details.component';
@@ -35,7 +33,7 @@ import { AcceptedTrackersTableComponent } from './components/accepted-trackers-t
     NgxDatatableModule,
     MomentModule
   ],
-  declarations: [TrackersComponent, TrackerStatusPipe, TrackerTypePipe, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent, TrackersInboxTableComponent, AcceptedTrackersTableComponent],
+  declarations: [TrackersComponent, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent, TrackersInboxTableComponent, AcceptedTrackersTableComponent],
   entryComponents: [SignatureRenderModalComponent],
   providers: [
     HrService,
