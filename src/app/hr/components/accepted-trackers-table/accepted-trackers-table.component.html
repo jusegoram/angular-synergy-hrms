@@ -1,0 +1,101 @@
+<!--<p>accepted-trackers-table works!</p>-->
+<div class="mat-card-top pa-2">
+    <mat-form-field appearance="outline">
+      <input
+        #inputFilter
+        matInput          
+        placeholder="Filter"
+      />
+    </mat-form-field>
+    <ngx-datatable
+      #trackerInboxTable
+      class="material expandable expandable-datatable"
+      [rows]="filteredData"      
+      [loadingIndicator]="isLoading"
+      [headerHeight]="50"
+      [rowHeight]="60"
+      [limit]="10"
+      [footerHeight]="50"
+      [scrollbarH]="true"
+      >   
+      <ngx-datatable-column
+          [width]="50"
+          [resizeable]="false"
+          [sortable]="false"
+          [canAutoResize]="false"
+        >
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+          <a
+            href="javascript:void(0)"            
+            title="Expand/Collapse Row"
+            (click)="toggleExpandRow(row)"
+          >
+            <mat-icon [class.hidden]="!expanded">expand_less</mat-icon>
+            <mat-icon [class.hidden]="expanded">expand_more</mat-icon>
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="EMPLOYEE ID" [width]="100">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.employeeId }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="NAME" prop="employee.fullName">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.employee.fullName }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="TRACKER" prop="trackerTypeName">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.trackerTypeName }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="SUBMITTED DATE" prop="requestDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.requestDateFormatted }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="DEADLINE" prop="requestDate">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.deadlineDateFormatted }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="STATUS" prop="stateName" [sortable]="true">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.stateName | uppercase }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="SUBMITTED BY" prop="creationFingerprint.name">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row?.creationFingerprint?.name | uppercase }}
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <button mat-button color="primary" (click)="saveFinishedTrackerStatus(row)"
+                    [disabled]="row?.state==2">
+            <mat-icon>save</mat-icon> FINISH
+          </button>
+          <a mat-button color="accent" 
+            [routerLink]="['/', 'employee', 'detail']"
+            [queryParams]="{ id: row.employee._id }">
+            <mat-icon>person</mat-icon> PROFILE
+          </a>
+        </ng-template>
+      </ngx-datatable-column>      
+     
+      <!-- Tracker details -->
+      <ngx-datatable-row-detail rowHeight="auto" #myDetailRow>
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+          <div style="padding-left:35px;"
+               [ngSwitch]="row.tracker | trackerType">
+              <app-tracker-status-change-details *ngSwitchCase="'STATUS'" [trackerInfo]="row.tracker"></app-tracker-status-change-details>
+              <app-tracker-transfer-details *ngSwitchCase="'TRANSFER'" [trackerInfo]="row.tracker"></app-tracker-transfer-details>
+              <app-tracker-certify-training-details *ngSwitchCase="'CERTIFY'" [trackerInfo]="row.tracker"></app-tracker-certify-training-details>
+              <app-tracker-info-change-request-details *ngSwitchDefault [trackerInfo]="row.tracker"></app-tracker-info-change-request-details>
+          </div>
+        </ng-template>
+      </ngx-datatable-row-detail>
+
+    </ngx-datatable>
+</div>

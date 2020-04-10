@@ -8,7 +8,11 @@ export interface HrTracker {
     fullName: string;
   };
   requestDate?: Date;
+  requestDateFormatted?:string;
+  deadlineDateFormatted?:string;
   state: number;
+  stateName?: string;
   creationFingerprint?: any;
   tracker?: Tracker;
+  trackerTypeName?: string;
 }

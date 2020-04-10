@@ -1,12 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from "@angular/core";
-import { Employee } from "../../employee/Employee";
 import { EmployeeService } from "../../employee/employee.service";
 import { HrTracker } from "../../shared/models/hr-tracker";
-import moment from "moment";
-import { fromEvent } from "rxjs";
-import { debounceTime, map } from "rxjs/operators";
 import Swal from 'sweetalert2';
 import { TRACKER_STATUS } from "../../../environments/environment";
+import { SessionService } from "../../session/session.service";
 
 @Component({
   selector: "app-trackers",
@@ -16,47 +13,30 @@ import { TRACKER_STATUS } from "../../../environments/environment";
 export class TrackersComponent implements OnInit, AfterViewInit {
   @ViewChild('trackerInboxTable', {static: false}) trackerInboxTable: any;
   @ViewChild('inputFilter', {static: false}) inputFilter: any;  
-  data:Array<HrTracker> = []; 
-  filter='';
-  isLoading=true;
+  pendingTrackersInbox:Array<HrTracker> = []; 
+  inProgressTrackersInbox:Array<HrTracker> = [];   
+  isLoading=true;  
+  constructor(private employeeService:EmployeeService, private sessionService: SessionService) {}  
 
-  constructor(private employeeService:EmployeeService) {}  
-
-  ngOnInit() {
+  ngOnInit() {    
     this.fetchTrackers();
   }
 
   ngAfterViewInit(){
-    this.setUpInputFilter();
-  }
-
-  setUpInputFilter(){
-    fromEvent(this.inputFilter.nativeElement, 'keydown')    
-    .pipe(
-      debounceTime(300),
-      map( (event: any)=> event.target.value )
-    ).subscribe((value)=>{
-      this.filter= value.trim();
-    });
-  }
-
-  get filteredData():Array<HrTracker>{
-    if(this.filter && this.data){
-      const filterNormalized= this.filter.toLowerCase();
-      return this.data.filter((item:HrTracker)=>{        
-        return item.employeeId.includes(filterNormalized) ||
-               item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
-               item.creationFingerprint.name?.toLowerCase().includes(filterNormalized);
-      });
-    }
-    return this.data;
+    
   }
   
   async fetchTrackers(){
     try{
-      const response=await this.employeeService.getTrackers();
-      this.data=  response;      
-      console.log('TrackersComponent',response);
+      this.pendingTrackersInbox=await this.employeeService.getTrackers({
+        state: TRACKER_STATUS.PENDING
+      });
+      this.inProgressTrackersInbox=await this.employeeService.getTrackers({
+        state: TRACKER_STATUS.IN_PROGRESS+'.'+TRACKER_STATUS.DONE,
+        creationFingerprintUserId: this.sessionService.getId()
+      });
+      console.log('TrackersComponent - pending',this.pendingTrackersInbox);
+      console.log('TrackersComponent - in progress',this.inProgressTrackersInbox);
     }catch(error){
       console.log('TrackersComponent',error);
     }finally{
@@ -68,23 +48,25 @@ export class TrackersComponent implements OnInit, AfterViewInit {
     this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
-  saveAcceptedTrackerStatus(hrTracker:HrTracker){
+  saveNewTrackerStatus(hrTracker:Partial<HrTracker>){
+    let message='Are you sure you want to accept this track?';
+    if(hrTracker.state==TRACKER_STATUS.DONE){
+      message=`By clicking on finish, I ${this.sessionService.getName()}, 
+               agree that the issue in this tracker has been resolved to the best of my ability. 
+              If for some reason I haven’t been able to resolve the issue I have escalated it to the synergy team`;
+    }
+    
     Swal.fire({
       title: 'Confirmation',
-      text: 'Are you sure you want to accept this track?',
+      text: message,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'YES',
       cancelButtonText: 'NO'
     }).then(async (result) => {
-      if (result.value) {
-        hrTracker.state= TRACKER_STATUS.IN_PROGRESS;
-        let { _id } = hrTracker;
+      if (result.value) {        
         try{
-          await this.employeeService.updateTracker({      
-            _id,    
-            state: TRACKER_STATUS.IN_PROGRESS
-          });
+          await this.employeeService.updateTracker(hrTracker);
           location.reload();
         }catch(error){
           Swal.fire(
