@@ -10,6 +10,10 @@ export const AppRoutes: Routes = [
     component: AdminLayoutComponent,
     children: [
       {
+        path: 'pages',
+        loadChildren: ()=> import("./pages/pages.module").then((m) => m.PagesModule)
+      },
+      {
         path: "main",
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
