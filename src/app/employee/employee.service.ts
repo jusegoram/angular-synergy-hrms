@@ -487,6 +487,14 @@ export class EmployeeService {
       .toPromise();
   }
 
+  updateTracker(hrTracker: Partial<HrTracker>) {
+    // TODO: feat/hr-module
+    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    return this.httpClient
+      .put(API.TRACKER(hrTracker._id), hrTracker, { headers })
+      .toPromise();
+  }
+
   deleteTracker(employeeId: string) {
     // TODO: feat/hr-module
     return this.httpClient.delete(API.TRACKER(employeeId)).toPromise();
@@ -497,8 +505,38 @@ export class EmployeeService {
     return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
   }
 
-  getTrackers() {
+  getTrackers():Promise<Array<HrTracker>> {
     // TODO: feat/hr-module
-    return this.httpClient.get(API.TRACKERS).toPromise();
+    return this.httpClient.get<Array<HrTracker>>(API.TRACKERS)
+                        .pipe(
+                          map((hrTrackers:Array<HrTracker>)=>{                            
+                            return this.mapHrTrackersData(hrTrackers);
+                          })
+                        ).toPromise();
+  }
+
+  private mapHrTrackersData(hrTrackers:Array<HrTracker>):Array<HrTracker>{
+    return hrTrackers.map((hrTracker:HrTracker)=>{
+      if(hrTracker.tracker.certifyTraining){
+        hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(hrTracker.tracker.certifyTraining.managerSignature);        
+        return hrTracker;  
+      }
+
+      if(hrTracker.tracker.statusChange){
+        hrTracker.tracker.statusChange.managerSignature = this.bufferToBase64(hrTracker.tracker.statusChange.managerSignature);
+        hrTracker.tracker.statusChange.supervisorSignature = this.bufferToBase64(hrTracker.tracker.statusChange.supervisorSignature);
+        return hrTracker;  
+      }
+
+      if(hrTracker.tracker.transfer){
+        hrTracker.tracker.transfer.managerSignature = this.bufferToBase64(hrTracker.tracker.transfer.managerSignature);
+        return hrTracker;  
+      }
+      return hrTracker;
+    });
+  }
+
+  private bufferToBase64(buffer){
+    return String.fromCharCode.apply(null,buffer.data).toString('base64');
   }
 }

@@ -1,0 +1,28 @@
+<mat-list>
+    <mat-list-item>
+        <strong>Effective Date:</strong> &nbsp; {{ trackerInfo.transfer.effectiveDate |  amDateFormat: 'MM/DD/YYYY' }}
+    </mat-list-item>
+    <mat-list-item>
+        <strong>Old client: </strong> &nbsp; {{ trackerInfo.transfer.oldClient }}
+    </mat-list-item>
+    <mat-list-item>
+        <strong>Old campaign: </strong> &nbsp; {{ trackerInfo.transfer.oldCampaign }}
+    </mat-list-item>
+    <mat-list-item>
+        <strong>New client: </strong> &nbsp; {{ trackerInfo.transfer.newClient }}
+    </mat-list-item>
+    <mat-list-item>
+        <strong>New campaign: </strong> &nbsp; {{ trackerInfo.transfer.newCampaign }}
+    </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Manager Signature',trackerInfo.transfer.managerSignature)">Show Manager Signature</button>
+    </mat-list-item>
+    <mat-list-item class="reason-wrapper">
+        <div fxLayout="column">
+            <strong>Reason: </strong>
+            <p class="reason">
+                {{ trackerInfo.transfer.reason }}
+            </p>  
+        </div>              
+    </mat-list-item>
+</mat-list>

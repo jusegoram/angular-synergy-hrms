@@ -1,0 +1,18 @@
+<div class="wrapper">
+    <mat-card-header>
+      <mat-card-title fxLayout="row" fxLayoutAlign="center center">
+        <span class="align-text-icon">{{ data.title }}</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <img [src]="data.signatureBase64" />
+    </mat-card-content>
+    <mat-card-actions
+        fxLayout="row"
+        fxLayoutAlign="flex-end center"        
+    >    
+    <button mat-button color="primary" (click)="closeDialog()">
+      OK
+    </button>
+  </mat-card-actions>
+</div>

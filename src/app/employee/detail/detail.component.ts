@@ -68,7 +68,8 @@ export class DetailComponent implements OnInit {
     private route: ActivatedRoute,
     public snackBar: MatSnackBar,
     private fb: FormBuilder,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private sessionService: SessionService
   ) {
     this.newCompany = new EmployeeCompany(
       "",
@@ -364,10 +365,16 @@ export class DetailComponent implements OnInit {
   }
 
   setHrTracker() {
+    console.log('decodeToken',this.sessionService.decodeToken());
+    const {userId, name, role}=this.sessionService.decodeToken();
     this.hrTracker = {
-      employee: this.employee._id, //selected employee for track
-      employeeId: this.employee._id,
-      state: TRACKER_STATUS.PENDING
+      employee: {
+        _id: this.employee._id,
+        fullName: this.employee.firstName + " " + this.employee.middleName + " " + this.employee.lastName
+      },
+      employeeId: this.employee.employeeId.toString(),
+      state: TRACKER_STATUS.PENDING,
+      creationFingerprint: {userId, name, role}      
     };
   }
 }

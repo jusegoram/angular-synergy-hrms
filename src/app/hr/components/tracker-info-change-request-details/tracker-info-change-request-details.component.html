@@ -1,0 +1,29 @@
+<mat-list>
+    <mat-list-item class="requested-information-list-wrapper">
+        <div fxLayout="column">
+            <strong>Requested information:</strong>
+            <ul class="requested-information-list">
+                <li *ngIf="trackerInfo.infoChangeRequest.mainInfo">
+                    Main info
+                </li>
+                <li *ngIf="trackerInfo.infoChangeRequest.companyInfo">
+                    Company info
+                </li>
+                <li *ngIf="trackerInfo.infoChangeRequest.personalInfo">
+                    Personal info
+                </li>
+                <li *ngIf="trackerInfo.infoChangeRequest.positionInfo">
+                    Position info
+                </li>
+            </ul>
+        </div>        
+    </mat-list-item>  
+    <mat-list-item class="reason-wrapper">
+        <div fxLayout="column">
+            <strong>Reason: </strong>
+            <p class="reason">
+                {{ trackerInfo.infoChangeRequest.reason }}
+            </p>  
+        </div>              
+    </mat-list-item>
+</mat-list>

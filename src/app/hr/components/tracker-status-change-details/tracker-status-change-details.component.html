@@ -1,0 +1,45 @@
+<mat-list>
+    <mat-list-item>
+        <strong>Effective Date:</strong> &nbsp; {{ trackerInfo.statusChange.effectiveDate |  amDateFormat: 'MM/DD/YYYY' }}
+    </mat-list-item>
+    <mat-list-item>
+        <strong>Status:</strong> &nbsp; {{ trackerInfo.statusChange.newStatus | titlecase}}
+    </mat-list-item>
+    <mat-list-item class="absenteeism-list-wrapper" *ngIf="trackerInfo.statusChange.absenteeism">
+        <div fxLayout="column">
+            <strong>Absenteeism:</strong>
+            <table class="absenteeism-list-table">
+                <thead>
+                    <tr>
+                        <th>Chance</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let chance of chances">
+                        <td><strong>{{chance.nth}} </strong></td>
+                        <td>{{chance.details.date |  amDateFormat: 'MM/DD/YYYY'}}</td>
+                        <td>{{chance.details.time}}</td>
+                        <td class="reason">{{chance.details.reason}}</td>
+                    </tr>                    
+                </tbody>
+            </table>
+        </div>        
+    </mat-list-item>
+    <mat-list-item class="reason-wrapper" *ngIf="trackerInfo.statusChange.reason">
+        <div fxLayout="column">
+            <strong>Reason: </strong>
+            <p class="reason">
+                {{ trackerInfo.statusChange.reason }}
+            </p>  
+        </div>              
+    </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Manager Signature',trackerInfo.statusChange.managerSignature)">Show Manager Signature</button>
+    </mat-list-item>
+    <mat-list-item>
+        <button mat-flat-button color="primary" (click)="openSignatureRenderModal('Supervisor Signature',trackerInfo.statusChange.supervisorSignature)">Show Supervisor Signature</button>
+    </mat-list-item>
+</mat-list>
