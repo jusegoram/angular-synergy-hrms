@@ -6,23 +6,21 @@ import { SignatureRenderModalComponent } from '../signature-render-modal/signatu
 @Component({
   selector: 'app-tracker-transfer-details',
   templateUrl: './tracker-transfer-details.component.html',
-  styleUrls: ['./tracker-transfer-details.component.scss']
+  styleUrls: ['./tracker-transfer-details.component.scss'],
 })
 export class TrackerTransferDetailsComponent implements OnInit {
   @Input() trackerInfo: Tracker;
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  openSignatureRenderModal(title:string, signatureBase64:string){
-    this.dialog.open(SignatureRenderModalComponent,{
+  openSignatureRenderModal(title: string, signatureBase64: string) {
+    this.dialog.open(SignatureRenderModalComponent, {
       data: {
         title,
-        signatureBase64
-      }
+        signatureBase64,
+      },
     });
   }
-
 }

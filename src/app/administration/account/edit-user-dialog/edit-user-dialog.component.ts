@@ -1,32 +1,18 @@
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { AdminService } from "../../admin.service";
-import {
-  Component,
-  ElementRef,
-  Inject,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from "@angular/material/autocomplete";
-import { MatChipInputEvent } from "@angular/material/chips";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
-import { Observable } from "rxjs";
-import { Employee } from "../../../employee/Employee";
-import { map, startWith } from "rxjs/operators";
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { AdminService } from '../../admin.service';
+import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Employee } from '../../../employee/employee.model';
+import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: "app-edit-user-dialog",
-  templateUrl: "./edit-user-dialog.component.html",
-  styleUrls: ["./edit-user-dialog.component.scss"],
+  selector: 'app-edit-user-dialog',
+  templateUrl: './edit-user-dialog.component.html',
+  styleUrls: ['./edit-user-dialog.component.scss'],
 })
 export class EditUserDialogComponent implements OnInit {
   items: Array<any>;
@@ -56,15 +42,11 @@ export class EditUserDialogComponent implements OnInit {
   filteredClients: Observable<any[]>;
   clients: string[] = [];
   allClients: any[] = [];
-  @ViewChild("pageInput", { static: false }) pageInput: ElementRef<
-    HTMLInputElement
-  >;
-  @ViewChild("pageAuto", { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('pageInput', { static: false }) pageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('pageAuto', { static: false }) matAutocomplete: MatAutocomplete;
 
-  @ViewChild("clientInput", { static: false }) clientInput: ElementRef<
-    HTMLInputElement
-  >;
-  @ViewChild("clientAuto", { static: false })
+  @ViewChild('clientInput', { static: false }) clientInput: ElementRef<HTMLInputElement>;
+  @ViewChild('clientAuto', { static: false })
   matClientAutocomplete: MatAutocomplete;
 
   constructor(
@@ -75,16 +57,12 @@ export class EditUserDialogComponent implements OnInit {
   ) {
     this.filteredPages = this.pagesCtrl.valueChanges.pipe(
       startWith(null),
-      map((page: string | null) =>
-        page ? this._filter(page) : this.allPages.slice()
-      )
+      map((page: string | null) => (page ? this._filter(page) : this.allPages.slice()))
     );
 
     this.filteredClients = this.clientsCtrl.valueChanges.pipe(
       startWith(null),
-      map((client: string | null) =>
-        client ? this._filterClient(client) : this.allClients.slice()
-      )
+      map((client: string | null) => (client ? this._filterClient(client) : this.allClients.slice()))
     );
   }
   ngOnInit() {
@@ -97,8 +75,8 @@ export class EditUserDialogComponent implements OnInit {
       ln: [this.data.lastName],
       role: [this.data.role],
       username: [this.data.username],
-      password: ["", Validators.minLength(10)],
-      confirmPw: ["", Validators.minLength(10)],
+      password: ['', Validators.minLength(10)],
+      confirmPw: ['', Validators.minLength(10)],
     });
     this.edit = this.data.rights ? this.data.rights.edit : false;
     this.create = this.data.rights ? this.data.rights.create : false;
@@ -108,19 +86,12 @@ export class EditUserDialogComponent implements OnInit {
     this._adminService.getEmployees().subscribe((data) => {
       data.map((item) => {
         item.fullSearchName =
-          "(" +
-          item.employeeId +
-          ") " +
-          item.firstName +
-          " " +
-          item.middleName +
-          " " +
-          item.lastName;
+          '(' + item.employeeId + ') ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
       });
       this.employees = data;
     });
     this.filteredEmployees = this.employeeCtrl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map((value) => {
         return this.employees ? this._filterEmployees(value) : this.employees;
       })
@@ -129,7 +100,7 @@ export class EditUserDialogComponent implements OnInit {
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
     return this.employees.filter((employee) => {
-      return employee["fullSearchName"].toLowerCase().includes(filterValue);
+      return employee['fullSearchName'].toLowerCase().includes(filterValue);
     });
   }
 
@@ -143,9 +114,7 @@ export class EditUserDialogComponent implements OnInit {
   pagesNametoPage(name: string[]): number[] {
     const result: number[] = [];
     name.forEach((n) => {
-      const found = this.allPages.find(
-        (item) => item.name.localeCompare(n) === 0
-      );
+      const found = this.allPages.find((item) => item.name.localeCompare(n) === 0);
       result.push(found.page);
     });
     return result;
@@ -209,13 +178,13 @@ export class EditUserDialogComponent implements OnInit {
       const value = event.value;
 
       // Add our page
-      if ((value || ("" && !this.pages.includes(value))).trim()) {
+      if ((value || ('' && !this.pages.includes(value))).trim()) {
         this.pages.push(value.trim());
       }
 
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
 
       this.pagesCtrl.setValue(null);
@@ -234,14 +203,14 @@ export class EditUserDialogComponent implements OnInit {
     if (!this.pages.includes(event.option.viewValue)) {
       this.pages.push(event.option.viewValue);
     }
-    this.pageInput.nativeElement.value = "";
+    this.pageInput.nativeElement.value = '';
     this.pagesCtrl.setValue(null);
   }
 
   private _filter(value: string): any[] {
     const filterValue = value.toString().toLowerCase();
     return this.allPages.filter((page) => {
-      return page["name"].toLowerCase().includes(filterValue);
+      return page['name'].toLowerCase().includes(filterValue);
     });
   }
 
@@ -253,13 +222,13 @@ export class EditUserDialogComponent implements OnInit {
       const value = event.value;
 
       // Add our page
-      if ((value || ("" && !this.clients.includes(value))).trim()) {
+      if ((value || ('' && !this.clients.includes(value))).trim()) {
         this.clients.push(value.trim());
       }
 
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
 
       this.clientsCtrl.setValue(null);
@@ -278,14 +247,14 @@ export class EditUserDialogComponent implements OnInit {
     if (!this.clients.includes(event.option.viewValue)) {
       this.clients.push(event.option.viewValue);
     }
-    this.clientInput.nativeElement.value = "";
+    this.clientInput.nativeElement.value = '';
     this.clientsCtrl.setValue(null);
   }
 
   private _filterClient(value: string): any[] {
     const filterValue = value.toString().toLowerCase();
     return this.allClients.filter((client) => {
-      return client["name"].toLowerCase().includes(filterValue);
+      return client['name'].toLowerCase().includes(filterValue);
     });
   }
 }

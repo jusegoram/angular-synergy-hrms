@@ -49,8 +49,8 @@ export class Position {
   constructor() {
     this.startDate = null;
     this.position = {
-      name: "",
-      positionId: "",
+      name: '',
+      positionId: '',
     };
   }
 }

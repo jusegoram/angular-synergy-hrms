@@ -1,14 +1,14 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { ProfileComponent } from "./profile/profile.component";
-import { SettingsComponent } from "./settings/settings.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ProfileComponent } from './profile/profile.component';
+import { SettingsComponent } from './settings/settings.component';
 
 export const routes: Routes = [
   {
-    path: "",
+    path: '',
     children: [
-      { path: "profile", component: ProfileComponent },
-      { path: "settings", component: SettingsComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'settings', component: SettingsComponent },
     ],
   },
 ];

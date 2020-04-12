@@ -42,7 +42,6 @@
       }
     ],
     "no-arg": true,
-    "no-bitwise": true,
     "no-console": [
       true,
       "debug",
@@ -137,13 +136,12 @@
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
     "directive-class-suffix": true,
-    "invoke-injectable": true,
     "file-name-casing": [
       true,
       "kebab-case"
     ],
     "no-magic-numbers": [
-      true,
+      false,
       -1, 0, 1, 2, 10, 100, 1000, 10000
     ],
     "no-async-without-await": true

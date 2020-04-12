@@ -1,26 +1,23 @@
-import { RequestInfoChangeDialogComponent } from "./request-info-change-dialog/request-info-change-dialog.component";
-import { CertifyDialogComponent } from "./certify-dialog/certify-dialog.component";
-import { TransferDialogComponent } from "./transfer-dialog/transfer-dialog.component";
-import { StatusDialogComponent } from "./status-dialog/status-dialog.component";
-import { SessionService } from "../../session/session.service";
-import { Component, OnInit, OnChanges, SimpleChanges } from "@angular/core";
-import { EmployeeService } from "../employee.service";
-import { ActivatedRoute } from "@angular/router";
-import { Employee, EmployeeCompany, Position } from "../Employee";
-import { FormGroup, FormBuilder } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Observable } from "rxjs";
-import { Client } from "../../administration/employee/models/positions-models";
-import { DatePipe, AsyncPipe } from "@angular/common";
-import { async } from "@angular/core/testing";
-import { HrTracker } from "../../shared/models/hr-tracker";
-import { TRACKER_STATUS } from "../../../environments/environment";
+import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
+import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
+import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
+import { StatusDialogComponent } from './status-dialog/status-dialog.component';
+import { SessionService } from '../../session/session.service';
+import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { EmployeeService } from '../employee.service';
+import { ActivatedRoute } from '@angular/router';
+import { Employee, EmployeeCompany, Position } from '../employee.model';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DatePipe, AsyncPipe } from '@angular/common';
+import { HrTracker } from '../../shared/models/hr-tracker';
+import { TRACKER_STATUS } from '../../../environments/environment';
 
 @Component({
-  selector: "app-detail",
-  templateUrl: "./detail.component.html",
-  styleUrls: ["./detail.component.scss"]
+  selector: 'app-detail',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
   auth: any;
@@ -71,23 +68,7 @@ export class DetailComponent implements OnInit {
     public dialog: MatDialog,
     private sessionService: SessionService
   ) {
-    this.newCompany = new EmployeeCompany(
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      null,
-      null,
-      null,
-      null,
-      null,
-      false
-    );
+    this.newCompany = new EmployeeCompany('', '', '', '', '', '', '', '', '', null, null, null, null, null, false);
     this.isNewCompany = false;
     this.items = this.employeeService.status;
     this.reaptimes = this.employeeService.reaptimes;
@@ -97,7 +78,7 @@ export class DetailComponent implements OnInit {
   ngOnInit() {
     this.auth = this.employeeService.getAuth();
     this.clients = this.employeeService.clients;
-    this.employee = this.route.snapshot.data["employee"];
+    this.employee = this.route.snapshot.data['employee'];
     this.positions = this.employee.position;
     if (!this.positions[0]) {
       this.latestPos = new Position();
@@ -112,7 +93,7 @@ export class DetailComponent implements OnInit {
     this.company = this.employee.company;
     this.buildForms();
     if (!this.clients) {
-      this.employeeService.getClient().subscribe(data => {
+      this.employeeService.getClient().subscribe((data) => {
         this.clients = data;
         this.setCampaigns();
       });
@@ -122,8 +103,8 @@ export class DetailComponent implements OnInit {
   }
 
   transformDate(date: Date) {
-    const dp = new DatePipe("en-US");
-    const p = "M/dd/yyyy";
+    const dp = new DatePipe('en-US');
+    const p = 'M/dd/yyyy';
     const dtr = dp.transform(date, p);
     return dtr;
   }
@@ -136,7 +117,7 @@ export class DetailComponent implements OnInit {
       status: [this.employee.status.toLowerCase()],
       currentPosition: [this.latestPos.position.name],
       currentPositionId: [this.latestPos.position.positionId],
-      currentPositionDate: [this.transformDate(this.latestPos.startDate)]
+      currentPositionDate: [this.transformDate(this.latestPos.startDate)],
     });
     this.companyForm = this.fb.group({
       client: [this.company.client],
@@ -150,7 +131,7 @@ export class DetailComponent implements OnInit {
       terminationDate: [this.company.terminationDate],
       reapplicant: [this.company.reapplicant],
       reapplicantTimes: [this.company.reapplicantTimes],
-      bilingual: [this.company.bilingual]
+      bilingual: [this.company.bilingual],
     });
   }
   onSubmit() {
@@ -166,26 +147,18 @@ export class DetailComponent implements OnInit {
     );
 
     if (this.statusChange) {
-      console.log("execute status change");
+      console.log('execute status change');
     }
     this.employeeService.updateEmployee(employee).subscribe(
-      data => {
-        this.snackBar.open(
-          "Employee information updated successfully",
-          "thank you",
-          {
-            duration: 2000
-          }
-        );
+      (data) => {
+        this.snackBar.open('Employee information updated successfully', 'thank you', {
+          duration: 2000,
+        });
       },
-      error => {
-        this.snackBar.open(
-          "Error updating information, please try again or notify the IT department",
-          "Try again",
-          {
-            duration: 2000
-          }
-        );
+      (error) => {
+        this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+          duration: 2000,
+        });
       }
     );
   }
@@ -193,7 +166,7 @@ export class DetailComponent implements OnInit {
   onCompanySubmit() {
     const employeeCompany = new EmployeeCompany(
       this.company._id,
-      this.employee.employeeId + "",
+      this.employee.employeeId + '',
       this.employee._id,
       this.companyForm.value.client,
       this.companyForm.value.campaign,
@@ -210,46 +183,30 @@ export class DetailComponent implements OnInit {
     );
     if (!this.isNewCompany) {
       this.employeeService.updateCompany(employeeCompany).subscribe(
-        data => {
-          this.snackBar.open(
-            "Employee comapany information updated successfully",
-            "Thank you",
-            {
-              duration: 2000
-            }
-          );
+        (data) => {
+          this.snackBar.open('Employee comapany information updated successfully', 'Thank you', {
+            duration: 2000,
+          });
         },
-        error => {
-          this.snackBar.open(
-            "Error updating information, please try again or notify the IT department",
-            "Try again",
-            {
-              duration: 2000
-            }
-          );
+        (error) => {
+          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
         }
       );
     } else {
       this.employeeService.saveCompany(employeeCompany).subscribe(
-        data => {
-          this.snackBar.open(
-            "Employee comapany information updated successfully",
-            "Thank you",
-            {
-              duration: 2000
-            }
-          );
+        (data) => {
+          this.snackBar.open('Employee comapany information updated successfully', 'Thank you', {
+            duration: 2000,
+          });
           this.company = data;
           this.isNewCompany = false;
         },
-        error => {
-          this.snackBar.open(
-            "Error updating information, please try again or notify the IT department",
-            "Try again",
-            {
-              duration: 2000
-            }
-          );
+        (error) => {
+          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
         }
       );
     }
@@ -257,9 +214,7 @@ export class DetailComponent implements OnInit {
 
   setCampaigns() {
     if (this.clients) {
-      const i = this.clients.findIndex(
-        result => result.name === this.companyForm.value.client
-      );
+      const i = this.clients.findIndex((result) => result.name === this.companyForm.value.client);
       if (i >= 0) {
         this.campaigns = this.clients[i].campaigns;
       }
@@ -268,113 +223,113 @@ export class DetailComponent implements OnInit {
 
   openStatusDialog(): void {
     const dialogRef = this.dialog.open(StatusDialogComponent, {
-      width: "700px",
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker }
+      width: '700px',
+      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase()
+          status: this.employee.status.toLowerCase(),
         });
       } else {
         this.statusChange = result;
       }
 
       if (result.message) {
-        this.snackBar.open(result.message, "OK", {
+        this.snackBar.open(result.message, 'OK', {
           duration: 3000,
-          horizontalPosition: "end"
+          horizontalPosition: 'end',
         });
       }
     });
   }
   openTransferDialog(): void {
     const dialogRef = this.dialog.open(TransferDialogComponent, {
-      width: "700px",
+      width: '700px',
       data: {
         status: this.mainForm.value.status,
         selectedClient: this.companyForm.value.client,
         selectedCampaign: this.companyForm.value.campaign,
-        hrTracker: this.hrTracker
-      }
+        hrTracker: this.hrTracker,
+      },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase()
+          status: this.employee.status.toLowerCase(),
         });
       } else {
         this.statusChange = result;
       }
 
       if (result.message) {
-        this.snackBar.open(result.message, "OK", {
+        this.snackBar.open(result.message, 'OK', {
           duration: 3000,
-          horizontalPosition: "end"
+          horizontalPosition: 'end',
         });
       }
     });
   }
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
-      width: "700px",
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker }
+      width: '700px',
+      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase()
+          status: this.employee.status.toLowerCase(),
         });
       } else {
         this.statusChange = result;
       }
 
       if (result.message) {
-        this.snackBar.open(result.message, "OK", {
+        this.snackBar.open(result.message, 'OK', {
           duration: 3000,
-          horizontalPosition: "end"
+          horizontalPosition: 'end',
         });
       }
     });
   }
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
-      width: "700px",
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker }
+      width: '700px',
+      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (!result.status) {
         this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase()
+          status: this.employee.status.toLowerCase(),
         });
       } else {
         this.statusChange = result;
       }
 
       if (result.message) {
-        this.snackBar.open(result.message, "OK", {
+        this.snackBar.open(result.message, 'OK', {
           duration: 3000,
-          horizontalPosition: "end"
+          horizontalPosition: 'end',
         });
       }
     });
   }
 
   setHrTracker() {
-    console.log('decodeToken',this.sessionService.decodeToken());
-    const {userId, name, role}=this.sessionService.decodeToken();
+    console.log('decodeToken', this.sessionService.decodeToken());
+    const { userId, name, role } = this.sessionService.decodeToken();
     this.hrTracker = {
       employee: {
         _id: this.employee._id,
-        fullName: this.employee.firstName + " " + this.employee.middleName + " " + this.employee.lastName
+        fullName: this.employee.firstName + ' ' + this.employee.middleName + ' ' + this.employee.lastName,
       },
       employeeId: this.employee.employeeId.toString(),
       state: TRACKER_STATUS.PENDING,
-      creationFingerprint: {userId, name, role}      
+      creationFingerprint: { userId, name, role },
     };
   }
 }

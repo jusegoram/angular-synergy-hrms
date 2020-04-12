@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { environment } from "../../environments/environment";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class UserService {
   api = environment.apiUrl;
   constructor(private http: HttpClient) {}
   updateUser(query) {
     const body = JSON.stringify(query);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.http.put(this.api + "/user/password", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.put(this.api + '/user/password', body, {
       headers: headers,
     });
   }

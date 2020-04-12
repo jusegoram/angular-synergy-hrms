@@ -1,6 +1,6 @@
-import { Component, forwardRef, ViewChild } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { SignaturePad } from "angular2-signaturepad/signature-pad";
+import { Component, forwardRef, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 
 /*
   Generated class for the SignatureField component.
@@ -9,8 +9,8 @@ import { SignaturePad } from "angular2-signaturepad/signature-pad";
 */
 
 @Component({
-  selector: "signature-field",
-  templateUrl: "signature-field.component.html",
+  selector: 'signature-field',
+  templateUrl: 'signature-field.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -23,7 +23,7 @@ export class SignatureFieldComponent implements ControlValueAccessor {
   @ViewChild(SignaturePad) public signaturePad: SignaturePad;
 
   public options: Object = {
-    backgroundColor: "rgb(245, 245, 245)",
+    backgroundColor: 'rgb(245, 245, 245)',
     canvasWidth: 500,
     canvasHeight: 250,
   };
@@ -57,14 +57,14 @@ export class SignatureFieldComponent implements ControlValueAccessor {
     // no-op
   }
 
-  public ngAfterViewInit(): void {
-    this.signaturePad.clear();
-  }
+  // public ngAfterViewInit(): void {
+  //    this.signaturePad.clear();
+  // }
 
   public drawBegin(): void {}
 
   public drawComplete(): void {
-    this.signature = this.signaturePad.toDataURL("image/jpeg", 0.5);
+    this.signature = this.signaturePad.toDataURL('image/jpeg', 0.5);
   }
 
   public off(): void {
@@ -77,6 +77,6 @@ export class SignatureFieldComponent implements ControlValueAccessor {
   public clear(): void {
     this.signaturePad.on();
     this.signaturePad.clear();
-    this.signature = "";
+    this.signature = '';
   }
 }

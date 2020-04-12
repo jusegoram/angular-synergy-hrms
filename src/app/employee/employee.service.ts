@@ -7,19 +7,18 @@ import {
   EmployeeFamily,
   EmployeeComment,
   EmployeeAttrition,
-} from "./Employee";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { publishReplay, refCount, map } from "rxjs/operators";
-import { environment } from "../../environments/environment";
-import { HttpClient, HttpParams, HttpHeaders } from "@angular/common/http";
-import { SessionService } from "../session/session.service";
-import { Tracker } from "../shared/models/tracker";
-import { HrTracker } from "../shared/models/hr-tracker";
-import { API } from "../../environments/environment";
-import { TrackerStatusPipe } from "../shared/pipes/tracker-status.pipe";
-import { TrackerTypePipe } from "../shared/pipes/tracker-type.pipe";
-import moment from "moment";
+} from './employee.model';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { publishReplay, refCount, map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { SessionService } from '../session/session.service';
+import { HrTracker } from '../shared/models/hr-tracker';
+import { API } from '../../environments/environment';
+import { TrackerStatusPipe } from '../shared/pipes/tracker-status.pipe';
+import { TrackerTypePipe } from '../shared/pipes/tracker-type.pipe';
+import moment from 'moment';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {}
@@ -40,57 +39,57 @@ export class EmployeeService {
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
   public status = [
-    { value: "active", viewValue: "Active" },
+    { value: 'active', viewValue: 'Active' },
     {
-      value: "resignation",
-      viewValue: "Resignation",
-      onclick: "openStatusDialog()",
+      value: 'resignation',
+      viewValue: 'Resignation',
+      onclick: 'openStatusDialog()',
     },
     {
-      value: "dissmisal",
-      viewValue: "Dissmisal",
-      onclick: "openStatusDialog()",
+      value: 'dissmisal',
+      viewValue: 'Dissmisal',
+      onclick: 'openStatusDialog()',
     },
     {
-      value: "termination",
-      viewValue: "Termination",
-      onclick: "openStatusDialog()",
+      value: 'termination',
+      viewValue: 'Termination',
+      onclick: 'openStatusDialog()',
     },
-    { value: "on-hold", viewValue: "On-Hold" },
-    { value: "transfer", viewValue: "Transfer" },
+    { value: 'on-hold', viewValue: 'On-Hold' },
+    { value: 'transfer', viewValue: 'Transfer' },
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
   public reaptimes = [
-    { value: 0, viewValue: "0" },
-    { value: 1, viewValue: "1" },
-    { value: 2, viewValue: "2" },
-    { value: 3, viewValue: "3" },
-    { value: 4, viewValue: "4" },
-    { value: 5, viewValue: "5" },
-    { value: 6, viewValue: "6" },
-    { value: 7, viewValue: "7" },
-    { value: 8, viewValue: "8" },
-    { value: 9, viewValue: "9" },
-    { value: 10, viewValue: "10" },
+    { value: 0, viewValue: '0' },
+    { value: 1, viewValue: '1' },
+    { value: 2, viewValue: '2' },
+    { value: 3, viewValue: '3' },
+    { value: 4, viewValue: '4' },
+    { value: 5, viewValue: '5' },
+    { value: 6, viewValue: '6' },
+    { value: 7, viewValue: '7' },
+    { value: 8, viewValue: '8' },
+    { value: 9, viewValue: '9' },
+    { value: 10, viewValue: '10' },
   ];
   public genders = [
-    { value: "male", viewValue: "Male" },
-    { value: "female", viewValue: "Female" },
+    { value: 'male', viewValue: 'Male' },
+    { value: 'female', viewValue: 'Female' },
   ];
 
   constructor(
     protected httpClient: HttpClient,
     private sessionService: SessionService,
-    private trackerStatusPipe:TrackerStatusPipe, 
-    private trackerTypePipe:TrackerTypePipe
+    private trackerStatusPipe: TrackerStatusPipe,
+    private trackerTypePipe: TrackerTypePipe
   ) {
     this.store = [];
   }
 
   getReport(query: any): Observable<any> {
     const body = query;
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/report", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/report', body, {
       headers: headers,
     });
   }
@@ -106,10 +105,10 @@ export class EmployeeService {
     if (!this._clients) {
       let params;
       if (contextFilter && contextFilter.length > 0) {
-        params = new HttpParams().set("clients", JSON.stringify(contextFilter));
+        params = new HttpParams().set('clients', JSON.stringify(contextFilter));
       }
       this._clients = this.httpClient
-        .get<any>(this.api + "/admin/employee/client", { params: params })
+        .get<any>(this.api + '/admin/employee/client', { params: params })
         .pipe(
           map((data) => {
             this.clients = data;
@@ -124,21 +123,19 @@ export class EmployeeService {
   getDepartment(): Observable<any> {
     if (!this._departments) {
       this._departments = this.httpClient
-        .get<any>(this.api + "/admin/payroll/department")
+        .get<any>(this.api + '/admin/payroll/department')
         .pipe(publishReplay(1), refCount());
     }
     return this._departments;
   }
   getShift(): Observable<any> {
     if (!this._shift) {
-      this._shift = this.httpClient
-        .get<any>(this.api + "/admin/employee/shift")
-        .pipe(publishReplay(1), refCount());
+      this._shift = this.httpClient.get<any>(this.api + '/admin/employee/shift').pipe(publishReplay(1), refCount());
     }
     return this._shift;
   }
   tokenGetter() {
-    return "JWT " + localStorage.getItem("id_token");
+    return 'JWT ' + localStorage.getItem('id_token');
   }
   /**
    *
@@ -150,11 +147,11 @@ export class EmployeeService {
     const contextFilter = this.getDecodedToken().clients;
     let params;
     if (contextFilter && contextFilter.length > 0) {
-      params = new HttpParams().set("clients", JSON.stringify(contextFilter));
+      params = new HttpParams().set('clients', JSON.stringify(contextFilter));
     }
     if (!this._employees) {
       this._employees = this.httpClient
-        .get<Array<Employee>>(this.api + "/employee", { params: params })
+        .get<Array<Employee>>(this.api + '/employee', { params: params })
         .pipe(publishReplay(1), refCount());
     }
     return this._employees;
@@ -162,7 +159,7 @@ export class EmployeeService {
 
   getTemplate(templateUrl) {
     return this.httpClient.get(this.api + templateUrl, {
-      responseType: "blob",
+      responseType: 'blob',
     });
   }
   /**
@@ -173,11 +170,8 @@ export class EmployeeService {
    * @memberof EmployeeService
    */
   findEmployeeById(param: string): Observable<Employee> {
-    const params = new HttpParams().set("id", param);
-    return (this._detail = this.httpClient.get<Employee>(
-      this.api + "/employee/main",
-      { params: params }
-    ));
+    const params = new HttpParams().set('id', param);
+    return (this._detail = this.httpClient.get<Employee>(this.api + '/employee/main', { params: params }));
   }
 
   cachedAvatar(param: string): Observable<any> {
@@ -191,55 +185,37 @@ export class EmployeeService {
     }
   }
   getAvatar(param: string): Observable<any> {
-    const params = new HttpParams().set("id", param);
+    const params = new HttpParams().set('id', param);
     return this.httpClient
-      .get(this.api + "/employee/avatar", {
+      .get(this.api + '/employee/avatar', {
         params: params,
-        responseType: "blob",
+        responseType: 'blob',
       })
       .pipe(publishReplay(1), refCount());
   }
   getPositions(param: string): Observable<Array<EmployeePosition>> {
-    const params = new HttpParams().set("id", param);
-    return this.httpClient.get<Array<EmployeePosition>>(
-      this.api + "/employee/position",
-      { params: params }
-    );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeePosition>>(this.api + '/employee/position', { params: params });
   }
   getPersonal(param: string): Observable<EmployeePersonal> {
-    const params = new HttpParams().set("id", param);
-    return this.httpClient.get<EmployeePersonal>(
-      this.api + "/employee/personal",
-      { params: params }
-    );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<EmployeePersonal>(this.api + '/employee/personal', { params: params });
   }
   getPayroll(param: string): Observable<EmployeePayroll> {
-    const params = new HttpParams().set("id", param);
-    return this.httpClient.get<EmployeePayroll>(
-      this.api + "/employee/payroll",
-      { params: params }
-    );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<EmployeePayroll>(this.api + '/employee/payroll', { params: params });
   }
   getfamily(param: string): Observable<Array<EmployeeFamily>> {
-    const params = new HttpParams().set("id", param);
-    return this.httpClient.get<Array<EmployeeFamily>>(
-      this.api + "/employee/family",
-      { params: params }
-    );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeeFamily>>(this.api + '/employee/family', { params: params });
   }
   getComment(param: string): Observable<Array<EmployeeComment>> {
-    const params = new HttpParams().set("id", param);
-    return this.httpClient.get<Array<EmployeeComment>>(
-      this.api + "/employee/comment",
-      { params: params }
-    );
+    const params = new HttpParams().set('id', param);
+    return this.httpClient.get<Array<EmployeeComment>>(this.api + '/employee/comment', { params: params });
   }
   getEmployeeShift(employeeId, fromDate, toDate) {
-    const params = new HttpParams()
-      .set("employeeId", employeeId)
-      .set("fromDate", fromDate)
-      .set("toDate", toDate);
-    return this.httpClient.get(this.api + "/employee/shift", {
+    const params = new HttpParams().set('employeeId', employeeId).set('fromDate', fromDate).set('toDate', toDate);
+    return this.httpClient.get(this.api + '/employee/shift', {
       params: params,
     });
   }
@@ -252,78 +228,78 @@ export class EmployeeService {
    */
   updateEmployee(employee: Employee) {
     const body = JSON.stringify(employee);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", employee._id);
-    return this.httpClient.put(this.api + "/employee/main", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', employee._id);
+    return this.httpClient.put(this.api + '/employee/main', body, {
       headers: headers,
       params: params,
     });
   }
   updateCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", company._id);
-    return this.httpClient.put(this.api + "/employee/company", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', company._id);
+    return this.httpClient.put(this.api + '/employee/company', body, {
       headers: headers,
       params: params,
     });
   }
   updatePosition(position: any) {
     const body = JSON.stringify(position);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", position._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', position._id);
 
-    return this.httpClient.put(this.api + "/employee/position", body, {
+    return this.httpClient.put(this.api + '/employee/position', body, {
       headers: headers,
       params: params,
     });
   }
   updatePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", personal._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', personal._id);
 
-    return this.httpClient.put(this.api + "/employee/personal", body, {
+    return this.httpClient.put(this.api + '/employee/personal', body, {
       headers: headers,
       params: params,
     });
   }
   updatePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", payroll._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', payroll._id);
 
-    return this.httpClient.put(this.api + "/employee/payroll", body, {
+    return this.httpClient.put(this.api + '/employee/payroll', body, {
       headers: headers,
       params: params,
     });
   }
   updateFamily(family: EmployeeFamily) {
     const body = JSON.stringify(family);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", family._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', family._id);
 
-    return this.httpClient.put(this.api + "/employee/family", body, {
+    return this.httpClient.put(this.api + '/employee/family', body, {
       headers: headers,
       params: params,
     });
   }
   updateComment(comment: EmployeeComment) {
     const body = JSON.stringify(comment);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", comment._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', comment._id);
 
-    return this.httpClient.put(this.api + "/employee/payroll", body, {
+    return this.httpClient.put(this.api + '/employee/payroll', body, {
       headers: headers,
       params: params,
     });
   }
   updateEmployeeShift(shift) {
     const body = shift;
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    const params = new HttpParams().set("id", shift._id);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const params = new HttpParams().set('id', shift._id);
 
-    return this.httpClient.put(this.api + "/employee/shift", body, {
+    return this.httpClient.put(this.api + '/employee/shift', body, {
       headers: headers,
       params: params,
     });
@@ -337,64 +313,64 @@ export class EmployeeService {
    */
   saveEmployee(employee: Employee) {
     const body = JSON.stringify(employee);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/new", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/new', body, {
       headers: headers,
     });
   }
   saveCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/company", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/company', body, {
       headers: headers,
     });
   }
   savePosition(position: EmployeePosition) {
     const body = JSON.stringify(position);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/position", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/position', body, {
       headers: headers,
     });
   }
   savePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/personal", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/personal', body, {
       headers: headers,
     });
   }
   savePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/payroll", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/payroll', body, {
       headers: headers,
     });
   }
   saveFamily(family: EmployeeFamily) {
     const body = JSON.stringify(family);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/family", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/family', body, {
       headers: headers,
     });
   }
   saveComment(comment: EmployeeComment) {
     const body = JSON.stringify(comment);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/comment", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/comment', body, {
       headers: headers,
     });
   }
   saveAttrition(com: EmployeeAttrition) {
     const body = JSON.stringify(com);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/attrition", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/attrition', body, {
       headers: headers,
     });
   }
   saveShift(employeeShift: any) {
     const body = JSON.stringify(employeeShift);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/shift", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/shift', body, {
       headers: headers,
     });
   }
@@ -429,39 +405,32 @@ export class EmployeeService {
   }
 
   deletePosition(position: any) {
-    let url = `${this.api}/employee/position?id=${position._id}&employee=${position.employee}`;
+    const url = `${this.api}/employee/position?id=${position._id}&employee=${position.employee}`;
     return this.httpClient.delete(url);
   }
   deleteShift(shift: any) {
-    let url = `${this.api}/employee/shift?id=${shift._id}&employee=${shift.employee}`;
+    const url = `${this.api}/employee/shift?id=${shift._id}&employee=${shift.employee}`;
     return this.httpClient.delete(url);
   }
 
   availableInformation(query: any) {
     const body = JSON.stringify(query);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(
-      this.api + "/employee/report/information",
-      body,
-      { headers: headers }
-    );
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/report/information', body, { headers: headers });
   }
 
   getApprovedShiftUpdates(employeeId, fromDate, toDate) {
-    const params = new HttpParams()
-      .set("fromDate", fromDate)
-      .set("toDate", toDate)
-      .set("employeeId", employeeId);
+    const params = new HttpParams().set('fromDate', fromDate).set('toDate', toDate).set('employeeId', employeeId);
 
-    return this.httpClient.get(this.api + "/employee/shift/updates", {
+    return this.httpClient.get(this.api + '/employee/shift/updates', {
       params: params,
     });
   }
 
   saveApprovedShiftUpdates(query) {
     const body = query;
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/shift/updates", body, {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.api + '/employee/shift/updates', body, {
       headers: headers,
     });
   }
@@ -486,18 +455,14 @@ export class EmployeeService {
 
   saveTracker(hrTracker: HrTracker) {
     // TODO: feat/hr-module
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient
-      .post(API.TRACKERS, hrTracker, { headers })
-      .toPromise();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(API.TRACKERS, hrTracker, { headers }).toPromise();
   }
 
   updateTracker(hrTracker: Partial<HrTracker>) {
     // TODO: feat/hr-module
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient
-      .put(API.TRACKER(hrTracker._id), hrTracker, { headers })
-      .toPromise();
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put(API.TRACKER(hrTracker._id), hrTracker, { headers }).toPromise();
   }
 
   deleteTracker(employeeId: string) {
@@ -510,44 +475,52 @@ export class EmployeeService {
     return this.httpClient.get(API.TRACKER(employeeId)).toPromise();
   }
 
-  getTrackers(filters={}):Promise<Array<HrTracker>> {
+  getTrackers(filters = {}): Promise<Array<HrTracker>> {
     // TODO: feat/hr-module
-    return this.httpClient.get<Array<HrTracker>>(API.TRACKERS,{ params:filters })
-                        .pipe(
-                          map((hrTrackers:Array<HrTracker>)=>{                            
-                            return this.mapHrTrackersData(hrTrackers);
-                          })
-                        ).toPromise();
+    return this.httpClient
+      .get<Array<HrTracker>>(API.TRACKERS, { params: filters })
+      .pipe(
+        map((hrTrackers: Array<HrTracker>) => {
+          return this.mapHrTrackersData(hrTrackers);
+        })
+      )
+      .toPromise();
   }
 
-  private mapHrTrackersData(hrTrackers:Array<HrTracker>):Array<HrTracker>{
-    return hrTrackers.map((hrTracker:HrTracker)=>{
-      hrTracker.stateName= this.trackerStatusPipe.transform(hrTracker.state);
-      hrTracker.trackerTypeName= this.trackerTypePipe.transform(hrTracker.tracker);
-      hrTracker.requestDateFormatted= moment(hrTracker.requestDate).format('MM/DD/YYYY') ;
-      hrTracker.deadlineDateFormatted= moment(hrTracker.requestDate).add(3, 'days').format('MM/DD/YYYY');
+  private mapHrTrackersData(hrTrackers: Array<HrTracker>): Array<HrTracker> {
+    return hrTrackers.map((hrTracker: HrTracker) => {
+      hrTracker.stateName = this.trackerStatusPipe.transform(hrTracker.state);
+      hrTracker.trackerTypeName = this.trackerTypePipe.transform(hrTracker.tracker);
+      hrTracker.requestDateFormatted = moment(hrTracker.requestDate).format('MM/DD/YYYY');
+      hrTracker.deadlineDateFormatted = moment(hrTracker.requestDate).add(3, 'days').format('MM/DD/YYYY');
 
-      if(hrTracker.tracker.certifyTraining){
-        hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(hrTracker.tracker.certifyTraining.managerSignature);        
-        return hrTracker;  
+      if (hrTracker.tracker.certifyTraining) {
+        hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(
+          hrTracker.tracker.certifyTraining.managerSignature
+        );
+        return hrTracker;
       }
 
-      if(hrTracker.tracker.statusChange){
-        hrTracker.tracker.statusChange.managerSignature = this.bufferToBase64(hrTracker.tracker.statusChange.managerSignature);
-        hrTracker.tracker.statusChange.supervisorSignature = this.bufferToBase64(hrTracker.tracker.statusChange.supervisorSignature);
-        return hrTracker;  
+      if (hrTracker.tracker.statusChange) {
+        hrTracker.tracker.statusChange.managerSignature = this.bufferToBase64(
+          hrTracker.tracker.statusChange.managerSignature
+        );
+        hrTracker.tracker.statusChange.supervisorSignature = this.bufferToBase64(
+          hrTracker.tracker.statusChange.supervisorSignature
+        );
+        return hrTracker;
       }
 
-      if(hrTracker.tracker.transfer){
+      if (hrTracker.tracker.transfer) {
         hrTracker.tracker.transfer.managerSignature = this.bufferToBase64(hrTracker.tracker.transfer.managerSignature);
-        return hrTracker;  
+        return hrTracker;
       }
 
       return hrTracker;
     });
   }
 
-  private bufferToBase64(buffer){
-    return String.fromCharCode.apply(null,buffer.data).toString('base64');
+  private bufferToBase64(buffer) {
+    return String.fromCharCode.apply(null, buffer.data).toString('base64');
   }
 }

@@ -3,26 +3,24 @@ import { Tracker } from '../models/tracker';
 
 @Pipe({
   name: 'trackerType',
-  pure: true
+  pure: true,
 })
 export class TrackerTypePipe implements PipeTransform {
-
-  transform(tracker: Tracker, ...args: unknown[]):string {
-    if(tracker.statusChange){
+  transform(tracker: Tracker, ...args: unknown[]): string {
+    if (tracker.statusChange) {
       return 'STATUS';
     }
-    
-    if(tracker.transfer){
+
+    if (tracker.transfer) {
       return 'TRANSFER';
     }
 
-    if(tracker.certifyTraining){
+    if (tracker.certifyTraining) {
       return 'CERTIFY';
     }
 
-    if(tracker.infoChangeRequest){
+    if (tracker.infoChangeRequest) {
       return 'INFO CHANGE';
     }
   }
-
 }

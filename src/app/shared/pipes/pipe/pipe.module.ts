@@ -1,6 +1,6 @@
-import { MinutesHoursPipe } from "./../minutes-hours.pipe";
-import { MinuteSecondsPipe } from "./../minute-seconds.pipe";
-import { NgModule } from "@angular/core";
+import { MinutesHoursPipe } from './../minutes-hours.pipe';
+import { MinuteSecondsPipe } from './../minute-seconds.pipe';
+import { NgModule } from '@angular/core';
 
 @NgModule({
   imports: [],

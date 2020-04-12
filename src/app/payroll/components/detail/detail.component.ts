@@ -1,25 +1,25 @@
-import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
-import { EditPayrollDetailComponent } from "./edit-payroll-detail/edit-payroll-detail.component";
-import { MatDialog } from "@angular/material/dialog";
-import { PayrollService } from "./../../services/payroll.service";
-import { MinuteSecondsPipe } from "./../../../shared/pipes/minute-seconds.pipe";
-import { MatTableDataSource } from "@angular/material/table";
-import { ChartData, Datum } from "../../../shared/models/ChartData";
-import { Component, NgZone, OnInit, ViewChild } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { ColumnMode } from "@swimlane/ngx-datatable";
-import { MatStepper } from "@angular/material/stepper";
-import { noop } from "rxjs";
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { EditPayrollDetailComponent } from './edit-payroll-detail/edit-payroll-detail.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PayrollService } from './../../services/payroll.service';
+import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
+import { MatTableDataSource } from '@angular/material/table';
+import { ChartData, Datum } from '../../../shared/models/chart-data.model';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { MatStepper } from '@angular/material/stepper';
+import { noop } from 'rxjs';
 
 @Component({
-  selector: "app-detail",
-  templateUrl: "./detail.component.html",
-  styleUrls: ["./detail.component.scss"],
+  selector: 'app-detail',
+  templateUrl: './detail.component.html',
+  styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
-  @ViewChild("myTable", { static: false }) table: any;
-  @ViewChild("stepper", { static: false }) stepper: MatStepper;
-  @ViewChild("failedFinalizeSwal", { static: false })
+  @ViewChild('myTable', { static: false }) table: any;
+  @ViewChild('stepper', { static: false }) stepper: MatStepper;
+  @ViewChild('failedFinalizeSwal', { static: false })
   failedFinalizeSwal: SwalComponent;
 
   rows = [];
@@ -29,19 +29,19 @@ export class DetailComponent implements OnInit {
   payroll: any;
   doughnutChartData: ChartData;
   barChartData: ChartData;
-  width = "100%";
-  height = "100%";
-  widthBar = "100%";
-  heightBar = "100%";
-  type = "doughnut2d";
-  dataFormat = "json";
+  width = '100%';
+  height = '100%';
+  widthBar = '100%';
+  heightBar = '100%';
+  type = 'doughnut2d';
+  dataFormat = 'json';
   barChartSwitchableData: any[];
   totals: any;
   totalTableDataSource: any;
   clientTableDataSource: any;
   dataSource: any;
   filterItems: any;
-  filterValue = "";
+  filterValue = '';
   user;
   constructor(
     private route: ActivatedRoute,
@@ -55,12 +55,12 @@ export class DetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.resolvedData = this.route.snapshot.data["payroll"];
+    this.resolvedData = this.route.snapshot.data['payroll'];
     this.stats = this.resolvedData.stats;
     this.payroll = this.resolvedData.payroll;
     this.dataSource = new MatTableDataSource(this.payroll);
     this.rows = this.dataSource.data;
-    this.filterItems = ["employeeId", "employeeName", "client", "campaign"];
+    this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
     this.barChartSwitchableData = this.mapBarChartData(this.stats);
     this.totals = this.calculateTotals(this.stats);
     this.totalTableDataSource = new MatTableDataSource(this.totals);
@@ -88,44 +88,41 @@ export class DetailComponent implements OnInit {
   initializeCharts() {
     this.doughnutChartData = new ChartData(
       {
-        caption: "Payroll Campaign Distribution Chart",
-        subCaption: "For employees in the current payroll",
-        defaultcenterlabel: "RCC BPO",
-        aligncaptionwithcanvas: "0",
-        captionpadding: "0",
-        decimals: "1",
-        plottooltext:
-          "<b>$percentValue</b> of our employees are on <b>$label</b>",
-        centerlabel: "Employees: $value",
-        theme: "fusion",
-        exportenabled: "1",
-        exportfilename: "payrollDoughnutChart1",
+        caption: 'Payroll Campaign Distribution Chart',
+        subCaption: 'For employees in the current payroll',
+        defaultcenterlabel: 'RCC BPO',
+        aligncaptionwithcanvas: '0',
+        captionpadding: '0',
+        decimals: '1',
+        plottooltext: '<b>$percentValue</b> of our employees are on <b>$label</b>',
+        centerlabel: 'Employees: $value',
+        theme: 'fusion',
+        exportenabled: '1',
+        exportfilename: 'payrollDoughnutChart1',
       },
-      this.mapDoughNutChartData(this.stats, "client", "", "employeesAmount")
+      this.mapDoughNutChartData(this.stats, 'client', '', 'employeesAmount')
     );
 
     this.barChartData = new ChartData(
       {
-        caption: "AIP's Financial Details",
-        decimals: "2",
-        numberPrefix: "$",
-        subcaption: "",
-        xaxisname: "Concept",
-        yaxisname: "Amount (BZD)",
-        plottooltext: " <b>$label</b> - $<b>$value</b>",
-        numbersuffix: "",
-        theme: "fusion",
-        exportenabled: "1",
-        exportfilename: "payrollBarChart1",
+        caption: 'AIP\'s Financial Details',
+        decimals: '2',
+        numberPrefix: '$',
+        subcaption: '',
+        xaxisname: 'Concept',
+        yaxisname: 'Amount (BZD)',
+        plottooltext: ' <b>$label</b> - $<b>$value</b>',
+        numbersuffix: '',
+        theme: 'fusion',
+        exportenabled: '1',
+        exportfilename: 'payrollBarChart1',
       },
-      this.barDataSwitch("AIP")
+      this.barDataSwitch('AIP')
     );
-    this.setClientTableData("AIP");
+    this.setClientTableData('AIP');
   }
   barDataSwitch(client) {
-    const data = this.barChartSwitchableData.filter(
-      (item) => item.client === client
-    );
+    const data = this.barChartSwitchableData.filter((item) => item.client === client);
     return data[0].data;
   }
   mapBarChartData(data: any[]) {
@@ -145,7 +142,7 @@ export class DetailComponent implements OnInit {
       delete item.campaigns;
       delete item._id;
       Object.keys(mirrorData[0]).forEach((key, index) => {
-        const result = key.replace(/([A-Z])/g, " $1");
+        const result = key.replace(/([A-Z])/g, ' $1');
         const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
         keyArray.data.push({
           label: finalResult,
@@ -159,26 +156,22 @@ export class DetailComponent implements OnInit {
   }
 
   setClientTableData(client) {
-    const data = JSON.parse(
-      JSON.stringify(this.stats.filter((item) => item._id.client === client)[0])
-    );
+    const data = JSON.parse(JSON.stringify(this.stats.filter((item) => item._id.client === client)[0]));
     delete data._id;
     const mappedData = Object.keys(data).map((key, index) => {
-      const result = key.replace(/([A-Z])/g, " $1");
+      const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-      if (key === "campaigns") {
+      if (key === 'campaigns') {
         return {
           label: finalResult,
           value: data[key].length,
         };
       } else {
-        const transform = this.minutesecondsPipe.transform(
-          Math.round(data[key] * 100) / 100
-        );
+        const transform = this.minutesecondsPipe.transform(Math.round(data[key] * 100) / 100);
         const value =
           index === 5 || index === 7 || index === 9 || index === 11
             ? transform
-            : (Math.round(data[key] * 100) / 100).toLocaleString("en-US", {
+            : (Math.round(data[key] * 100) / 100).toLocaleString('en-US', {
                 minimumFractionDigits: 2,
               });
         return {
@@ -212,9 +205,9 @@ export class DetailComponent implements OnInit {
     };
 
     const returnedArr = Object.keys(calculatedTotal).map((key, index) => {
-      const result = key.replace(/([A-Z])/g, " $1");
+      const result = key.replace(/([A-Z])/g, ' $1');
       const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-      if (key === "campaigns") {
+      if (key === 'campaigns') {
         return {
           label: finalResult,
           value: data.reduce((a, b) => {
@@ -238,7 +231,7 @@ export class DetailComponent implements OnInit {
                 return { [key]: a[key] + b[key] };
               })[key] * 100
             ) / 100;
-          value = parseInt(value, 10).toLocaleString("en-US", {
+          value = parseInt(value, 10).toLocaleString('en-US', {
             minimumFractionDigits: 2,
           });
         }
@@ -255,10 +248,10 @@ export class DetailComponent implements OnInit {
     let mappedData: Datum[];
     mappedData = data.map((item) => {
       let label;
-      if (labelPath === "client" && labelPath2 === "") {
+      if (labelPath === 'client' && labelPath2 === '') {
         label = item._id.client;
       } else {
-        label = item[labelPath] + " - " + item[labelPath2];
+        label = item[labelPath] + ' - ' + item[labelPath2];
       }
       return {
         label: label,
@@ -270,12 +263,12 @@ export class DetailComponent implements OnInit {
   reloadAll() {
     this.route.queryParams.subscribe((params) => {
       const { id } = params;
-      this._payrollService.getPayroll(id, "", false).subscribe((result) => {
+      this._payrollService.getPayroll(id, '', false).subscribe((result) => {
         this.stats = result.stats;
         this.payroll = result.payroll;
         this.dataSource = new MatTableDataSource(this.payroll);
         this.rows = this.dataSource.data;
-        this.filterItems = ["employeeId", "employeeName", "client", "campaign"];
+        this.filterItems = ['employeeId', 'employeeName', 'client', 'campaign'];
         this.barChartSwitchableData = this.mapBarChartData(this.stats);
         this.totals = this.calculateTotals(this.stats);
         this.totalTableDataSource = new MatTableDataSource(this.totals);
@@ -285,7 +278,7 @@ export class DetailComponent implements OnInit {
   }
   editPayrollRecord(row) {
     const dialogRef = this.matDialog.open(EditPayrollDetailComponent, {
-      width: "600px",
+      width: '600px',
       data: row,
     });
 
@@ -299,12 +292,10 @@ export class DetailComponent implements OnInit {
   finalize() {
     if (this.rows[0].isPayed) {
       const query = this.user;
-      this._payrollService
-        .updatePayroll(this.rows[0].payroll_Id, query, "FIN")
-        .subscribe((result) => {
-          console.log(result);
-          this.reloadAll();
-        });
+      this._payrollService.updatePayroll(this.rows[0].payroll_Id, query, 'FIN').subscribe((result) => {
+        console.log(result);
+        this.reloadAll();
+      });
     } else {
       this.failedFinalizeSwal.fire().then((e) => noop());
     }

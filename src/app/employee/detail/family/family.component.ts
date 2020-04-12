@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { Employee, EmployeeFamily } from "../../Employee";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { EmployeeService } from "../../employee.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { Employee, EmployeeFamily } from '../../employee.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from '../../employee.service';
 
 @Component({
-  selector: "family-info",
-  templateUrl: "./family.component.html",
-  styleUrls: ["./family.component.css"],
+  selector: 'family-info',
+  templateUrl: './family.component.html',
+  styleUrls: ['./family.component.css'],
 })
 export class FamilyComponent implements OnInit {
   @Input() employee: Employee;
@@ -20,48 +20,35 @@ export class FamilyComponent implements OnInit {
   public expandedComment = false;
 
   public familyRelationships = [
-    { value: "Son", viewValue: "Son" },
-    { value: "Daughter", viewValue: "Daughter" },
-    { value: "Son-in-law", viewValue: "Son-in-law" },
-    { value: "Daughter-in-law", viewValue: "Daughter-in-law" },
-    { value: "Niece", viewValue: "Niece" },
-    { value: "Nephew", viewValue: "Nephew" },
-    { value: "Cousin", viewValue: "Cousin" },
-    { value: "Cousin’s husband", viewValue: "Cousin’s husband" },
-    { value: "Cousin’s wife", viewValue: "Cousin’s wife" },
-    { value: "Wife", viewValue: "Wife" },
-    { value: "Husband", viewValue: "Husband" },
-    { value: "Brother", viewValue: "Brother" },
-    { value: "Sister", viewValue: "Sister" },
-    { value: "Brother-in-law", viewValue: "Brother-in-law" },
-    { value: "Sister-in-law", viewValue: "Sister-in-law" },
-    { value: "Father", viewValue: "Father" },
-    { value: "Mother", viewValue: "Mother" },
-    { value: "Uncle", viewValue: "Uncle" },
-    { value: "Aunt", viewValue: "Aunt" },
-    { value: "Great-uncle", viewValue: "Great-uncle" },
-    { value: "Great-aunt", viewValue: "Great-aunt" },
-    { value: "Grandmother", viewValue: "Grandmother" },
-    { value: "Grandfather", viewValue: "Grandfather" },
-    { value: "Friend", viewValue: "Friend" },
+    { value: 'Son', viewValue: 'Son' },
+    { value: 'Daughter', viewValue: 'Daughter' },
+    { value: 'Son-in-law', viewValue: 'Son-in-law' },
+    { value: 'Daughter-in-law', viewValue: 'Daughter-in-law' },
+    { value: 'Niece', viewValue: 'Niece' },
+    { value: 'Nephew', viewValue: 'Nephew' },
+    { value: 'Cousin', viewValue: 'Cousin' },
+    { value: 'Cousin’s husband', viewValue: 'Cousin’s husband' },
+    { value: 'Cousin’s wife', viewValue: 'Cousin’s wife' },
+    { value: 'Wife', viewValue: 'Wife' },
+    { value: 'Husband', viewValue: 'Husband' },
+    { value: 'Brother', viewValue: 'Brother' },
+    { value: 'Sister', viewValue: 'Sister' },
+    { value: 'Brother-in-law', viewValue: 'Brother-in-law' },
+    { value: 'Sister-in-law', viewValue: 'Sister-in-law' },
+    { value: 'Father', viewValue: 'Father' },
+    { value: 'Mother', viewValue: 'Mother' },
+    { value: 'Uncle', viewValue: 'Uncle' },
+    { value: 'Aunt', viewValue: 'Aunt' },
+    { value: 'Great-uncle', viewValue: 'Great-uncle' },
+    { value: 'Great-aunt', viewValue: 'Great-aunt' },
+    { value: 'Grandmother', viewValue: 'Grandmother' },
+    { value: 'Grandfather', viewValue: 'Grandfather' },
+    { value: 'Friend', viewValue: 'Friend' },
   ];
-  displayedColumns = [
-    "name",
-    "relationship",
-    "celNumber",
-    "telNumber",
-    "emailAddress",
-    "address",
-    "comment",
-    "edit",
-  ];
+  displayedColumns = ['name', 'relationship', 'celNumber', 'telNumber', 'emailAddress', 'address', 'comment', 'edit'];
   editReferenceId: string;
 
-  constructor(
-    private fb: FormBuilder,
-    public snackBar: MatSnackBar,
-    private employeeService: EmployeeService
-  ) {}
+  constructor(private fb: FormBuilder, public snackBar: MatSnackBar, private employeeService: EmployeeService) {}
 
   ngOnInit() {
     this.employeeFamily = this.employee.family;
@@ -76,13 +63,13 @@ export class FamilyComponent implements OnInit {
 
   buildForms() {
     this.familyForm = this.fb.group({
-      name: [""],
-      relationship: [""],
-      celNumber: [""],
-      telNumber: [""],
-      emailAddress: ["", Validators.email],
-      address: [""],
-      comment: [""],
+      name: [''],
+      relationship: [''],
+      celNumber: [''],
+      telNumber: [''],
+      emailAddress: ['', Validators.email],
+      address: [''],
+      comment: [''],
     });
   }
   populateTable(event: any) {
@@ -103,20 +90,20 @@ export class FamilyComponent implements OnInit {
     const i = data.findIndex((res) => res._id === param);
     const ref = this.dataSource.data[i];
     this.editReferenceId = param;
-    this.familyForm.controls["name"].setValue(ref.referenceName);
-    this.familyForm.controls["relationship"].setValue(ref.relationship);
-    this.familyForm.controls["celNumber"].setValue(ref.celNumber);
-    this.familyForm.controls["telNumber"].setValue(ref.telNumber);
-    this.familyForm.controls["emailAddress"].setValue(ref.emailAddress);
-    this.familyForm.controls["address"].setValue(ref.address);
-    this.familyForm.controls["comment"].setValue(ref.comment);
+    this.familyForm.controls['name'].setValue(ref.referenceName);
+    this.familyForm.controls['relationship'].setValue(ref.relationship);
+    this.familyForm.controls['celNumber'].setValue(ref.celNumber);
+    this.familyForm.controls['telNumber'].setValue(ref.telNumber);
+    this.familyForm.controls['emailAddress'].setValue(ref.emailAddress);
+    this.familyForm.controls['address'].setValue(ref.address);
+    this.familyForm.controls['comment'].setValue(ref.comment);
     this.isEdit = true;
   }
   onSubmit() {
     const current = this.familyForm.value;
     if (!this.isEdit) {
       const ref = new EmployeeFamily(
-        "",
+        '',
         this.employee.employeeId.toString(10),
         this.employee._id,
         current.name,

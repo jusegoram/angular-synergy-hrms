@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { EmployeeService } from "../../employee.service";
-import { SessionService } from "../../../session/session.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { EmployeePayroll } from "../../Employee";
+import { Component, Input, OnInit } from '@angular/core';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { EmployeePayroll } from '../../employee.model';
 
 @Component({
-  selector: "payroll-info",
-  templateUrl: "./payroll.component.html",
-  styleUrls: ["./payroll.component.scss"],
+  selector: 'payroll-info',
+  templateUrl: './payroll.component.html',
+  styleUrls: ['./payroll.component.scss'],
 })
 export class PayrollComponent implements OnInit {
   @Input() payroll: any;
@@ -19,8 +19,8 @@ export class PayrollComponent implements OnInit {
   newPayroll: EmployeePayroll;
   payrollForm: FormGroup;
   payrollTypes = [
-    { value: "SEMIMONTHLY", name: "SEMIMONTHLY" },
-    { value: "BI-WEEKLY", name: "BI-WEEKLY" },
+    { value: 'SEMIMONTHLY', name: 'SEMIMONTHLY' },
+    { value: 'BI-WEEKLY', name: 'BI-WEEKLY' },
   ];
 
   constructor(
@@ -29,7 +29,7 @@ export class PayrollComponent implements OnInit {
     public snackBar: MatSnackBar,
     public fb: FormBuilder
   ) {
-    this.newPayroll = new EmployeePayroll("", "", "", "", "", "", "", null, "");
+    this.newPayroll = new EmployeePayroll('', '', '', '', '', '', '', null, '');
     this.new = false;
   }
 
@@ -50,7 +50,7 @@ export class PayrollComponent implements OnInit {
   onSubmit() {
     if (this.new) {
       const post = new EmployeePayroll(
-        "",
+        '',
         this.employee.employeeId,
         this.employee._id,
         this.payrollForm.value.TIN,
@@ -62,22 +62,14 @@ export class PayrollComponent implements OnInit {
       );
       this.employeeService.savePayroll(post).subscribe(
         (data) => {
-          this.snackBar.open(
-            "Employee information updated successfully",
-            "thank you",
-            {
-              duration: 2000,
-            }
-          );
+          this.snackBar.open('Employee information updated successfully', 'thank you', {
+            duration: 2000,
+          });
         },
         (error) => {
-          this.snackBar.open(
-            "Error updating information, please try again or notify the IT department",
-            "Try again",
-            {
-              duration: 2000,
-            }
-          );
+          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
         }
       );
     } else {
@@ -94,22 +86,14 @@ export class PayrollComponent implements OnInit {
       );
       this.employeeService.updatePayroll(update).subscribe(
         (data) => {
-          this.snackBar.open(
-            "Employee information updated successfully",
-            "thank you",
-            {
-              duration: 2000,
-            }
-          );
+          this.snackBar.open('Employee information updated successfully', 'thank you', {
+            duration: 2000,
+          });
         },
         (error) => {
-          this.snackBar.open(
-            "Error updating information, please try again or notify the IT department",
-            "Try again",
-            {
-              duration: 2000,
-            }
-          );
+          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+            duration: 2000,
+          });
         }
       );
     }

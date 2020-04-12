@@ -1,4 +1,4 @@
-import { Tracker } from "./tracker";
+import { Tracker } from './tracker';
 
 export interface HrTracker {
   _id?: string;
@@ -8,8 +8,8 @@ export interface HrTracker {
     fullName: string;
   };
   requestDate?: Date;
-  requestDateFormatted?:string;
-  deadlineDateFormatted?:string;
+  requestDateFormatted?: string;
+  deadlineDateFormatted?: string;
   state: number;
   stateName?: string;
   creationFingerprint?: any;
