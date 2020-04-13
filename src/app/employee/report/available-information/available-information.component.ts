@@ -1,12 +1,12 @@
-import { MatTableDataSource } from "@angular/material/table";
-import { Component, Input, OnInit } from "@angular/core";
-import { EmployeeService } from "../../employee.service";
-import * as XLSX from "xlsx";
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, Input, OnInit} from '@angular/core';
+import {EmployeeService} from '../../employee.service';
+import * as XLSX from 'xlsx';
 
 @Component({
-  selector: "app-available-information",
-  templateUrl: "./available-information.component.html",
-  styleUrls: ["./available-information.component.scss"],
+  selector: 'app-available-information',
+  templateUrl: './available-information.component.html',
+  styleUrls: ['./available-information.component.scss'],
 })
 export class AvailableInformationComponent implements OnInit {
   @Input() query: any;
@@ -14,12 +14,12 @@ export class AvailableInformationComponent implements OnInit {
   isLoaded = false;
   dataSource: any;
   displayedColumns = [
-    "index",
-    "employeeId",
-    "name",
-    "client",
-    "campaign",
-    "action",
+    'index',
+    'employeeId',
+    'name',
+    'client',
+    'campaign',
+    'action',
   ];
   wb: XLSX.WorkBook;
   constructor(private _employeeService: EmployeeService) {}
@@ -56,8 +56,8 @@ export class AvailableInformationComponent implements OnInit {
     this.constructTableObj(this.dataSource.data).then(
       (resolved: any[]) => {
         const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(resolved);
-        XLSX.utils.book_append_sheet(this.wb, main, "exported-info");
-        XLSX.writeFile(this.wb, "export-info.xlsx");
+        XLSX.utils.book_append_sheet(this.wb, main, 'exported-info');
+        XLSX.writeFile(this.wb, 'export-info.xlsx');
       },
       (rejected) => {}
     );
@@ -73,10 +73,10 @@ export class AvailableInformationComponent implements OnInit {
       const mapped = arr.map((item) => {
         let complementaryObject;
         switch (this.query.reportType) {
-          case "avatar":
+          case 'avatar':
             complementaryObject.avatar = false;
             break;
-          case "company":
+          case 'company':
             if (item.company !== null && item.company !== undefined) {
               delete item.company._id;
               delete item.company.employee;
@@ -86,23 +86,23 @@ export class AvailableInformationComponent implements OnInit {
             } else {
               break;
             }
-          case "shift":
+          case 'shift':
             if (item.shift !== null && item.shift !== undefined) {
-              complementaryObject["Amount Of Shifts"] =
+              complementaryObject['Amount Of Shifts'] =
                 item.shift && item.shift.length;
               break;
             } else {
               break;
             }
-          case "position":
+          case 'position':
             if (item.position !== null && item.position !== undefined) {
-              complementaryObject["Amount Of Positions"] =
+              complementaryObject['Amount Of Positions'] =
                 item.position && item.position.length;
               break;
             } else {
               break;
             }
-          case "payroll":
+          case 'payroll':
             if (item.payroll !== null && item.payroll !== undefined) {
               delete item.payroll._id;
               delete item.payroll.employee;
@@ -112,7 +112,7 @@ export class AvailableInformationComponent implements OnInit {
             } else {
               break;
             }
-          case "personal":
+          case 'personal':
             if (item.personal !== null && item.personal !== undefined) {
               delete item.personal._id;
               delete item.personal.employee;
@@ -121,15 +121,15 @@ export class AvailableInformationComponent implements OnInit {
                 item.personal.hobbies !== null &&
                 item.personal.hobbies !== undefined
                   ? item.personal.hobbies.length
-                  : "MISSING HOBBIES";
+                  : 'MISSING HOBBIES';
               complementaryObject = item.personal;
               break;
             } else {
               break;
             }
-          case "family":
+          case 'family':
             if (item.family !== null && item.family !== undefined) {
-              complementaryObject["Amount of Contacts"] =
+              complementaryObject['Amount of Contacts'] =
                 item.family && item.family.length;
               break;
             } else {

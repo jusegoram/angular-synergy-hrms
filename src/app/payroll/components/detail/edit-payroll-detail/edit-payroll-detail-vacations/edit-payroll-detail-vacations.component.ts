@@ -1,26 +1,20 @@
-import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
-import { CurrencyPipe, DatePipe } from "@angular/common";
-import {
-  Component,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from "@angular/core";
-import { ColumnMode } from "@swimlane/ngx-datatable";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { PayrollService } from "../../../../services/payroll.service";
-import { noop } from "rxjs";
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {CurrencyPipe, DatePipe} from '@angular/common';
+import {Component, Input, OnInit, TemplateRef, ViewChild,} from '@angular/core';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PayrollService} from '../../../../services/payroll.service';
+import {noop} from 'rxjs';
 
 @Component({
-  selector: "app-edit-payroll-detail-vacations",
-  templateUrl: "./edit-payroll-detail-vacations.component.html",
-  styleUrls: ["./edit-payroll-detail-vacations.component.scss"],
+  selector: 'app-edit-payroll-detail-vacations',
+  templateUrl: './edit-payroll-detail-vacations.component.html',
+  styleUrls: ['./edit-payroll-detail-vacations.component.scss'],
 })
 export class EditPayrollDetailVacationsComponent implements OnInit {
-  @ViewChild("editCell", { static: true }) editCell: TemplateRef<any>;
-  @ViewChild("confirmSwal") private confirmSwal: SwalComponent;
-  @ViewChild("successSwal") private successSwal: SwalComponent;
+  @ViewChild('editCell', {static: true}) editCell: TemplateRef<any>;
+  @ViewChild('confirmSwal') private confirmSwal: SwalComponent;
+  @ViewChild('successSwal') private successSwal: SwalComponent;
 
   @Input() row: any;
   columns: any[] = [];
@@ -39,10 +33,10 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   ngOnInit() {
     this.user = this._payrollService.getDecodedToken();
     this.columns = [
-      { name: "FROM", prop: "from", pipe: this.datePipe() },
-      { name: "TO", prop: "to", pipe: this.datePipe() },
-      { name: "AMOUNT", prop: "amount", width: 85, pipe: this._currencyPipe },
-      { name: "CONFIRM | DELETE", cellTemplate: this.editCell, width: 155 },
+      {name: 'FROM', prop: 'from', pipe: this.datePipe()},
+      {name: 'TO', prop: 'to', pipe: this.datePipe()},
+      {name: 'AMOUNT', prop: 'amount', width: 85, pipe: this._currencyPipe},
+      {name: 'CONFIRM | DELETE', cellTemplate: this.editCell, width: 155},
     ];
     this.buildForm();
     this.loadData();
@@ -50,22 +44,22 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
 
   datePipe() {
     return {
-      transform: (value) => this._datePipe.transform(value, "MM/dd/yyyy"),
+      transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy'),
     };
   }
   buildForm() {
     const r = this.row;
     this.vacationsForm = this.fb.group({
-      type: ["Other Payments"],
+      type: ['Other Payments'],
       vacations: [true],
       employee: [r.employee],
       employeeName: [r.employeeName],
       employeeId: [r.employeeId],
-      reason: ["Vacations Leave"],
+      reason: ['Vacations Leave'],
       date: [r.fromDate],
-      from: ["", Validators.required],
-      to: ["", Validators.required],
-      amount: ["", Validators.required],
+      from: ['', Validators.required],
+      to: ['', Validators.required],
+      amount: ['', Validators.required],
       creationFingerprint: [this.user.userId],
       submittedDate: [new Date()],
       createdBy: [this.user.userId],
@@ -86,7 +80,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
     console.log(this.row);
     this._payrollService
       .getConcepts({
-        type: "Other Payments",
+        type: 'Other Payments',
         id: this.row.employee,
         vacations: true,
         assigned: true,
@@ -107,7 +101,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
             this.vacationsForm.value.to
           ),
         },
-        "VAC"
+        'VAC'
       )
       .subscribe((result) => {
         this.rows = [...this.rows, result];
@@ -121,7 +115,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
     } else {
       this._payrollService
         .updateConcept({
-          type: "Other Payments",
+          type: 'Other Payments',
           id: [rowItem._id],
           query: {
             verified: true,
@@ -133,7 +127,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
             rowItem.verified = true;
             rowItem.verificationFingerprint = this.user.userId;
             this._payrollService
-              .updatePayroll(rowItem.payroll, rowItem, "VAC", this.row._id)
+              .updatePayroll(rowItem.payroll, rowItem, 'VAC', this.row._id)
               .subscribe((finalResult) => {
                 this.successSwal
                   .fire()
@@ -146,7 +140,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   }
   deleteValue(item, index) {
     this._payrollService
-      .deleteConcept({ type: "Other Payments", id: item._id })
+      .deleteConcept({type: 'Other Payments', id: item._id})
       .subscribe((result) => {
         this.rows.splice(index, 1);
       });

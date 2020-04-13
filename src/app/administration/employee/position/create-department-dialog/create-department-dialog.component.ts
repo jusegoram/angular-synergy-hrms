@@ -1,11 +1,11 @@
-import { Component, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Department } from "../../models/positions-models";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Department} from '../../models/positions-models';
 
 @Component({
-  selector: "app-create-department-dialog",
-  templateUrl: "./create-department-dialog.component.html",
-  styleUrls: ["./create-department-dialog.component.scss"],
+  selector: 'app-create-department-dialog',
+  templateUrl: './create-department-dialog.component.html',
+  styleUrls: ['./create-department-dialog.component.scss'],
 })
 export class CreateDepartmentDialogComponent {
   constructor(

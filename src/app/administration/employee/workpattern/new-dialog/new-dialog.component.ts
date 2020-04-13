@@ -1,11 +1,11 @@
-import { Component, Inject } from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { Workpattern } from "../../models/positions-models";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Workpattern} from '../../models/positions-models';
 
 @Component({
-  selector: "app-new-dialog",
-  templateUrl: "./new-dialog.component.html",
-  styleUrls: ["./new-dialog.component.scss"],
+  selector: 'app-new-dialog',
+  templateUrl: './new-dialog.component.html',
+  styleUrls: ['./new-dialog.component.scss'],
 })
 export class NewDialogComponent {
   constructor(

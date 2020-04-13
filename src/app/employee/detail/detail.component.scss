@@ -4,9 +4,9 @@ $mat-toolbar-height-desktop: 20px !default;
 $mat-toolbar-height-mobile-portrait: 10px !default;
 $mat-toolbar-height-mobile-landscape: 0px !default;
 
-$mat-toolbar-width-desktop: 70% !default;
-$mat-toolbar-width-mobile-portrait: 90% !default;
-$mat-toolbar-width-mobile-landscape: 90% !default;
+$mat-toolbar-width-desktop: 100% !default;
+$mat-toolbar-width-mobile-portrait: 100% !default;
+$mat-toolbar-width-mobile-landscape: 100% !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);
@@ -65,7 +65,8 @@ mat-form-field {
   align-content: stretch;
 }
 
-.readonly-wrapper {
-  pointer-events: none !important;
-  cursor: not-allowed !important;
+
+.profileImage {
+  margin-left: 25px;
+  width: 150px;
 }

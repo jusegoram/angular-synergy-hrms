@@ -1,17 +1,14 @@
-import { Component, Inject } from "@angular/core";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA
-} from "@angular/material/dialog";
-import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { EmployeeService } from "../../employee.service";
-import { HrTracker } from "../../../shared/models/hr-tracker";
-import { CommonValidator } from "../../../shared/validators/common.validator";
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmployeeService} from '../../employee.service';
+import {HrTracker} from '../../../shared/models/hr-tracker';
+import {CommonValidator} from '../../../shared/validators/common.validator';
+
 @Component({
-  selector: "app-transfer-dialog",
-  templateUrl: "./transfer-dialog.component.html",
-  styleUrls: ["./transfer-dialog.component.scss"]
+  selector: 'app-transfer-dialog',
+  templateUrl: './transfer-dialog.component.html',
+  styleUrls: ['./transfer-dialog.component.scss']
 })
 export class TransferDialogComponent {
   transferFom: FormGroup;
@@ -26,31 +23,31 @@ export class TransferDialogComponent {
   ) {}
 
   get effectiveDateHasError() {
-    return this.transferFom.get("effectiveDate").invalid;
+    return this.transferFom.get('effectiveDate').invalid;
   }
 
   get newClientHasError() {
-    return this.transferFom.get("newClient").invalid;
+    return this.transferFom.get('newClient').invalid;
   }
 
   get newCampaignHasError() {
-    return this.transferFom.get("newCampaign").invalid;
+    return this.transferFom.get('newCampaign').invalid;
   }
 
   get reasonHasError() {
-    return this.transferFom.get("reason").invalid;
+    return this.transferFom.get('reason').invalid;
   }
 
   ngOnInit() {
     this.clients = this.employeeService.clients;
     this.transferFom = this.formBuilder.group({
-      reason: ["", [Validators.required, CommonValidator.emptyFieldValidator]],
+      reason: ['', [Validators.required, CommonValidator.emptyFieldValidator]],
       oldClient: [this.data.selectedClient],
       oldCampaign: [this.data.selectedCampaign],
-      newClient: ["", Validators.required],
-      newCampaign: ["", Validators.required],
+      newClient: ['', Validators.required],
+      newCampaign: ['', Validators.required],
       effectiveDate: [new Date(), Validators.required],
-      managerSignature: ["", Validators.required]
+      managerSignature: ['', Validators.required]
     });
     this.setCampaigns();
   }
@@ -64,12 +61,12 @@ export class TransferDialogComponent {
         this.campaigns = this.clients[i].campaigns;
       }
     }
-    this.transferFom.get("newCampaign").setValue("");
+    this.transferFom.get('newCampaign').setValue('');
   }
 
   async onProceedClick(formValues: any) {
     try {
-      let {
+      const {
         effectiveDate,
         oldClient,
         oldCampaign,
@@ -78,7 +75,7 @@ export class TransferDialogComponent {
         reason,
         managerSignature
       } = formValues;
-      let hrTracker: HrTracker = this.data.hrTracker;
+      const hrTracker: HrTracker = this.data.hrTracker;
       hrTracker.tracker = {
         transfer: {
           effectiveDate,
@@ -93,17 +90,17 @@ export class TransferDialogComponent {
       const response = await this.employeeService.saveTracker(hrTracker);
       this.dialogRef.close({
         state: true,
-        message: "Transfer tracker info send successfully"
+        message: 'Transfer tracker info send successfully'
       });
     } catch (error) {
       this.dialogRef.close({
         state: false,
-        message: "We couldn't send your request. Try again later."
+        message: 'We couldn\'t send your request. Try again later.'
       });
     }
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({ state: false, message: "" });
+    this.dialogRef.close({state: false, message: ''});
   }
 }

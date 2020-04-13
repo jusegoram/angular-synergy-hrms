@@ -32,13 +32,13 @@
               appearance="outline"
               [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
             >
-              <mat-label>Payroll Type</mat-label>
+              <mat-label>PAYROLL TYPE</mat-label>
               <mat-select
                 placeholder="Payroll Type"
                 formControlName="payrollType"
               >
                 <mat-option value="">
-                  N/A
+                  - SELECT PAYROLL TYPE -
                 </mat-option>
                 <mat-option
                   *ngFor="let payrollType of payrollTypes"
@@ -51,15 +51,15 @@
           </td>
         </tr>
         <tr fxLayout.xs="column">
-          <td colspan="2">
+          <td colspan="3">
             <mat-form-field
               appearance="outline"
               [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
             >
-              <mat-label>Bank Name</mat-label>
+              <mat-label>BANK ENTITY</mat-label>
               <mat-select placeholder="Bank Name" formControlName="bankName">
                 <mat-option value="">
-                  N/A
+                  - SELECT BANK -
                 </mat-option>
                 <mat-option value="Heritage Bank">
                   Heritage Bank
@@ -79,34 +79,15 @@
               </mat-select>
             </mat-form-field>
           </td>
-          <td colspan="2">
+          <td colspan="3">
             <mat-form-field appearance="outline">
-              <mat-label>Bank Account No.</mat-label>
+              <mat-label>BANK ACCOUNT #</mat-label>
               <input
                 matInput
                 formControlName="bankAccount"
                 placeholder="1234567"
                 [readonly]="!this.authorization.edit"
               />
-            </mat-form-field>
-          </td>
-          <td colspan="2">
-            <mat-form-field
-              appearance="outline"
-              [ngClass]="{ 'readonly-wrapper': !this.authorization.edit }"
-            >
-              <mat-label>Billable</mat-label>
-              <mat-select placeholder="Billable" formControlName="billable">
-                <mat-option value="null">
-                  N/A
-                </mat-option>
-                <mat-option [value]="true">
-                  Yes
-                </mat-option>
-                <mat-option [value]="false">
-                  No
-                </mat-option>
-              </mat-select>
             </mat-form-field>
           </td>
         </tr>
@@ -134,8 +115,26 @@
             </mat-form-field>
           </td>
         </tr>
+        <tr>
+          <td colspan="2" class="pa-2">
+            <mat-checkbox formControlName="billable" color="primary"
+                          matTooltip="TICK THIS IF THE PERSON'S WORK IS BILLED TO OUR CLIENTS">
+              <div *ngIf="payrollForm.invalid && payrollForm.touched; then thenBlock else elseBlock"></div>
+              <ng-template #thenBlock>
+                <mat-error><b>BILLABLE</b></mat-error>
+              </ng-template>
+              <ng-template #elseBlock>
+                <span><b>BILLABLE</b></span>
+              </ng-template>
+            </mat-checkbox>
+          </td>
+        </tr>
       </table>
     </form>
+
+    <mat-error *ngIf="payrollForm.invalid && payrollForm.touched">WOOPS! Some of the fields are either empty or invalid.
+      Please double check and try again.
+    </mat-error>
     <button
       mat-stroked-button
       color="primary"
@@ -143,7 +142,8 @@
       (click)="onSubmit()"
       *ngIf="this.authorization.edit"
     >
-      <mat-icon>save</mat-icon>&nbsp; SAVE
+      <mat-icon>save</mat-icon>
+      <span>SAVE</span>
     </button>
   </mat-expansion-panel>
 </mat-accordion>

@@ -1,17 +1,17 @@
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { SessionService } from "../../session/session.service";
-import { UserService } from "../user.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import {Component, OnInit} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {SessionService} from '../../session/session.service';
+import {UserService} from '../user.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
-  selector: "app-profile",
-  templateUrl: "./profile.component.html",
-  styleUrls: ["./profile.component.scss"],
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
   hide = true;
-  name = "";
+  name = '';
   changePwdForm: FormGroup;
   constructor(
     private _session: SessionService,
@@ -57,10 +57,10 @@ export class ProfileComponent implements OnInit {
     if (query.password && query.newPassword) {
       this._userService.updateUser(query).subscribe(
         (data) => {
-          this.openSnackBar("Password changed successfully", "thanks!");
+          this.openSnackBar('Password changed successfully', 'thanks!');
         },
         (error) => {
-          this.openSnackBar("Your password is wrong", "Try again");
+          this.openSnackBar('Your password is wrong', 'Try again');
         }
       );
     }

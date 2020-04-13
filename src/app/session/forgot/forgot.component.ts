@@ -1,16 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { CustomValidators } from "ng2-validation";
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CustomValidators} from 'ng2-validation';
 
 @Component({
-  selector: "app-forgot",
-  templateUrl: "./forgot.component.html",
-  styleUrls: ["./forgot.component.scss"],
+  selector: 'app-forgot',
+  templateUrl: './forgot.component.html',
+  styleUrls: ['./forgot.component.scss'],
 })
 export class ForgotComponent implements OnInit {
   public form: FormGroup;
-  constructor(private fb: FormBuilder, private router: Router) {}
+
+  constructor(private fb: FormBuilder, private router: Router) {
+  }
 
   ngOnInit() {
     this.form = this.fb.group({
@@ -22,6 +24,6 @@ export class ForgotComponent implements OnInit {
   }
 
   onSubmit() {
-    this.router.navigate(["/session/signin"]);
+    this.router.navigate(['/session/signin']);
   }
 }

@@ -1,47 +1,48 @@
-import { SessionService } from "./../../../../session/session.service";
-import { PayrollService } from "./../../../services/payroll.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { SelectionModel } from "@angular/cdk/collections";
-import { SwalComponent } from "@sweetalert2/ngx-sweetalert2";
+import {SessionService} from './../../../../session/session.service';
+import {PayrollService} from './../../../services/payroll.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {SelectionModel} from '@angular/cdk/collections';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
-  selector: "app-concept-verification",
-  templateUrl: "./concept-verification.component.html",
-  styleUrls: ["./concept-verification.component.scss"],
+  selector: 'app-concept-verification',
+  templateUrl: './concept-verification.component.html',
+  styleUrls: ['./concept-verification.component.scss'],
 })
 export class ConceptVerificationComponent implements OnInit {
-  @ViewChild("confirmSwal") private confirmSwal: SwalComponent;
-  @ViewChild("successSwal") private successSwal: SwalComponent;
+  @ViewChild('confirmSwal') private confirmSwal: SwalComponent;
+  @ViewChild('successSwal') private successSwal: SwalComponent;
   displayedColumns = [
-    "select",
-    "employee",
-    "type",
-    "concept",
-    "amount",
-    "date",
-    "action",
+    'select',
+    'employee',
+    'type',
+    'concept',
+    'amount',
+    'date',
+    'action',
   ];
   verfiedTableColumns = [
-    "employee",
-    "type",
-    "concept",
-    "amount",
-    "date",
-    "verified",
+    'employee',
+    'type',
+    'concept',
+    'amount',
+    'date',
+    'verified',
   ];
   selection = new SelectionModel(true, []);
   verificationTable = new MatTableDataSource([]);
   verifiedTable = new MatTableDataSource([]);
-  selectedConceptForVerification = "Deduction";
-  selectedconceptForVerified = "Deduction";
+  selectedConceptForVerification = 'Deduction';
+  selectedconceptForVerified = 'Deduction';
   concepts = [
-    { name: "Deduction" },
-    { name: "Other Payments" },
-    { name: "Taxable Bonus" },
-    { name: "Non-Taxable Bonus" },
+    {name: 'Deduction'},
+    {name: 'Other Payments'},
+    {name: 'Taxable Bonus'},
+    {name: 'Non-Taxable Bonus'},
   ];
+
   constructor(
     private payrollService: PayrollService,
     private sessionService: SessionService,
@@ -73,7 +74,7 @@ export class ConceptVerificationComponent implements OnInit {
     const type = this.selectedConceptForVerification;
     const query = {
       type: type,
-      id: "all",
+      id: 'all',
       payed: false,
       verified: false,
       assigned: false,
@@ -86,7 +87,7 @@ export class ConceptVerificationComponent implements OnInit {
     const type = this.selectedconceptForVerified;
     const query = {
       type: type,
-      id: "all",
+      id: 'all',
       payed: false,
       verified: true,
       assigned: false,
@@ -143,8 +144,8 @@ export class ConceptVerificationComponent implements OnInit {
           },
           (error) => {
             this.openSnackbar(
-              "Woops, an ERROR happened during the verification",
-              "Try Again"
+              'Woops, an ERROR happened during the verification',
+              'Try Again'
             );
           }
         );
@@ -155,8 +156,8 @@ export class ConceptVerificationComponent implements OnInit {
     const verificationFingerprint = this.sessionService.getId();
     if (concept.creationFingerprint === verificationFingerprint) {
       this.openSnackbar(
-        "Sorry, you cant DELETE your own concepts, ask an accounting teammate",
-        "Ok, sorry"
+        'Sorry, you cant DELETE your own concepts, ask an accounting teammate',
+        'Ok, sorry'
       );
     } else {
       this.payrollService
@@ -165,14 +166,14 @@ export class ConceptVerificationComponent implements OnInit {
           (result) => {
             this.refresh();
             this.openSnackbar(
-              "The item was DELETED successfully",
-              "Great, thanks!"
+              'The item was DELETED successfully',
+              'Great, thanks!'
             );
           },
           (error) => {
             this.openSnackbar(
-              "Woops, an Error happened during the deletion",
-              "Try Again"
+              'Woops, an Error happened during the deletion',
+              'Try Again'
             );
           }
         );

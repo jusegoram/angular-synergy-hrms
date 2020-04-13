@@ -15,19 +15,52 @@
 }
 
 .editable {
+  font-size: 1em;
   text-align: center;
-  font-size: small;
-  width: 35px;
+  width: 95px;
+  // font-size: small;
   border: none;
   outline: none;
-  background: transparent;
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
 }
+
 .editable-border {
+  font-size: 1em;
   text-align: center;
-  font-size: small;
-  width: 35px;
-  background: transparent;
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
 }
+
 tr.mat-footer-row {
   font-weight: bold;
+}
+
+span {
+  margin: 20px;
+}
+
+.break-and-lunch {
+  background-color: white;
+  display: inline-flex;
+  border: 1px solid #ccc;
+  color: #555;
+}
+
+.break-and-lunch-input {
+  font-size: 1em;
+  text-align: center;
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  width: 60px;
+  border: none;
+  outline: none;
+}
+
+.break-and-lunch-input-border {
+  font-size: 1em;
+  text-align: center;
+  font-family: "Roboto", "Helvetica Neue", sans-serif;
+  font-weight: 400;
+  width: 60px;
 }

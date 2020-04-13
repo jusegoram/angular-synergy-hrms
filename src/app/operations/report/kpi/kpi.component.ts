@@ -1,73 +1,73 @@
-import { Component, OnInit } from "@angular/core";
-import { OperationsService } from "../../operations.service";
-import { MatTableDataSource } from "@angular/material/table";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import * as XLSX from "xlsx";
+import {Component, OnInit} from '@angular/core';
+import {OperationsService} from '../../operations.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
-  selector: "report-kpi",
-  templateUrl: "./kpi.component.html",
-  styleUrls: ["./kpi.component.scss"],
+  selector: 'report-kpi',
+  templateUrl: './kpi.component.html',
+  styleUrls: ['./kpi.component.scss'],
 })
 export class KpiComponent implements OnInit {
   items;
   kpiGroups = [
     {
-      name: "TIB",
+      name: 'TIB',
       kpi: [
-        { name: "Quality" },
-        { name: "PrimaryClosing" },
-        { name: "SPC" },
-        { name: "SPH" },
-        { name: "GrossClosing" },
-        { name: "Adherence" },
+        {name: 'Quality'},
+        {name: 'PrimaryClosing'},
+        {name: 'SPC'},
+        {name: 'SPH'},
+        {name: 'GrossClosing'},
+        {name: 'Adherence'},
       ],
     },
     {
-      name: "CIT",
+      name: 'CIT',
       kpi: [
-        { name: "OCR" },
-        { name: "UCR" },
-        { name: "HomeSecurity" },
-        { name: "Quality" },
-        { name: "NRPC" },
-        { name: "GRPO" },
-        { name: "Satellite" },
-        { name: "DukeRSP" },
-        { name: "AmericanWater" },
-        { name: "GeekSquad" },
-        { name: "Quality" },
+        {name: 'OCR'},
+        {name: 'UCR'},
+        {name: 'HomeSecurity'},
+        {name: 'Quality'},
+        {name: 'NRPC'},
+        {name: 'GRPO'},
+        {name: 'Satellite'},
+        {name: 'DukeRSP'},
+        {name: 'AmericanWater'},
+        {name: 'GeekSquad'},
+        {name: 'Quality'},
       ],
     },
     {
-      name: "CCS",
-      kpi: [{ name: "Efficiency" }, { name: "Adherence" }],
+      name: 'CCS',
+      kpi: [{name: 'Efficiency'}, {name: 'Adherence'}],
     },
     {
-      name: "RAD",
+      name: 'RAD',
       kpi: [
-        { name: "AIMS" },
-        { name: "UPH" },
-        { name: "Adherence" },
-        { name: "CSAT" },
+        {name: 'AIMS'},
+        {name: 'UPH'},
+        {name: 'Adherence'},
+        {name: 'CSAT'},
       ],
     },
     {
-      name: "FALC",
-      kpi: [{ name: "Avg Claim Time" }, { name: "Adherence" }],
+      name: 'FALC',
+      kpi: [{name: 'Avg Claim Time'}, {name: 'Adherence'}],
     },
     {
-      name: "ATLAS",
-      kpi: [{ name: "Avg Claim Time" }, { name: "Adherence" }],
+      name: 'ATLAS',
+      kpi: [{name: 'Avg Claim Time'}, {name: 'Adherence'}],
     },
     {
-      name: "AIP",
+      name: 'AIP',
       kpi: [
-        { name: "Conversion" },
-        { name: "Calls Answered" },
-        { name: "LostJobs" },
-        { name: "Escalations" },
-        { name: "Immediate Coaching" },
+        {name: 'Conversion'},
+        {name: 'Calls Answered'},
+        {name: 'LostJobs'},
+        {name: 'Escalations'},
+        {name: 'Immediate Coaching'},
       ],
     },
   ];
@@ -78,15 +78,15 @@ export class KpiComponent implements OnInit {
   dialData: object;
   queryForm: FormGroup;
   displayedColumns = [
-    "employeeId",
-    "fullName",
-    "client",
-    "campaign",
-    "teamId",
-    "kpiName",
-    "score",
-    "date",
-    "action",
+    'employeeId',
+    'fullName',
+    'client',
+    'campaign',
+    'teamId',
+    'kpiName',
+    'score',
+    'date',
+    'action',
   ];
   notfound;
 
@@ -104,12 +104,12 @@ export class KpiComponent implements OnInit {
 
   buildQueryForm() {
     this.queryForm = this.fb.group({
-      kpiFrom: [""],
+      kpiFrom: [''],
       kpiTo: [new Date()],
-      kpiClient: [""],
-      kpiCampaign: [""],
-      kpiTeamId: [""],
-      kpiName: [""],
+      kpiClient: [''],
+      kpiCampaign: [''],
+      kpiTeamId: [''],
+      kpiName: [''],
     });
   }
 
@@ -153,8 +153,8 @@ export class KpiComponent implements OnInit {
     });
     const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, main, "kpi-info");
-    XLSX.writeFile(wb, "export-kpi.xlsx");
+    XLSX.utils.book_append_sheet(wb, main, 'kpi-info');
+    XLSX.writeFile(wb, 'export-kpi.xlsx');
   }
 
   clear() {

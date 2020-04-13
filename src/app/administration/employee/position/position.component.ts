@@ -1,19 +1,19 @@
-import { Component, OnInit } from "@angular/core";
-import { Department, Position } from "../models/positions-models";
-import { AdminService } from "../../admin.service";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { CreateDepartmentDialogComponent } from "./create-department-dialog/create-department-dialog.component";
-import { EditPositionDialogComponent } from "./edit-position-dialog/edit-position-dialog.component";
+import {Component, OnInit} from '@angular/core';
+import {Department, Position} from '../models/positions-models';
+import {AdminService} from '../../admin.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {CreateDepartmentDialogComponent} from './create-department-dialog/create-department-dialog.component';
+import {EditPositionDialogComponent} from './edit-position-dialog/edit-position-dialog.component';
 
 @Component({
-  selector: "app-position",
-  templateUrl: "./position.component.html",
-  styleUrls: ["./position.component.scss"],
+  selector: 'app-position',
+  templateUrl: './position.component.html',
+  styleUrls: ['./position.component.scss'],
 })
 export class PositionComponent implements OnInit {
-  displayedColumns: string[] = ["positionId", "name", "wage", "action"];
+  displayedColumns: string[] = ['positionId', 'name', 'wage', 'action'];
   public departments: Department[];
   public currentDep: Department;
   dataSource: any;
@@ -83,9 +83,9 @@ export class PositionComponent implements OnInit {
   }
 
   openCreateDepartmentDialog() {
-    const newDepartment = new Department("", "", "", []);
+    const newDepartment = new Department('', '', '', []);
     const dialogRef = this.dialog.open(CreateDepartmentDialogComponent, {
-      width: "500px",
+      width: '500px',
       data: newDepartment,
     });
 
@@ -95,7 +95,7 @@ export class PositionComponent implements OnInit {
   }
 
   newDepartment(department: Department) {
-    if (department.name !== "") {
+    if (department.name !== '') {
       this._admService.createDepartment(department).subscribe(
         (result: Department) => {
           this.departments.push(result);
@@ -120,7 +120,7 @@ export class PositionComponent implements OnInit {
     let editPosition = null;
     editPosition = position;
     const dialogRef = this.dialog.open(EditPositionDialogComponent, {
-      width: "500px",
+      width: '500px',
       data: editPosition,
     });
     dialogRef.afterClosed().subscribe((result) => {
@@ -157,14 +157,14 @@ export class PositionComponent implements OnInit {
   }
   newPosition(position) {
     const newPosition = new Position(
-      "",
+      '',
       position.positionId,
       position.name,
       position.baseWage
     );
     if (
-      newPosition.name !== "" &&
-      newPosition.positionId !== "" &&
+      newPosition.name !== '' &&
+      newPosition.positionId !== '' &&
       newPosition.baseWage !== null
     ) {
       this._admService
@@ -189,13 +189,13 @@ export class PositionComponent implements OnInit {
   }
   clearNewPosition() {
     this.newPos = null;
-    this.newPos = new Position("", "", "", null);
+    this.newPos = new Position('', '', '', null);
   }
   openSuccess() {
-    this.openSnackBar("Great! Everything was done correctly", "Ok");
+    this.openSnackBar('Great! Everything was done correctly', 'Ok');
   }
   openError() {
-    this.openSnackBar("Opps! Something went wrong", "Notify Synergy Admin");
+    this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {

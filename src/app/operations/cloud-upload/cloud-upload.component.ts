@@ -1,14 +1,14 @@
-import { Component } from "@angular/core";
-import { FileUploader } from "ng2-file-upload";
-import { environment } from "../../../environments/environment";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { OperationsService } from "../operations.service";
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../environments/environment';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {OperationsService} from '../operations.service';
 
 @Component({
-  selector: "app-cloud-upload",
-  templateUrl: "./cloud-upload.component.html",
-  styleUrls: ["./cloud-upload.component.scss"],
+  selector: 'app-cloud-upload',
+  templateUrl: './cloud-upload.component.html',
+  styleUrls: ['./cloud-upload.component.scss'],
 })
 export class CloudUploadComponent {
   api = environment.apiUrl;
@@ -19,47 +19,47 @@ export class CloudUploadComponent {
   errorDataSource: any;
   response: string;
   errorTableColumns: string[] = [
-    "employeeId",
-    "dialerId",
-    "date",
-    "systemHours",
-    "tosHours",
-    "timeIn",
+    'employeeId',
+    'dialerId',
+    'date',
+    'systemHours',
+    'tosHours',
+    'timeIn',
   ];
-  displayedColumns: string[] = ["name", "size", "progress", "status", "action"];
+  displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
   public selected = {
-    value: "/employee/upload/hours",
-    viewValue: "Employee Hours",
+    value: '/employee/upload/hours',
+    viewValue: 'Employee Hours',
   };
   items = [
     {
-      value: "/operations/upload/hours",
-      viewValue: "Hours",
+      value: '/operations/upload/hours',
+      viewValue: 'Hours',
       swal: [
-        "DON'T FORGET THE SHIFT",
-        "If you haven't, please upload the shift first",
-        "warning",
+        'DON\'T FORGET THE SHIFT',
+        'If you haven\'t, please upload the shift first',
+        'warning',
       ],
     },
     {
-      value: "/operations/upload/kpi",
-      viewValue: "KPI's",
+      value: '/operations/upload/kpi',
+      viewValue: 'KPI\'s',
       swal: [
-        "WAIT",
-        "Please double check the file you will upload to avoid introducing errors ",
-        "warning",
+        'WAIT',
+        'Please double check the file you will upload to avoid introducing errors ',
+        'warning',
       ],
     },
   ];
 
   templates = [
     {
-      value: "/operations/hourTemplate",
-      viewValue: "Hours Template",
+      value: '/operations/hourTemplate',
+      viewValue: 'Hours Template',
     },
-    { value: "/operations/kpiTemplate", viewValue: "KPI Template" },
+    {value: '/operations/kpiTemplate', viewValue: 'KPI Template'},
   ];
-  templateSelected = "";
+  templateSelected = '';
   // public uploader: FileUploader = new FileUploader({
   //   allowedMimeType: ['text/csv'],
   //   url: this.URL,
@@ -82,9 +82,9 @@ export class CloudUploadComponent {
     const setURL = this.api + this.selected.value;
     this.uploader = new FileUploader({
       url: setURL,
-      allowedMimeType: ["text/csv", "application/vnd.ms-excel"],
+      allowedMimeType: ['text/csv', 'application/vnd.ms-excel'],
       isHTML5: true,
-      authTokenHeader: "Authorization",
+      authTokenHeader: 'Authorization',
       authToken: this._operationsService.tokenGetter(),
     });
     this.refresh();
@@ -93,12 +93,12 @@ export class CloudUploadComponent {
       this.openSnackBar(
         `Sorry, we are unable to process any other file formats.
      Please upload only CSV files`,
-        "Ok"
+        'Ok'
       );
     this.uploader.onSuccessItem = (res) => {
       if (res) {
         this.refresh();
-        this.openSnackBar("Great! the upload was successful", "Thanks!");
+        this.openSnackBar('Great! the upload was successful', 'Thanks!');
       }
     };
     this.uploader.onErrorItem = (item, res) => {
@@ -108,11 +108,11 @@ export class CloudUploadComponent {
       }
       this.openSnackBar(
         `Woops! Remember that all the fields in the template are REQUIRED AND There can't be any duplicates records for the same Date.`,
-        "Ok, I'll try again"
+        'Ok, I\'ll try again'
       );
     };
     this.hoursUploader = new FileUploader({
-      url: "/",
+      url: '/',
       isHTML5: true,
     });
   }
@@ -128,20 +128,20 @@ export class CloudUploadComponent {
   getTemplate(template) {
     this._operationsService.getTemplate(template.value).subscribe(
       (data: BlobPart) => {
-        this.openSnackBar("Download started", "thanks");
-        const a = document.createElement("a");
-        const blob = new Blob([data], { type: "text/csv" }),
+        this.openSnackBar('Download started', 'thanks');
+        const a = document.createElement('a');
+        const blob = new Blob([data], {type: 'text/csv'}),
           url = window.URL.createObjectURL(blob);
 
         a.href = url;
-        a.download = template.viewValue + ".csv";
+        a.download = template.viewValue + '.csv';
         a.click();
         window.URL.revokeObjectURL(url);
         a.remove();
       },
       (err) => {
         console.error(err);
-        this.openSnackBar("Woops! Could not start download", "Try again");
+        this.openSnackBar('Woops! Could not start download', 'Try again');
       }
     );
   }

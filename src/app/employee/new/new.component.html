@@ -1,10 +1,21 @@
+<shared-on-success-alert
+  #successAlert
+  [message]="'The changes were saved correctly'"
+></shared-on-success-alert>
+<shared-on-error-alert
+  #onErrorAlert
+  [message]="
+    'We could not save the changes made, please verify that the data was filled in correctly and try again'
+  "
+></shared-on-error-alert>
+
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
     <span>New Employee</span>
     <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row></mat-toolbar-row>
+  <mat-toolbar-row></mat-toolbar-row>
 </mat-toolbar>
 <div class="mat-card-top pa-1">
   <div fxLayout="column" fxLayout.xs="column">
@@ -15,30 +26,12 @@
       <mat-card-subtitle>
         Fill > Create Employee > Redirect to Employee's profile.
       </mat-card-subtitle>
-      <form [formGroup]="mainForm" id="mainForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="formGroup" id="mainForm" (ngSubmit)="onSubmit()">
         <div>
           <table style="width: 80%; margin-left: auto; margin-right: auto;">
             <tr>
               <td colspan="4">
-                <mat-slide-toggle
-                  formControlName="idToggle"
-                  color="primary"
-                  matTooltip="Manually Assign Employee ID"
-                >
-                  Employee ID</mat-slide-toggle
-                >
-                <mat-form-field
-                  class="fill-remaining-space"
-                  *ngIf="!mainForm.value.idToggle"
-                  appearance="outline"
-                >
-                  <mat-label>Employee ID</mat-label>
-                  <input
-                    matInput
-                    formControlName="employeeId"
-                    placeholder="Enter Employee ID"
-                  />
-                </mat-form-field>
+
               </td>
             </tr>
             <tr>
@@ -54,7 +47,7 @@
                     placeholder="John"
                   />
                   <mat-error
-                    >First name is required to create a new Employee in the
+                  >First name is required to create a new Employee in the
                     synergy system</mat-error
                   >
                 </mat-form-field>
@@ -84,7 +77,7 @@
                     placeholder="Doe"
                   />
                   <mat-error
-                    >Last name is required to create a new Employee in the
+                  >Last name is required to create a new Employee in the
                     synergy system</mat-error
                   >
                 </mat-form-field>
@@ -120,9 +113,7 @@
                     formControlName="status"
                     placeholder="Active / Resignation / etc..."
                   >
-                    <mat-option *ngFor="let item of items" [value]="item.value">
-                      {{ item.viewValue | titlecase }}</mat-option
-                    >
+                    <mat-option value="active">Active</mat-option>
                   </mat-select>
                 </mat-form-field>
               </td>
@@ -141,7 +132,7 @@
                     placeholder="Social Security No."
                   />
                   <mat-error
-                    >Social Security Number is required to create a new Employee
+                  >Social Security Number is required to create a new Employee
                     in the synergy system</mat-error
                   >
                 </mat-form-field>
@@ -154,7 +145,7 @@
                   class="fill-remaining-space"
                   color="primary"
                   form="mainForm"
-                  [disabled]="!mainForm.valid"
+                  [disabled]="!formGroup.valid"
                   matTooltip="After CREATE EMPLOYEE we will take you to the Employee's profile"
                   matTooltipPosition="after"
                 >

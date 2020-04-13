@@ -1,15 +1,15 @@
-import { Component, OnInit } from "@angular/core";
-import { Workpattern } from "../models/positions-models";
-import { AdminService } from "../../admin.service";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { EditDialogComponent } from "./edit-dialog/edit-dialog.component";
-import { NewDialogComponent } from "./new-dialog/new-dialog.component";
+import {Component, OnInit} from '@angular/core';
+import {Workpattern} from '../models/positions-models';
+import {AdminService} from '../../admin.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {EditDialogComponent} from './edit-dialog/edit-dialog.component';
+import {NewDialogComponent} from './new-dialog/new-dialog.component';
 
 @Component({
-  selector: "app-workpattern",
-  templateUrl: "./workpattern.component.html",
-  styleUrls: ["./workpattern.component.scss"],
+  selector: 'app-workpattern',
+  templateUrl: './workpattern.component.html',
+  styleUrls: ['./workpattern.component.scss'],
 })
 export class WorkpatternComponent implements OnInit {
   public wp: Workpattern[];
@@ -41,8 +41,8 @@ export class WorkpatternComponent implements OnInit {
 
   editShift(id, propName, propValue) {
     const edit = {};
-    edit["propName"] = propName;
-    edit["propValue"] = propValue;
+    edit['propName'] = propName;
+    edit['propValue'] = propValue;
     this._admService.editShift(edit, id).subscribe(
       (data) => {
         this.openSuccess();
@@ -73,10 +73,10 @@ export class WorkpatternComponent implements OnInit {
     }
   }
   openSuccess() {
-    this.openSnackBar("Great! Everything was done correctly", "Ok");
+    this.openSnackBar('Great! Everything was done correctly', 'Ok');
   }
   openError() {
-    this.openSnackBar("Opps! Something went wrong", "Notify Synergy Admin");
+    this.openSnackBar('Opps! Something went wrong', 'Notify Synergy Admin');
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
@@ -84,52 +84,52 @@ export class WorkpatternComponent implements OnInit {
     });
   }
   openNewDialog(): void {
-    const newWorkPattern = new Workpattern("", "", "", [
+    const newWorkPattern = new Workpattern('', '', '', [
       {
         day: 0,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 1,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 2,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 3,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 4,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 5,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
       {
         day: 6,
         onShift: null,
-        startTime: "",
-        endTime: "",
+        startTime: '',
+        endTime: '',
       },
     ]);
     const dialogRef = this.dialog.open(NewDialogComponent, {
-      width: "750px",
+      width: '750px',
       data: newWorkPattern,
     });
 
@@ -144,7 +144,7 @@ export class WorkpatternComponent implements OnInit {
     dayNum = day;
     editDay = this.currentwp.shift[dayNum];
     const dialogRef = this.dialog.open(EditDialogComponent, {
-      width: "750px",
+      width: '750px',
       data: editDay,
     });
 
@@ -182,15 +182,15 @@ export class WorkpatternComponent implements OnInit {
     let startTime = null;
     let endTime = null;
     if (day.startTime !== null) {
-      const str: string = day.startTime + "";
-      const strArray = str.split(":");
+      const str: string = day.startTime + '';
+      const strArray = str.split(':');
       const hoursStr = parseInt(strArray[0], 10) * 60;
       const minutesStr = parseInt(strArray[1], 10);
       startTime = hoursStr + minutesStr;
     }
     if (day.endTime !== null) {
-      const end: string = day.endTime + "";
-      const endArray = end.split(":");
+      const end: string = day.endTime + '';
+      const endArray = end.split(':');
       const hoursEnd = parseInt(endArray[0], 10) * 60;
       const minutesEnd = parseInt(endArray[1], 10);
       endTime = hoursEnd + minutesEnd;

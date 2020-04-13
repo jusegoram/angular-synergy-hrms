@@ -20,29 +20,42 @@
           </mat-form-field>
         </div>
         <mat-table #table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="emergencyContact">
+            <mat-header-cell *matHeaderCellDef>EMERGENCY</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <mat-icon *ngIf="element.emergencyContact" color="warn">add_circle_outline</mat-icon>
+            </mat-cell>
+          </ng-container>
           <ng-container matColumnDef="name">
-            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>NAME</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.referenceName }}
             </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="relationship">
-            <mat-header-cell *matHeaderCellDef>Relationship</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>RELATIONSHIP</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.relationship }}
             </mat-cell>
           </ng-container>
 
+          <ng-container matColumnDef="birthDate">
+            <mat-header-cell *matHeaderCellDef>BIRTH DATE</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.birthDate | date: 'MM/dd/yyyy' }}
+            </mat-cell>
+          </ng-container>
+
           <ng-container matColumnDef="celNumber">
-            <mat-header-cell *matHeaderCellDef>Cellphone</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>CELLPHONE</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.celNumber }}
             </mat-cell>
           </ng-container>
 
           <ng-container matColumnDef="telNumber">
-            <mat-header-cell *matHeaderCellDef>Telephone</mat-header-cell>
+            <mat-header-cell *matHeaderCellDef>TELEPHONE</mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.telNumber }}
             </mat-cell>
@@ -50,7 +63,7 @@
 
           <ng-container matColumnDef="emailAddress">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Email
+              EMAIL
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.emailAddress }}
@@ -59,7 +72,7 @@
 
           <ng-container matColumnDef="address">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Address
+              ADDRESS
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
               {{ element.address }}
@@ -68,7 +81,7 @@
 
           <ng-container matColumnDef="comment">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Comment
+              COMMENT
             </mat-header-cell>
             <mat-cell *matCellDef="let element">
               <p
@@ -84,17 +97,19 @@
             >
           </ng-container>
 
-          <ng-container matColumnDef="edit">
+          <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef mat-sort-header>
-              Edit
+              ACTION
             </mat-header-cell>
             <mat-cell *matCellDef="let element"
-              ><button
+            >
+              <button
                 mat-icon-button
-                disabled="true"
-                (click)="editReference(element._id)"
+                color="warn"
+                (click)="fireDelete(element)"
               >
-                <mat-icon>border_color</mat-icon>
+                <shared-on-delete-alert #onDeleteAlert (confirm)="onDelete($event)"></shared-on-delete-alert>
+                <mat-icon>delete</mat-icon>
               </button>
             </mat-cell>
           </ng-container>
@@ -104,30 +119,38 @@
         </mat-table>
         <mat-paginator
           #paginator
-          [pageSize]="5"
-          [pageSizeOptions]="[5, 10, 15]"
+          [pageSize]="3"
+          [pageSizeOptions]="[3, 6, 9]"
         >
         </mat-paginator>
       </div>
-      <div class="pa-1" fxLayout="column">
+      <div class="pa-1" fxLayout="column" *ngIf="authorization.edit">
         <div fxLayout.xs="column" [formGroup]="familyForm">
           <table style="width: 100%;">
+            <tr>
+              <td colspan="2">
+                <mat-checkbox formControlName="emergencyContact" color="warn"
+                              matTooltip="TICK IF THE NEW CONTACT WILL BE CONSIDERED AN EMERGENCY CONTACT">
+                  <span><b>EMERGENCY CONTACT</b></span>
+                </mat-checkbox>
+              </td>
+            </tr>
             <tr fxLayout.xs="column">
-              <td colspan="3">
+              <td colspan="2">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contact's Name</mat-label>
+                  <mat-label>CONTACT NAME</mat-label>
                   <input
                     matInput
-                    placeholder="Contact Name"
-                    formControlName="name"
+                    placeholder="FULL NAME"
+                    formControlName="referenceName"
                   />
                 </mat-form-field>
               </td>
-              <td colspan="3">
+              <td colspan="2">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contact's Relationship</mat-label>
+                  <mat-label>RELATIONSHIP</mat-label>
                   <mat-select
-                    placeholder="Placeholder"
+                    placeholder="relationship"
                     formControlName="relationship"
                     name="item"
                   >
@@ -140,11 +163,24 @@
                   </mat-select>
                 </mat-form-field>
               </td>
+              <td colspan="2">
+                <mat-form-field class="form" appearance="outline">
+                  <mat-label>BIRTH DATE</mat-label>
+                  <input matInput
+                         formControlName="birthDate"
+                         [matDatepicker]="datePickerRef"
+                         placeholder="MM/DD/YYYY">
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="datePickerRef"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #datePickerRef></mat-datepicker>
+                </mat-form-field>
             </tr>
             <tr fxLayout.xs="column">
               <td colspan="2">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contact's Phone Number (Cel)</mat-label>
+                  <mat-label>CELLPHONE</mat-label>
                   <input
                     matInput
                     placeholder="600-0000"
@@ -152,23 +188,25 @@
                     type="tel"
                     pattern="[0-9]{3}-[0-9]{4}"
                   />
+                  <mat-error>FIELD STRUCTURE: 600-0000</mat-error>
                 </mat-form-field>
               </td>
               <td colspan="2">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contat's Phone Number (Tel)</mat-label>
+                  <mat-label>TELEPHONE</mat-label>
                   <input
                     matInput
-                    placeholder="600-0000"
+                    placeholder="220-0000"
                     formControlName="telNumber"
                     type="tel"
                     pattern="[0-9]{3}-[0-9]{4}"
                   />
+                  <mat-error>FIELD STRUCTURE: 600-0000</mat-error>
                 </mat-form-field>
               </td>
               <td colspan="2">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contact's Email Address</mat-label>
+                  <mat-label>EMAIL</mat-label>
                   <input
                     matInput
                     placeholder="email@provider.com"
@@ -180,7 +218,7 @@
             <tr fxLayout.xs="column">
               <td colspan="6">
                 <mat-form-field class="form" appearance="outline">
-                  <mat-label>Contact's Home Address</mat-label>
+                  <mat-label>ADDRESS</mat-label>
                   <input
                     matInput
                     placeholder="123 Example St. Belize City"
@@ -202,12 +240,10 @@
           </mat-form-field>
         </div>
         <div fxLayout="row" fxLayout.xs="column">
-          <div fxFlex="95%" fxFlexFill></div>
           <button
-            mat-button
+            mat-stroked-button
             color="primary"
             (click)="onSubmit()"
-            [disabled]="!this.familyForm.valid"
           >
             <mat-icon>{{
               this.isEdit ? "check_circle" : "add_circle"

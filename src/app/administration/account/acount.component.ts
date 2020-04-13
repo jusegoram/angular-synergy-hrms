@@ -1,30 +1,30 @@
-import { SessionService } from "../../session/session.service";
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { MatDialog } from "@angular/material/dialog";
-import { MatPaginator } from "@angular/material/paginator";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatSort } from "@angular/material/sort";
-import { MatTableDataSource } from "@angular/material/table";
-import { AdminService } from "../admin.service";
-import { EditUserDialogComponent } from "./edit-user-dialog/edit-user-dialog.component";
+import {SessionService} from '../../session/session.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {AdminService} from '../admin.service';
+import {EditUserDialogComponent} from './edit-user-dialog/edit-user-dialog.component';
 
 @Component({
-  selector: "app-account",
-  templateUrl: "./account.component.html",
-  styleUrls: ["./account.component.scss"],
+  selector: 'app-account',
+  templateUrl: './account.component.html',
+  styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   dataSource;
 
   displayedColumns = [
-    "employee.employeeId",
-    "firstName",
-    "employee.status",
-    "role",
-    "details",
+    'employee.employeeId',
+    'firstName',
+    'employee.status',
+    'role',
+    'details',
   ];
   constructor(
     private sessionService: SessionService,
@@ -67,14 +67,14 @@ export class AccountComponent implements OnInit {
 
   openEditDialog(user) {
     const dialogRef = this.dialog.open(EditUserDialogComponent, {
-      width: "500px",
+      width: '500px',
       data: user,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       this.adminService.editUser(result).subscribe((resp) => {
         this.reload();
-        this.snackBar.open("User was edited successfully", "thank you", {
+        this.snackBar.open('User was edited successfully', 'thank you', {
           duration: 2000,
         });
       });

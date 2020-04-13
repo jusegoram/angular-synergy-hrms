@@ -25,7 +25,6 @@
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.bundle.min.js"
-
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {
@@ -61,5 +60,6 @@
   "defaults": {
     "styleExt": "scss",
     "component": {}
-  }
+  },
+  "version": '2.0.0'
 }

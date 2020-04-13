@@ -1,16 +1,47 @@
+<shared-on-success-alert #successAlert [message]="'The changes were saved correctly'"></shared-on-success-alert>
+<shared-on-delete-alert #onDeleteAlert (confirm)="onDelete($event)"></shared-on-delete-alert>
+<shared-on-error-alert #onErrorAlert
+                       [message]="'We could not save the changes made, please verify that the data was filled in correctly and try again'"></shared-on-error-alert>
+
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span>Details</span>
-    <span class="fill-remaining-space"></span>
-    <span> Employee ID - {{ this.employee.employeeId }} </span>
   </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row>
+    <div fxLayout="column"
+         fxLayoutAlign="end end"
+         fxLayoutGap="0px"
+         fxLayout.gt-md="row"
+         fxLayoutAlign.gt-md="end end"
+         fxLayoutGap.gt-md="20px"
+         style="width: 100%">
+      <button mat-raised-button (click)="openStatusDialog()">
+        ATTRITION TRACKER
+      </button>
+      <button mat-raised-button (click)="openTransferDialog()">
+        TRANSFER TRACKER
+      </button>
+      <button mat-raised-button (click)="openCertifyDialog()">
+        CERTIFICATION TRACKER
+      </button>
+      <button mat-raised-button (click)="openRequestChangeDialog()">
+        REQUEST CHANGE
+      </button>
+      <button
+        mat-icon-button
+        [matTooltip]="helpMessage"
+        matTooltipHideDelay="500000"
+        matTooltipClass="tooltip-text"
+      >
+        <mat-icon>help_outline</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar-row>
+  <mat-toolbar-row></mat-toolbar-row>
 </mat-toolbar>
-<div class="mat-card-top pa-1">
+<div class="mat-card-top">
   <div fxLayout="column" fxLayout.xs="column">
     <mat-card class="main-info pa-1">
-      <div>
+      <div class="profileImage">
         <avatar-detail
           [id]="this.employee._id"
           [authorization]="this.auth"
@@ -19,390 +50,68 @@
       <mat-card-header>
         <mat-card-title>
           {{
-            this.employee.firstName +
-              " " +
-              (this.employee.middleName !== ""
-                ? this.employee.middleName + " " + this.employee.lastName
-                : this.employee.lastName) +
-              "'s Information"
-          }}
+          this.employee.firstName +
+          " " +
+          (this.employee.middleName !== ""
+            ? this.employee.middleName + " " + this.employee.lastName
+            : this.employee.lastName)
+            | uppercase
+          }} | <b> {{ this.employee.employeeId }} </b>
         </mat-card-title>
       </mat-card-header>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-        <button mat-stroked-button (click)="openStatusDialog()">
-          STATUS TRACKER
-        </button>
-        ,<button mat-stroked-button (click)="openTransferDialog()">
-          TRANSFER TRACKER
-        </button>
-        <button mat-stroked-button (click)="openCertifyDialog()">
-          CERTIFY TRAINING
-        </button>
-        <button mat-stroked-button (click)="openRequestChangeDialog()">
-          REQUEST INFO CHANGE
-        </button>
-        <button
-          mat-icon-button
-          [matTooltip]="helpMessage"
-          matTooltipHideDelay="500000"
-          matTooltipClass="tooltip-text"
-        >
-          <mat-icon>help_outline</mat-icon>
-        </button>
-      </div>
-      <br />
-      <mat-card-subtitle>
-        <span fxFlex="auto" fxFlexFill></span>
-        <span stype="white-space: nowrap;">MAIN&nbsp;INFORMATION</span>
-        <span fxFlex="auto" fxFlexFill></span>
-      </mat-card-subtitle>
-      <form class="ma-1" [formGroup]="mainForm" fxLayoutGap="5px">
-        <table style="width: 100%;">
-          <tr fxLayout.xs="column">
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>First Name</mat-label>
-                <input
-                  matInput
-                  formControlName="firstName"
-                  placeholder="First Name"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Middle Name</mat-label>
-                <input
-                  matInput
-                  formControlName="middleName"
-                  placeholder="Middle Name"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Last Name</mat-label>
-                <input
-                  matInput
-                  formControlName="lastName"
-                  placeholder="Last Name"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="6">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': true }"
-              >
-                <mat-label>Gender</mat-label>
-                <mat-select formControlName="gender" placeholder="Gender">
-                  <mat-option
-                    *ngFor="let gender of genders"
-                    [value]="gender.value"
-                  >
-                    {{ gender.viewValue | titlecase }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="6">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-              >
-                <mat-label>Company Status</mat-label>
-                <mat-select formControlName="status" placeholder="Status">
-                  <mat-option *ngFor="let item of items" [value]="item.value">
-                    {{ item.viewValue | titlecase }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Position</mat-label>
-                <input
-                  matInput
-                  formControlName="currentPosition"
-                  placeholder="Current Position"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Position ID</mat-label>
-                <input
-                  matInput
-                  formControlName="currentPositionId"
-                  placeholder="Positition ID"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Since</mat-label>
-                <input
-                  matInput
-                  formControlName="currentPositionDate"
-                  placeholder="Since"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-
-          <tr>
-            <td colspan="6">
-              <mat-form-field appearance="outline">
-                <mat-label> Social Security Number (SSN)</mat-label>
-                <input
-                  matInput
-                  placeholder=""
-                  [value]="this.employee.socialSecurity"
-                  readonly="true"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-        </table>
-      </form>
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="onSubmit()"
-        *ngIf="this.auth.edit"
+      <br/>
+      <main-info
+        [employee]="this.employee"
+        [authorization]="this.auth"
+        (onSuccess)="onSuccess()"
+        (onError)="onError()"
       >
-        <mat-icon>save</mat-icon> &nbsp; SAVE
-      </button>
 
-      <mat-divider
-        style="margin-top: 20px; margin-bottom: 30px;"
-        inset="true"
-      ></mat-divider>
-      <mat-card-subtitle>
-        <span fxFlex="auto" fxFlexFill></span>
-        <span stype="white-space: nowrap;">COMPANY&nbsp;INFORMATION</span>
-        <span fxFlex="auto" fxFlexFill></span>
-      </mat-card-subtitle>
-      <form
-        class="ma-2"
-        [formGroup]="companyForm"
-        id="companyForm"
-        fxLayoutGap="5px"
-      >
-        <table style="width: 100%;">
-          <tr fxLayout.xs="column">
-            <td colspan="3">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-              >
-                <mat-label>Client</mat-label>
-                <mat-select
-                  placeholder="Client"
-                  (selectionChange)="setCampaigns()"
-                  formControlName="client"
-                >
-                  <mat-option
-                    *ngFor="let client of clients"
-                    [value]="client?.name"
-                  >
-                    {{ client.name }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-            <td colspan="3">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-              >
-                <mat-label>Campaign</mat-label>
-                <mat-select placeholder="Campaign" formControlName="campaign">
-                  <mat-option
-                    *ngFor="let campaign of campaigns"
-                    [value]="campaign?.name"
-                  >
-                    {{ campaign.name | titlecase }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Manager</mat-label>
-                <input
-                  matInput
-                  formControlName="manager"
-                  placeholder="Manager"
-                  [readonly]="!this.auth.edit"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Supervisor</mat-label>
-                <input
-                  matInput
-                  formControlName="supervisor"
-                  placeholder="Supervisor Name"
-                  [readonly]="!this.auth.edit"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="2">
-              <mat-form-field appearance="outline">
-                <mat-label>Trainer</mat-label>
-                <input
-                  matInput
-                  formControlName="trainer"
-                  placeholder="Trainer"
-                  [readonly]="!this.auth.edit"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="3">
-              <mat-form-field appearance="outline">
-                <mat-label>Training Group Name</mat-label>
-                <input
-                  matInput
-                  formControlName="trainingGroupRef"
-                  placeholder="Training Group Name"
-                  [readonly]="!this.auth.edit"
-                />
-              </mat-form-field>
-            </td>
-            <td colspan="3">
-              <mat-form-field appearance="outline">
-                <mat-label>Training Group No.</mat-label>
-                <input
-                  matInput
-                  formControlName="trainingGroupNum"
-                  placeholder="Training Group No."
-                  [readonly]="!this.auth.edit"
-                />
-              </mat-form-field>
-            </td>
-          </tr>
-          <tr fxLayout.xs="column">
-            <td colspan="3">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-              >
-                <mat-label>Hire Date (mm/dd/yyyy)</mat-label>
-                <input
-                  matInput
-                  formControlName="hireDate"
-                  placeholder="Hire Date (mm/dd/yyyy)"
-                  [matDatepicker]="hirePicker"
-                  (focus)="hirePicker.open()"
-                />
-                <mat-datepicker #hirePicker></mat-datepicker>
-              </mat-form-field>
-            </td>
-            <td colspan="3">
-              <mat-form-field
-                appearance="outline"
-                [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-              >
-                <mat-label>Termination Date (mm/dd/yyyy)</mat-label>
-                <input
-                  matInput
-                  formControlName="terminationDate"
-                  placeholder="Termination Date (mm/dd/yyyy)"
-                  [matDatepicker]="terminationPicker"
-                  (focus)="terminationPicker.open()"
-                />
-                <mat-datepicker #terminationPicker></mat-datepicker>
-              </mat-form-field>
-            </td>
-          </tr>
-        </table>
-
-        <!-- reapplicant yes|no && reapplicant times (number)-->
-
-        <mat-slide-toggle
-          formControlName="reapplicant"
-          color="primary"
-          [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-          >REAPPLICANT (NO / YES)</mat-slide-toggle
-        >
-
-        <mat-form-field
-          *ngIf="this.companyForm.value.reapplicant"
-          appearance="outline"
-        >
-          <mat-select
-            placeholder="How many times?"
-            formControlName="reapplicantTimes"
-          >
-            <mat-option
-              *ngFor="let reaptime of reaptimes"
-              [value]="reaptime.value"
-            >
-              {{ reaptime.viewValue }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-slide-toggle
-          formControlName="bilingual"
-          color="primary"
-          [ngClass]="{ 'readonly-wrapper': !this.auth.edit }"
-        >
-          BILINGUAL (NO / YES)</mat-slide-toggle
-        >
-      </form>
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="onCompanySubmit()"
-        *ngIf="this.auth.edit"
-      >
-        <mat-icon>save</mat-icon>&nbsp; SAVE
-      </button>
+      </main-info>
+      <company-info
+        [employee]="this.employee"
+        [authorization]="this.auth"
+        (onSuccess)="onSuccess()"
+        (onError)="onError()"
+      ></company-info>
     </mat-card>
   </div>
   <shift [employee]="this.employee" [authorization]="this.auth"></shift>
   <position-info
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></position-info>
   <payroll-info
-    [payroll]="this.employee.payroll"
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></payroll-info>
   <personal-info
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></personal-info>
   <family-info
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></family-info>
   <comment-info
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></comment-info>
   <attrition-info
     [employee]="this.employee"
     [authorization]="this.auth"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
   ></attrition-info>
+  <div style="width: 100%; height: 80px"></div>
 </div>

@@ -1,21 +1,21 @@
-import { SessionService } from "../../session/session.service";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { map, publishReplay, refCount } from "rxjs/operators";
-import { environment } from "../../../environments/environment";
+import {SessionService} from '../../session/session.service';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {map, publishReplay, refCount} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class PayrollService {
   api = environment.apiUrl;
   public status = [
-    { value: "active", viewValue: "Active" },
-    { value: "resignation", viewValue: "Resignation" },
-    { value: "dissmisal", viewValue: "Dissmisal" },
-    { value: "termination", viewValue: "Termination" },
-    { value: "on-hold", viewValue: "On-Hold" },
-    { value: "transfer", viewValue: "Transfer" },
-    { value: "undefined", viewValue: "Undefined" },
+    {value: 'active', viewValue: 'Active'},
+    {value: 'resignation', viewValue: 'Resignation'},
+    {value: 'dissmisal', viewValue: 'Dissmisal'},
+    {value: 'termination', viewValue: 'Termination'},
+    {value: 'on-hold', viewValue: 'On-Hold'},
+    {value: 'transfer', viewValue: 'Transfer'},
+    {value: 'undefined', viewValue: 'Undefined'},
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
   _clients: Observable<any> = null;
@@ -33,7 +33,7 @@ export class PayrollService {
     return this._sessionService.decodeToken();
   }
   sendPayslips(employee, payId) {
-    const params = new HttpParams().set("payId", payId);
+    const params = new HttpParams().set('payId', payId);
     return this.httpClient.get<any>(
       `${this.api}/payroll/payslips/${employee}`,
       {
@@ -43,8 +43,8 @@ export class PayrollService {
   }
   getReport(query: any): Observable<any> {
     const body = query;
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/employee/report", body, {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.httpClient.post(this.api + '/employee/report', body, {
       headers: headers,
     });
   }
@@ -53,10 +53,10 @@ export class PayrollService {
     if (!this._clients) {
       let params;
       if (contextFilter && contextFilter.length > 0) {
-        params = new HttpParams().set("clients", JSON.stringify(contextFilter));
+        params = new HttpParams().set('clients', JSON.stringify(contextFilter));
       }
       this._clients = this.httpClient
-        .get<any>(this.api + "/admin/employee/client", { params: params })
+        .get<any>(this.api + '/admin/employee/client', {params: params})
         .pipe(
           map((data) => {
             return data;
@@ -76,19 +76,19 @@ export class PayrollService {
   getPayroll(id: any, type: any, finalized: any, payed?: any): Observable<any> {
     let params;
     params = new HttpParams()
-      .set("id", id)
-      .set("type", type)
-      .set("finalized", finalized)
-      .set("payed", payed);
-    return this.httpClient.get<any>(this.api + "/payroll", { params: params });
+      .set('id', id)
+      .set('type', type)
+      .set('finalized', finalized)
+      .set('payed', payed);
+    return this.httpClient.get<any>(this.api + '/payroll', {params: params});
   }
   updatePayroll(payroll, element, type, payrollRecordId?) {
     const body = element;
     const params = new HttpParams()
-      .set("conceptType", type)
-      .set("payrollRecordId", payrollRecordId);
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.put(this.api + "/payroll/" + payroll, body, {
+      .set('conceptType', type)
+      .set('payrollRecordId', payrollRecordId);
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.httpClient.put(this.api + '/payroll/' + payroll, body, {
       headers: headers,
       params: params,
     });
@@ -97,24 +97,24 @@ export class PayrollService {
     const body = {
       payroll: payroll,
     };
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
-    return this.httpClient.post(this.api + "/payroll/", body, {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.httpClient.post(this.api + '/payroll/', body, {
       headers: headers,
     });
   }
   getPayrollRun(payment_Id) {
     return this.httpClient.get(
-      this.api + "/payroll/" + payment_Id + "/details"
+      this.api + '/payroll/' + payment_Id + '/details'
     );
   }
   getLastYearPayrolls(id: any) {
-    const params = new HttpParams().set("id", id);
-    return this.httpClient.get<any>(this.api + "/payroll/employees", {
+    const params = new HttpParams().set('id', id);
+    return this.httpClient.get<any>(this.api + '/payroll/employees', {
       params: params,
     });
   }
   getPayedHistory() {
-    return this.httpClient.get<any>(this.api + "/payroll/payed");
+    return this.httpClient.get<any>(this.api + '/payroll/payed');
   }
 
   getConcepts(arg: {
@@ -153,49 +153,49 @@ export class PayrollService {
     let params = new HttpParams();
     params =
       verified !== undefined && verified !== null
-        ? params.set("verified", verified + "")
+        ? params.set('verified', verified + '')
         : params;
     params =
       payed !== undefined && payed !== null
-        ? params.set("payed", payed + "")
+        ? params.set('payed', payed + '')
         : params;
     params =
       maternity !== undefined && maternity !== null
-        ? params.set("maternity", maternity + "")
+        ? params.set('maternity', maternity + '')
         : params;
     params =
-      csl !== undefined && csl !== null ? params.set("csl", csl + "") : params;
+      csl !== undefined && csl !== null ? params.set('csl', csl + '') : params;
     params =
       notice !== undefined && notice !== null
-        ? params.set("notice", notice + "")
+        ? params.set('notice', notice + '')
         : params;
     params =
       severance !== undefined && severance !== null
-        ? params.set("severance", severance + "")
+        ? params.set('severance', severance + '')
         : params;
     params =
       compassionate !== undefined && compassionate !== null
-        ? params.set("compassionate", compassionate + "")
+        ? params.set('compassionate', compassionate + '')
         : params;
     params =
       leaveWithoutPay !== undefined && leaveWithoutPay !== null
-        ? params.set("LeaveWithoutPay", leaveWithoutPay + "")
+        ? params.set('LeaveWithoutPay', leaveWithoutPay + '')
         : params;
     params =
       vacations !== undefined && vacations !== null
-        ? params.set("vacations", vacations + "")
+        ? params.set('vacations', vacations + '')
         : params;
     params =
       assigned !== undefined && assigned !== null
-        ? params.set("assigned", assigned + "")
+        ? params.set('assigned', assigned + '')
         : params;
     params =
       payroll !== undefined && payroll !== null
-        ? params.set("payroll", payroll)
+        ? params.set('payroll', payroll)
         : params;
     params =
       taxable !== undefined && taxable !== null
-        ? params.set("taxable", taxable + "")
+        ? params.set('taxable', taxable + '')
         : params;
     return this.httpClient.get<any>(
       `${this.api}/payroll/concepts/${type}/${id}`,
@@ -208,7 +208,7 @@ export class PayrollService {
   saveConcept(concept) {
     const { type, employee } = concept;
     const body = concept;
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(
       `${this.api}/payroll/concepts/${type}/${employee}`,
       body,
@@ -218,14 +218,14 @@ export class PayrollService {
     );
   }
   updateConcept({ type, id, query }) {
-    const body = { id, query };
-    const headers = new HttpHeaders({ "Content-Type": "application/json" });
+    const body = {id, query};
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.put(`${this.api}/payroll/concepts/${type}`, body, {
       headers: headers,
     });
   }
   deleteConcept({ type, id }) {
-    const params = new HttpParams().set("id", id);
+    const params = new HttpParams().set('id', id);
     return this.httpClient.delete(`${this.api}/payroll/concepts/${type}`, {
       params: params,
     });
@@ -233,7 +233,7 @@ export class PayrollService {
   getEmployees() {
     if (!this._employees) {
       this._employees = this.httpClient
-        .get<any>(this.api + "/admin/employee/employee")
+        .get<any>(this.api + '/admin/employee/employee')
         .pipe(
           map((data) => {
             return data;

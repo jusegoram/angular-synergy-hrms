@@ -1,41 +1,30 @@
-import { ExportAsConfig, ExportAsService } from "ngx-export-as";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { COMMA, ENTER } from "@angular/cdk/keycodes";
-import { OperationsService } from "./../../operations.service";
-import {
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
-import moment from "moment";
-import { Observable, Subscription } from "rxjs";
-import {
-  MatAutocomplete,
-  MatAutocompleteSelectedEvent,
-} from "@angular/material/autocomplete";
-import { map, startWith } from "rxjs/operators";
-import { MatChipInputEvent } from "@angular/material/chips";
+import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {OperationsService} from './../../operations.service';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
+import moment from 'moment';
+import {Observable, Subscription} from 'rxjs';
+import {MatAutocomplete, MatAutocompleteSelectedEvent,} from '@angular/material/autocomplete';
+import {map, startWith} from 'rxjs/operators';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
-  selector: "report-matrix",
-  templateUrl: "./matrix.component.html",
-  styleUrls: ["./matrix.component.scss"],
+  selector: 'report-matrix',
+  templateUrl: './matrix.component.html',
+  styleUrls: ['./matrix.component.scss'],
 })
 export class MatrixComponent implements OnInit, OnDestroy {
-  @ViewChild("positionInput", { static: false }) positionInput: ElementRef<
-    HTMLInputElement
-  >;
-  @ViewChild("positionAuto", { static: false })
+  @ViewChild('positionInput', {static: false}) positionInput: ElementRef<HTMLInputElement>;
+  @ViewChild('positionAuto', {static: false})
   matPositionAutocomplete: MatAutocomplete;
   results: any[] = [];
   clients = [];
   campaigns = [];
   CurrentTime: Observable<Date>;
   queryForm: FormGroup;
-  startOfWeek = moment().startOf("week");
-  endOfWeek = moment().endOf("week").add(1, "day");
+  startOfWeek = moment().startOf('week');
+  endOfWeek = moment().endOf('week').add(1, 'day');
 
   selectable = true;
   removable = true;
@@ -78,9 +67,9 @@ export class MatrixComponent implements OnInit, OnDestroy {
         result
           .filter(
             (item) =>
-              item.name === "Operations" ||
-              item.name === "Production" ||
-              item.name === "Training"
+              item.name === 'Operations' ||
+              item.name === 'Production' ||
+              item.name === 'Training'
           )
           .map((item) => item.positions)
           .sort()
@@ -109,15 +98,15 @@ export class MatrixComponent implements OnInit, OnDestroy {
   };
   buildForm() {
     this.queryForm = this.fb.group({
-      client: ["", Validators.required],
-      campaign: ["", Validators.required],
+      client: ['', Validators.required],
+      campaign: ['', Validators.required],
       from: [this.startOfWeek.toDate(), Validators.required],
       to: [this.endOfWeek.toDate(), Validators.required],
-      position: [""],
+      position: [''],
     });
   }
   setCampaigns(event: any) {
-    this.queryForm.value.Campaign = "";
+    this.queryForm.value.Campaign = '';
     this.campaigns = event.campaigns;
   }
   onLoadMatrix() {
@@ -125,8 +114,8 @@ export class MatrixComponent implements OnInit, OnDestroy {
     this.loadMatrix(
       client.name,
       campaign,
-      moment(from).format("MM/DD/YYYY").toString(),
-      moment(to).format("MM/DD/YYYY").toString(),
+      moment(from).format('MM/DD/YYYY').toString(),
+      moment(to).format('MM/DD/YYYY').toString(),
       this.positions
     );
   }
@@ -149,7 +138,7 @@ export class MatrixComponent implements OnInit, OnDestroy {
           };
           mappedResult.keys.shift();
           mappedResult.keys = mappedResult.keys.map((key: string) => {
-            return parseInt(key.split("-")[0], 10);
+            return parseInt(key.split('-')[0], 10);
           });
           mappedResult.header = moment(mappedResult.values.shift()).toDate();
           this.results.push(mappedResult);
@@ -166,13 +155,13 @@ export class MatrixComponent implements OnInit, OnDestroy {
       const value = event.value;
 
       // Add our page
-      if ((value || ("" && !this.positions.includes(value))).trim()) {
+      if ((value || ('' && !this.positions.includes(value))).trim()) {
         this.positions.push(value.trim());
       }
 
       // Reset the input value
       if (input) {
-        input.value = "";
+        input.value = '';
       }
 
       this.queryForm.controls.position.setValue(null);
@@ -191,27 +180,27 @@ export class MatrixComponent implements OnInit, OnDestroy {
     if (!this.positions.includes(event.option.viewValue)) {
       this.positions.push(event.option.viewValue);
     }
-    this.positionInput.nativeElement.value = "";
+    this.positionInput.nativeElement.value = '';
     this.queryForm.controls.position.setValue(null);
   }
 
   private _filterPosition(value: string): any[] {
     const filterValue = value.toString().toLowerCase();
     return this.allPositions.filter((position) => {
-      return position["name"].toLowerCase().includes(filterValue);
+      return position['name'].toLowerCase().includes(filterValue);
     });
   }
   exportAs(type) {
     const config: ExportAsConfig = {
       type: type,
-      elementId: "matrix",
+      elementId: 'matrix',
     };
     this._exportAsService
       .save(
         config,
         `${this.startOfWeek
-          .format("MM-DD-YY")
-          .toString()}_${this.endOfWeek.format("MM-DD-YY").toString()}_MATRIX`
+          .format('MM-DD-YY')
+          .toString()}_${this.endOfWeek.format('MM-DD-YY').toString()}_MATRIX`
       )
       .subscribe(() => {});
   }

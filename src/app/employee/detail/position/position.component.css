@@ -9,3 +9,8 @@ mat-form-field {
 .fill-remaining-space {
   flex: 1 1 auto;
 }
+
+span {
+  margin-left: 10px;
+  margin-right: 10px;
+}
