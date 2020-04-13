@@ -1,18 +1,20 @@
-import { SessionService } from '../session.service';
-import { Injectable } from '@angular/core';
+import {SessionService} from '../session.service';
+import {Injectable} from '@angular/core';
 import { ActivatedRoute, CanActivate, CanActivateChild, CanLoad, Router } from '@angular/router';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { GuardDialogComponent } from './guard-dialog/guard-dialog.component';
+import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
+import {GuardDialogComponent} from './guard-dialog/guard-dialog.component';
 
 @Injectable()
 export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
   returnUrl: string;
+
   constructor(
     private sessionService: SessionService,
     private router: Router,
     private dialog: MatDialog,
     private route: ActivatedRoute
-  ) {}
+  ) {
+  }
   // TODO: Re-evaluate current guards and checks to be able to reanbled routeguards.
   canActivate(): boolean {
     if (this.checkLogin()) {

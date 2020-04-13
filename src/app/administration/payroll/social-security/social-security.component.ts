@@ -1,9 +1,9 @@
-import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from './../../admin.service';
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { Page } from '../../../shared/models/page';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { CurrencyPipe } from '@angular/common';
+import {MatTableDataSource} from '@angular/material/table';
+import {AdminService} from './../../admin.service';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Page} from '../../../shared/models/page';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {CurrencyPipe} from '@angular/common';
 
 @Component({
   selector: 'app-social-security',
@@ -11,7 +11,7 @@ import { CurrencyPipe } from '@angular/common';
   styleUrls: ['./social-security.component.scss'],
 })
 export class SocialSecurityComponent implements OnInit {
-  @ViewChild('editCell', { static: true }) editCell: TemplateRef<any>;
+  @ViewChild('editCell', {static: true}) editCell: TemplateRef<any>;
 
   dataSource: MatTableDataSource<any>;
   columns: any[] = [];
@@ -24,18 +24,18 @@ export class SocialSecurityComponent implements OnInit {
 
   ngOnInit() {
     this.columns = [
-      { name: 'EARNINGS FROM', prop: 'fromEarnings', pipe: this.currencyPipe },
-      { name: 'TO', prop: 'toEarnings', pipe: this.currencyPipe },
+      {name: 'EARNINGS FROM', prop: 'fromEarnings', pipe: this.currencyPipe},
+      {name: 'TO', prop: 'toEarnings', pipe: this.currencyPipe},
       {
         name: 'INSURABLE EARNINGS',
         prop: 'weeklyInsurableEarnings',
         pipe: this.currencyPipe,
       },
-      { name: 'RCC', prop: 'employerContribution', pipe: this.currencyPipe },
-      { name: 'EMP', prop: 'employeeContribution', pipe: this.currencyPipe },
-      { name: 'TOTAL', prop: 'totalContribution', pipe: this.currencyPipe },
+      {name: 'RCC', prop: 'employerContribution', pipe: this.currencyPipe},
+      {name: 'EMP', prop: 'employeeContribution', pipe: this.currencyPipe},
+      {name: 'TOTAL', prop: 'totalContribution', pipe: this.currencyPipe},
     ];
-    this.columns.push({ name: '', cellTemplate: this.editCell, width: '50px' });
+    this.columns.push({name: '', cellTemplate: this.editCell, width: '50px'});
   }
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;

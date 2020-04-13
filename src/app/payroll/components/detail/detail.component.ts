@@ -1,15 +1,15 @@
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { EditPayrollDetailComponent } from './edit-payroll-detail/edit-payroll-detail.component';
-import { MatDialog } from '@angular/material/dialog';
-import { PayrollService } from './../../services/payroll.service';
-import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
-import { MatTableDataSource } from '@angular/material/table';
-import { ChartData, Datum } from '../../../shared/models/chart-data.model';
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { MatStepper } from '@angular/material/stepper';
-import { noop } from 'rxjs';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {EditPayrollDetailComponent} from './edit-payroll-detail/edit-payroll-detail.component';
+import {MatDialog} from '@angular/material/dialog';
+import {PayrollService} from './../../services/payroll.service';
+import {MinuteSecondsPipe} from './../../../shared/pipes/minute-seconds.pipe';
+import {MatTableDataSource} from '@angular/material/table';
+import {ChartData, Datum} from '../../../shared/models/ChartData';
+import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {MatStepper} from '@angular/material/stepper';
+import {noop} from 'rxjs';
 
 @Component({
   selector: 'app-detail',
@@ -17,9 +17,9 @@ import { noop } from 'rxjs';
   styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
-  @ViewChild('myTable', { static: false }) table: any;
-  @ViewChild('stepper', { static: false }) stepper: MatStepper;
-  @ViewChild('failedFinalizeSwal', { static: false })
+  @ViewChild('myTable', {static: false}) table: any;
+  @ViewChild('stepper', {static: false}) stepper: MatStepper;
+  @ViewChild('failedFinalizeSwal', {static: false})
   failedFinalizeSwal: SwalComponent;
 
   rows = [];
@@ -43,6 +43,7 @@ export class DetailComponent implements OnInit {
   filterItems: any;
   filterValue = '';
   user;
+
   constructor(
     private route: ActivatedRoute,
     private zone: NgZone,
@@ -94,7 +95,8 @@ export class DetailComponent implements OnInit {
         aligncaptionwithcanvas: '0',
         captionpadding: '0',
         decimals: '1',
-        plottooltext: '<b>$percentValue</b> of our employees are on <b>$label</b>',
+        plottooltext:
+          '<b>$percentValue</b> of our employees are on <b>$label</b>',
         centerlabel: 'Employees: $value',
         theme: 'fusion',
         exportenabled: '1',
@@ -172,8 +174,8 @@ export class DetailComponent implements OnInit {
           index === 5 || index === 7 || index === 9 || index === 11
             ? transform
             : (Math.round(data[key] * 100) / 100).toLocaleString('en-US', {
-                minimumFractionDigits: 2,
-              });
+              minimumFractionDigits: 2,
+            });
         return {
           label: finalResult,
           value: value,
@@ -211,7 +213,7 @@ export class DetailComponent implements OnInit {
         return {
           label: finalResult,
           value: data.reduce((a, b) => {
-            return { [key]: a[key].concat(b[key]) };
+            return {[key]: a[key].concat(b[key])};
           })[key].length,
         };
       } else {

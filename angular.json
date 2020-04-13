@@ -26,7 +26,8 @@
               "src/assets/styles/app.scss",
               "node_modules/@sweetalert2/theme-material-ui/material-ui.scss"
             ],
-            "scripts": []
+            "scripts": [
+            ]
           },
           "configurations": {
             "production": {

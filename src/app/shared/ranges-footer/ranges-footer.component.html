@@ -1,0 +1,6 @@
+<div class="mat-calendar-footer" fxLayout="row" fxLayoutAlign="space-around">
+  <button mat-button
+          color="warn"
+          *ngFor="let range of ranges"
+          (click)="setRange(range.key)">{{range.label}}</button>
+</div>

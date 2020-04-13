@@ -1,11 +1,11 @@
-import { TrackersComponent } from './trackers/trackers.component';
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {TrackersComponent} from './trackers/trackers.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 export const routes: Routes = [
   {
     path: '',
-    children: [{ path: 'trackers', component: TrackersComponent }],
+    children: [{path: 'trackers', component: TrackersComponent}],
   },
 ];
 

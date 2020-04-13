@@ -1,14 +1,14 @@
-import { AdminService } from '../../admin.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { SessionService } from '../../../session/session.service';
-import { Employee } from '../../../employee/employee.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { User } from '../../../session/user.model';
+import {AdminService} from '../../admin.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Router} from '@angular/router';
+import {SessionService} from '../../../session/session.service';
+import {Employee} from '../../../shared/models/employee/employee';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {User} from '../../../session/User';
 
 @Component({
   selector: 'adm-create-user',
@@ -88,7 +88,7 @@ export class CreateUserComponent implements OnInit {
     return this.selectedEmployee;
   }
   onSubmit() {
-    const log: object = { date: new Date(), log: 'User Creation' };
+    const log: object = {date: new Date(), log: 'User Creation'};
     const user = new User(
       this.myForm.value.username,
       this.myForm.value.password,

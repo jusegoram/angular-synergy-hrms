@@ -1,6 +1,6 @@
-import { PayslipDialogComponent } from './payslip-dialog/payslip-dialog.component';
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {PayslipDialogComponent} from './payslip-dialog/payslip-dialog.component';
+import {Component, Input, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payslips',
@@ -10,7 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
 export class PayslipsComponent implements OnInit {
   @Input() payrollRun: any[];
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog) {
+  }
 
   ngOnInit() {}
   openDialog() {

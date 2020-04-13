@@ -1,0 +1,11 @@
+<swal
+  #deleteSwal
+  title="ARE YOU SURE"
+  text="You can't undo a deletion"
+  icon="question"
+  [showCancelButton]="true"
+  [focusCancel]="true"
+  (confirm)="onConfirm($event)"
+  (cancel)="onCancel($event)"
+>
+</swal>

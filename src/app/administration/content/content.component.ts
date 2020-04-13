@@ -1,6 +1,6 @@
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Menu, MenuItems } from './../../shared/menu-items/menu-items';
-import { Component, OnInit } from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {Menu, MenuItems} from './../../shared/menu-items/menu-items';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-content',
@@ -10,6 +10,7 @@ import { Component, OnInit } from '@angular/core';
 export class ContentComponent implements OnInit {
   public menus: Menu[];
   public selectedMenu: Menu;
+
   constructor(private menuItem: MenuItems, private snackbar: MatSnackBar) {
     this.createSelectedItems();
   }
@@ -46,7 +47,7 @@ export class ContentComponent implements OnInit {
 
   onAddSubmenu(name, state) {
     if (name !== '' && state !== '') {
-      this.selectedMenu.children.push({ name: name, state: state });
+      this.selectedMenu.children.push({name: name, state: state});
     }
   }
   onDelete() {

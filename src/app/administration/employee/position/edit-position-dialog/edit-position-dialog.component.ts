@@ -1,7 +1,7 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { EditDialogComponent } from '../../workpattern/edit-dialog/edit-dialog.component';
-import { Position } from '../../models/positions-models';
+import {Component, Inject} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {EditDialogComponent} from '../../workpattern/edit-dialog/edit-dialog.component';
+import {Position} from '../../models/positions-models';
 
 @Component({
   selector: 'app-edit-position-dialog',

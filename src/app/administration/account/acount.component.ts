@@ -1,12 +1,12 @@
-import { SessionService } from '../../session/session.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '../admin.service';
-import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import {SessionService} from '../../session/session.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {AdminService} from '../admin.service';
+import {EditUserDialogComponent} from './edit-user-dialog/edit-user-dialog.component';
 
 @Component({
   selector: 'app-account',
@@ -14,12 +14,18 @@ import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.com
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent implements OnInit {
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
 
   dataSource;
 
-  displayedColumns = ['employee.employeeId', 'firstName', 'employee.status', 'role', 'details'];
+  displayedColumns = [
+    'employee.employeeId',
+    'firstName',
+    'employee.status',
+    'role',
+    'details',
+  ];
   constructor(
     private sessionService: SessionService,
     private adminService: AdminService,

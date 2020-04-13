@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
-import { PayrollService } from '../../../services/payroll.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
+import {PayrollService} from '../../../services/payroll.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
+import {MatTableDataSource} from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-non-finalized-payrolls',
@@ -13,8 +13,8 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./non-finalized-payrolls.component.scss'],
 })
 export class NonFinalizedPayrollsComponent implements OnInit {
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   dataSource: any;
   displayedColumns = [
@@ -31,9 +31,9 @@ export class NonFinalizedPayrollsComponent implements OnInit {
   ];
   filterValue = '';
   type = [
-    { type: '', view: 'All' },
-    { type: 'BI-WEEKLY', view: 'Bi-Weekly Payroll' },
-    { type: 'SEMIMONTHLY', view: 'Semi-Monthly Payroll' },
+    {type: '', view: 'All'},
+    {type: 'BI-WEEKLY', view: 'Bi-Weekly Payroll'},
+    {type: 'SEMIMONTHLY', view: 'Semi-Monthly Payroll'},
   ];
   refreshEvent: any;
   selectedType = '';

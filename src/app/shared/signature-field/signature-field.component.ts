@@ -1,6 +1,6 @@
-import { Component, forwardRef, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import {Component, forwardRef, ViewChild} from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {SignaturePad} from 'angular2-signaturepad/signature-pad';
 
 /*
   Generated class for the SignatureField component.

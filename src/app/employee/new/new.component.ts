@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '../employee.service';
-import { Employee } from '../employee.model';
-import { Router } from '../../../../node_modules/@angular/router';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmployeeService} from '../employee.service';
+import {Employee} from '../../shared/models/employee/employee';
+import {Router} from '../../../../node_modules/@angular/router';
+import {OnSuccessAlertComponent} from '../../shared/modals/on-success-alert/on-success-alert.component';
+import {OnErrorAlertComponent} from '../../shared/modals/on-error-alert/on-error-alert.component';
 
 @Component({
   selector: 'new',
@@ -10,76 +12,51 @@ import { Router } from '../../../../node_modules/@angular/router';
   styleUrls: ['./new.component.scss'],
 })
 export class NewComponent implements OnInit {
-  created = false;
-  mainForm: FormGroup;
-  companyForm: FormGroup;
+  @ViewChild('successAlert', {static: false})
+  successAlert: OnSuccessAlertComponent;
+  @ViewChild('onErrorAlert', {static: false})
+  onErrorAlert: OnErrorAlertComponent;
+  formGroup: FormGroup;
   auth = false;
-  items = this.employeeService.status;
-  reaptimes = [
-    { value: 0, viewValue: '0' },
-    { value: 1, viewValue: '1' },
-    { value: 2, viewValue: '2' },
-    { value: 3, viewValue: '3' },
-    { value: 4, viewValue: '4' },
-    { value: 5, viewValue: '5' },
-    { value: 6, viewValue: '6' },
-    { value: 7, viewValue: '7' },
-    { value: 8, viewValue: '8' },
-    { value: 9, viewValue: '9' },
-    { value: 10, viewValue: '10' },
-  ];
 
   genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' },
+    {value: 'male', viewValue: 'Male'},
+    {value: 'female', viewValue: 'Female'},
   ];
 
-  constructor(private employeeService: EmployeeService, private router: Router) {}
+  constructor(
+    private _service: EmployeeService,
+    private _formBuilder: FormBuilder,
+    private router: Router
+  ) {
+  }
+
 
   ngOnInit() {
-    this.mainForm = new FormGroup({
-      idToggle: new FormControl(true),
-      employeeId: new FormControl(),
-      firstName: new FormControl('', [Validators.required]),
-      middleName: new FormControl(''),
-      lastName: new FormControl('', [Validators.required]),
-      gender: new FormControl('', [Validators.required]),
-      status: new FormControl('', [Validators.required]),
-      socialSecurity: new FormControl('', [Validators.required]),
-    });
+    this.buildForm();
+  }
 
-    this.companyForm = new FormGroup({
-      client: new FormControl(),
-      campaign: new FormControl(),
-      supervisor: new FormControl(),
-      trainer: new FormControl(),
-      trainingGroupRef: new FormControl(),
-      trainingGroupNum: new FormControl(),
-      hireDate: new FormControl(),
-      terminationDate: new FormControl(),
-      reapplicant: new FormControl(),
-      reapplicantTimes: new FormControl(),
+  buildForm() {
+    this.formGroup = this._formBuilder.group({
+      firstName: ['', Validators.required],
+      middleName: [''],
+      lastName: ['', Validators.required],
+      gender: ['', Validators.required],
+      status: ['', Validators.required],
+      socialSecurity: ['', Validators.required],
     });
   }
 
-  onSubmit() {
-    const employee = new Employee(
-      '',
-      parseInt(this.mainForm.value.employeeId, 10),
-      this.mainForm.value.firstName,
-      this.mainForm.value.lastName,
-      this.mainForm.value.socialSecurity,
-      this.mainForm.value.status,
-      this.mainForm.value.gender,
-      this.mainForm.value.middleName
-    );
-    this.employeeService.saveEmployee(employee).subscribe(
-      (result) => {
-        this.router.navigateByUrl('/employee/detail?id=' + result['_id']);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+  async onSubmit() {
+    const employee: Employee = {
+      ...this.formGroup.value
+    };
+    try {
+      const result = await this._service.saveEmployee(employee).toPromise();
+      setTimeout(() => this.router.navigateByUrl('/employee/detail?id=' + result['_id']), 200);
+      return this.successAlert.fire();
+    } catch (e) {
+      return this.onErrorAlert.fire();
+    }
   }
 }

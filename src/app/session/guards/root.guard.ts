@@ -1,10 +1,12 @@
-import { SessionService } from '../session.service';
-import { CanActivate, CanLoad, Router } from '@angular/router';
-import { Injectable } from '@angular/core';
+import {SessionService} from '../session.service';
+import {CanActivate, CanLoad, Router} from '@angular/router';
+import {Injectable} from '@angular/core';
 
 @Injectable()
 export class RootGuard implements CanLoad, CanActivate {
-  constructor(private sessionService: SessionService, private router: Router) {}
+  constructor(private sessionService: SessionService, private router: Router) {
+  }
+
   canLoad(): boolean {
     if (this.checkLogin()) {
       return true;

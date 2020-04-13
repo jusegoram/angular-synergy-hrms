@@ -99,7 +99,7 @@ export class StatusDialogComponent implements AfterViewInit {
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({ state: false, message: '' });
+    this.dialogRef.close({state: false, message: ''});
   }
 
   /*logDebug(){

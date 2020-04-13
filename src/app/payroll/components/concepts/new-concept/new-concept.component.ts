@@ -1,14 +1,14 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from './../../../services/payroll.service';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PayrollConcept } from '../concepts.model';
-import { SessionService } from '../../../../session/session.service';
-import { Employee } from '../../../../employee/employee.model';
-import { map, startWith } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import {CurrencyPipe, DatePipe} from '@angular/common';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {PayrollService} from './../../../services/payroll.service';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PayrollConcept} from '../Concepts';
+import {SessionService} from '../../../../session/session.service';
+import {Employee} from '../../../../shared/models/employee/employee';
+import {map, startWith} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-new-concept',
@@ -20,7 +20,7 @@ export class NewConceptComponent implements OnInit {
   deductions: PayrollConcept[];
   otherPayments: PayrollConcept[];
   columns = [];
-  rows = new Array();
+  rows = [];
   ColumnMode = ColumnMode;
   messages = {
     emptyMessage: 'PLEASE SELECT AN EMPLOYEE AND A CONCEPT TYPE TO LOAD INFO.',
@@ -29,45 +29,45 @@ export class NewConceptComponent implements OnInit {
   conceptTypeList = [
     {
       type: 'Taxable Bonus',
-      concepts: [{ concept: 'Other Bonus' }],
+      concepts: [{concept: 'Other Bonus'}],
     },
     {
       type: 'Non-Taxable Bonus',
-      concepts: [{ concept: 'Attendance Bonus (Falcon)' }],
+      concepts: [{concept: 'Attendance Bonus (Falcon)'}],
     },
     {
       type: 'Deduction',
       concepts: [
-        { concept: 'Magistrate Court' },
-        { concept: 'Loan/Salary Advance' },
-        { concept: 'Police Record' },
-        { concept: 'Headset' },
-        { concept: 'Uniform' },
-        { concept: 'Quick Stop / AAA Loans' },
-        { concept: 'Overpayment' },
-        { concept: 'Early / Break Offender' },
+        {concept: 'Magistrate Court'},
+        {concept: 'Loan/Salary Advance'},
+        {concept: 'Police Record'},
+        {concept: 'Headset'},
+        {concept: 'Uniform'},
+        {concept: 'Quick Stop / AAA Loans'},
+        {concept: 'Overpayment'},
+        {concept: 'Early / Break Offender'},
       ],
     },
     {
       type: 'Other Payments',
       concepts: [
-        { concept: 'Certify Sick Leave' },
-        { concept: 'Compassionate Leave' },
-        { concept: 'Maternity Leave' },
-        { concept: 'Training Hours' },
-        { concept: 'Training Stipend' },
-        { concept: 'Time off System' },
-        { concept: 'Time off System 1.5' },
-        { concept: 'Time off System 2X' },
-        { concept: 'Card (cleaners/Security)' },
-        { concept: 'Card 1.5' },
-        { concept: 'Card 2X' },
-        { concept: 'Salary Differences (Discrepancies)' },
+        {concept: 'Certify Sick Leave'},
+        {concept: 'Compassionate Leave'},
+        {concept: 'Maternity Leave'},
+        {concept: 'Training Hours'},
+        {concept: 'Training Stipend'},
+        {concept: 'Time off System'},
+        {concept: 'Time off System 1.5'},
+        {concept: 'Time off System 2X'},
+        {concept: 'Card (cleaners/Security)'},
+        {concept: 'Card 1.5'},
+        {concept: 'Card 2X'},
+        {concept: 'Salary Differences (Discrepancies)'},
       ],
     },
     {
       type: 'Final Payments',
-      concepts: [{ concept: 'Severance' }, { concept: 'Notice Payment' }],
+      concepts: [{concept: 'Severance'}, {concept: 'Notice Payment'}],
     },
   ];
 
@@ -89,11 +89,11 @@ export class NewConceptComponent implements OnInit {
 
   ngOnInit() {
     this.columns = [
-      { name: 'CONCEPT', prop: 'type' },
-      { name: 'REASON', prop: 'reason' },
-      { name: 'AMOUNT', prop: 'amount', pipe: this.currency },
-      { name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe() },
-      { name: 'VERIFIED', prop: 'verified' },
+      {name: 'CONCEPT', prop: 'type'},
+      {name: 'REASON', prop: 'reason'},
+      {name: 'AMOUNT', prop: 'amount', pipe: this.currency},
+      {name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe()},
+      {name: 'VERIFIED', prop: 'verified'},
     ];
     this.getEmployees();
     this.buildForm();
@@ -104,6 +104,7 @@ export class NewConceptComponent implements OnInit {
       })
     );
   }
+
   isNotice = (concept) => concept === 'Notice Payment';
   isSeverance = (concept) => concept === 'Severance';
   isCompassionateLeave = (concept) => concept === 'Compassionate Leave';
@@ -115,6 +116,7 @@ export class NewConceptComponent implements OnInit {
       transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy'),
     };
   }
+
   buildForm() {
     this.conceptFormGroup = this.fb.group({
       employee: ['', Validators.required],

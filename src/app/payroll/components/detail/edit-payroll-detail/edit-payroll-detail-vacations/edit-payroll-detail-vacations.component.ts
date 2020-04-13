@@ -1,10 +1,10 @@
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import {CurrencyPipe, DatePipe} from '@angular/common';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PayrollService } from '../../../../services/payroll.service';
-import { noop } from 'rxjs';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {PayrollService} from '../../../../services/payroll.service';
+import {noop} from 'rxjs';
 
 @Component({
   selector: 'app-edit-payroll-detail-vacations',
@@ -12,7 +12,7 @@ import { noop } from 'rxjs';
   styleUrls: ['./edit-payroll-detail-vacations.component.scss'],
 })
 export class EditPayrollDetailVacationsComponent implements OnInit {
-  @ViewChild('editCell', { static: true }) editCell: TemplateRef<any>;
+  @ViewChild('editCell', {static: true}) editCell: TemplateRef<any>;
   @ViewChild('confirmSwal') private confirmSwal: SwalComponent;
   @ViewChild('successSwal') private successSwal: SwalComponent;
 
@@ -33,10 +33,10 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   ngOnInit() {
     this.user = this._payrollService.getDecodedToken();
     this.columns = [
-      { name: 'FROM', prop: 'from', pipe: this.datePipe() },
-      { name: 'TO', prop: 'to', pipe: this.datePipe() },
-      { name: 'AMOUNT', prop: 'amount', width: 85, pipe: this._currencyPipe },
-      { name: 'CONFIRM | DELETE', cellTemplate: this.editCell, width: 155 },
+      {name: 'FROM', prop: 'from', pipe: this.datePipe()},
+      {name: 'TO', prop: 'to', pipe: this.datePipe()},
+      {name: 'AMOUNT', prop: 'amount', width: 85, pipe: this._currencyPipe},
+      {name: 'CONFIRM | DELETE', cellTemplate: this.editCell, width: 155},
     ];
     this.buildForm();
     this.loadData();
@@ -136,7 +136,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
     }
   }
   deleteValue(item, index) {
-    this._payrollService.deleteConcept({ type: 'Other Payments', id: item._id }).subscribe((result) => {
+    this._payrollService.deleteConcept({type: 'Other Payments', id: item._id}).subscribe((result) => {
       this.rows.splice(index, 1);
     });
   }

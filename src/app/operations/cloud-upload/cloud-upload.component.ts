@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { FileUploader } from 'ng2-file-upload';
-import { environment } from '../../../environments/environment';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from '../operations.service';
+import {Component} from '@angular/core';
+import {FileUploader} from 'ng2-file-upload';
+import {environment} from '../../../environments/environment';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {OperationsService} from '../operations.service';
 
 @Component({
   selector: 'app-cloud-upload',
@@ -42,7 +42,7 @@ export class CloudUploadComponent {
       value: '/operations/hourTemplate',
       viewValue: 'Hours Template',
     },
-    { value: '/operations/kpiTemplate', viewValue: 'KPI Template' },
+    {value: '/operations/kpiTemplate', viewValue: 'KPI Template'},
   ];
   templateSelected = '';
   // public uploader: FileUploader = new FileUploader({
@@ -113,7 +113,7 @@ export class CloudUploadComponent {
       (data: BlobPart) => {
         this.openSnackBar('Download started', 'thanks');
         const a = document.createElement('a');
-        const blob = new Blob([data], { type: 'text/csv' }),
+        const blob = new Blob([data], {type: 'text/csv'}),
           url = window.URL.createObjectURL(blob);
 
         a.href = url;

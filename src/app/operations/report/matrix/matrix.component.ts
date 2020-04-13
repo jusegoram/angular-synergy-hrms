@@ -1,13 +1,13 @@
-import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { OperationsService } from './../../operations.service';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {OperationsService} from './../../operations.service';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild,} from '@angular/core';
 import moment from 'moment';
-import { Observable, Subscription } from 'rxjs';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
-import { MatChipInputEvent } from '@angular/material/chips';
+import {Observable, Subscription} from 'rxjs';
+import {MatAutocomplete, MatAutocompleteSelectedEvent,} from '@angular/material/autocomplete';
+import {map, startWith} from 'rxjs/operators';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'report-matrix',
@@ -15,8 +15,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
   styleUrls: ['./matrix.component.scss'],
 })
 export class MatrixComponent implements OnInit, OnDestroy {
-  @ViewChild('positionInput', { static: false }) positionInput: ElementRef<HTMLInputElement>;
-  @ViewChild('positionAuto', { static: false })
+  @ViewChild('positionInput', {static: false}) positionInput: ElementRef<HTMLInputElement>;
+  @ViewChild('positionAuto', {static: false})
   matPositionAutocomplete: MatAutocomplete;
   results: any[] = [];
   clients = [];
@@ -61,6 +61,12 @@ export class MatrixComponent implements OnInit, OnDestroy {
       const filtered: any[] = [].concat.apply(
         [],
         result
+          .filter(
+            (item) =>
+              item.name === 'Operations' ||
+              item.name === 'Production' ||
+              item.name === 'Training'
+          )
           .filter((item) => item.name === 'Operations' || item.name === 'Production' || item.name === 'Training')
           .map((item) => item.positions)
           .sort()

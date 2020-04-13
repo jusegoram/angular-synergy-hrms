@@ -51,7 +51,8 @@
     "npm": "^6.13.7",
     "pretty-quick": "^2.0.1",
     "rxjs": "^6.5.4",
-    "screenfull": "^5.0.1",
+    "saturn-datepicker": "^8.0.5",
+    "screenfull": "^5.0.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "sweetalert2": "^9.7.2",
@@ -82,7 +83,7 @@
     "prettier": "^2.0.4",
     "protractor": "^5.4.3",
     "ts-node": "^8.6.2",
-    "tslint": "^6.0.0",
+    "tslint": "^6.1.1",
     "typescript": "^3.7.5"
   },
   "husky": {

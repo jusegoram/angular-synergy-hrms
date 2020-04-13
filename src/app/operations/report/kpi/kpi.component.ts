@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { OperationsService } from '../../operations.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {OperationsService} from '../../operations.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -15,28 +15,28 @@ export class KpiComponent implements OnInit {
     {
       name: 'TIB',
       kpi: [
-        { name: 'Quality' },
-        { name: 'PrimaryClosing' },
-        { name: 'SPC' },
-        { name: 'SPH' },
-        { name: 'GrossClosing' },
-        { name: 'Adherence' },
+        {name: 'Quality'},
+        {name: 'PrimaryClosing'},
+        {name: 'SPC'},
+        {name: 'SPH'},
+        {name: 'GrossClosing'},
+        {name: 'Adherence'},
       ],
     },
     {
       name: 'CIT',
       kpi: [
-        { name: 'OCR' },
-        { name: 'UCR' },
-        { name: 'HomeSecurity' },
-        { name: 'Quality' },
-        { name: 'NRPC' },
-        { name: 'GRPO' },
-        { name: 'Satellite' },
-        { name: 'DukeRSP' },
-        { name: 'AmericanWater' },
-        { name: 'GeekSquad' },
-        { name: 'Quality' },
+        {name: 'OCR'},
+        {name: 'UCR'},
+        {name: 'HomeSecurity'},
+        {name: 'Quality'},
+        {name: 'NRPC'},
+        {name: 'GRPO'},
+        {name: 'Satellite'},
+        {name: 'DukeRSP'},
+        {name: 'AmericanWater'},
+        {name: 'GeekSquad'},
+        {name: 'Quality'},
       ],
     },
     {

@@ -20,12 +20,7 @@
       "dom"
     ]
   },
-  "angularCompilerOptions": {
-    "enableIvy": false
-  },
   "include": [
-    "src/**/*",
-    "node_modules/ngx-quill/src/quill.module.ts",
-    "node_modules/ngx-quill/src/quill-editor.component.ts"
+    "src/**/*"
   ]
 }

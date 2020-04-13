@@ -1,10 +1,10 @@
-import { Employee } from '../employee.model';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, SortDirection } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '../employee.service';
-import { ActivatedRoute } from '@angular/router';
+import {Employee} from '../../shared/models/employee/employee';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort, SortDirection} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {EmployeeService} from '../employee.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   templateUrl: 'manage.component.html',
@@ -12,8 +12,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ManageComponent implements OnInit, AfterViewInit {
   // FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   employees: Employee[];
   selectedEmployees: string[] = [];
   // dataSource = any;

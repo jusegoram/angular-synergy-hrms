@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Department, Position } from '../models/positions-models';
-import { AdminService } from '../../admin.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTableDataSource } from '@angular/material/table';
-import { CreateDepartmentDialogComponent } from './create-department-dialog/create-department-dialog.component';
-import { EditPositionDialogComponent } from './edit-position-dialog/edit-position-dialog.component';
+import {Component, OnInit} from '@angular/core';
+import {Department, Position} from '../models/positions-models';
+import {AdminService} from '../../admin.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatTableDataSource} from '@angular/material/table';
+import {CreateDepartmentDialogComponent} from './create-department-dialog/create-department-dialog.component';
+import {EditPositionDialogComponent} from './edit-position-dialog/edit-position-dialog.component';
 
 @Component({
   selector: 'app-position',
@@ -152,22 +152,33 @@ export class PositionComponent implements OnInit {
     );
   }
   newPosition(position) {
-    const newPosition = new Position('', position.positionId, position.name, position.baseWage);
-    if (newPosition.name !== '' && newPosition.positionId !== '' && newPosition.baseWage !== null) {
-      this._admService.createPosition(newPosition, this.selectedDep._id).subscribe(
-        (data: Department) => {
-          this._admService.clearDepartment();
-          this.loadDepartments();
-          this.openSuccess();
-          this.clearNewPosition();
-          this.selectedDep = data;
-          this.onChange(this.selectedDep.positions);
-        },
-        (error) => {
-          console.error(error);
-          this.openError();
-        }
-      );
+    const newPosition = new Position(
+      '',
+      position.positionId,
+      position.name,
+      position.baseWage
+    );
+    if (
+      newPosition.name !== '' &&
+      newPosition.positionId !== '' &&
+      newPosition.baseWage !== null
+    ) {
+      this._admService
+        .createPosition(newPosition, this.selectedDep._id)
+        .subscribe(
+          (data: Department) => {
+            this._admService.clearDepartment();
+            this.loadDepartments();
+            this.openSuccess();
+            this.clearNewPosition();
+            this.selectedDep = data;
+            this.onChange(this.selectedDep.positions);
+          },
+          (error) => {
+            console.error(error);
+            this.openError();
+          }
+        );
     } else {
       this.openError();
     }

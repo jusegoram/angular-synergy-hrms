@@ -1,11 +1,11 @@
-import { FormControl } from '@angular/forms';
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { map, startWith } from 'rxjs/operators';
-import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
-import { MinuteSecondsPipe } from '../../../../shared/pipes/minute-seconds.pipe';
-import { PayrollService } from '../../../services/payroll.service';
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import {FormControl} from '@angular/forms';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {map, startWith} from 'rxjs/operators';
+import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
+import {MinuteSecondsPipe} from '../../../../shared/pipes/minute-seconds.pipe';
+import {PayrollService} from '../../../services/payroll.service';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-payslip-dialog',
@@ -13,13 +13,14 @@ import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
   styleUrls: ['./payslip-dialog.component.scss'],
 })
 export class PayslipDialogComponent implements OnInit {
-  @ViewChild('sentSwal', { static: false }) sentSwal: SwalComponent;
-  @ViewChild('downloadSwal', { static: false }) downloadSwal: SwalComponent;
+  @ViewChild('sentSwal', {static: false}) sentSwal: SwalComponent;
+  @ViewChild('downloadSwal', {static: false}) downloadSwal: SwalComponent;
   myControl: FormControl;
   filteredEmployees: any;
   allEmployees: any;
   employeePayslip: any;
   bulkPayslipSent = false;
+
   constructor(
     private _exportasService: ExportAsService,
     public dialogRef: MatDialogRef<PayslipDialogComponent>,
@@ -78,7 +79,8 @@ export class PayslipDialogComponent implements OnInit {
   onSendAll() {
     const { payment_Id } = this.data[0];
     this._payrollService.sendPayslips('all', payment_Id).subscribe((result) => {
-      this.sentSwal.fire().then((fired) => {});
+      this.sentSwal.fire().then((fired) => {
+      });
     });
     this.dialogRef.close();
   }

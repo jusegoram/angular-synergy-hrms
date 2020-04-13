@@ -1,13 +1,13 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AdminService } from '../../admin.service';
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Employee } from '../../../employee/employee.model';
-import { map, startWith } from 'rxjs/operators';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {AdminService} from '../../admin.service';
+import {Component, ElementRef, Inject, OnInit, ViewChild,} from '@angular/core';
+import {MatAutocomplete, MatAutocompleteSelectedEvent,} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {FormBuilder, FormControl, FormGroup, Validators,} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {Employee} from '../../../shared/models/employee/employee';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-user-dialog',
@@ -42,11 +42,11 @@ export class EditUserDialogComponent implements OnInit {
   filteredClients: Observable<any[]>;
   clients: string[] = [];
   allClients: any[] = [];
-  @ViewChild('pageInput', { static: false }) pageInput: ElementRef<HTMLInputElement>;
-  @ViewChild('pageAuto', { static: false }) matAutocomplete: MatAutocomplete;
+  @ViewChild('pageInput', {static: false}) pageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('pageAuto', {static: false}) matAutocomplete: MatAutocomplete;
 
-  @ViewChild('clientInput', { static: false }) clientInput: ElementRef<HTMLInputElement>;
-  @ViewChild('clientAuto', { static: false })
+  @ViewChild('clientInput', {static: false}) clientInput: ElementRef<HTMLInputElement>;
+  @ViewChild('clientAuto', {static: false})
   matClientAutocomplete: MatAutocomplete;
 
   constructor(

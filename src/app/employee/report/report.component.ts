@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { EmployeeService } from '../employee.service';
+import {Component, OnInit} from '@angular/core';
+import {EmployeeService} from '../employee.service';
 import * as XLSX from 'xlsx';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MatTableDataSource} from '@angular/material/table';
 import moment from 'moment';
+import {RangesFooterComponent} from '../../shared/ranges-footer/ranges-footer.component';
 
 @Component({
   selector: 'app-report',
@@ -11,11 +12,13 @@ import moment from 'moment';
   styleUrls: ['./report.component.scss'],
 })
 export class ReportComponent implements OnInit {
+  rangesFooter = RangesFooterComponent;
   private auth: any;
   data: any;
   clients: any[];
   campaigns: any[];
   status: any[];
+  superiors: any;
   dataSource: any;
   reportForm: FormGroup;
   queryForm: FormGroup;
@@ -102,36 +105,48 @@ export class ReportComponent implements OnInit {
     this.commentsInfoToggle = !this.commentsInfoToggle;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.auth = this.employeeService.getDecodedToken();
-    this.employeeService.getClient(this.auth.clients).subscribe((data) => (this.clients = data));
     this.buildForm();
+    try {
+      this.clients = await this.employeeService.getClient(this.auth.clients).toPromise();
+      this.superiors = await this.employeeService.getEmployeeManagers(this.auth.clients).toPromise();
+    } catch (e) {
+      return;
+    }
+  }
+
+  onFilterRemoved(item: string, control?: string) {
+    const items = this.queryForm.controls[control].value as string[];
+    this.removeFirst(items, item);
+    this.queryForm.controls[control].setValue(items); // To trigger change detection
+  }
+
+  private removeFirst<T>(array: T[], toRemove: T): void {
+    const index = array.indexOf(toRemove);
+    if (index !== -1) {
+      array.splice(index, 1);
+    }
   }
 
   buildForm() {
     this.reportForm = this.fb.group({
-      statusCheck: [false],
-      clientCheck: [this.auth.clients.length > 0],
-      campaignCheck: [false],
-      supervisorCheck: [false],
       hireDateCheck: [false],
       terminationDateCheck: [false],
-      managerCheck: [false],
-      trainingGroupCheck: [false],
     });
 
     this.queryForm = this.fb.group({
-      status: [''],
-      client: [''],
-      campaign: [''],
-      supervisor: [''],
-      hireDateFrom: [''],
-      hireDateTo: [new Date()],
-      terminationDateFrom: [''],
-      terminationDateTo: [new Date()],
-      manager: [''],
-      trainingGroup: [''],
-      trainingNo: [''],
+      status: [],
+      client: [],
+      campaign: [],
+      manager: [],
+      shiftManager: [],
+      supervisor: [],
+      trainer: [],
+      hireDate: [],
+      terminationDate: [],
+      trainingGroup: ['GEN'],
+      trainingNo: [],
     });
 
     this.sheetControl = new FormControl();
@@ -146,35 +161,59 @@ export class ReportComponent implements OnInit {
     this.commentsInfoToggle = false;
   }
 
-  getReport() {
-    const queryParam = this.queryForm.value;
-    const obj = {
-      status: queryParam.status,
-      'company.client':
-        this.auth.clients.length > 0 && !queryParam.client.name ? { $in: this.auth.clients } : queryParam.client.name,
-      'company.campaign': queryParam.campaign.name,
-      'company.supervisor': queryParam.supervisor,
-      'company.manager': queryParam.manager,
-      'company.hireDate': {
-        $gte: moment(queryParam.hireDateFrom).format('MM/DD/YYYY').toString(),
-        $lte: moment(queryParam.hireDateTo).format('MM/DD/YYYY').toString(),
-      },
-      'company.terminationDate': {
-        $gte: moment(queryParam.terminationDateFrom).format('MM/DD/YYYY').toString(),
-        $lte: moment(queryParam.terminationDateTo).format('MM/DD/YYYY').toString(),
-      },
-      'company.trainingGroupRef': queryParam.trainingGroup,
-      'company.trainingGroupNum': queryParam.trainingNo,
-    };
-    this.employeeService.getReport(obj).subscribe(
-      (data) => {
-        this.buildTable(data);
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
+  getStatusQuery(item) {
+    const query = {$in: item};
+    if (item.length > 0) {
+      return query;
+    }
+    this.auth.clients.length > 0 ?
+      query.$in = this.auth.clients :
+      query.$in = [/./];
+    return query;
   }
+
+  async getReport() {
+    // console.log(this.queryForm.value);
+    const {value: q} = this.queryForm;
+    //     // const obj = {
+    //     //   status: this.getStatusQuery(q.status),
+    //     //   'company.client':
+    //     //     this.auth.clients.length > 0 && !queryParam.client.name
+    //     //       ? { $in: this.auth.clients }
+    //     //       : queryParam.client.name,
+    //     //   'company.campaign': queryParam.campaign.name,
+    //     //   'company.supervisor': queryParam.supervisor,
+    //     //   'company.manager': queryParam.manager,
+    //     //   'company.hireDate': {
+    //     //     $gte: moment(queryParam.hireDateFrom).format('MM/DD/YYYY').toString(),
+    //     //     $lte: moment(queryParam.hireDateTo).format('MM/DD/YYYY').toString(),
+    //     //   },
+    //     //   'company.terminationDate': {
+    //     //     $gte: moment(queryParam.terminationDateFrom)
+    //     //       .format('MM/DD/YYYY')
+    //     //       .toString(),
+    //     //     $lte: moment(queryParam.terminationDateTo)
+    //     //       .format('MM/DD/YYYY')
+    //     //       .toString(),
+    //     //   },
+    //     //   'company.trainingGroupRef': queryParam.trainingGroup,
+    //     //   'company.trainingGroupNum': queryParam.trainingNo,
+    //     // };
+    try {
+      await this.employeeService.getReport(q).toPromise();
+    } catch (e) {
+      console.log(e);
+    }
+    // this.employeeService.getReport(obj).subscribe(
+    //   (data) => {
+    //     this.buildTable(data);
+    //   },
+    //   (error) => {
+    //     console.error(error);
+    //   }
+    // );
+  }
+
   export() {
     const data: any = this.dataSource.data;
     const promiseArray = [];
@@ -238,24 +277,48 @@ export class ReportComponent implements OnInit {
   exportCompany(element) {
     if (this.companyInfoToggle) {
       return {
-        client: typeof element.company !== 'undefined' && element.company !== null ? element.company.client : '',
-        campaign: typeof element.company !== 'undefined' && element.company !== null ? element.company.campaign : '',
-        manager: typeof element.company !== 'undefined' && element.company !== null ? element.company.manager : '',
+        client:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.client
+            : '',
+        campaign:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.campaign
+            : '',
+        manager:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.manager
+            : '',
         supervisor:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.supervisor : '',
-        trainer: typeof element.company !== 'undefined' && element.company !== null ? element.company.trainer : '',
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.supervisor
+            : '',
+        trainer:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.trainer
+            : '',
         trainingGroupRef:
           typeof element.company !== 'undefined' && element.company !== null ? element.company.trainingGroupRef : '',
         trainingGroupNum:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.trainingGroupNum : '',
-        hireDate: typeof element.company !== 'undefined' && element.company !== null ? element.company.hireDate : '',
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.trainingGroupNum
+            : '',
+        hireDate:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.hireDate
+            : '',
         terminationDate:
           typeof element.company !== 'undefined' && element.company !== null ? element.company.terminationDate : '',
         reapplicant:
           typeof element.company !== 'undefined' && element.company !== null ? element.company.reapplicant : '',
         reapplicantTimes:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.reapplicantTimes : '',
-        bilingual: typeof element.company !== 'undefined' && element.company !== null ? element.company.bilingual : '',
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.reapplicantTimes
+            : '',
+        bilingual:
+          typeof element.company !== 'undefined' && element.company !== null
+            ? element.company.bilingual
+            : '',
       };
     } else {
       return {};
@@ -378,7 +441,9 @@ export class ReportComponent implements OnInit {
     return {};
   }
   setCampaigns(event: any) {
-    this.campaigns = event.campaigns;
+    let currentCampaigns = [];
+    event.forEach(i => currentCampaigns = [...currentCampaigns, ...i.campaigns]);
+    this.campaigns = currentCampaigns;
   }
   transformTime(param: any): string {
     let result = '00:00';

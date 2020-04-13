@@ -10,7 +10,8 @@ import { MatDialog } from '@angular/material/dialog';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  constructor(private router: Router, private _session: SessionService, private dialog: MatDialog) {}
+  constructor(private router: Router, private _session: SessionService, private dialog: MatDialog) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(

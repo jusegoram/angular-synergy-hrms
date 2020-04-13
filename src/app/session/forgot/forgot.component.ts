@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomValidators } from 'ng2-validation';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CustomValidators} from 'ng2-validation';
 
 @Component({
   selector: 'app-forgot',
@@ -10,7 +10,9 @@ import { CustomValidators } from 'ng2-validation';
 })
 export class ForgotComponent implements OnInit {
   public form: FormGroup;
-  constructor(private fb: FormBuilder, private router: Router) {}
+
+  constructor(private fb: FormBuilder, private router: Router) {
+  }
 
   ngOnInit() {
     this.form = this.fb.group({

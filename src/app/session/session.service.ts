@@ -10,6 +10,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export function tokenGetter() {
   return localStorage.getItem('id_token');
 }
+
 @Injectable()
 export class SessionService {
   _login: Observable<boolean>;
@@ -26,7 +27,7 @@ export class SessionService {
   constructor(protected http: HttpClient) {}
   login(user: string, password: string) {
     return this.http
-      .post<User>(this.url + '/api/login', { user, password })
+      .post<User>(this.url + '/api/login', {user, password})
       .pipe(
         tap((res) => this.setSession(res)),
         shareReplay()
@@ -59,8 +60,8 @@ export class SessionService {
   }
   signup(user: User) {
     const body = JSON.stringify(user);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post(this.api + '/signup', body, { headers: headers });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post(this.api + '/signup', body, {headers: headers});
   }
   // permission() {
   //   if (this.isLoggedIn()) {

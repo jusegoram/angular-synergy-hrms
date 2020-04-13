@@ -1,14 +1,14 @@
-import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { PayrollService } from '../../services/payroll.service';
+import {Router} from '@angular/router';
+import {DatePipe} from '@angular/common';
+import {PayrollService} from '../../services/payroll.service';
 
 import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import * as moment from 'moment';
-import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
-import { ColumnMode } from '@swimlane/ngx-datatable';
-import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import {ExportBottomSheetComponent} from './export-bottom-sheet/export-bottom-sheet.component';
+import {ColumnMode} from '@swimlane/ngx-datatable';
+import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-manage',
@@ -16,7 +16,7 @@ import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
   styleUrls: ['./new-payroll.component.scss'],
 })
 export class NewPayrollComponent implements OnInit {
-  @ViewChild('myTable', { static: false }) table: any;
+  @ViewChild('myTable', {static: false}) table: any;
   @ViewChild('successSwal') private successSwal: SwalComponent;
 
   socialSecurityTable: any[];
@@ -167,7 +167,7 @@ export class NewPayrollComponent implements OnInit {
       return;
     }
     const categories = data[0].categories.map((cat) => {
-      return { label: this._datePipe.transform(new Date(cat), 'MM/dd/yyyy') };
+      return {label: this._datePipe.transform(new Date(cat), 'MM/dd/yyyy')};
     });
     const mapped = data.map((i) => {
       return {
@@ -277,11 +277,11 @@ export class NewPayrollComponent implements OnInit {
       return controlDate.isAfter(validationDate)
         ? null
         : {
-            'date-minimum': {
-              'date-minimum': validationDate.format(FORMAT_DATE),
-              actual: controlDate.format(FORMAT_DATE),
-            },
-          };
+          'date-minimum': {
+            'date-minimum': validationDate.format(FORMAT_DATE),
+            actual: controlDate.format(FORMAT_DATE),
+          },
+        };
     };
   }
 
@@ -301,11 +301,11 @@ export class NewPayrollComponent implements OnInit {
       return controlDate.isBefore(validationDate)
         ? null
         : {
-            'date-max': {
-              'date-max': validationDate.format(FORMAT_DATE),
-              actual: controlDate.format(FORMAT_DATE),
-            },
-          };
+          'date-max': {
+            'date-max': validationDate.format(FORMAT_DATE),
+            actual: controlDate.format(FORMAT_DATE),
+          },
+        };
     };
   }
 
@@ -321,7 +321,8 @@ export class NewPayrollComponent implements OnInit {
         type: payroll[0].payrollType,
       })
       .subscribe((result) => {
-        this.successSwal.fire().then((e) => {});
+        this.successSwal.fire().then((e) => {
+        });
         this.router.navigate(['payroll', 'main']);
       });
   }

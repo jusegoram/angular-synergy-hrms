@@ -27,6 +27,7 @@ export class ConceptVerificationComponent implements OnInit {
     { name: 'Taxable Bonus' },
     { name: 'Non-Taxable Bonus' },
   ];
+
   constructor(
     private payrollService: PayrollService,
     private sessionService: SessionService,

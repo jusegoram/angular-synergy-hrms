@@ -1,17 +1,16 @@
-import { Injectable } from '@angular/core';
-import { interval, Observable } from 'rxjs';
-import { EmployeeHours } from '../employee/employee.model';
-import { map, publishReplay, refCount, share } from 'rxjs/operators';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '../session/session.service';
-import { environment } from '../../environments/environment';
+import {Injectable} from '@angular/core';
+import {interval, Observable} from 'rxjs';
+import {map, publishReplay, refCount, share} from 'rxjs/operators';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {SessionService} from '../session/session.service';
+import {environment} from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OperationsService {
   api = environment.apiUrl;
-  _employeeHours: Observable<Array<EmployeeHours>>;
+  _employeeHours: Observable<Array<any>>;
   _clients: Observable<any>;
   _departments: Observable<any>;
   public clients: any;
@@ -39,14 +38,14 @@ export class OperationsService {
   }
   getHours(query): Observable<any> {
     const body = query;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/hour', body, {
       headers: headers,
     });
   }
   getKpis(query): Observable<any> {
     const body = query;
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/kpi', body, {
       headers: headers,
     });
@@ -89,7 +88,7 @@ export class OperationsService {
     }
     if (!this._clients) {
       this._clients = this.httpClient
-        .get<any>(this.api + '/admin/employee/client', { params: params })
+        .get<any>(this.api + '/admin/employee/client', {params: params})
         .pipe(
           map((data) => {
             this.clients = data;
@@ -102,13 +101,14 @@ export class OperationsService {
     return this._clients;
   }
 
-  saveHours(hours: EmployeeHours[]) {
+  saveHours(hours: any[]) {
     const body = JSON.stringify(hours);
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/hours', body, {
       headers: headers,
     });
   }
+
   clearHours() {
     this._employeeHours = null;
   }

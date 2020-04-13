@@ -1,14 +1,14 @@
-import { filter } from 'rxjs/operators';
-import { Menu } from './../../shared/menu-items/menu-items';
-import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { MenuItems } from '../../shared/menu-items/menu-items';
-import { Subscription } from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {Menu} from './../../shared/menu-items/menu-items';
+import {Component, NgZone, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {NavigationEnd, Router} from '@angular/router';
+import {MenuItems} from '../../shared/menu-items/menu-items';
+import {Subscription} from 'rxjs';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '../../session/session.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatIconRegistry } from '@angular/material/icon';
+import {SessionService} from '../../session/session.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material/icon';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 
@@ -36,12 +36,13 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   sidePanelOpened;
   user;
 
-  @ViewChild('sidemenu', { static: true }) sidemenu;
-  @ViewChild(PerfectScrollbarDirective, { static: true })
+  @ViewChild('sidemenu', {static: true}) sidemenu;
+  @ViewChild(PerfectScrollbarDirective, {static: true})
   directiveScroll: PerfectScrollbarDirective;
 
   public config: PerfectScrollbarConfigInterface = {};
   menus: Menu[];
+
   constructor(
     private router: Router,
     public menuItems: MenuItems,

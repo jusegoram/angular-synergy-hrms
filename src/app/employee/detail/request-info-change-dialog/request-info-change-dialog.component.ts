@@ -44,7 +44,7 @@ export class RequestInfoChangeDialogComponent implements OnInit {
           invalid = false;
         }
       });
-      return invalid ? { 'Select at least one info type option': true } : null;
+      return invalid ? {'Select at least one info type option': true} : null;
     };
   }
 
@@ -75,6 +75,6 @@ export class RequestInfoChangeDialogComponent implements OnInit {
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({ state: false, message: '' });
+    this.dialogRef.close({state: false, message: ''});
   }
 }

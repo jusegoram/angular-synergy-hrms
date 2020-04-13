@@ -1,9 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { EmployeeService } from '../../employee.service';
-import { DomSanitizer } from '@angular/platform-browser';
-import { SessionService } from '../../../session/session.service';
-import { FileUploader } from 'ng2-file-upload';
+import {Component, Input, OnInit} from '@angular/core';
+import {environment} from '../../../../environments/environment';
+import {EmployeeService} from '../../employee.service';
+import {DomSanitizer} from '@angular/platform-browser';
+import {SessionService} from '../../../session/session.service';
+import {FileUploader} from 'ng2-file-upload';
 
 @Component({
   selector: 'avatar-detail',
@@ -14,7 +14,8 @@ export class AvatarComponent implements OnInit {
   @Input() id: string;
   @Input() authorization: any;
   api = environment.apiUrl;
-  imageData: any = '/assets/images/default-avatar.png';
+  imageData: any;
+  loaded = false;
   selected = '/employee/upload/avatars';
   URL = this.api + this.selected;
   public uploader: FileUploader = new FileUploader({
@@ -24,7 +25,7 @@ export class AvatarComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.loadAvatar(this.id);
+    this.imageData = '/assets/employee/avatar/' + this.id + '.jpg';
     this.getPermission();
   }
   constructor(
@@ -46,20 +47,21 @@ export class AvatarComponent implements OnInit {
       this.loadAvatar(this.id);
     };
   }
+
   loadAvatar(id: string) {
-    let blob;
-    this.employeeService.cachedAvatar(id).subscribe((response) => {
-      if (response.type === 'text/plain') {
-        this.imageData = '/assets/images/default-avatar.png';
-      } else {
-        blob = response;
-        const urlCreator = window.URL;
-        this.imageData = this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob));
-      }
-    });
+    this.imageData = '/assets/employee/avatar/' + id + '.jpg';
   }
+
+  onLoad(e) {
+    this.loaded = true;
+  }
+
+  onError(e) {
+    this.imageData = '/assets/images/default-avatar.png';
+    this.loaded = true;
+  }
+
   getPermission() {
-    // this.auth = this.sessionService.permission();
     return this.authorization;
   }
 }

@@ -1,15 +1,14 @@
-import { PayrollService } from './../../services/payroll.service';
-import { Payroll } from '../new-payroll/payroll.model';
-
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import {PayrollService} from './../../services/payroll.service';
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot,} from '@angular/router';
+import {Observable} from 'rxjs';
 
 @Injectable()
-export class DetailResolver implements Resolve<Payroll> {
-  constructor(private _payrollService: PayrollService) {}
+export class DetailResolver implements Resolve<any> {
+  constructor(private _payrollService: PayrollService) {
+  }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Payroll> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     return this._payrollService.getPayroll(route.queryParams.id, '', false);
   }
 }

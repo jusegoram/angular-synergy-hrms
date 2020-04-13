@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { EmployeeHours } from '../../../employee/employee.model';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { OperationsService } from '../../operations.service';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {OperationsService} from '../../operations.service';
+import {MatTableDataSource} from '@angular/material/table';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
 
@@ -14,8 +13,17 @@ import * as XLSX from 'xlsx';
 export class HoursComponent implements OnInit {
   dataSource = null;
   auth: any;
-  hours: EmployeeHours[];
-  displayedColumns = ['employeeID', 'fullName', 'dialerID', 'hours', 'tosHours', 'timeIn', 'date', 'action'];
+  hours: any[];
+  displayedColumns = [
+    'employeeID',
+    'fullName',
+    'dialerID',
+    'hours',
+    'tosHours',
+    'timeIn',
+    'date',
+    'action',
+  ];
   clients = [];
   campaigns = [];
   queryForm: FormGroup;

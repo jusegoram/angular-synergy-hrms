@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Campaign, Client } from '../models/positions-models';
-import { AdminService } from '../../admin.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {Component, OnInit} from '@angular/core';
+import {Campaign, Client} from '../models/positions-models';
+import {AdminService} from '../../admin.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-client',
@@ -21,7 +21,7 @@ export class ClientComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.clients = [{ state: 'default', _id: '', name: 'New', campaigns: [] }];
+    this.clients = [{state: 'default', _id: '', name: 'New', campaigns: []}];
 
     this._admService.getClient().subscribe((results: Client[]) => {
       results.forEach((result) => {

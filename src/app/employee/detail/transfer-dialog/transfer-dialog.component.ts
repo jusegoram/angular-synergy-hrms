@@ -7,7 +7,7 @@ import { CommonValidator } from '../../../shared/validators/common.validator';
 @Component({
   selector: 'app-transfer-dialog',
   templateUrl: './transfer-dialog.component.html',
-  styleUrls: ['./transfer-dialog.component.scss'],
+  styleUrls: ['./transfer-dialog.component.scss']
 })
 export class TransferDialogComponent implements OnInit {
   transferFom: FormGroup;
@@ -79,17 +79,17 @@ export class TransferDialogComponent implements OnInit {
       const response = await this.employeeService.saveTracker(hrTracker);
       this.dialogRef.close({
         state: true,
-        message: 'Transfer tracker info send successfully',
+        message: 'Transfer tracker info send successfully'
       });
     } catch (error) {
       this.dialogRef.close({
         state: false,
-        message: 'We couldn\'t send your request. Try again later.',
+        message: 'We couldn\'t send your request. Try again later.'
       });
     }
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({ state: false, message: '' });
+    this.dialogRef.close({state: false, message: ''});
   }
 }

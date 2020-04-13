@@ -1,12 +1,12 @@
-import { MinuteSecondsPipe } from './../../../../shared/pipes/minute-seconds.pipe';
-import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
-import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, Input, NgZone, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '../../../services/payroll.service';
+import {MinuteSecondsPipe} from './../../../../shared/pipes/minute-seconds.pipe';
+import {ColumnMode, SelectionType} from '@swimlane/ngx-datatable';
+import {CurrencyPipe, DatePipe} from '@angular/common';
+import {Component, Input, NgZone, OnInit} from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {PayrollService} from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { ChartData, Datum } from '../../../../shared/models/chart-data.model';
+import {ChartData, Datum} from '../../../../shared/models/ChartData';
 
 @Component({
   selector: 'app-payed-payrolls',
@@ -16,24 +16,24 @@ import { ChartData, Datum } from '../../../../shared/models/chart-data.model';
 export class PayedPayrollsComponent implements OnInit {
   @Input() type;
   wb: XLSX.WorkBook;
-  rows = new Array();
+  rows = [];
   columns = [];
-  selected = new Array();
-  selectedClient = new Array();
+  selected = [];
+  selectedClient = [];
   ColumnMode = ColumnMode;
   SelectionType = SelectionType;
-  statsRows = new Array();
+  statsRows = [];
   statsColumns = [
-    { name: 'CONCEPT', prop: 'concept' },
-    { name: 'AMOUNT', prop: 'amount' },
+    {name: 'CONCEPT', prop: 'concept'},
+    {name: 'AMOUNT', prop: 'amount'},
   ];
   tableMessages = {
     emptyMessage: 'PLEASE CLICK ON A PAYROLL RUN TO LOAD THE STATS',
   };
-  clientStatsRows = new Array();
+  clientStatsRows = [];
   clientStatsColumns = [
-    { name: 'CONCEPT', prop: 'concept' },
-    { name: 'AMOUNT', prop: 'amount' },
+    {name: 'CONCEPT', prop: 'concept'},
+    {name: 'AMOUNT', prop: 'amount'},
   ];
   clientTableMessages = {
     emptyMessage: 'PLEASE CLICK ON A CLIENT IN THE CHART TO LOAD THIS TABLE',
@@ -50,10 +50,10 @@ export class PayedPayrollsComponent implements OnInit {
     private zone: NgZone
   ) {
     this.columns = [
-      { name: 'PAY RUN DATE', prop: 'paymentDate', pipe: this.datePipe() },
-      { name: 'FROM DATE', prop: 'fromDate', pipe: this.datePipe() },
-      { name: 'TO DATE', prop: 'toDate', pipe: this.datePipe() },
-      { name: 'EMPLOYEES', prop: 'employeesAmount' },
+      {name: 'PAY RUN DATE', prop: 'paymentDate', pipe: this.datePipe()},
+      {name: 'FROM DATE', prop: 'fromDate', pipe: this.datePipe()},
+      {name: 'TO DATE', prop: 'toDate', pipe: this.datePipe()},
+      {name: 'EMPLOYEES', prop: 'employeesAmount'},
       {
         name: 'TOTAL NET',
         prop: 'totalPayed.$numberDecimal',
@@ -220,8 +220,8 @@ export class PayedPayrollsComponent implements OnInit {
       if (this.selectedClient.length === 1) {
         const [clientStats] = this.clientStats.filter((c) => c._id.client === this.selectedClient[0]);
         this.clientStatsColumns = [
-          { name: this.selectedClient[0].toUpperCase(), prop: 'concept' },
-          { name: 'AMOUNT', prop: 'amount' },
+          {name: this.selectedClient[0].toUpperCase(), prop: 'concept'},
+          {name: 'AMOUNT', prop: 'amount'},
         ];
         this.clientStatsRows = this.mapTotalStats(clientStats);
       }

@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '../../../session/session.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { EmployeePayroll } from '../../employee.model';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {EmployeeService} from '../../employee.service';
+import {SessionService} from '../../../session/session.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {EmployeePayroll} from '../../../shared/models/employee/employee';
 
 @Component({
   selector: 'payroll-info',
@@ -11,91 +10,87 @@ import { EmployeePayroll } from '../../employee.model';
   styleUrls: ['./payroll.component.scss'],
 })
 export class PayrollComponent implements OnInit {
-  @Input() payroll: any;
   @Input() employee: any;
   @Input() authorization: any;
-  new: boolean;
-  isAuth: boolean;
-  newPayroll: EmployeePayroll;
+  @Output() onSuccess = new EventEmitter<any>();
+  @Output() onError = new EventEmitter<any>();
+  payroll: EmployeePayroll = {
+    _id: '',
+    employee: '',
+    TIN: '',
+    payrollType: '',
+    bankName: '',
+    bankAccount: '',
+    billable: false,
+    paymentType: '',
+  };
   payrollForm: FormGroup;
   payrollTypes = [
-    { value: 'SEMIMONTHLY', name: 'SEMIMONTHLY' },
-    { value: 'BI-WEEKLY', name: 'BI-WEEKLY' },
+    {value: 'SEMIMONTHLY', name: 'SEMIMONTHLY'},
+    {value: 'BI-WEEKLY', name: 'BI-WEEKLY'},
   ];
 
   constructor(
-    private employeeService: EmployeeService,
-    private sessionService: SessionService,
-    public snackBar: MatSnackBar,
-    public fb: FormBuilder
+    private _service: EmployeeService,
+    private _session: SessionService,
+    public _formBuilder: FormBuilder
   ) {
-    this.newPayroll = new EmployeePayroll('', '', '', '', '', '', '', null, '');
-    this.new = false;
   }
 
   ngOnInit() {
-    if (!this.payroll) {
-      this.payroll = this.newPayroll;
-      this.new = true;
-    }
-    this.payrollForm = this.fb.group({
-      TIN: [this.payroll.TIN],
-      payrollType: [this.payroll.payrollType],
-      bankName: [this.payroll.bankName],
-      bankAccount: [this.payroll.bankAccount],
-      billable: [this.payroll.billable],
-      paymentType: [this.payroll.paymentType],
+    Object.assign(this.payroll, this.employee.payroll);
+    this.buildForm();
+  }
+
+  buildForm() {
+    const {
+        _id, TIN, payrollType, bankName, bankAccount, billable, paymentType
+      } = this.payroll,
+      {_id: employee} = this.employee;
+    this.payrollForm = this._formBuilder.group({
+      _id: [_id],
+      employee: [employee],
+      TIN: [TIN],
+      payrollType: [payrollType, Validators.required],
+      bankName: [bankName, Validators.required],
+      bankAccount: [bankAccount, Validators.required],
+      billable: [billable, Validators.required],
+      paymentType: [paymentType, Validators.required],
     });
   }
+
+  async savePayroll() {
+    const {value: values} = this.payrollForm;
+    const payroll: EmployeePayroll = {
+      ...values
+    };
+    delete payroll._id;
+    try {
+      await this._service.savePayroll(payroll).toPromise();
+      return this.onSuccess.emit();
+    } catch (e) {
+      return this.onError.emit();
+    }
+  }
+
+  async updatePayroll() {
+    const {value: values} = this.payrollForm;
+    const payroll: EmployeePayroll = {
+      ...values
+    };
+    try {
+      await this._service.updatePayroll(payroll).toPromise();
+      return this.onSuccess.emit();
+    } catch (e) {
+      return this.onError.emit();
+    }
+  }
+
   onSubmit() {
-    if (this.new) {
-      const post = new EmployeePayroll(
-        '',
-        this.employee.employeeId,
-        this.employee._id,
-        this.payrollForm.value.TIN,
-        this.payrollForm.value.payrollType,
-        this.payrollForm.value.bankName,
-        this.payrollForm.value.bankAccount,
-        this.payrollForm.value.billable,
-        this.payrollForm.value.paymentType
-      );
-      this.employeeService.savePayroll(post).subscribe(
-        (data) => {
-          this.snackBar.open('Employee information updated successfully', 'thank you', {
-            duration: 2000,
-          });
-        },
-        (error) => {
-          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
-            duration: 2000,
-          });
-        }
-      );
+    if (this.payrollForm.valid && this.payrollForm.touched) {
+      return this.payrollForm.value._id === '' ? this.savePayroll() : this.updatePayroll();
     } else {
-      const update = new EmployeePayroll(
-        this.payroll._id,
-        this.payroll.employeeId,
-        this.payroll.employee,
-        this.payrollForm.value.TIN,
-        this.payrollForm.value.payrollType,
-        this.payrollForm.value.bankName,
-        this.payrollForm.value.bankAccount,
-        this.payrollForm.value.billable,
-        this.payrollForm.value.paymentType
-      );
-      this.employeeService.updatePayroll(update).subscribe(
-        (data) => {
-          this.snackBar.open('Employee information updated successfully', 'thank you', {
-            duration: 2000,
-          });
-        },
-        (error) => {
-          this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
-            duration: 2000,
-          });
-        }
-      );
+      return this.payrollForm.markAllAsTouched();
     }
   }
 }
