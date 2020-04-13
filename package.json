@@ -12,6 +12,7 @@
     "test:coverage": "ng test --codeCoverage",
     "lint": "ng lint",
     "lint-fix": "ng lint com.rccbpo.synergy --fix",
+    "format:fix": "pretty-quick --staged",
     "e2e": "ng e2e"
   },
   "author": "Sebastian Gomez",
@@ -38,6 +39,7 @@
     "angular-fusioncharts": "^3.0.4",
     "angular2-signaturepad": "^2.11.0",
     "fusioncharts": "^3.15.0-sr.1",
+    "husky": "^4.2.5",
     "intl": "^1.2.5",
     "moment": "^2.24.0",
     "ng2-file-upload": "^1.4.0",
@@ -47,6 +49,7 @@
     "ngx-perfect-scrollbar": "^9.0.0",
     "ngx-socket-io": "^3.0.1",
     "npm": "^6.13.7",
+    "pretty-quick": "^2.0.1",
     "rxjs": "^6.5.4",
     "screenfull": "^5.0.1",
     "socket.io": "^2.3.0",
@@ -75,9 +78,17 @@
     "karma-coverage-istanbul-reporter": "^2.1.1",
     "karma-jasmine": "^3.1.0",
     "karma-jasmine-html-reporter": "^1.5.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.4",
     "protractor": "^5.4.3",
     "ts-node": "^8.6.2",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s lint",
+      "pre-push": "ng test -- --no-watch"
+    }
   }
 }

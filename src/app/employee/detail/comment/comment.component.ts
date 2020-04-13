@@ -1,15 +1,15 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { Employee, EmployeeComment } from "../../Employee";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { EmployeeService } from "../../employee.service";
-import { SessionService } from "../../../session/session.service";
+import { Component, Input, OnInit } from '@angular/core';
+import { Employee, EmployeeComment } from '../../employee.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
 
 @Component({
-  selector: "comment-info",
-  templateUrl: "./comment.component.html",
-  styleUrls: ["./comment.component.scss"],
+  selector: 'comment-info',
+  templateUrl: './comment.component.html',
+  styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit {
   @Input() employee: Employee;
@@ -19,7 +19,7 @@ export class CommentComponent implements OnInit {
   employeeComment: any;
   editCommentId: string;
   editCommentDate: Date;
-  displayedColumns = ["comment", "by", "date"];
+  displayedColumns = ['comment', 'by', 'date'];
   public commentForm: FormGroup;
   userFullName: any;
   constructor(
@@ -33,11 +33,11 @@ export class CommentComponent implements OnInit {
     this.employeeComment = this.employee.comments;
     this.populateTable(this.employeeComment);
     this.buildForms();
-    this.userFullName = this.sessionService.getName().split(" ");
+    this.userFullName = this.sessionService.getName().split(' ');
   }
   buildForms() {
     this.commentForm = this.fb.group({
-      comment: [""],
+      comment: [''],
     });
   }
 
@@ -56,7 +56,7 @@ export class CommentComponent implements OnInit {
     const user = this.sessionService.getId();
     if (!this.isEdit) {
       const com = new EmployeeComment(
-        "",
+        '',
         this.employee.employeeId.toString(10),
         current.comment,
         new Date(),

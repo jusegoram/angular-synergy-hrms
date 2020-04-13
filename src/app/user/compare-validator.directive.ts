@@ -1,15 +1,10 @@
-import { Directive, Input } from "@angular/core";
-import {
-  AbstractControl,
-  NG_VALIDATORS,
-  ValidationErrors,
-  Validator,
-} from "@angular/forms";
-import { Subscription } from "rxjs";
+import { Directive, Input } from '@angular/core';
+import { AbstractControl, NG_VALIDATORS, ValidationErrors, Validator } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: "[compare]",
+  selector: '[compare]',
   providers: [
     {
       provide: NG_VALIDATORS,
@@ -20,7 +15,7 @@ import { Subscription } from "rxjs";
 })
 export class CompareValidatorDirective implements Validator {
   // tslint:disable-next-line:no-input-rename
-  @Input("compare") controlNameToCompare;
+  @Input('compare') controlNameToCompare;
 
   validate(c: AbstractControl): ValidationErrors | null {
     if (c.value.length < 10 || c.value === null) {
@@ -29,16 +24,12 @@ export class CompareValidatorDirective implements Validator {
     const controlToCompare = c.root.get(this.controlNameToCompare);
 
     if (controlToCompare) {
-      const subscription: Subscription = controlToCompare.valueChanges.subscribe(
-        () => {
-          c.updateValueAndValidity();
-          subscription.unsubscribe();
-        }
-      );
+      const subscription: Subscription = controlToCompare.valueChanges.subscribe(() => {
+        c.updateValueAndValidity();
+        subscription.unsubscribe();
+      });
     }
 
-    return controlToCompare && controlToCompare.value !== c.value
-      ? { compare: true }
-      : null;
+    return controlToCompare && controlToCompare.value !== c.value ? { compare: true } : null;
   }
 }

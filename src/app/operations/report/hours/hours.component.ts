@@ -1,39 +1,27 @@
-import { Component, OnInit } from "@angular/core";
-import { EmployeeHours } from "../../../employee/Employee";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { OperationsService } from "../../operations.service";
-import { MatTableDataSource } from "@angular/material/table";
-import moment from "moment";
-import * as XLSX from "xlsx";
+import { Component, OnInit } from '@angular/core';
+import { EmployeeHours } from '../../../employee/employee.model';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { OperationsService } from '../../operations.service';
+import { MatTableDataSource } from '@angular/material/table';
+import moment from 'moment';
+import * as XLSX from 'xlsx';
 
 @Component({
-  selector: "report-hours",
-  templateUrl: "./hours.component.html",
-  styleUrls: ["./hours.component.scss"],
+  selector: 'report-hours',
+  templateUrl: './hours.component.html',
+  styleUrls: ['./hours.component.scss'],
 })
 export class HoursComponent implements OnInit {
   dataSource = null;
   auth: any;
   hours: EmployeeHours[];
-  displayedColumns = [
-    "employeeID",
-    "fullName",
-    "dialerID",
-    "hours",
-    "tosHours",
-    "timeIn",
-    "date",
-    "action",
-  ];
+  displayedColumns = ['employeeID', 'fullName', 'dialerID', 'hours', 'tosHours', 'timeIn', 'date', 'action'];
   clients = [];
   campaigns = [];
   queryForm: FormGroup;
   notfound;
-  displayedColumns2 = ["employeeId"];
-  constructor(
-    private _opsService: OperationsService,
-    private fb: FormBuilder
-  ) {}
+  displayedColumns2 = ['employeeId'];
+  constructor(private _opsService: OperationsService, private fb: FormBuilder) {}
   ngOnInit() {
     this._opsService.getClient().subscribe((data) => {
       this.clients = data;
@@ -57,11 +45,11 @@ export class HoursComponent implements OnInit {
   }
   buildQueryForm() {
     this.queryForm = this.fb.group({
-      From: [""],
+      From: [''],
       To: [new Date()],
-      Client: [""],
-      Campaign: [""],
-      dialerId: [""],
+      Client: [''],
+      Campaign: [''],
+      dialerId: [''],
     });
   }
   applyFilter(filterValue: string) {
@@ -81,7 +69,7 @@ export class HoursComponent implements OnInit {
       delete item._id;
       delete item.__v;
       delete item.employee;
-      item.date = moment(item.date).format("MM/DD/YYYY").toString();
+      item.date = moment(item.date).format('MM/DD/YYYY').toString();
       item.systemHours = item.systemHours.value;
       item.tosHours = item.tosHours.value;
       item.timeIn = item.timeIn.value;
@@ -89,12 +77,12 @@ export class HoursComponent implements OnInit {
     });
     const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, main, "hours-info");
-    XLSX.writeFile(wb, "export-hours.xlsx");
+    XLSX.utils.book_append_sheet(wb, main, 'hours-info');
+    XLSX.writeFile(wb, 'export-hours.xlsx');
     console.log(exportData.length === this.dataSource.data.length);
   }
   setCampaigns(event: any) {
-    this.queryForm.value.Campaign = "";
+    this.queryForm.value.Campaign = '';
     this.campaigns = event.campaigns;
   }
   runQuery() {
@@ -103,8 +91,8 @@ export class HoursComponent implements OnInit {
       client: queryParam.Client && queryParam.Client.name,
       campaign: queryParam.Campaign,
       date: {
-        $gte: moment(queryParam.From).startOf("day").toDate(),
-        $lte: moment(queryParam.To).endOf("day").toDate(),
+        $gte: moment(queryParam.From).startOf('day').toDate(),
+        $lte: moment(queryParam.To).endOf('day').toDate(),
       },
       dialerId: queryParam.dialerId,
     };

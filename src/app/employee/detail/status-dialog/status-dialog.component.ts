@@ -1,38 +1,25 @@
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators
-} from "@angular/forms";
-import { EmployeeService } from "./../../employee.service";
-import {
-  AfterViewInit,
-  Component,
-  Inject,
-  QueryList,
-  ViewChildren
-} from "@angular/core";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { SignatureFieldComponent } from "../../../shared/signature-field/signature-field.component";
-import { HrTracker } from "../../../shared/models/hr-tracker";
-import { CommonValidator } from "../../../shared/validators/common.validator";
-import moment from "moment";
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from './../../employee.service';
+import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SignatureFieldComponent } from '../../../shared/signature-field/signature-field.component';
+import { HrTracker } from '../../../shared/models/hr-tracker';
+import { CommonValidator } from '../../../shared/validators/common.validator';
+import moment from 'moment';
 
 @Component({
-  selector: "app-status-dialog",
-  templateUrl: "./status-dialog.component.html",
-  styleUrls: ["./status-dialog.component.scss"]
+  selector: 'app-status-dialog',
+  templateUrl: './status-dialog.component.html',
+  styleUrls: ['./status-dialog.component.scss'],
 })
 export class StatusDialogComponent implements AfterViewInit {
-  @ViewChildren(SignatureFieldComponent) public signatures: QueryList<
-    SignatureFieldComponent
-  >;
+  @ViewChildren(SignatureFieldComponent) public signatures: QueryList<SignatureFieldComponent>;
   supervisor = 0;
   manager = 1;
   statusForm: FormGroup;
   status: any[];
   statusControl: FormControl;
-  statusAbsenteeismForm: FormGroup; 
+  statusAbsenteeismForm: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<StatusDialogComponent>,
@@ -41,49 +28,49 @@ export class StatusDialogComponent implements AfterViewInit {
     private employeeService: EmployeeService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    const today= moment().toDate();
-    const currentTime= moment().format('HH:mm');    
-    this.statusControl = new FormControl("", Validators.required);
+    const today = moment().toDate();
+    const currentTime = moment().format('HH:mm');
+    this.statusControl = new FormControl('', Validators.required);
     this.status = this._employeeService.status;
     this.statusForm = fb.group({
       effectiveDate: [today, Validators.required],
-      supervisorSignature: ["", Validators.required],
-      managerSignature: ["", Validators.required],
-      reason: [""],
-      absenteeism: [false]
-    });        
+      supervisorSignature: ['', Validators.required],
+      managerSignature: ['', Validators.required],
+      reason: [''],
+      absenteeism: [false],
+    });
 
-    this.statusAbsenteeismForm = fb.group({      
-      firstChance:  fb.group({
+    this.statusAbsenteeismForm = fb.group({
+      firstChance: fb.group({
         date: [today, Validators.required],
         time: [currentTime, Validators.required],
-        reason: ["", [Validators.required, CommonValidator.emptyFieldValidator]]
+        reason: ['', [Validators.required, CommonValidator.emptyFieldValidator]],
       }),
-      secondChance:  fb.group({
+      secondChance: fb.group({
         date: [today, Validators.required],
         time: [currentTime, Validators.required],
-        reason: ["", [Validators.required, CommonValidator.emptyFieldValidator]]
+        reason: ['', [Validators.required, CommonValidator.emptyFieldValidator]],
       }),
-      thirdChance:  fb.group({
+      thirdChance: fb.group({
         date: [today, Validators.required],
         time: [currentTime, Validators.required],
-        reason: ["", [Validators.required, CommonValidator.emptyFieldValidator]]
+        reason: ['', [Validators.required, CommonValidator.emptyFieldValidator]],
       }),
     });
   }
 
   ngAfterViewInit() {}
 
-  get isDueToabsenteeism(){
+  get isDueToabsenteeism() {
     return this.statusForm.get('absenteeism').value;
   }
 
-  async onProceedClick(statusFormValues: any, statusAbsenteeismFormValues: any , newStatus: string) {
+  async onProceedClick(statusFormValues: any, statusAbsenteeismFormValues: any, newStatus: string) {
     try {
-      let { effectiveDate, supervisorSignature, managerSignature, reason } = statusFormValues;
-      let hrTracker: HrTracker = this.data.hrTracker;
+      const { effectiveDate, supervisorSignature, managerSignature, reason } = statusFormValues;
+      const hrTracker: HrTracker = this.data.hrTracker;
       let absenteeism;
-      if(this.isDueToabsenteeism){
+      if (this.isDueToabsenteeism) {
         absenteeism = statusAbsenteeismFormValues;
       }
       hrTracker.tracker = {
@@ -93,26 +80,26 @@ export class StatusDialogComponent implements AfterViewInit {
           absenteeism,
           supervisorSignature,
           managerSignature,
-          reason
-        }
+          reason,
+        },
       };
-      console.log("data sent", hrTracker);
+      console.log('data sent', hrTracker);
       const response = await this.employeeService.saveTracker(hrTracker);
       this.dialogRef.close({
         state: true,
-        message: "Status tracker send successfully"
+        message: 'Status tracker send successfully',
       });
     } catch (errorResponse) {
-      console.log("status dialog", errorResponse);
+      console.log('status dialog', errorResponse);
       this.dialogRef.close({
         state: false,
-        message: errorResponse.error.message
+        message: errorResponse.error.message,
       });
     }
   }
 
   onCancelClick(): void {
-    this.dialogRef.close({ state: false, message: "" });
+    this.dialogRef.close({ state: false, message: '' });
   }
 
   /*logDebug(){

@@ -1,17 +1,17 @@
-import { TrackersComponent } from "./trackers/trackers.component";
-import { HrService } from "./hr.service";
-import { HrRoutingModule } from "./hr.routing";
-import { NgModule } from "@angular/core";
-import { CommonModule, TitleCasePipe, DatePipe } from "@angular/common";
-import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
-import { MaterialSharedModule } from "../shared/material.shared.module";
-import { SharedModule } from "../shared/shared.module";
-import { FileUploadModule } from "ng2-file-upload";
-import { FormsModule } from "@angular/forms";
-import { TokenInterceptor } from "../token-interceptor.service";
-import { AuthenticationService } from "../authentication.service";
-import { EmployeeService } from "../employee/employee.service";
-import { NgxDatatableModule } from "@swimlane/ngx-datatable";
+import { TrackersComponent } from './trackers/trackers.component';
+import { HrService } from './hr.service';
+import { HrRoutingModule } from './hr.routing';
+import { NgModule } from '@angular/core';
+import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MaterialSharedModule } from '../shared/material.shared.module';
+import { SharedModule } from '../shared/shared.module';
+import { FileUploadModule } from 'ng2-file-upload';
+import { FormsModule } from '@angular/forms';
+import { TokenInterceptor } from '../token-interceptor.service';
+import { AuthenticationService } from '../authentication.service';
+import { EmployeeService } from '../employee/employee.service';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MomentModule } from 'ngx-moment';
 import { TrackerTransferDetailsComponent } from './components/tracker-transfer-details/tracker-transfer-details.component';
 import { TrackerCertifyTrainingDetailsComponent } from './components/tracker-certify-training-details/tracker-certify-training-details.component';
@@ -31,9 +31,18 @@ import { AcceptedTrackersTableComponent } from './components/accepted-trackers-t
     FileUploadModule,
     FormsModule,
     NgxDatatableModule,
-    MomentModule
+    MomentModule,
   ],
-  declarations: [TrackersComponent, TrackerTransferDetailsComponent, TrackerCertifyTrainingDetailsComponent, TrackerInfoChangeRequestDetailsComponent, TrackerStatusChangeDetailsComponent, SignatureRenderModalComponent, TrackersInboxTableComponent, AcceptedTrackersTableComponent],
+  declarations: [
+    TrackersComponent,
+    TrackerTransferDetailsComponent,
+    TrackerCertifyTrainingDetailsComponent,
+    TrackerInfoChangeRequestDetailsComponent,
+    TrackerStatusChangeDetailsComponent,
+    SignatureRenderModalComponent,
+    TrackersInboxTableComponent,
+    AcceptedTrackersTableComponent,
+  ],
   entryComponents: [SignatureRenderModalComponent],
   providers: [
     HrService,
@@ -49,7 +58,7 @@ import { AcceptedTrackersTableComponent } from './components/accepted-trackers-t
       useClass: AuthenticationService,
       multi: true,
     },
-    EmployeeService
+    EmployeeService,
   ],
 })
 export class HrModule {}

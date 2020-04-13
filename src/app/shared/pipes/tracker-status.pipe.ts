@@ -3,12 +3,10 @@ import { TRACKER_STATUS_LABELS } from '../../../environments/environment';
 
 @Pipe({
   name: 'trackerStatus',
-  pure: true
+  pure: true,
 })
 export class TrackerStatusPipe implements PipeTransform {
-
-  transform(value: number, ...args: unknown[]): string {   
+  transform(value: number, ...args: unknown[]): string {
     return TRACKER_STATUS_LABELS[value];
   }
-
 }

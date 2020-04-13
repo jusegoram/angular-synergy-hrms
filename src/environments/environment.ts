@@ -5,21 +5,21 @@
 
 export const environment = {
   production: false,
-  siteUri: "http://localhost:3000",
-  apiUrl: "http://localhost:3000/api/v1",
+  siteUri: 'http://localhost:3000',
+  apiUrl: 'http://localhost:3000/api/v1',
 };
 
 export const API = {
-  TRACKERS: environment.siteUri+"/api/test/hr/trackers",
+  TRACKERS: environment.siteUri + '/api/test/hr/trackers',
   TRACKER: (id: string) => {
-    return environment.siteUri+"/api/test/hr/trackers/" + id;
+    return environment.siteUri + '/api/test/hr/trackers/' + id;
   },
 };
 
 export const TRACKER_STATUS = {
   PENDING: 0,
   IN_PROGRESS: 1,
-  DONE: 2
+  DONE: 2,
 };
 
-export const TRACKER_STATUS_LABELS= ['Pending', 'In progress', 'Done'];
+export const TRACKER_STATUS_LABELS = ['Pending', 'In progress', 'Done'];

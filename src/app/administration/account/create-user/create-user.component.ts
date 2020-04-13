@@ -1,19 +1,19 @@
-import { AdminService } from "../../admin.service";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { Router } from "@angular/router";
-import { SessionService } from "../../../session/session.service";
-import { Employee } from "./../../../employee/Employee";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { Component, OnInit } from "@angular/core";
-import { Observable } from "rxjs";
-import { map, startWith } from "rxjs/operators";
-import { User } from "../../../session/User";
+import { AdminService } from '../../admin.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { SessionService } from '../../../session/session.service';
+import { Employee } from '../../../employee/employee.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { User } from '../../../session/user.model';
 
 @Component({
-  selector: "adm-create-user",
-  templateUrl: "./create-user.component.html",
-  styleUrls: ["./create-user.component.scss"],
+  selector: 'adm-create-user',
+  templateUrl: './create-user.component.html',
+  styleUrls: ['./create-user.component.scss'],
 })
 export class CreateUserComponent implements OnInit {
   items = [];
@@ -37,14 +37,7 @@ export class CreateUserComponent implements OnInit {
     this.adminService.getEmployees().subscribe((data) => {
       data.map((item) => {
         item.fullSearchName =
-          "(" +
-          item.employeeId +
-          ") " +
-          item.firstName +
-          " " +
-          item.middleName +
-          " " +
-          item.lastName;
+          '(' + item.employeeId + ') ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
       });
       this.employees = data;
     });
@@ -54,15 +47,12 @@ export class CreateUserComponent implements OnInit {
       lastName: new FormControl(null, Validators.required),
       role: new FormControl(null, Validators.required),
       username: new FormControl(null, [Validators.required, Validators.email]),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.minLength(10),
-      ]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(10)]),
       confirmPassword: new FormControl(null, Validators.required),
     });
     this.employeeCtrl.setValidators(Validators.required);
     this.filteredEmployees = this.employeeCtrl.valueChanges.pipe(
-      startWith(""),
+      startWith(''),
       map((value) => {
         return this.employees ? this._filterEmployees(value) : this.employees;
       })
@@ -71,7 +61,7 @@ export class CreateUserComponent implements OnInit {
   _filterEmployees(value: string): Employee[] {
     const filterValue = value.toString().toLowerCase();
     return this.employees.filter((employee) => {
-      return employee["fullSearchName"].toLowerCase().includes(filterValue);
+      return employee['fullSearchName'].toLowerCase().includes(filterValue);
     });
   }
   verifyPassword() {
@@ -98,7 +88,7 @@ export class CreateUserComponent implements OnInit {
     return this.selectedEmployee;
   }
   onSubmit() {
-    const log: object = { date: new Date(), log: "User Creation" };
+    const log: object = { date: new Date(), log: 'User Creation' };
     const user = new User(
       this.myForm.value.username,
       this.myForm.value.password,
@@ -107,7 +97,7 @@ export class CreateUserComponent implements OnInit {
       this.myForm.value.middleName,
       this.myForm.value.lastName,
       new Date(),
-      this.getEmployee()["_id"], // Employee _id
+      this.getEmployee()['_id'], // Employee _id
       log
     );
     this.sessionService.signup(user).subscribe(
@@ -115,21 +105,17 @@ export class CreateUserComponent implements OnInit {
       (error) => this.snackResponse()
     );
     this.myForm.reset();
-    this.router.navigateByUrl("/admin/permissions");
+    this.router.navigateByUrl('/admin/permissions');
   }
 
   snackResponse(param?) {
     if (!param) {
-      this.snackBar.open(
-        "There was an error creating the user, please contact the IT department",
-        "OK",
-        {
-          duration: 2000,
-        }
-      );
+      this.snackBar.open('There was an error creating the user, please contact the IT department', 'OK', {
+        duration: 2000,
+      });
       return null;
     } else {
-      this.snackBar.open("User was created successfully", "thank you", {
+      this.snackBar.open('User was created successfully', 'thank you', {
         duration: 2000,
       });
       return null;

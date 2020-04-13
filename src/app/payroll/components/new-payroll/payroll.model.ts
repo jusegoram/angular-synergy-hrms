@@ -1,5 +1,6 @@
-import { PayrollRow } from "./PayrollRow";
-import * as moment from "moment";
+
+import * as moment from 'moment';
+import { PayrollRow } from './payroll-row.model';
 
 export class Payroll {
   private _employees: PayrollRow[] = [];
@@ -51,11 +52,7 @@ export class Payroll {
         e.lastName,
         e.socialSecurity,
         e.status,
-        e.personal
-          ? e.personal.emailAddress
-            ? e.personal.emailAddress
-            : ""
-          : "",
+        e.personal ? (e.personal.emailAddress ? e.personal.emailAddress : '') : '',
         e.payrollType,
         e.hourlyRate,
         e.employeeName,
@@ -143,11 +140,7 @@ export class Payroll {
       this._isCalculating = true;
       for (let i = 0; i < this.employees.length; i++) {
         const employee: PayrollRow = this.employees[i];
-        employee.calculatePayrollRow(
-          this.socialTable,
-          this.holidayTable,
-          this.incometaxTable
-        );
+        employee.calculatePayrollRow(this.socialTable, this.holidayTable, this.incometaxTable);
         if (i === this.employees.length - 1) {
         }
       }
@@ -180,9 +173,9 @@ export class Payroll {
       for (let e = 0; e < table.length; e++) {
         const item = table[e];
         if (employee.employee === item.employee) {
-          if (param === "hours" && employee[param].length < 7) {
+          if (param === 'hours' && employee[param].length < 7) {
             employee[param].push(item);
-          } else if (param !== "hours") {
+          } else if (param !== 'hours') {
             employee[param].push(item);
           }
         }
@@ -192,10 +185,7 @@ export class Payroll {
 
   recalculateOnConceptsChange(employee: any) {
     const foundEmployee = this.getEmployeeById(employee);
-    foundEmployee.calculateConceptsGrossAndNet(
-      this.socialTable,
-      this.incometaxTable
-    );
+    foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);
   }
   onCalculating() {
     return this._isCalculating;

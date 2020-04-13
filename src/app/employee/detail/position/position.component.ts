@@ -1,19 +1,16 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { EmployeePosition } from "../../Employee";
-import { EmployeeService } from "../../employee.service";
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import {
-  Client,
-  Department,
-} from "../../../administration/employee/models/positions-models";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Component, Input, OnInit } from '@angular/core';
+import { EmployeePosition } from '../../employee.model';
+import { EmployeeService } from '../../employee.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { Client, Department } from '../../../administration/employee/models/positions-models';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: "position-info",
-  templateUrl: "./position.component.html",
-  styleUrls: ["./position.component.css"],
+  selector: 'position-info',
+  templateUrl: './position.component.html',
+  styleUrls: ['./position.component.css'],
 })
 export class PositionComponent implements OnInit {
   userId: string;
@@ -51,14 +48,7 @@ export class PositionComponent implements OnInit {
   public clients: Client[];
   isSuperAdmin = false;
   positionForm: FormGroup;
-  displayedColumns = [
-    "client",
-    "department",
-    "position",
-    "positionId",
-    "startDate",
-    "endDate",
-  ];
+  displayedColumns = ['client', 'department', 'position', 'positionId', 'startDate', 'endDate'];
   constructor(
     private fb: FormBuilder,
     public snackBar: MatSnackBar,
@@ -67,19 +57,17 @@ export class PositionComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.employeeService.getClient().subscribe((data) => (this.clients = data));
-    this.employeeService
-      .getDepartment()
-      .subscribe((data) => (this.departments = data));
+    this.employeeService.getDepartment().subscribe((data) => (this.departments = data));
     this.isSuperAdmin = this.authorization.role === 9999;
     this.addActionColumn(this.isSuperAdmin);
     this.employeePositions = this.employee.position;
     this.populateTable(this.employeePositions);
     this.positionForm = this.fb.group({
-      client: ["", [Validators.required]],
-      department: ["", [Validators.required]],
-      position: ["", [Validators.required]],
-      start: ["", [Validators.required]],
-      end: [""],
+      client: ['', [Validators.required]],
+      department: ['', [Validators.required]],
+      position: ['', [Validators.required]],
+      start: ['', [Validators.required]],
+      end: [''],
     });
   }
 
@@ -91,12 +79,12 @@ export class PositionComponent implements OnInit {
 
   addActionColumn(rights: boolean) {
     if (rights) {
-      this.displayedColumns.push("action");
+      this.displayedColumns.push('action');
     }
   }
   onAdd() {
     const newPosition = new EmployeePosition(
-      "",
+      '',
       this.employee.employeeId,
       this.positionForm.value.client,
       this.positionForm.value.department.name,
@@ -107,24 +95,16 @@ export class PositionComponent implements OnInit {
     );
     this.employeeService.savePosition(newPosition).subscribe(
       (data: any) => {
-        this.snackBar.open(
-          "Employee information updated successfully",
-          "thank you",
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open('Employee information updated successfully', 'thank you', {
+          duration: 2000,
+        });
         this.populateTable(data);
         this.fixDate(data.startDate);
       },
       (error) => {
-        this.snackBar.open(
-          "Error updating information, please try again or notify the IT department",
-          "Try again",
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+          duration: 2000,
+        });
         return error;
       }
     );
@@ -193,22 +173,14 @@ export class PositionComponent implements OnInit {
           this.dataSource = undefined;
           this.populateTable(newData);
         }
-        this.snackBar.open(
-          "Employee information updated successfully",
-          "thank you",
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open('Employee information updated successfully', 'thank you', {
+          duration: 2000,
+        });
       },
       (error) => {
-        this.snackBar.open(
-          "Error updating information, please try again or notify the IT department",
-          "Try again",
-          {
-            duration: 2000,
-          }
-        );
+        this.snackBar.open('Error updating information, please try again or notify the IT department', 'Try again', {
+          duration: 2000,
+        });
       }
     );
   }

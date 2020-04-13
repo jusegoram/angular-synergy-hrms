@@ -1,9 +1,9 @@
-import { Directive, HostListener, Inject } from "@angular/core";
+import { Directive, HostListener, Inject } from '@angular/core';
 
-import { AccordionLinkDirective } from "./accordionlink.directive";
+import { AccordionLinkDirective } from './accordionlink.directive';
 
 @Directive({
-  selector: "[appAccordionToggle]",
+  selector: '[appAccordionToggle]',
 })
 export class AccordionAnchorDirective {
   protected navlink: AccordionLinkDirective;
@@ -12,7 +12,7 @@ export class AccordionAnchorDirective {
     this.navlink = navlink;
   }
 
-  @HostListener("click", ["$event"])
+  @HostListener('click', ['$event'])
   onClick(e: any) {
     this.navlink.toggle();
   }

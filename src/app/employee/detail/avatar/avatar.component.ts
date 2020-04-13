@@ -1,24 +1,24 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { environment } from "../../../../environments/environment";
-import { EmployeeService } from "../../employee.service";
-import { DomSanitizer } from "@angular/platform-browser";
-import { SessionService } from "../../../session/session.service";
-import { FileUploader } from "ng2-file-upload";
+import { Component, Input, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { EmployeeService } from '../../employee.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SessionService } from '../../../session/session.service';
+import { FileUploader } from 'ng2-file-upload';
 
 @Component({
-  selector: "avatar-detail",
-  templateUrl: "./avatar.component.html",
-  styleUrls: ["./avatar.component.scss"],
+  selector: 'avatar-detail',
+  templateUrl: './avatar.component.html',
+  styleUrls: ['./avatar.component.scss'],
 })
 export class AvatarComponent implements OnInit {
   @Input() id: string;
   @Input() authorization: any;
   api = environment.apiUrl;
-  imageData: any = "/assets/images/default-avatar.png";
-  selected = "/employee/upload/avatars";
+  imageData: any = '/assets/images/default-avatar.png';
+  selected = '/employee/upload/avatars';
   URL = this.api + this.selected;
   public uploader: FileUploader = new FileUploader({
-    allowedMimeType: ["image/jpeg"],
+    allowedMimeType: ['image/jpeg'],
     url: this.URL,
     isHTML5: true,
   });
@@ -35,11 +35,11 @@ export class AvatarComponent implements OnInit {
 
   public onclick() {
     this.uploader = new FileUploader({
-      allowedMimeType: ["image/jpeg"],
-      url: this.URL + "?id=" + this.id,
+      allowedMimeType: ['image/jpeg'],
+      url: this.URL + '?id=' + this.id,
       isHTML5: true,
-      authTokenHeader: "Authorization",
-      authToken: "JWT " + this.sessionService.jwtHelper.tokenGetter(),
+      authTokenHeader: 'Authorization',
+      authToken: 'JWT ' + this.sessionService.jwtHelper.tokenGetter(),
     });
     this.employeeService.clearAvatar(this.id);
     this.uploader.onCompleteItem = () => {
@@ -49,14 +49,12 @@ export class AvatarComponent implements OnInit {
   loadAvatar(id: string) {
     let blob;
     this.employeeService.cachedAvatar(id).subscribe((response) => {
-      if (response.type === "text/plain") {
-        this.imageData = "/assets/images/default-avatar.png";
+      if (response.type === 'text/plain') {
+        this.imageData = '/assets/images/default-avatar.png';
       } else {
         blob = response;
         const urlCreator = window.URL;
-        this.imageData = this.sanitizer.bypassSecurityTrustUrl(
-          urlCreator.createObjectURL(blob)
-        );
+        this.imageData = this.sanitizer.bypassSecurityTrustUrl(urlCreator.createObjectURL(blob));
       }
     });
   }

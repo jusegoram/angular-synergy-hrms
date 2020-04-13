@@ -7,40 +7,37 @@ import { SignatureRenderModalComponent } from '../signature-render-modal/signatu
 @Component({
   selector: 'app-tracker-status-change-details',
   templateUrl: './tracker-status-change-details.component.html',
-  styleUrls: ['./tracker-status-change-details.component.scss']
+  styleUrls: ['./tracker-status-change-details.component.scss'],
 })
 export class TrackerStatusChangeDetailsComponent implements OnInit {
-  @Input() trackerInfo: Tracker;  
-  constructor(public dialog: MatDialog) { }
-  
-  ngOnInit(): void {
-  }  
+  @Input() trackerInfo: Tracker;
+  constructor(public dialog: MatDialog) {}
 
-  get chances():Array<{nth:string, details:Chance}>{
-    
+  ngOnInit(): void {}
+
+  get chances(): Array<{ nth: string; details: Chance }> {
     return [
       {
         nth: 'First',
-        details:this.trackerInfo?.statusChange?.absenteeism.firstChance,
+        details: this.trackerInfo?.statusChange?.absenteeism.firstChance,
       },
       {
         nth: 'Second',
-        details:this.trackerInfo?.statusChange?.absenteeism.secondChance,
+        details: this.trackerInfo?.statusChange?.absenteeism.secondChance,
       },
       {
         nth: 'Third',
-        details:this.trackerInfo?.statusChange?.absenteeism.secondChance,
-      }
+        details: this.trackerInfo?.statusChange?.absenteeism.secondChance,
+      },
     ];
   }
 
-  openSignatureRenderModal(title:string, signatureBase64:string){
-    this.dialog.open(SignatureRenderModalComponent,{
+  openSignatureRenderModal(title: string, signatureBase64: string) {
+    this.dialog.open(SignatureRenderModalComponent, {
       data: {
         title,
-        signatureBase64
-      }
+        signatureBase64,
+      },
     });
   }
-
 }

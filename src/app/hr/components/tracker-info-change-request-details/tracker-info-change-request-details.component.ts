@@ -4,13 +4,11 @@ import { Tracker } from '../../../shared/models/tracker';
 @Component({
   selector: 'app-tracker-info-change-request-details',
   templateUrl: './tracker-info-change-request-details.component.html',
-  styleUrls: ['./tracker-info-change-request-details.component.scss']
+  styleUrls: ['./tracker-info-change-request-details.component.scss'],
 })
 export class TrackerInfoChangeRequestDetailsComponent implements OnInit {
   @Input() trackerInfo: Tracker;
-  constructor() { }
+  constructor() {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 }

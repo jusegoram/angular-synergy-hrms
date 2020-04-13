@@ -1,17 +1,17 @@
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
-import { MatTableDataSource } from "@angular/material/table";
-import { AdminService } from "../../admin.service";
-import { Page } from "../../../shared/models/page";
-import { ColumnMode } from "@swimlane/ngx-datatable";
-import { DatePipe } from "@angular/common";
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { AdminService } from '../../admin.service';
+import { Page } from '../../../shared/models/page';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: "app-holidays",
-  templateUrl: "./holidays.component.html",
-  styleUrls: ["./holidays.component.scss"],
+  selector: 'app-holidays',
+  templateUrl: './holidays.component.html',
+  styleUrls: ['./holidays.component.scss'],
 })
 export class HolidaysComponent implements OnInit {
-  @ViewChild("HolidayEditCell", { static: true }) editCell: TemplateRef<any>;
+  @ViewChild('HolidayEditCell', { static: true }) editCell: TemplateRef<any>;
 
   dataSource: MatTableDataSource<any>;
   columns: any[] = [];
@@ -20,25 +20,22 @@ export class HolidaysComponent implements OnInit {
   cache: any = {};
   ColumnMode = ColumnMode;
 
-  constructor(
-    private _adminService: AdminService,
-    private _datePipe: DatePipe
-  ) {
+  constructor(private _adminService: AdminService, private _datePipe: DatePipe) {
     this.page.pageNumber = 0;
   }
 
   ngOnInit() {
     this.columns = [
-      { name: "Holiday", prop: "name" },
-      { name: "Date", prop: "date", pipe: this.datePipe() },
-      { name: "Rate", prop: "rate" },
-      { name: "Year", prop: "year" },
+      { name: 'Holiday', prop: 'name' },
+      { name: 'Date', prop: 'date', pipe: this.datePipe() },
+      { name: 'Rate', prop: 'rate' },
+      { name: 'Year', prop: 'year' },
     ];
-    this.columns.push({ name: "", cellTemplate: this.editCell, width: "50px" });
+    this.columns.push({ name: '', cellTemplate: this.editCell, width: '50px' });
   }
   datePipe() {
     return {
-      transform: (value) => this._datePipe.transform(value, "MM/dd/yyyy"),
+      transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy'),
     };
   }
   setPage(pageInfo) {
