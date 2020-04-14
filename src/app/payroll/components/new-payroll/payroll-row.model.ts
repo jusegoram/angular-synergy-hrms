@@ -1,4 +1,5 @@
 import * as moment from 'moment';
+import { TIME_VALUES, INCOME_VALUES } from '../../../../environments/enviroment.common';
 
 export class PayrollRow {
   // these properties are needed for object creation and are gotten from DB.

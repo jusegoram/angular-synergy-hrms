@@ -1,6 +1,7 @@
 import { Component, forwardRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { IMAGE_VALUES } from '../../../environments/enviroment.common';
 
 /*
   Generated class for the SignatureField component.

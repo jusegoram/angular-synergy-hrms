@@ -18,7 +18,12 @@
     "lib": [
       "es2017",
       "dom"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@synergy-app/*": ["app/*"],
+      "@synergy/*": ["*"]
+    }
   },
   "angularCompilerOptions": {
     "enableIvy": false

@@ -4,6 +4,7 @@ import { AdminService } from '../../admin.service';
 import { Page } from '../../../shared/models/page';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { CurrencyPipe } from '@angular/common';
+import { DATA_TABLE } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-income-tax',

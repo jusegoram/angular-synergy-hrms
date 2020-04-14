@@ -1,4 +1,4 @@
-const USER_ROLES = {
+export const USER_ROLES = {
   ACCOUNTING: { value: 0, name: 'Accounting' },
   MANAGEMENT: { value: 1, name: 'Management' },
   TRAINING: { value: 2, name: 'Training' },
@@ -7,14 +7,14 @@ const USER_ROLES = {
   WEB_ADMINISTRATOR: { value: 9999, name: 'Web Administrator' },
 };
 
-const DATA_TABLE = {
+export const DATA_TABLE = {
   PAGINATION: {
     DEFAULT_PAGE_SIZE: 11,
     DEFAULT_PAGE_SIZES: [5, 10, 25, 100],
   },
 };
 
-const IMAGE_VALUES = {
+export const IMAGE_VALUES = {
   QUALITY: {
     FULL: 1.0,
     MEDIUM: 0.5,
@@ -22,7 +22,7 @@ const IMAGE_VALUES = {
   },
 };
 
-const TIME_VALUES = {
+export const TIME_VALUES = {
   SHORT_TIME_TO_WAIT: 350,
   SEXAGESIMAL_BASE: 60,
   SECONDS_PER_HOUR: 3600,
@@ -51,13 +51,13 @@ const TIME_VALUES = {
   },
 };
 
-const INCOME_VALUES = {
+export const INCOME_VALUES = {
   EMPLOYEE: {
     AVERAGE_EARNING: 500,
   },
 };
 
-const HTTP_CODES = {
+export const HTTP_CODES = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   FORBIDDEN: 403,
@@ -67,7 +67,7 @@ const HTTP_CODES = {
   GATEWAY_TIMEOUT: 504,
 };
 
-const TEMPERATURE_VALUES = {
+export const TEMPERATURE_VALUES = {
   ZERO_KELVIN: 273.15,
   FREEZING_POINT: 32,
   DEGREE_RATIO: 1.8,

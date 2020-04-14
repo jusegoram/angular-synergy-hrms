@@ -3,8 +3,9 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PayrollService } from '../../../../services/payroll.service';
+import { PayrollService } from '@synergy-app/payroll/services/payroll.service';
 import { noop } from 'rxjs';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-edit-payroll-detail-vacations',

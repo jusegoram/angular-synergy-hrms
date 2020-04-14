@@ -8,6 +8,7 @@ import { Observable, Subscription } from 'rxjs';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { map, startWith } from 'rxjs/operators';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'report-matrix',

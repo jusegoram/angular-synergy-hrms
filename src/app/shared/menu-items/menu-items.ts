@@ -1,6 +1,7 @@
 import { SessionService } from '../../session/session.service';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { USER_ROLES } from '../../../environments/enviroment.common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class BadgeItem {

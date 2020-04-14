@@ -2,6 +2,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from './../../admin.service';
 import { Component, OnInit } from '@angular/core';
+import { DATA_TABLE } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-recent-activities',

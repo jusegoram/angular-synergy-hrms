@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Client, Department } from '../../../administration/employee/models/positions-models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { USER_ROLES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'position-info',

@@ -9,6 +9,7 @@ import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-
 import { SessionService } from '../../session/session.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
+import { TEMPERATURE_VALUES, TIME_VALUES } from '../../../environments/enviroment.common';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 

@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TIME_VALUES } from '../../../environments/enviroment.common';
 
 @Pipe({
   name: 'minuteSeconds',

@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-manage',

@@ -19,6 +19,7 @@ import { API } from '../../environments/environment';
 import { TrackerStatusPipe } from '../shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '../shared/pipes/tracker-type.pipe';
 import moment from 'moment';
+import { TIME_VALUES } from '../../environments/enviroment.common';
 
 export class Store {
   constructor(public id: string, public obs: Observable<any>) {}

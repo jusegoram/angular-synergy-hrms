@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { Employee } from '../employee/employee.model';
 import { Menu } from '../shared/menu-items/menu-items';
+import { TIME_VALUES } from '../../environments/enviroment.common';
 
 @Injectable()
 export class AdminService {

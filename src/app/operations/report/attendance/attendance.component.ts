@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
 import { Observable } from 'rxjs';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'report-attendance',

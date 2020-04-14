@@ -9,6 +9,7 @@ import { SessionService } from '../../../../session/session.service';
 import { Employee } from '../../../../employee/employee.model';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-new-concept',

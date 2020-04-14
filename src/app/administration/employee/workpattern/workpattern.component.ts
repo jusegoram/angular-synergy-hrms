@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-workpattern',
