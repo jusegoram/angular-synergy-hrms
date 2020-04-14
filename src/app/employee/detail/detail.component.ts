@@ -13,6 +13,7 @@ import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/r
 import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
 import { TRACKER_STATUS } from '../../../environments/environment';
+import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
 
 @Component({
   selector: 'app-detail',
@@ -83,7 +84,18 @@ export class DetailComponent implements OnInit {
       width: '700px',
       data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+    });
+  }
+  openTransferDialog(): void {
+    const dialogRef = this.dialog.open(TransferDialogComponent, {
+      width: '700px',
+      data: { status: this.employee.status, hrTracker: this.hrTracker }
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+    });
   }
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
@@ -91,7 +103,9 @@ export class DetailComponent implements OnInit {
       data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+    });
   }
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
@@ -99,7 +113,9 @@ export class DetailComponent implements OnInit {
       data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {});
+    dialogRef.afterClosed().subscribe((result) => {
+      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+    });
   }
 
   setHrTracker() {
