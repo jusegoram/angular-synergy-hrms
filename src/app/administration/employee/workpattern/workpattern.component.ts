@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-workpattern',
@@ -180,14 +181,14 @@ export class WorkpatternComponent implements OnInit {
     if (day.startTime !== null) {
       const str: string = day.startTime + '';
       const strArray = str.split(':');
-      const hoursStr = parseInt(strArray[0], 10) * 60;
+      const hoursStr = parseInt(strArray[0], 10) * TIME_VALUES.MINUTES_PER_HOUR;
       const minutesStr = parseInt(strArray[1], 10);
       startTime = hoursStr + minutesStr;
     }
     if (day.endTime !== null) {
       const end: string = day.endTime + '';
       const endArray = end.split(':');
-      const hoursEnd = parseInt(endArray[0], 10) * 60;
+      const hoursEnd = parseInt(endArray[0], 10) * TIME_VALUES.MINUTES_PER_HOUR;
       const minutesEnd = parseInt(endArray[1], 10);
       endTime = hoursEnd + minutesEnd;
     }

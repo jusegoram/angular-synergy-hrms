@@ -5,6 +5,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
 import { Observable } from 'rxjs';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'report-attendance',
@@ -85,8 +86,8 @@ export class AttendanceComponent implements OnInit {
 
   transformToMinutes(hh, mm) {
     let minutes: number;
-    if (parseInt(hh, 10) < 25 && parseInt(mm, 10) < 60) {
-      minutes = parseInt(hh, 10) * 60 + parseInt(mm, 10);
+    if (parseInt(hh, 10) < TIME_VALUES.OVER_ONE_DAY_HOURS && parseInt(mm, 10) < TIME_VALUES.MINUTES_PER_HOUR) {
+      minutes = parseInt(hh, 10) * TIME_VALUES.SECONDS_PER_MINUTE + parseInt(mm, 10);
       return minutes;
     }
   }

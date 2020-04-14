@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { HrTracker } from '../../../shared/models/hr-tracker';
-import { TRACKER_STATUS } from '../../../../environments/environment';
+import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
+import { TRACKER_STATUS } from '@synergy/environments/environment';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-trackers-inbox-table',
@@ -28,7 +29,7 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
   setUpInputFilter() {
     fromEvent(this.inputFilter.nativeElement, 'keydown')
       .pipe(
-        debounceTime(300),
+        debounceTime( TIME_VALUES.SHORT_DEBOUNCE_TIME ),
         map((event: any) => event.target.value)
       )
       .subscribe((value) => {

@@ -4,6 +4,7 @@ import { AdminService } from '../../admin.service';
 import { Page } from '../../../shared/models/page';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { DatePipe } from '@angular/common';
+import { DATA_TABLE } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-holidays',
@@ -41,7 +42,7 @@ export class HolidaysComponent implements OnInit {
   setPage(pageInfo) {
     console.log(pageInfo);
     this.page.pageNumber = pageInfo.offset;
-    this.page.size = pageInfo.pageSize === 0 ? 11 : pageInfo.pageSize;
+    this.page.size = pageInfo.pageSize === 0 ? DATA_TABLE.PAGINATION.DEFAULT_PAGE_SIZE : pageInfo.pageSize;
 
     if (this.cache[this.page.pageNumber]) {
       return;

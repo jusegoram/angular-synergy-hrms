@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-manage',
@@ -26,7 +27,10 @@ export class NewPayrollComponent implements OnInit {
   ColumnMode = ColumnMode;
 
   payrollType = new FormControl('', [Validators.required]);
-  fromDate = new FormControl('', [this.dateMinimum(moment().add(-21, 'days')), Validators.required]);
+  fromDate = new FormControl('', [
+    this.dateMinimum(moment().add(-1 * TIME_VALUES.TWENTY_ONE_DAYS, 'days')),
+    Validators.required,
+  ]);
   toDate = new FormControl('', [this.dateMaximum(this.fromDate.value), Validators.required]);
   holidays = [];
   lastPayrollSettings: any;
@@ -297,7 +301,7 @@ export class NewPayrollComponent implements OnInit {
         return null;
       }
 
-      const validationDate = moment(this.fromDate.value, FORMAT_DATE).add(7, 'days');
+      const validationDate = moment(this.fromDate.value, FORMAT_DATE).add(TIME_VALUES.WEEK.AMOUNT_OF_DAYS, 'days');
       return controlDate.isBefore(validationDate)
         ? null
         : {

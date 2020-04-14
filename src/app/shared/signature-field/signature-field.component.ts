@@ -1,6 +1,7 @@
 import { Component, forwardRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SignaturePad } from 'angular2-signaturepad/signature-pad';
+import { IMAGE_VALUES } from '../../../environments/enviroment.common';
 
 /*
   Generated class for the SignatureField component.
@@ -64,7 +65,7 @@ export class SignatureFieldComponent implements ControlValueAccessor {
   public drawBegin(): void {}
 
   public drawComplete(): void {
-    this.signature = this.signaturePad.toDataURL('image/jpeg', 0.5);
+    this.signature = this.signaturePad.toDataURL('image/jpeg', IMAGE_VALUES.QUALITY.MEDIUM);
   }
 
   public off(): void {

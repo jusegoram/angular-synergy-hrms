@@ -9,6 +9,7 @@ import { Employee } from '../../../../shared/models/employee/employee';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PayrollConcept } from '../concepts.model';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-new-concept',
@@ -29,45 +30,45 @@ export class NewConceptComponent implements OnInit {
   conceptTypeList = [
     {
       type: 'Taxable Bonus',
-      concepts: [{concept: 'Other Bonus'}],
+      concepts: [{ concept: 'Other Bonus' }],
     },
     {
       type: 'Non-Taxable Bonus',
-      concepts: [{concept: 'Attendance Bonus (Falcon)'}],
+      concepts: [{ concept: 'Attendance Bonus (Falcon)' }],
     },
     {
       type: 'Deduction',
       concepts: [
-        {concept: 'Magistrate Court'},
-        {concept: 'Loan/Salary Advance'},
-        {concept: 'Police Record'},
-        {concept: 'Headset'},
-        {concept: 'Uniform'},
-        {concept: 'Quick Stop / AAA Loans'},
-        {concept: 'Overpayment'},
-        {concept: 'Early / Break Offender'},
+        { concept: 'Magistrate Court' },
+        { concept: 'Loan/Salary Advance' },
+        { concept: 'Police Record' },
+        { concept: 'Headset' },
+        { concept: 'Uniform' },
+        { concept: 'Quick Stop / AAA Loans' },
+        { concept: 'Overpayment' },
+        { concept: 'Early / Break Offender' },
       ],
     },
     {
       type: 'Other Payments',
       concepts: [
-        {concept: 'Certify Sick Leave'},
-        {concept: 'Compassionate Leave'},
-        {concept: 'Maternity Leave'},
-        {concept: 'Training Hours'},
-        {concept: 'Training Stipend'},
-        {concept: 'Time off System'},
-        {concept: 'Time off System 1.5'},
-        {concept: 'Time off System 2X'},
-        {concept: 'Card (cleaners/Security)'},
-        {concept: 'Card 1.5'},
-        {concept: 'Card 2X'},
-        {concept: 'Salary Differences (Discrepancies)'},
+        { concept: 'Certify Sick Leave' },
+        { concept: 'Compassionate Leave' },
+        { concept: 'Maternity Leave' },
+        { concept: 'Training Hours' },
+        { concept: 'Training Stipend' },
+        { concept: 'Time off System' },
+        { concept: 'Time off System 1.5' },
+        { concept: 'Time off System 2X' },
+        { concept: 'Card (cleaners/Security)' },
+        { concept: 'Card 1.5' },
+        { concept: 'Card 2X' },
+        { concept: 'Salary Differences (Discrepancies)' },
       ],
     },
     {
       type: 'Final Payments',
-      concepts: [{concept: 'Severance'}, {concept: 'Notice Payment'}],
+      concepts: [{ concept: 'Severance' }, { concept: 'Notice Payment' }],
     },
   ];
 
@@ -89,11 +90,11 @@ export class NewConceptComponent implements OnInit {
 
   ngOnInit() {
     this.columns = [
-      {name: 'CONCEPT', prop: 'type'},
-      {name: 'REASON', prop: 'reason'},
-      {name: 'AMOUNT', prop: 'amount', pipe: this.currency},
-      {name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe()},
-      {name: 'VERIFIED', prop: 'verified'},
+      { name: 'CONCEPT', prop: 'type' },
+      { name: 'REASON', prop: 'reason' },
+      { name: 'AMOUNT', prop: 'amount', pipe: this.currency },
+      { name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe() },
+      { name: 'VERIFIED', prop: 'verified' },
     ];
     this.getEmployees();
     this.buildForm();
@@ -104,7 +105,6 @@ export class NewConceptComponent implements OnInit {
       })
     );
   }
-
   isNotice = (concept) => concept === 'Notice Payment';
   isSeverance = (concept) => concept === 'Severance';
   isCompassionateLeave = (concept) => concept === 'Compassionate Leave';
@@ -116,7 +116,6 @@ export class NewConceptComponent implements OnInit {
       transform: (value) => this._datePipe.transform(value, 'MM/dd/yyyy'),
     };
   }
-
   buildForm() {
     this.conceptFormGroup = this.fb.group({
       employee: ['', Validators.required],
@@ -209,7 +208,7 @@ export class NewConceptComponent implements OnInit {
   calculateDaysDiff(from, to) {
     if (from && to) {
       const timeDiff = to.getTime() - from.getTime();
-      return timeDiff / (1000 * 3600 * 24);
+      return timeDiff / (1000 * TIME_VALUES.SECONDS_PER_HOUR * TIME_VALUES.HOURS_PER_DAY);
     }
     return null;
   }

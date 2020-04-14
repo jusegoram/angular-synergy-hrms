@@ -3,8 +3,9 @@ import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PayrollService } from '../../../../services/payroll.service';
+import { PayrollService } from '@synergy-app/payroll/services/payroll.service';
 import { noop } from 'rxjs';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-edit-payroll-detail-vacations',
@@ -71,7 +72,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   calculateDaysDiff(from, to) {
     if (from && to) {
       const timeDiff = to.getTime() - from.getTime();
-      return timeDiff / (1000 * 3600 * 24);
+      return timeDiff / (1000 * TIME_VALUES.SECONDS_PER_HOUR * TIME_VALUES.HOURS_PER_DAY);
     }
     return null;
   }

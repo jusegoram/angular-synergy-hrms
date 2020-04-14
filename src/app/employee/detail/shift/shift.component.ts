@@ -6,6 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild, } from '@angular/core';
 import moment from 'moment';
 import { MinutesHoursPipe } from '../../../shared/pipes/minutes-hours.pipe';
+import { TIME_VALUES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'shift',
@@ -107,7 +108,7 @@ export class ShiftComponent implements OnInit, OnChanges {
   myFilter = (d: Date): boolean => {
     const day = d.getDay();
     // Prevent Saturday and Sunday from being selected.
-    return day === 0 || day === 1 || day === 6;
+    return day === TIME_VALUES.WEEK.MONDAY || day === TIME_VALUES.WEEK.TUESDAY || day === TIME_VALUES.WEEK.SUNDAY;
   }
 
   onEdit(item) {
@@ -183,10 +184,10 @@ export class ShiftComponent implements OnInit, OnChanges {
       totaled.hh = arr.reduce((p, c) => p + c.hh, 0);
       totaled.mm = arr.reduce((p, c) => p + c.mm, 0);
       totaled.ss = arr.reduce((p, c) => p + c.ss, 0);
-      const time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-      const hrs = ~~(time / 3600);
-      const mins = ~~((time % 3600) / 60);
-      const secs = ~~time % 60;
+      const time = totaled.hh * TIME_VALUES.SECONDS_PER_HOUR + totaled.mm * TIME_VALUES.SECONDS_PER_MINUTE + totaled.ss;
+      const hrs = ~~(time / TIME_VALUES.SECONDS_PER_HOUR);
+      const mins = ~~((time % TIME_VALUES.SECONDS_PER_HOUR) / TIME_VALUES.SECONDS_PER_MINUTE);
+      const secs = ~~time % TIME_VALUES.SEXAGESIMAL_BASE;
       let ret = '';
 
       if (hrs > 0) {
@@ -199,7 +200,7 @@ export class ShiftComponent implements OnInit, OnChanges {
         hh: hrs,
         mm: mins,
         ss: secs,
-        value: time / 3600,
+        value: time / TIME_VALUES.SECONDS_PER_HOUR,
         valueString: ret,
       };
       return correctedTotal;
@@ -221,7 +222,7 @@ export class ShiftComponent implements OnInit, OnChanges {
         return endTime - startTime;
       }
       if (startTime > endTime) {
-        return 1440 - startTime + endTime;
+        return TIME_VALUES.MINUTES_PER_DAY - startTime + endTime;
       }
     } else {
       return 0;

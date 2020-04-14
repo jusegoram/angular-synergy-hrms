@@ -2,6 +2,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from './../../admin.service';
 import { Component, OnInit } from '@angular/core';
+import { DATA_TABLE } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-recent-activities',
@@ -18,12 +19,12 @@ export class RecentActivitiesComponent implements OnInit {
   logsPage = 0;
   logsLength = 0;
   logsLimit = 5;
-  logsPageSizeOptions: number[] = [5, 10, 25, 100];
+  logsPageSizeOptions: number[] = DATA_TABLE.PAGINATION.DEFAULT_PAGE_SIZES;
 
   uploadsPage = 0;
   uploadsLength = 0;
   uploadsLimit = 5;
-  uploadsPageSizeOptions: number[] = [5, 10, 25, 100];
+  uploadsPageSizeOptions: number[] = DATA_TABLE.PAGINATION.DEFAULT_PAGE_SIZES;
 
   constructor(private _adminService: AdminService) {}
 

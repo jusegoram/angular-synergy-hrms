@@ -1,6 +1,7 @@
 import { SessionService } from '../../session/session.service';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { USER_ROLES } from '../../../environments/enviroment.common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class BadgeItem {
@@ -32,7 +33,13 @@ const MENUITEMS = [
     name: 'Home',
     type: 'link',
     icon: 'home',
-    roles: [0, 1, 2, 3, 4],
+    roles: [
+      USER_ROLES.ACCOUNTING.value,
+      USER_ROLES.MANAGEMENT.value,
+      USER_ROLES.TRAINING.value,
+      USER_ROLES.ADMINISTRATOR.value,
+      USER_ROLES.UNKNOWN.value,
+    ],
   },
   {
     state: 'employee',
@@ -45,7 +52,13 @@ const MENUITEMS = [
       {state: 'reports', name: 'Reports'},
       {state: 'upload', name: 'Uploads'},
     ],
-    roles: [0, 1, 2, 3, 4],
+    roles: [
+      USER_ROLES.ACCOUNTING.value,
+      USER_ROLES.MANAGEMENT.value,
+      USER_ROLES.TRAINING.value,
+      USER_ROLES.ADMINISTRATOR.value,
+      USER_ROLES.UNKNOWN.value,
+    ],
   },
   {
     state: 'admin',
@@ -57,7 +70,7 @@ const MENUITEMS = [
       {state: 'content', name: 'Content'},
       {state: 'employee', name: 'Employee'},
     ],
-    roles: [3, 4],
+    roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.UNKNOWN.value],
   },
 ];
 

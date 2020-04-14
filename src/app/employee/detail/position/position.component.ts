@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OnDeleteAlertComponent } from '../../../shared/modals/on-delete-alert/on-delete-alert.component';
 import { Roles } from '../../../shared/global-constants/global-constants';
+import { USER_ROLES } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'position-info',

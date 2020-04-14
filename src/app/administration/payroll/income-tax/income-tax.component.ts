@@ -4,6 +4,7 @@ import { AdminService } from '../../admin.service';
 import { Page } from '../../../shared/models/page';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { CurrencyPipe } from '@angular/common';
+import { DATA_TABLE } from '../../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-income-tax',
@@ -32,9 +33,10 @@ export class IncomeTaxComponent implements OnInit {
     ];
     this.columns.push({name: '', cellTemplate: this.editCell, width: '50px'});
   }
+
   setPage(pageInfo) {
     this.page.pageNumber = pageInfo.offset;
-    this.page.size = pageInfo.pageSize === 0 ? 11 : pageInfo.pageSize;
+    this.page.size = pageInfo.pageSize === 0 ? DATA_TABLE.PAGINATION.DEFAULT_PAGE_SIZE : pageInfo.pageSize;
 
     //  if (this.cache[this.page.pageNumber]) { return; }
     this._adminService.getIncomeTax(this.page).subscribe((pagedData: any) => {
@@ -61,8 +63,10 @@ export class IncomeTaxComponent implements OnInit {
       this.cache[this.page.pageNumber] = true;
     });
   }
+
   editRow(row) {
     console.log(row);
   }
+
   populateTable() {}
 }

@@ -78,6 +78,17 @@ export class DashboardComponent implements OnInit {
     // this.employeeCount = this._dashboardService.employeeCount;
   }
   fetchData() {
+    const schema = [
+      {
+        name: 'Time',
+        type: 'date',
+        format: '%d-%b-%y',
+      },
+      {
+        name: 'Active Employees',
+        type: 'number',
+      },
+    ];
     // First we are creating a DataStore
     // const fusionDataStore = new FusionCharts.DataStore();
     // After that we are creating a DataTable by passing our data and schema as arguments

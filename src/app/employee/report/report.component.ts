@@ -5,6 +5,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import { RangesFooterComponent } from '../../shared/ranges-footer/ranges-footer.component';
+import { TIME_VALUES } from '../../../environments/enviroment.common';
 
 @Component({
   selector: 'app-report',
@@ -452,8 +453,8 @@ export class ReportComponent implements OnInit {
         return param;
       }
       const stored = parseInt(param, 10);
-      const hours = Math.floor(stored / 60);
-      const minutes = stored - hours * 60;
+      const hours = Math.floor(stored / TIME_VALUES.SECONDS_PER_MINUTE);
+      const minutes = stored - hours * TIME_VALUES.SECONDS_PER_MINUTE;
       const fixedMin = minutes === 0 ? '00' : minutes;
       result = hours + ':' + fixedMin;
       return result;

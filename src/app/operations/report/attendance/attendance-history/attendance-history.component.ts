@@ -30,8 +30,9 @@ export class AttendanceHistoryComponent implements OnInit, OnChanges {
     this.buildTable([]);
   }
   buildForm() {
+    const lessThanFourTeen = -14;
     this.dateRangeForm = this.fb.group({
-      from: [moment().add(-14, 'days').toDate()],
+      from: [moment().add(lessThanFourTeen, 'days').toDate()],
       to: [moment().toDate()],
     });
   }

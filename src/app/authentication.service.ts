@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { SessionService } from './session/session.service';
 import { MatDialog } from '@angular/material/dialog';
+import { HTTP_CODES } from '../environments/enviroment.common';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class AuthenticationService {
         },
         (err: any) => {
           if (err instanceof HttpErrorResponse) {
-            if (err.status === 401) {
+            if (err.status === HTTP_CODES.UNAUTHORIZED) {
               // redirect to the login route
               // or show a modal
               this._session.logout();
