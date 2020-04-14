@@ -71,7 +71,7 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   calculateDaysDiff(from, to) {
     if (from && to) {
       const timeDiff = to.getTime() - from.getTime();
-      return timeDiff / (1000 * 3600 * 24);
+      return timeDiff / (1000 * TIME_VALUES.SECONDS_PER_HOUR * TIME_VALUES.HOURS_PER_DAY);
     }
     return null;
   }

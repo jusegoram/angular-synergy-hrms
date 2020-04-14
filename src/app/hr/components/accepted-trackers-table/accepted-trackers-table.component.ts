@@ -27,7 +27,7 @@ export class AcceptedTrackersTableComponent implements OnInit, AfterViewInit {
   setUpInputFilter() {
     fromEvent(this.inputFilter.nativeElement, 'keydown')
       .pipe(
-        debounceTime(300),
+        debounceTime(TIME_VALUES.SHORT_DEBOUNCE_TIME),
         map((event: any) => event.target.value)
       )
       .subscribe((value) => {

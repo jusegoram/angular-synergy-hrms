@@ -114,7 +114,7 @@ export class PayrollRow {
     this.employeeShift = employeeShift;
     this.fromDate = fromDate;
     this.toDate = toDate;
-    this.overtimeRate = hourlyRate * 1.5;
+    this.overtimeRate = hourlyRate * 1.5; // Q: what does 1.5 mean?
   }
 
   public set hours(v: any[]) {
@@ -211,19 +211,22 @@ export class PayrollRow {
     return new Promise((res, rej) => {
       const totalX2 = {
         hours: 0,
-        rate: 2 * this.hourlyRate,
+        rate: 2 * this.hourlyRate, // Q: what does 2 mean?
         totalPayed: 0,
       };
       const totalX1 = {
         hours: 0,
-        rate: 1.5 * this.hourlyRate,
+        rate: 1.5 * this.hourlyRate, // Q: what does 1.5 mean?
         totalPayed: 0,
       };
       if (this.holiday.length > 0) {
         for (let i = 0; i < this.holiday.length; i++) {
           const day = this.holiday[i];
-          const time = day.systemHours.hh * 3600 + day.systemHours.mm * 60 + day.systemHours.ss;
-          const value = time / 3600;
+          const time =
+            day.systemHours.hh * TIME_VALUES.SECONDS_PER_HOUR +
+            day.systemHours.mm * TIME_VALUES.SECONDS_PER_MINUTE +
+            day.systemHours.ss;
+          const value = time / TIME_VALUES.SECONDS_PER_HOUR;
           if (parseInt(day.holidayRate, 10) === 2) {
             totalX2.hours = totalX2.hours + value;
             totalX2.totalPayed = totalX2.hours * totalX2.rate;
@@ -249,7 +252,7 @@ export class PayrollRow {
       for (let i = 0; i < dif; i++) {
         const localizedDate = this.fromDate;
         localizedDate.add(i, 'days').toDate();
-        const dayOfWeek = localizedDate.day() === 0 ? 6 : localizedDate.day() - 1;
+        const dayOfWeek = localizedDate.day() === 0 ? TIME_VALUES.WEEK.SUNDAY : localizedDate.day() - 1;
 
         if (
           this.employeeShift !== null &&
@@ -257,7 +260,7 @@ export class PayrollRow {
           this.checkForHoliday(localizedDate, holidayList)
         ) {
           const shiftElement = this.employeeShift.shift[dayOfWeek];
-          const hoursWorked = (shiftElement.endTime - shiftElement.startTime) / 60;
+          const hoursWorked = (shiftElement.endTime - shiftElement.startTime) / TIME_VALUES.SECONDS_PER_MINUTE;
           this.regularHours = this.regularHours - hoursWorked;
         }
         localizedDate.subtract(i, 'days').toDate();
@@ -270,6 +273,7 @@ export class PayrollRow {
   calculateSystemHours() {
     return new Promise((res, rej) => {
       if (this.hours.length > 7) {
+        // Q: what does 7 mean?
         rej(this);
       }
       const totaled = this.calculateTotalHours(this.hours);
@@ -289,12 +293,12 @@ export class PayrollRow {
 
   calculateOvertimeHours() {
     return new Promise((res, rej) => {
-      if (this.totalSystemHours.value >= 45) {
+      if (this.totalSystemHours.value >= TIME_VALUES.WORK.REGULAR_HOURS) {
         this.overtime = this.totalSystemHours.value - this.regularHours;
-        const time = this.overtime * 3600;
-        const hrs = ~~(time / 3600);
-        const mins = ~~((time % 3600) / 60);
-        const secs = ~~time % 60;
+        const time = this.overtime * TIME_VALUES.SECONDS_PER_HOUR;
+        const hrs = ~~(time / TIME_VALUES.SECONDS_PER_HOUR);
+        const mins = ~~((time % TIME_VALUES.SECONDS_PER_HOUR) / TIME_VALUES.SECONDS_PER_MINUTE);
+        const secs = ~~time % TIME_VALUES.SEXAGESIMAL_BASE;
         let ret = '';
         if (hrs > 0) {
           ret += '' + hrs + ':' + (mins < 10 ? '0' : '');
@@ -367,7 +371,10 @@ export class PayrollRow {
         const social = socialTable[i];
         const upperLimit = socialTable[i + 1] !== undefined ? socialTable[i + 1].earnings : this.grossWage + 1;
         const identifier = this.grossWage - this.totalOtherpay;
-        if (this.totalSystemHours >= 8 || this.grossWage - this.totalOtherpay >= this.hourlyRate * 8) {
+        if (
+          this.totalSystemHours >= TIME_VALUES.WORK.AVERAGE_SYSTEM_HOURS_PER_DAY || // Q: what does 8 mean?
+          this.grossWage - this.totalOtherpay >= this.hourlyRate * TIME_VALUES.WORK.AVERAGE_SYSTEM_HOURS_PER_DAY
+        ) {
           if (identifier > social.earnings && identifier < upperLimit) {
             this.socialSecurityEmployer = social.employerDeductions;
             this.socialSecurityEmployee = social.employeeDeductions;
@@ -382,12 +389,14 @@ export class PayrollRow {
   calculateTotalIncomeTax(incometaxTable: any[]) {
     return new Promise((res, rej) => {
       const earnings = this.grossWage;
-      if (earnings > 500) {
+      if (earnings > INCOME_VALUES.EMPLOYEE.AVERAGE_EARNING) {
+        // Q = 500 ? minimun or average earning?
         let value;
         for (let i = 0; i < incometaxTable.length; i++) {
           const tax = incometaxTable[i];
           const earn = Math.round(100 * earnings) / 100;
           if (earn >= tax.fromAmount && earn < tax.toAmount + 0.1) {
+            // Q: what does 0.1 mean?
             value = tax;
             break;
           }
@@ -496,10 +505,10 @@ export class PayrollRow {
       totaled.hh = totaled.hh + arr.reduce((p, c) => p + c.tosHours.hh, 0);
       totaled.mm = totaled.mm + arr.reduce((p, c) => p + c.tosHours.mm, 0);
       totaled.ss = totaled.ss + arr.reduce((p, c) => p + c.tosHours.ss, 0);
-      const time = totaled.hh * 3600 + totaled.mm * 60 + totaled.ss;
-      const hrs = ~~(time / 3600);
-      const mins = ~~((time % 3600) / 60);
-      const secs = ~~time % 60;
+      const time = totaled.hh * TIME_VALUES.SECONDS_PER_HOUR + totaled.mm * TIME_VALUES.SECONDS_PER_MINUTE + totaled.ss;
+      const hrs = ~~(time / TIME_VALUES.SECONDS_PER_HOUR);
+      const mins = ~~((time % TIME_VALUES.SECONDS_PER_HOUR) / TIME_VALUES.SECONDS_PER_MINUTE);
+      const secs = ~~time % TIME_VALUES.SEXAGESIMAL_BASE;
       let ret = '';
 
       if (hrs > 0) {
@@ -512,7 +521,7 @@ export class PayrollRow {
         hh: hrs,
         mm: mins,
         ss: secs,
-        value: time / 3600,
+        value: time / TIME_VALUES.SECONDS_PER_HOUR,
         valueString: ret,
       };
       return correctedTotal;

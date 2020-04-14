@@ -85,8 +85,8 @@ export class AttendanceComponent implements OnInit {
 
   transformToMinutes(hh, mm) {
     let minutes: number;
-    if (parseInt(hh, 10) < 25 && parseInt(mm, 10) < 60) {
-      minutes = parseInt(hh, 10) * 60 + parseInt(mm, 10);
+    if (parseInt(hh, 10) < TIME_VALUES.OVER_ONE_DAY_HOURS && parseInt(mm, 10) < TIME_VALUES.MINUTES_PER_HOUR) {
+      minutes = parseInt(hh, 10) * TIME_VALUES.SECONDS_PER_MINUTE + parseInt(mm, 10);
       return minutes;
     }
   }

@@ -180,14 +180,14 @@ export class WorkpatternComponent implements OnInit {
     if (day.startTime !== null) {
       const str: string = day.startTime + '';
       const strArray = str.split(':');
-      const hoursStr = parseInt(strArray[0], 10) * 60;
+      const hoursStr = parseInt(strArray[0], 10) * TIME_VALUES.MINUTES_PER_HOUR;
       const minutesStr = parseInt(strArray[1], 10);
       startTime = hoursStr + minutesStr;
     }
     if (day.endTime !== null) {
       const end: string = day.endTime + '';
       const endArray = end.split(':');
-      const hoursEnd = parseInt(endArray[0], 10) * 60;
+      const hoursEnd = parseInt(endArray[0], 10) * TIME_VALUES.MINUTES_PER_HOUR;
       const minutesEnd = parseInt(endArray[1], 10);
       endTime = hoursEnd + minutesEnd;
     }

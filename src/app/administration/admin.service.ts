@@ -237,11 +237,11 @@ export class AdminService {
         const storedEnd = parseInt(day.endTime, 10);
         const storedStart = parseInt(day.startTime, 10);
 
-        const hoursEnd = Math.floor(storedEnd / 60);
-        const minutesEnd = storedEnd - hoursEnd * 60;
+        const hoursEnd = Math.floor(storedEnd / TIME_VALUES.MINUTES_PER_HOUR);
+        const minutesEnd = storedEnd - hoursEnd * TIME_VALUES.SECONDS_PER_HOUR;
 
-        const hoursStart = Math.floor(storedStart / 60);
-        const minutesStart = storedStart - hoursStart * 60;
+        const hoursStart = Math.floor(storedStart / TIME_VALUES.MINUTES_PER_HOUR);
+        const minutesStart = storedStart - hoursStart * TIME_VALUES.SECONDS_PER_HOUR;
         let minutesEndStr = '';
         if (minutesEnd < 10) {
           minutesEndStr = '0' + minutesEnd;

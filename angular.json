@@ -98,7 +98,8 @@
               "src/tsconfig.spec.json"
             ],
             "exclude": [
-              "**/node_modules/**"
+              "**/node_modules/**",
+              "src/environments/**"
             ]
           }
         }
@@ -123,7 +124,8 @@
               "e2e/tsconfig.e2e.json"
             ],
             "exclude": [
-              "**/node_modules/**"
+              "**/node_modules/**",
+              "src/environments/**"
             ]
           }
         }

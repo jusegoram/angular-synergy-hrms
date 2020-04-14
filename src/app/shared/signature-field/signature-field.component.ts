@@ -64,7 +64,7 @@ export class SignatureFieldComponent implements ControlValueAccessor {
   public drawBegin(): void {}
 
   public drawComplete(): void {
-    this.signature = this.signaturePad.toDataURL('image/jpeg', 0.5);
+    this.signature = this.signaturePad.toDataURL('image/jpeg', IMAGE_VALUES.QUALITY.MEDIUM);
   }
 
   public off(): void {

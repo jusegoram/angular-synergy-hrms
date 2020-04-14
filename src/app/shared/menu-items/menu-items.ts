@@ -31,7 +31,13 @@ const MENUITEMS = [
     name: 'Home',
     type: 'link',
     icon: 'home',
-    roles: [0, 1, 2, 3, 4],
+    roles: [
+      USER_ROLES.ACCOUNTING.value,
+      USER_ROLES.MANAGEMENT.value,
+      USER_ROLES.TRAINING.value,
+      USER_ROLES.ADMINISTRATOR.value,
+      USER_ROLES.UNKNOWN.value,
+    ],
   },
   {
     state: 'employee',
@@ -44,7 +50,13 @@ const MENUITEMS = [
       { state: 'reports', name: 'Reports' },
       { state: 'upload', name: 'Uploads' },
     ],
-    roles: [0, 1, 2, 3, 4],
+    roles: [
+      USER_ROLES.ACCOUNTING.value,
+      USER_ROLES.MANAGEMENT.value,
+      USER_ROLES.TRAINING.value,
+      USER_ROLES.ADMINISTRATOR.value,
+      USER_ROLES.UNKNOWN.value,
+    ],
   },
   {
     state: 'admin',
@@ -56,7 +68,7 @@ const MENUITEMS = [
       { state: 'content', name: 'Content' },
       { state: 'employee', name: 'Employee' },
     ],
-    roles: [3, 4],
+    roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.UNKNOWN.value],
   },
 ];
 

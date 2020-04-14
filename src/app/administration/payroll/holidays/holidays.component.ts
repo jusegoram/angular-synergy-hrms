@@ -41,7 +41,7 @@ export class HolidaysComponent implements OnInit {
   setPage(pageInfo) {
     console.log(pageInfo);
     this.page.pageNumber = pageInfo.offset;
-    this.page.size = pageInfo.pageSize === 0 ? 11 : pageInfo.pageSize;
+    this.page.size = pageInfo.pageSize === 0 ? DATA_TABLE.PAGINATION.DEFAULT_PAGE_SIZE : pageInfo.pageSize;
 
     if (this.cache[this.page.pageNumber]) {
       return;

@@ -79,7 +79,9 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this.sessionService.getWeather().subscribe((data) => {
       this.weather = data;
       this.switchWeatherIcon(this.weather.weather[0].icon);
-      this.tempFahrenheit = (this.weather.main.temp - 273.15) * 1.8 + 32;
+      this.tempFahrenheit =
+        (this.weather.main.temp - TEMPERATURE_VALUES.ZERO_KELVIN) * TEMPERATURE_VALUES.DEGREE_RATIO +
+        TEMPERATURE_VALUES.FREEZING_POINT;
     });
   }
 
@@ -108,6 +110,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       return this.mediaMatcher.matches;
     }
   }
+
   switchWeatherIcon(icon) {
     switch (icon) {
       case '01d':
@@ -184,7 +187,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     if (!this.mediaMatcher.matches && !this.compactSidebar) {
       setTimeout(() => {
         this.directiveScroll.update();
-      }, 350);
+      }, TIME_VALUES.SHORT_TIME_TO_WAIT);
     }
   }
 

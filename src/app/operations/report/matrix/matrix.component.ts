@@ -86,7 +86,7 @@ export class MatrixComponent implements OnInit, OnDestroy {
   myFilter = (d: Date): boolean => {
     const day = d.getDay();
     // Prevent Saturday and Sunday from being selected.
-    return day === 0 || day === 1 || day === 6;
+    return day === TIME_VALUES.WEEK.MONDAY || day === TIME_VALUES.WEEK.TUESDAY || day === TIME_VALUES.WEEK.SUNDAY;
   }
 
   buildForm() {

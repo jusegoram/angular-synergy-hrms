@@ -1,4 +1,3 @@
-
 import * as moment from 'moment';
 import { PayrollRow } from './payroll-row.model';
 
@@ -163,6 +162,7 @@ export class Payroll {
   getEmployeeById(id) {
     return this._employees.find((employee) => employee.employee === id);
   }
+
   joinEmployee(table, param) {
     const arrayLength = this._employees.length;
     for (let i = 0; i < arrayLength; i++) {
@@ -173,7 +173,7 @@ export class Payroll {
       for (let e = 0; e < table.length; e++) {
         const item = table[e];
         if (employee.employee === item.employee) {
-          if (param === 'hours' && employee[param].length < 7) {
+          if (param === 'hours' && employee[param].length < 7) {// Q: what does 7 mean?
             employee[param].push(item);
           } else if (param !== 'hours') {
             employee[param].push(item);
@@ -187,6 +187,7 @@ export class Payroll {
     const foundEmployee = this.getEmployeeById(employee);
     foundEmployee.calculateConceptsGrossAndNet(this.socialTable, this.incometaxTable);
   }
+
   onCalculating() {
     return this._isCalculating;
   }

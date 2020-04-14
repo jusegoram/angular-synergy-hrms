@@ -492,7 +492,7 @@ export class EmployeeService {
       hrTracker.stateName = this.trackerStatusPipe.transform(hrTracker.state);
       hrTracker.trackerTypeName = this.trackerTypePipe.transform(hrTracker.tracker);
       hrTracker.requestDateFormatted = moment(hrTracker.requestDate).format('MM/DD/YYYY');
-      hrTracker.deadlineDateFormatted = moment(hrTracker.requestDate).add(3, 'days').format('MM/DD/YYYY');
+      hrTracker.deadlineDateFormatted = moment(hrTracker.requestDate).add(TIME_VALUES.THREE_DAYS, 'days').format('MM/DD/YYYY');
 
       if (hrTracker.tracker.certifyTraining) {
         hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(

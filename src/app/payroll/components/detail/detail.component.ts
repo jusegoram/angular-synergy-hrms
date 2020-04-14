@@ -182,6 +182,7 @@ export class DetailComponent implements OnInit {
     });
     this.clientTableDataSource = new MatTableDataSource(mappedData);
   }
+
   calculateTotals(data: any[]) {
     const calculatedTotal = {
       campaigns: 0,
@@ -216,7 +217,17 @@ export class DetailComponent implements OnInit {
         };
       } else {
         let value;
-        if (index === 6 || index === 8 || index === 10 || index === 12) {
+        const totalRegularHoursIndex = 6;
+        const totalOvertimeHoursIndex = 8;
+        const totalHolidayHoursX2PayIndex = 10;
+        const totalHolidayHoursX1PayIndex = 12;
+
+        if (
+          index === totalRegularHoursIndex ||
+          index === totalOvertimeHoursIndex ||
+          index === totalHolidayHoursX2PayIndex ||
+          index === totalHolidayHoursX1PayIndex
+        ) {
           const calc =
             Math.round(
               data.reduce((a, b) => {
