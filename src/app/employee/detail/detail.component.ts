@@ -8,6 +8,10 @@ import {HrTracker} from '../../shared/models/hr-tracker';
 import {OnSuccessAlertComponent} from '../../shared/modals/on-success-alert/on-success-alert.component';
 import {OnDeleteAlertComponent} from '../../shared/modals/on-delete-alert/on-delete-alert.component';
 import {OnErrorAlertComponent} from '../../shared/modals/on-error-alert/on-error-alert.component';
+import {SessionService} from '../../session/session.service';
+import {RequestInfoChangeDialogComponent} from './request-info-change-dialog/request-info-change-dialog.component';
+import {StatusDialogComponent} from './status-dialog/status-dialog.component';
+import {CertifyDialogComponent} from './certify-dialog/certify-dialog.component';
 
 @Component({
   selector: 'app-detail',
@@ -15,6 +19,14 @@ import {OnErrorAlertComponent} from '../../shared/modals/on-error-alert/on-error
   styleUrls: ['./detail.component.scss']
 })
 export class DetailComponent implements OnInit {
+  constructor(
+    private _service: EmployeeService,
+    private route: ActivatedRoute,
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    private sessionService: SessionService
+  ) {
+  }
   @ViewChild('successAlert', {static: false})
   successAlert: OnSuccessAlertComponent;
   @ViewChild('onDeleteAlert', {static: false})
@@ -51,6 +63,7 @@ export class DetailComponent implements OnInit {
   request and info change to minimize report and payroll errors.
 
  `;
+<<<<<<< Updated upstream
   constructor(
     private _service: EmployeeService,
     private route: ActivatedRoute,
@@ -58,12 +71,21 @@ export class DetailComponent implements OnInit {
     public dialog: MatDialog
   ) {
   }
+=======
+>>>>>>> Stashed changes
 
+  // transformDate(date: Date) {
+  //   const dp = new DatePipe('en-US')
+  //   const p = 'M/dd/yyyy';
+  //   const dtr = dp.transform(date, p)
+  //   return dtr;
+  // }
   ngOnInit() {
     this.auth = this._service.getAuth();
     this.employee = this.route.snapshot.data['employee'];
     this.setHrTracker();
   }
+<<<<<<< Updated upstream
 
   // transformDate(date: Date) {
   //   const dp = new DatePipe('en-US');
@@ -170,6 +192,31 @@ export class DetailComponent implements OnInit {
   //     }
   //   });
   // }
+=======
+  openStatusDialog(): void {
+    const dialogRef = this.dialog.open(StatusDialogComponent, {
+      width: '700px',
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
+    });
+  dialogRef.afterClosed().subscribe((result) => {
+    });
+  }
+  openCertifyDialog(): void {
+    const dialogRef = this.dialog.open(CertifyDialogComponent, {
+      width: '700px',
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
+    });
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+  openRequestChangeDialog(): void {
+    const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
+      width: '700px',
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {});
+  }
+>>>>>>> Stashed changes
 
   setHrTracker() {
     this.hrTracker = {
