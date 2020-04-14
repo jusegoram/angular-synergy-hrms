@@ -1,5 +1,5 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'shared-on-error-alert',
@@ -8,8 +8,8 @@ import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 })
 export class OnErrorAlertComponent implements OnInit {
   @ViewChild('errorSwal', { static: false }) swal: SwalComponent;
-
-  @Input('message') message;
+  // tslint:disable-next-line:no-input-rename
+  @Input('message') text;
   constructor() { }
 
   ngOnInit(): void {

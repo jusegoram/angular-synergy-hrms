@@ -11,7 +11,7 @@
     "test": "ng test",
     "test:coverage": "ng test --codeCoverage",
     "lint": "ng lint",
-    "lint-fix": "ng lint com.rccbpo.synergy --fix",
+    "lint-fix": "ng lint synergysystem-frontend --fix",
     "format:fix": "pretty-quick --staged",
     "e2e": "ng e2e"
   },

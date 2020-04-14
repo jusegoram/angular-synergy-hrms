@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {environment} from '../../../../environments/environment';
-import {EmployeeService} from '../../employee.service';
-import {DomSanitizer} from '@angular/platform-browser';
-import {SessionService} from '../../../session/session.service';
-import {FileUploader} from 'ng2-file-upload';
+import { Component, Input, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
+import { EmployeeService } from '../../employee.service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SessionService } from '../../../session/session.service';
+import { FileUploader } from 'ng2-file-upload';
 
 @Component({
   selector: 'avatar-detail',
@@ -42,7 +42,6 @@ export class AvatarComponent implements OnInit {
       authTokenHeader: 'Authorization',
       authToken: 'JWT ' + this.sessionService.jwtHelper.tokenGetter(),
     });
-    this.employeeService.clearAvatar(this.id);
     this.uploader.onCompleteItem = () => {
       this.loadAvatar(this.id);
     };

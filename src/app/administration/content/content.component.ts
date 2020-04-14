@@ -1,6 +1,6 @@
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Menu, MenuItems} from './../../shared/menu-items/menu-items';
-import {Component, OnInit} from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Menu, MenuItems } from './../../shared/menu-items/menu-items';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-content',

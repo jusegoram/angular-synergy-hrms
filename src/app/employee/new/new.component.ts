@@ -1,10 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EmployeeService} from '../employee.service';
-import {Employee} from '../../shared/models/employee/employee';
-import {Router} from '../../../../node_modules/@angular/router';
-import {OnSuccessAlertComponent} from '../../shared/modals/on-success-alert/on-success-alert.component';
-import {OnErrorAlertComponent} from '../../shared/modals/on-error-alert/on-error-alert.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from '../employee.service';
+import { Employee } from '../../shared/models/employee/employee';
+import { Router } from '../../../../node_modules/@angular/router';
+import { OnSuccessAlertComponent } from '../../shared/modals/on-success-alert/on-success-alert.component';
+import { OnErrorAlertComponent } from '../../shared/modals/on-error-alert/on-error-alert.component';
 
 @Component({
   selector: 'new',

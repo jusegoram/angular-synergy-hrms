@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Employee, EmployeeComment,} from '../../../shared/models/employee/employee';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatTableDataSource} from '@angular/material/table';
-import {EmployeeService} from '../../employee.service';
-import {SessionService} from '../../../session/session.service';
-import {OnDeleteAlertComponent} from '../../../shared/modals/on-delete-alert/on-delete-alert.component';
-import {noop} from 'rxjs';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Employee, EmployeeComment, } from '../../../shared/models/employee/employee';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
+import { OnDeleteAlertComponent } from '../../../shared/modals/on-delete-alert/on-delete-alert.component';
+import { noop } from 'rxjs';
 
 @Component({
   selector: 'comment-info',

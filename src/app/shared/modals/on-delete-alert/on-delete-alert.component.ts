@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'shared-on-delete-alert',
@@ -8,7 +8,8 @@ import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
 })
 export class OnDeleteAlertComponent implements OnInit {
   @ViewChild('deleteSwal', { static: false }) swal: SwalComponent;
-  @Input('message') message;
+  // tslint:disable-next-line:no-input-rename
+  @Input('message') text;
   @Output() confirm = new EventEmitter<any>();
   CANCEL = false;
   DELETED_ITEM;

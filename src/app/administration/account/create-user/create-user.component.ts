@@ -1,14 +1,14 @@
-import {AdminService} from '../../admin.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Router} from '@angular/router';
-import {SessionService} from '../../../session/session.service';
-import {Employee} from '../../../shared/models/employee/employee';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {User} from '../../../session/User';
+import { AdminService } from '../../admin.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { SessionService } from '../../../session/session.service';
+import { Employee } from '../../../shared/models/employee/employee';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { User } from '../../../session/user.model';
 
 @Component({
   selector: 'adm-create-user',

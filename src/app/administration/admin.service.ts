@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../environments/environment';
-import {Client, Department, Position,} from './employee/models/positions-models';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map, publishReplay, refCount} from 'rxjs/operators';
-import {Employee} from '../shared/models/employee/employee';
-import {Menu} from '../shared/menu-items/menu-items';
+import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+import { Client, Department, Position, } from './employee/models/positions-models';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map, publishReplay, refCount } from 'rxjs/operators';
+import { Employee } from '../shared/models/employee/employee';
+import { Menu } from '../shared/menu-items/menu-items';
 
 @Injectable()
 export class AdminService {

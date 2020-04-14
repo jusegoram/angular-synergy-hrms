@@ -1,8 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Employee} from '../../../shared/models/employee/employee';
-import {EmployeeService} from '../../employee.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {DateAdapter} from '@angular/material/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Employee } from '../../../shared/models/employee/employee';
+import { EmployeeService } from '../../employee.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'main-info',
@@ -10,8 +9,10 @@ import {DateAdapter} from '@angular/material/core';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+  // tslint:disable-next-line:no-input-rename
   @Input('authorization') auth;
-  @Input('employee') employee: Employee;
+  // tslint:disable-next-line:no-input-rename
+  @Input('employee') currentEmployee: Employee;
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
   public form: FormGroup;
@@ -29,15 +30,15 @@ export class MainComponent implements OnInit {
     this.buildForms();
   }
   buildForms() {
-    const {_id } = this.employee;
+    const {_id } = this.currentEmployee;
     this.form = this._formBuilder.group({
       _id: [_id],
-      dialerId: [this.employee.dialerId],
-      firstName: [this.employee.firstName],
-      middleName: [this.employee.middleName],
-      lastName: [this.employee.lastName],
-      gender: [this.employee.gender.toLowerCase()],
-      status: [this.employee.status.toLowerCase()],
+      dialerId: [this.currentEmployee.dialerId],
+      firstName: [this.currentEmployee.firstName],
+      middleName: [this.currentEmployee.middleName],
+      lastName: [this.currentEmployee.lastName],
+      gender: [this.currentEmployee.gender.toLowerCase()],
+      status: [this.currentEmployee.status.toLowerCase()],
     });
 
   }

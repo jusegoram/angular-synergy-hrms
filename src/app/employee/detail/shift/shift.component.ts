@@ -1,11 +1,11 @@
-import {EmployeeService} from './../../employee.service';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatTableDataSource} from '@angular/material/table';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild,} from '@angular/core';
+import { EmployeeService } from './../../employee.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild, } from '@angular/core';
 import moment from 'moment';
-import {MinutesHoursPipe} from '../../../shared/pipes/minutes-hours.pipe';
+import { MinutesHoursPipe } from '../../../shared/pipes/minutes-hours.pipe';
 
 @Component({
   selector: 'shift',

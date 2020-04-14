@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {DashboardService} from './dashboard.service';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { DashboardService } from './dashboard.service';
 
 // import * as FusionCharts from 'fusioncharts';
 

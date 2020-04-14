@@ -1,12 +1,12 @@
-import {MinuteSecondsPipe} from './../../../../shared/pipes/minute-seconds.pipe';
-import {ColumnMode, SelectionType} from '@swimlane/ngx-datatable';
-import {CurrencyPipe, DatePipe} from '@angular/common';
-import {Component, Input, NgZone, OnInit} from '@angular/core';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {PayrollService} from '../../../services/payroll.service';
+import { MinuteSecondsPipe } from './../../../../shared/pipes/minute-seconds.pipe';
+import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { Component, Input, NgZone, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PayrollService } from '../../../services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import {ChartData, Datum} from '../../../../shared/models/ChartData';
+import { ChartData, Datum } from '../../../../shared/models/chart-data.model';
 
 @Component({
   selector: 'app-payed-payrolls',

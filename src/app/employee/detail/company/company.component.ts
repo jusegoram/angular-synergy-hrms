@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '../../employee.service';
-import {
-  Employee,
-  EmployeeCompany,
-  Manager,
-} from '../../../shared/models/employee/employee';
-import { noop, Observable } from 'rxjs';
+import { Employee, EmployeeCompany, Manager, } from '../../../shared/models/employee/employee';
+import { noop } from 'rxjs';
 
 @Component({
   selector: 'company-info',
@@ -14,8 +10,10 @@ import { noop, Observable } from 'rxjs';
   styleUrls: ['./company.component.css'],
 })
 export class CompanyComponent implements OnInit {
+  // tslint:disable-next-line:no-input-rename
   @Input('authorization') auth;
-  @Input('employee') employee: Employee;
+  // tslint:disable-next-line:no-input-rename
+  @Input('employee') currentEmployee: Employee;
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
   company: EmployeeCompany = {
@@ -45,14 +43,14 @@ export class CompanyComponent implements OnInit {
   constructor(private _service: EmployeeService, private fb: FormBuilder) {}
 
   ngOnInit() {
-    Object.assign(this.company, this.employee.company);
+    Object.assign(this.company, this.currentEmployee.company);
     this.fetchSuperiors(this.company.client);
     this.clients = this._service.getClient();
     this.campaigns = this.setCampaigns(this.company.client);
     this.buildForm();
   }
   buildForm() {
-    const { _id: employee } = this.employee;
+    const { _id: employee } = this.currentEmployee;
     const {
       client,
       campaign,

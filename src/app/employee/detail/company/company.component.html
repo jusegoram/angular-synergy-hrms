@@ -192,7 +192,7 @@
         <mat-form-field
           appearance="outline"
           [ngClass]="{ 'readonly-wrapper': !auth.edit }"
-          *ngIf="employee.status !== 'active'"
+          *ngIf="currentEmployee.status !== 'active'"
         >
           <mat-label>TERMINATION DATE</mat-label>
           <input

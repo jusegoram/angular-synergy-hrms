@@ -1,3 +1,13 @@
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map, publishReplay, refCount } from 'rxjs/operators';
+import { API, environment } from '../../environments/environment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { SessionService } from '../session/session.service';
+import { HrTracker } from '../shared/models/hr-tracker';
+import { TrackerStatusPipe } from '../shared/pipes/tracker-status.pipe';
+import { TrackerTypePipe } from '../shared/pipes/tracker-type.pipe';
+import moment from 'moment';
 import {
   Employee,
   EmployeeAttrition,
@@ -6,38 +16,15 @@ import {
   EmployeeFamily,
   EmployeePayroll,
   EmployeePersonal,
-  EmployeePosition,
-  EmployeeFamily,
-  EmployeeComment,
-  EmployeeAttrition,
-} from './employee.model';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { publishReplay, refCount, map } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { SessionService } from '../session/session.service';
-import { HrTracker } from '../shared/models/hr-tracker';
-import { API } from '../../environments/environment';
-import { TrackerStatusPipe } from '../shared/pipes/tracker-status.pipe';
-import { TrackerTypePipe } from '../shared/pipes/tracker-type.pipe';
-import moment from 'moment';
+  EmployeePosition
+} from '../shared/models/employee/employee';
 
-export class Store {
-  constructor(public id: string, public obs: Observable<any>) {
-  }
-
-  getObservable(): Observable<any> {
-    return this.obs;
-  }
-}
 
 @Injectable()
 export class EmployeeService {
   api = environment.apiUrl;
   _clients: Observable<any> = null;
   clients: any;
-  store: Store[];
   _departments: Observable<any> = null;
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
@@ -62,19 +49,6 @@ export class EmployeeService {
     {value: 'transfer', viewValue: 'Transfer'},
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
-  public reaptimes = [
-    {value: 0, viewValue: '0'},
-    {value: 1, viewValue: '1'},
-    {value: 2, viewValue: '2'},
-    {value: 3, viewValue: '3'},
-    {value: 4, viewValue: '4'},
-    {value: 5, viewValue: '5'},
-    {value: 6, viewValue: '6'},
-    {value: 7, viewValue: '7'},
-    {value: 8, viewValue: '8'},
-    {value: 9, viewValue: '9'},
-    {value: 10, viewValue: '10'},
-  ];
   public genders = [
     {value: 'male', viewValue: 'Male'},
     {value: 'female', viewValue: 'Female'},
@@ -86,7 +60,6 @@ export class EmployeeService {
     private trackerStatusPipe: TrackerStatusPipe,
     private trackerTypePipe: TrackerTypePipe
   ) {
-    this.store = [];
   }
 
   getTemplate(templateUrl) {
@@ -138,13 +111,6 @@ export class EmployeeService {
     }
     return this._departments;
   }
-
-  // getShift(): Observable<any> {
-  //   if (!this._shift) {
-  //    this._shift = this.httpClient//       .get<any>(this.api + '/admin/employee/shift')//       .pipe(publishReplay(1), refCount());
-  //   }
-  //   return this._shift;
-  // }
   tokenGetter() {
     return 'JWT ' + localStorage.getItem('id_token');
   }
@@ -168,11 +134,6 @@ export class EmployeeService {
     }
     return this._employees;
   }
-
-  getTemplate(templateUrl) {
-    return this.httpClient.get(this.api + templateUrl, {
-      responseType: 'blob',
-    });
   getEmployee(param: string): Observable<Employee> {
     const params = new HttpParams().set('id', param);
     return (this._detail = this.httpClient.get<Employee>(
@@ -185,9 +146,11 @@ export class EmployeeService {
   /**
    *
    *
-   * @param {string} param
    * @returns {Observable<Employee>}
    * @memberof EmployeeService
+   * @param employeeId
+   * @param fromDate
+   * @param toDate
    */
 
   getEmployeeShift(employeeId, fromDate, toDate) {
@@ -206,7 +169,6 @@ export class EmployeeService {
   updateEmployee(employee: Employee) {
     const body = employee;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    const params = new HttpParams().set('id', employee._id);
     return this.httpClient.put(this.api + '/employee/main', body, {
       headers: headers,
     });
@@ -324,11 +286,6 @@ export class EmployeeService {
     this._employees = null;
   }
 
-  clearAvatar(param: string) {
-    const i = this.store.findIndex((res) => res.id === param);
-    this.store.splice(i, 1);
-  }
-
   getAuth() {
     return this.sessionService.getRights();
   }
@@ -366,13 +323,10 @@ export class EmployeeService {
 
   /**@todo: feat/hr-module
    * @function saveTracker
-   * @param {hr-tracker} tracker
    *
    * @function deleteTracker
-   * @param {hr-tracker} tracker._id
    *
    * @function getTracker
-   * @param {hr-tracker} employee || employeeId
    *
    * employeeId: from employee-mains
    * employee: _id of employee-mains
@@ -381,6 +335,7 @@ export class EmployeeService {
    * tracker: Object from trackerSchema
    * creation fingerprint: current user decodedToken
    * verificationFingerprint: current hr module user who fulfills the tracker
+   * @param hrTracker
    */
 
   saveTracker(hrTracker: HrTracker) {

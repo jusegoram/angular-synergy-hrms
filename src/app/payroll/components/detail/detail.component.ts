@@ -1,15 +1,15 @@
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
-import {EditPayrollDetailComponent} from './edit-payroll-detail/edit-payroll-detail.component';
-import {MatDialog} from '@angular/material/dialog';
-import {PayrollService} from './../../services/payroll.service';
-import {MinuteSecondsPipe} from './../../../shared/pipes/minute-seconds.pipe';
-import {MatTableDataSource} from '@angular/material/table';
-import {ChartData, Datum} from '../../../shared/models/ChartData';
-import {Component, NgZone, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {MatStepper} from '@angular/material/stepper';
-import {noop} from 'rxjs';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { EditPayrollDetailComponent } from './edit-payroll-detail/edit-payroll-detail.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PayrollService } from './../../services/payroll.service';
+import { MinuteSecondsPipe } from './../../../shared/pipes/minute-seconds.pipe';
+import { MatTableDataSource } from '@angular/material/table';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { MatStepper } from '@angular/material/stepper';
+import { noop } from 'rxjs';
+import { ChartData, Datum } from '../../../shared/models/chart-data.model';
 
 @Component({
   selector: 'app-detail',
