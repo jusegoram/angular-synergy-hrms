@@ -1,10 +1,10 @@
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
-import {CurrencyPipe, DatePipe} from '@angular/common';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {PayrollService} from '../../../../services/payroll.service';
-import {noop} from 'rxjs';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PayrollService } from '../../../../services/payroll.service';
+import { noop } from 'rxjs';
 
 @Component({
   selector: 'app-edit-payroll-detail-vacations',

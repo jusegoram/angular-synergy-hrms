@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {Workpattern} from '../models/positions-models';
-import {AdminService} from '../../admin.service';
-import {MatDialog} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {EditDialogComponent} from './edit-dialog/edit-dialog.component';
-import {NewDialogComponent} from './new-dialog/new-dialog.component';
+import { Component, OnInit } from '@angular/core';
+import { Workpattern } from '../models/positions-models';
+import { AdminService } from '../../admin.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EditDialogComponent } from './edit-dialog/edit-dialog.component';
+import { NewDialogComponent } from './new-dialog/new-dialog.component';
 
 @Component({
   selector: 'app-workpattern',

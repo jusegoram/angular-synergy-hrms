@@ -95,7 +95,7 @@
             <mat-label>POSITION</mat-label>
             <input
               matInput
-              [value]="this.employee?.position[0]?.name"
+              [value]="this.currentEmployee?.position[0]?.name"
               placeholder="POSITION"
               readonly="true"
             />
@@ -106,7 +106,7 @@
             <mat-label>POSITION ID</mat-label>
             <input
               matInput
-              [value]="this.employee?.position[0]?.positionId"
+              [value]="this.currentEmployee?.position[0]?.positionId"
               placeholder="POSITION ID"
               readonly="true"
             />
@@ -116,7 +116,7 @@
           <mat-form-field appearance="outline" >
             <mat-label>SINCE</mat-label>
             <input
-              [value]="this.employee?.position[0]?.startDate | date:'MM/dd/yyyy'"
+              [value]="this.currentEmployee?.position[0]?.startDate | date:'MM/dd/yyyy'"
               matInput
               placeholder="SINCE"
               readonly="true"
@@ -132,7 +132,7 @@
             <input
               matInput
               placeholder=""
-              [value]="this.employee.socialSecurity"
+              [value]="this.currentEmployee.socialSecurity"
               readonly="true"
             />
           </mat-form-field>

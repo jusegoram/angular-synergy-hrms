@@ -1,6 +1,6 @@
-import {TrackersComponent} from './trackers/trackers.component';
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import { TrackersComponent } from './trackers/trackers.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 
 export const routes: Routes = [
   {

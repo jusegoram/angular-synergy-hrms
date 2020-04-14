@@ -2,8 +2,7 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { SatCalendar, SatCalendarFooter, SatDatepicker } from 'saturn-datepicker';
-import { DateAdapter } from 'saturn-datepicker';
+import { DateAdapter, SatCalendar, SatCalendarFooter, SatDatepicker } from 'saturn-datepicker';
 
 @Component({
   templateUrl: './ranges-footer.component.html'
@@ -23,7 +22,7 @@ export class RangesFooterComponent<Date> implements SatCalendarFooter<Date> {
   ) {
     calendar.stateChanges
       .pipe(takeUntil(this.destroyed))
-      .subscribe(() => cdr.markForCheck())
+      .subscribe(() => cdr.markForCheck());
   }
 
   setRange(range: string) {

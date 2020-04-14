@@ -1,9 +1,9 @@
-import {MatTableDataSource} from '@angular/material/table';
-import {AdminService} from './../../admin.service';
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {Page} from '../../../shared/models/page';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {CurrencyPipe} from '@angular/common';
+import { MatTableDataSource } from '@angular/material/table';
+import { AdminService } from './../../admin.service';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Page } from '../../../shared/models/page';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-social-security',

@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Campaign, Client} from '../models/positions-models';
-import {AdminService} from '../../admin.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, OnInit } from '@angular/core';
+import { Campaign, Client } from '../models/positions-models';
+import { AdminService } from '../../admin.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-client',

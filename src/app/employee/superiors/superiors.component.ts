@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {SuperiorsService} from './superiors.service';
-import {EmployeeService} from '../employee.service';
+import { SuperiorsService } from './superiors.service';
+import { EmployeeService } from '../employee.service';
 
 @Component({
   selector: 'app-superiors',

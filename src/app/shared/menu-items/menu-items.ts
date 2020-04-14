@@ -1,7 +1,7 @@
-import {SessionService} from '../../session/session.service';
-import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import { SessionService } from '../../session/session.service';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class BadgeItem {
   constructor(public type: string, public value: string) {

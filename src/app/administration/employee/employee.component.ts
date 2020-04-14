@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {AdminService} from '../admin.service';
-import {Observable} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
-import {Employee} from '../../shared/models/employee/employee';
-import {FormControl} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AdminService } from '../admin.service';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { Employee } from '../../shared/models/employee/employee';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-employee',

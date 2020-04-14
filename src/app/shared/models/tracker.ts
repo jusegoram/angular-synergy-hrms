@@ -1,4 +1,4 @@
-import {Chance} from './chance';
+import { Chance } from './chance';
 
 interface Absenteeism {
   firstChance: Chance;

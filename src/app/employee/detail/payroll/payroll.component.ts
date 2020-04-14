@@ -1,8 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EmployeeService} from '../../employee.service';
-import {SessionService} from '../../../session/session.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EmployeePayroll} from '../../../shared/models/employee/employee';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { EmployeeService } from '../../employee.service';
+import { SessionService } from '../../../session/session.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeePayroll } from '../../../shared/models/employee/employee';
 
 @Component({
   selector: 'payroll-info',

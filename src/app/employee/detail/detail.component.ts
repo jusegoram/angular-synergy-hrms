@@ -1,13 +1,18 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {EmployeeService} from '../employee.service';
-import {ActivatedRoute} from '@angular/router';
-import {Employee} from '../../shared/models/employee/employee';
-import {FormBuilder} from '@angular/forms';
-import {MatDialog} from '@angular/material/dialog';
-import {HrTracker} from '../../shared/models/hr-tracker';
-import {OnSuccessAlertComponent} from '../../shared/modals/on-success-alert/on-success-alert.component';
-import {OnDeleteAlertComponent} from '../../shared/modals/on-delete-alert/on-delete-alert.component';
-import {OnErrorAlertComponent} from '../../shared/modals/on-error-alert/on-error-alert.component';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { EmployeeService } from '../employee.service';
+import { ActivatedRoute } from '@angular/router';
+import { Employee } from '../../shared/models/employee/employee';
+import { FormBuilder } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { HrTracker } from '../../shared/models/hr-tracker';
+import { OnSuccessAlertComponent } from '../../shared/modals/on-success-alert/on-success-alert.component';
+import { OnDeleteAlertComponent } from '../../shared/modals/on-delete-alert/on-delete-alert.component';
+import { OnErrorAlertComponent } from '../../shared/modals/on-error-alert/on-error-alert.component';
+import { SessionService } from '../../session/session.service';
+import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
+import { StatusDialogComponent } from './status-dialog/status-dialog.component';
+import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
+import { TRACKER_STATUS } from '../../../environments/environment';
 
 @Component({
   selector: 'app-detail',
@@ -73,68 +78,28 @@ export class DetailComponent implements OnInit {
   //   return dtr;
   // }
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result.status) {
-        this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
-        });
-      } else {
-        this.statusChange = result;
-      }
-
-      if (result.message) {
-        this.snackBar.open(result.message, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'end',
-        });
-      }
+  openStatusDialog(): void {
+    const dialogRef = this.dialog.open(StatusDialogComponent, {
+      width: '700px',
+      data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
       width: '700px',
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
+      data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result.status) {
-        this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
-        });
-      } else {
-        this.statusChange = result;
-      }
-
-      if (result.message) {
-        this.snackBar.open(result.message, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'end',
-        });
-      }
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
       width: '700px',
-      data: { status: this.mainForm.value.status, hrTracker: this.hrTracker },
+      data: { status: this.employee.status, hrTracker: this.hrTracker }
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (!result.status) {
-        this.mainForm.patchValue({
-          status: this.employee.status.toLowerCase(),
-        });
-      } else {
-        this.statusChange = result;
-      }
-
-      if (result.message) {
-        this.snackBar.open(result.message, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'end',
-        });
-      }
-    });
+    dialogRef.afterClosed().subscribe((result) => {});
   }
 
   setHrTracker() {

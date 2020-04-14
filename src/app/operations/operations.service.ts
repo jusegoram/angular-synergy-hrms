@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {interval, Observable} from 'rxjs';
-import {map, publishReplay, refCount, share} from 'rxjs/operators';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {SessionService} from '../session/session.service';
-import {environment} from '../../environments/environment';
+import { Injectable } from '@angular/core';
+import { interval, Observable } from 'rxjs';
+import { map, publishReplay, refCount, share } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { SessionService } from '../session/session.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

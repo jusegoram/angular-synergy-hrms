@@ -1,9 +1,9 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {MatTableDataSource} from '@angular/material/table';
-import {AdminService} from '../../admin.service';
-import {Page} from '../../../shared/models/page';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {DatePipe} from '@angular/common';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { AdminService } from '../../admin.service';
+import { Page } from '../../../shared/models/page';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-holidays',

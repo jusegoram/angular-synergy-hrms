@@ -1,11 +1,11 @@
-import {FormControl} from '@angular/forms';
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {map, startWith} from 'rxjs/operators';
-import {ExportAsConfig, ExportAsService} from 'ngx-export-as';
-import {MinuteSecondsPipe} from '../../../../shared/pipes/minute-seconds.pipe';
-import {PayrollService} from '../../../services/payroll.service';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
+import { FormControl } from '@angular/forms';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { map, startWith } from 'rxjs/operators';
+import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
+import { MinuteSecondsPipe } from '../../../../shared/pipes/minute-seconds.pipe';
+import { PayrollService } from '../../../services/payroll.service';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'app-payslip-dialog',

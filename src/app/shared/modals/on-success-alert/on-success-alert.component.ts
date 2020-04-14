@@ -1,6 +1,5 @@
-import {Component, forwardRef, Input, OnInit, ViewChild} from '@angular/core';
-import {SwalComponent} from '@sweetalert2/ngx-sweetalert2';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, Input, ViewChild } from '@angular/core';
+import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
   selector: 'shared-on-success-alert',
@@ -8,8 +7,8 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 })
 export class OnSuccessAlertComponent  {
   @ViewChild('successSwal', { static: false }) swal: SwalComponent;
-
-  @Input('message') message;
+  // tslint:disable-next-line:no-input-rename
+  @Input('message') text;
   constructor() { }
 
   public fire() {

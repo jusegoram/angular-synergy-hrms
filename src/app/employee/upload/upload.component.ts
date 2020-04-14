@@ -1,9 +1,9 @@
-import {EmployeeService} from '../employee.service';
-import {Component} from '@angular/core';
-import {FileUploader} from 'ng2-file-upload';
-import {environment} from '../../../environments/environment';
-import {MatTableDataSource} from '@angular/material/table';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { EmployeeService } from '../employee.service';
+import { Component } from '@angular/core';
+import { FileUploader } from 'ng2-file-upload';
+import { environment } from '../../../environments/environment';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form-upload',

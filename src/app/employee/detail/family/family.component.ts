@@ -1,10 +1,10 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {Employee, EmployeeFamily} from '../../../shared/models/employee/employee';
-import {MatTableDataSource} from '@angular/material/table';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {EmployeeService} from '../../employee.service';
-import {OnDeleteAlertComponent} from '../../../shared/modals/on-delete-alert/on-delete-alert.component';
-import {noop} from 'rxjs';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Employee, EmployeeFamily } from '../../../shared/models/employee/employee';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from '../../employee.service';
+import { OnDeleteAlertComponent } from '../../../shared/modals/on-delete-alert/on-delete-alert.component';
+import { noop } from 'rxjs';
 
 @Component({
   selector: 'family-info',

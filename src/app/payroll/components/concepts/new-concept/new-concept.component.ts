@@ -1,14 +1,14 @@
-import {CurrencyPipe, DatePipe} from '@angular/common';
-import {ColumnMode} from '@swimlane/ngx-datatable';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {PayrollService} from './../../../services/payroll.service';
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {PayrollConcept} from '../Concepts';
-import {SessionService} from '../../../../session/session.service';
-import {Employee} from '../../../../shared/models/employee/employee';
-import {map, startWith} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import { CurrencyPipe, DatePipe } from '@angular/common';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { PayrollService } from './../../../services/payroll.service';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SessionService } from '../../../../session/session.service';
+import { Employee } from '../../../../shared/models/employee/employee';
+import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { PayrollConcept } from '../concepts.model';
 
 @Component({
   selector: 'app-new-concept',

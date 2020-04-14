@@ -1,9 +1,9 @@
-import {SessionService} from '../../session/session.service';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {map, publishReplay, refCount} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
+import { SessionService } from '../../session/session.service';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { map, publishReplay, refCount } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class PayrollService {
