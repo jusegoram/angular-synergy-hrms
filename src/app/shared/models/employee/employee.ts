@@ -4,7 +4,7 @@ export interface Employee {
   onLeave?: boolean;
   leaveType?: string;
   employeeId?: number;
-  dialerId?: number;
+  dialerId?: string;
   firstName: string;
   middleName: string;
   lastName: string;

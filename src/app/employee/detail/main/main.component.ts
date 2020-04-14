@@ -15,6 +15,16 @@ export class MainComponent implements OnInit {
   @Input('employee') currentEmployee: Employee;
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
+  employee: Employee = {
+    _id: '',
+    dialerId: null,
+    firstName: '',
+    middleName: '',
+    lastName: '',
+    gender: '',
+    status: '',
+    socialSecurity: '',
+  };
   public form: FormGroup;
   public currentPositionForm: FormGroup;
   private status;
@@ -27,12 +37,12 @@ export class MainComponent implements OnInit {
   }
 
   ngOnInit() {
+    Object.assign(this.employee, this.currentEmployee);
     this.buildForms();
   }
   buildForms() {
-    const {_id } = this.currentEmployee;
     this.form = this._formBuilder.group({
-      _id: [_id],
+      _id: [this.currentEmployee._id],
       dialerId: [this.currentEmployee.dialerId],
       firstName: [this.currentEmployee.firstName],
       middleName: [this.currentEmployee.middleName],

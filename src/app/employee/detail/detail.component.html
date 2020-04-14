@@ -1,7 +1,7 @@
 <shared-on-success-alert #successAlert [message]="'The changes were saved correctly'"></shared-on-success-alert>
 <shared-on-delete-alert #onDeleteAlert (confirm)="onDelete($event)"></shared-on-delete-alert>
 <shared-on-error-alert #onErrorAlert
-                       [text]="'We could not save the changes made, please verify that the data was filled in correctly and try again'"></shared-on-error-alert>
+                       [message]="'We could not save the changes made, please verify that the data was filled in correctly and try again'"></shared-on-error-alert>
 
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
@@ -61,7 +61,7 @@
       </mat-card-header>
       <br/>
       <main-info
-        [currentEmployee]="this.employee"
+        [employee]="this.employee"
         [authorization]="this.auth"
         (onSuccess)="onSuccess()"
         (onError)="onError()"
@@ -69,7 +69,7 @@
 
       </main-info>
       <company-info
-        [currentEmployee]="this.employee"
+        [employee]="this.employee"
         [authorization]="this.auth"
         (onSuccess)="onSuccess()"
         (onError)="onError()"
