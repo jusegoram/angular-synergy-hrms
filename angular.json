@@ -58,18 +58,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Synergy:build"
+            "browserTarget": "synergysystem-frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Synergy:build:production"
+              "browserTarget": "synergysystem-frontend:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Synergy:build"
+            "browserTarget": "synergysystem-frontend:build"
           }
         },
         "test": {
@@ -106,7 +106,7 @@
         }
       }
     },
-    "Synergy-e2e": {
+    "synergysystem-frontend-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -115,7 +115,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "Synergy:serve"
+            "devServerTarget": "synergysystem-frontend:serve"
           }
         },
         "lint": {
@@ -133,7 +133,7 @@
       }
     }
   },
-  "defaultProject": "Synergy",
+  "defaultProject": "synergysystem-frontend",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
