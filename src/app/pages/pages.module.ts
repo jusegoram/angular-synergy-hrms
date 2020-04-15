@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
-import { HrComponent } from './hr/hr.component';
+import { HrComponent } from './dashboard/hr/hr.component';
 
 
 @NgModule({

@@ -1,15 +1,15 @@
 import { filter } from 'rxjs/operators';
-import { Menu } from './../../shared/menu-items/menu-items';
+import { Menu } from '@synergy-app/shared/menu-items/menu-items';
 import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { MenuItems } from '../../shared/menu-items/menu-items';
+import { MenuItems } from '@synergy-app/shared/menu-items/menu-items';
 import { Subscription } from 'rxjs';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '../../session/session.service';
+import { SessionService } from '@synergy-app/pages/session/session.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
-import { TEMPERATURE_VALUES, TIME_VALUES } from '../../../environments/enviroment.common';
+import { TEMPERATURE_VALUES, TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 const SMALL_WIDTH_BREAKPOINT = 960;
 

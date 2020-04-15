@@ -3,9 +3,9 @@ import { HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest, HttpResponse } 
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { SessionService } from './session/session.service';
+import { SessionService } from './pages/session/session.service';
 import { MatDialog } from '@angular/material/dialog';
-import { HTTP_CODES } from '../environments/enviroment.common';
+import { HTTP_CODES } from '@synergy/environments/enviroment.common';
 
 @Injectable({
   providedIn: 'root',

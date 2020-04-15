@@ -1,5 +1,5 @@
-import { SessionGuard } from './session/guards/session.guard';
-import { SessionService } from './session/session.service';
+import { SessionGuard } from './pages/session/guards/session.guard';
+import { SessionService } from './pages/session/session.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialSharedModule } from './shared/material.shared.module';
@@ -14,9 +14,9 @@ import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { SharedModule } from './shared/shared.module';
-import { GuardDialogComponent } from './session/guards/guard-dialog/guard-dialog.component';
-import { RootGuard } from './session/guards/root.guard';
+import { SharedModule } from '@synergy-app/shared/shared.module';
+import { GuardDialogComponent } from '@synergy-app/pages/session/guards/guard-dialog/guard-dialog.component';
+import { RootGuard } from '@synergy-app/pages/session/guards/root.guard';
 import { TokenInterceptor } from './token-interceptor.service';
 import { AuthenticationService } from './authentication.service';
 

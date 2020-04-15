@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
-import { SessionGuard } from './session/guards/session.guard';
+import { SessionGuard } from '@synergy-app/pages/session/guards/session.guard';
 
 export const AppRoutes: Routes = [
   {
@@ -24,7 +24,7 @@ export const AppRoutes: Routes = [
         path: 'employee',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./employee/employee.module').then((m) => m.EmployeeModule),
+        loadChildren: () => import('./pages/dashboard/employee/employee.module').then((m) => m.EmployeeModule),
         canLoad: [SessionGuard],
       },
       {
@@ -38,7 +38,7 @@ export const AppRoutes: Routes = [
         path: 'operations',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./operations/operations.module').then((m) => m.OperationsModule),
+        loadChildren: () => import('./pages/dashboard/operations/operations.module').then((m) => m.OperationsModule),
         canLoad: [SessionGuard],
       },
       {
@@ -59,7 +59,7 @@ export const AppRoutes: Routes = [
         path: 'admin',
         canActivate: [SessionGuard],
         canActivateChild: [SessionGuard],
-        loadChildren: () => import('./administration/admin.module').then((m) => m.AdminModule),
+        loadChildren: () => import('./pages/dashboard/administration/admin.module').then((m) => m.AdminModule),
         canLoad: [SessionGuard],
       },
       {
@@ -77,7 +77,7 @@ export const AppRoutes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./session/session.module').then((m) => m.SessionModule),
+        loadChildren: () => import('./pages/session/session.module').then((m) => m.SessionModule),
       },
     ],
   },

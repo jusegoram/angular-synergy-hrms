@@ -1,4 +1,4 @@
-import { SessionService } from './../../../../session/session.service';
+import { SessionService } from '@synergy-app/pages/session/session.service';
 import { PayrollService } from './../../../services/payroll.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
