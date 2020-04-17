@@ -1,0 +1,60 @@
+example-container {
+  display: block;
+  width: 100% !important;
+}
+
+.mat-table {
+  overflow: hidden;
+}
+
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+
+.example-header {
+  min-height: 64px;
+  padding: 8px 24px 0;
+}
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 150px !default;
+$mat-toolbar-height-mobile-portrait: 142px !default;
+$mat-toolbar-height-mobile-landscape: 136px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+
+.header {
+  width: 100% !important;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.mat-column-details {
+  flex: 0 0 180px;
+}
+
+.mat-column-selected,
+.mat-column-isPayed {
+  max-width: 50px;
+}
+
+.mat-column-fromDate,
+.mat-column-toDate {
+  flex: 0 0 250px;
+}

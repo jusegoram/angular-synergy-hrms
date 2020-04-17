@@ -1,0 +1,39 @@
+.upload-button {
+  content: wrap;
+}
+mat-card {
+  margin: 20px;
+}
+
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 130px !default;
+$mat-toolbar-height-mobile-portrait: 122px !default;
+$mat-toolbar-height-mobile-landscape: 114px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+
+.header {
+  width: 100% !important;
+}
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.mat-card-2 {
+  margin-top: 10px;
+}

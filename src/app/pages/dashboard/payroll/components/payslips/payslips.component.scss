@@ -1,0 +1,45 @@
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 150px !default;
+$mat-toolbar-height-mobile-portrait: 142px !default;
+$mat-toolbar-height-mobile-landscape: 134px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+  width: 100%;
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+mat-card {
+  margin: 20px;
+}
+.mat-column-selected {
+  flex: 0 0 60px;
+}
+
+.mat-column-employeesAmount,
+.mat-column-totalPayed,
+.mat-column-totalCompanyContributions,
+.mat-column-totalEmployeeContributions,
+.mat-column-totalTaxes {
+  flex: 0 0 100px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.push-right {
+  margin-left: auto;
+  margin-right: 0;
+}

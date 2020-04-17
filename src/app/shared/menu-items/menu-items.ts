@@ -1,7 +1,7 @@
-import { SessionService } from '../../session/session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { USER_ROLES } from '../../../environments/enviroment.common';
+import { environment } from '@synergy/environments/environment';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class BadgeItem {
@@ -29,7 +29,7 @@ export class Menu {
 
 const MENUITEMS = [
   {
-    state: 'main',
+    state: 'home',
     name: 'Home',
     type: 'link',
     icon: 'home',

@@ -1,0 +1,72 @@
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 20px !default;
+$mat-toolbar-height-mobile-portrait: 10px !default;
+$mat-toolbar-height-mobile-landscape: 0px !default;
+
+$mat-toolbar-width-desktop: 100% !default;
+$mat-toolbar-width-mobile-portrait: 100% !default;
+$mat-toolbar-width-mobile-landscape: 100% !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+  width: ($mat-toolbar-width-desktop);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+    width: ($mat-toolbar-width-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+    width: ($mat-toolbar-width-mobile-landscape);
+  }
+}
+mat-form-field {
+  width: 100%;
+}
+.header {
+  width: 100% !important;
+}
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.main-info {
+  margin-bottom: 10px;
+  flex: 1 1 auto;
+}
+
+.form {
+  margin: 10px;
+  max-height: 190px;
+  display: flex;
+  flex: 2 2 50em;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
+  align-content: stretch;
+}
+
+.main-form {
+  margin: 10px;
+  max-height: 190px;
+  display: flex;
+  flex: 0 0 50%;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column wrap;
+  align-content: stretch;
+}
+
+
+.profileImage {
+  margin-left: 25px;
+  width: 150px;
+}

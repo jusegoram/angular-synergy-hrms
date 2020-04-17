@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+    <span>Welcome</span>
+</mat-toolbar>
+<mat-card class="ma-1">
+    <mat-card-title>
+        Today's Date
+    </mat-card-title>
+    <mat-card-content>
+        <div fxLayout="column">
+        <h1 class="ma-0">{{ today | date: "EEEE" }}</h1>
+        <h2 class="mat-text-muted ma-0">
+            <span>{{ today | date: "MMMM" }}</span
+            >&nbsp;<span>{{ today | date: "dd" }}</span>
+        </h2>
+        </div>
+    </mat-card-content>
+</mat-card>
