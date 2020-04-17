@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { EmployeeService } from '../employee.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
-import { RangesFooterComponent } from '../../shared/ranges-footer/ranges-footer.component';
-import { TIME_VALUES } from '../../../environments/enviroment.common';
-import { ReportService } from '@synergy-app/employee/report/report.service';
 import { REPORTS } from '@synergy-app/shared/models/reports.constants';
 import { noop } from 'rxjs';
 import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
+import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
+import { ReportService } from '@synergy-app/pages/dashboard/employee/report/report.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-report',
