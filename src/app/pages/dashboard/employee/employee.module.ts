@@ -17,7 +17,6 @@ import { PayrollComponent } from './detail/payroll/payroll.component';
 import { PositionComponent } from './detail/position/position.component';
 import { MaterialSharedModule } from '../../../shared/material.shared.module';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
-import { EmployeeService } from '../../../shared/services/employee.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
@@ -41,6 +40,7 @@ import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-
 import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
+import { ReportService } from '@synergy-app/pages/dashboard/employee/report/report.service';
 
 @NgModule({
   imports: [
@@ -96,6 +96,7 @@ import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
     RangesFooterComponent,
   ],
   providers: [
+    ReportService,
     SuperiorsService,
     DetailResolver,
     TitleCasePipe,
