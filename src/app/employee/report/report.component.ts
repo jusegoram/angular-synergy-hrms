@@ -1,11 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { EmployeeService } from '../employee.service';
 import * as XLSX from 'xlsx';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import { RangesFooterComponent } from '../../shared/ranges-footer/ranges-footer.component';
 import { TIME_VALUES } from '../../../environments/enviroment.common';
+import { ReportService } from '@synergy-app/employee/report/report.service';
+import { REPORTS } from '@synergy-app/shared/models/reports.constants';
+import { noop } from 'rxjs';
+import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
+import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 
 @Component({
   selector: 'app-report',
@@ -13,8 +18,15 @@ import { TIME_VALUES } from '../../../environments/enviroment.common';
   styleUrls: ['./report.component.scss'],
 })
 export class ReportComponent implements OnInit {
+  @ViewChild('successAlert', { static: false })
+  successAlert: OnSuccessAlertComponent;
+  @ViewChild('errorAlert', { static: false })
+  errorAlert: OnErrorAlertComponent;
+  errorMessage = 'Woops, looks like your search came back empty. Please check the filters';
+  successMessage = 'Great! The download is starting.';
   rangesFooter = RangesFooterComponent;
   private auth: any;
+  reports = REPORTS;
   data: any;
   clients: any[];
   campaigns: any[];
@@ -25,14 +37,6 @@ export class ReportComponent implements OnInit {
   queryForm: FormGroup;
   sheetControl: FormControl;
   displayedColumns = [];
-  mainInfoToggle = true;
-  companyInfoToggle = false;
-  personalInfoToggle = false;
-  positionInfoToggle = false;
-  shiftInfoToggle = false;
-  attritionInfoToggle = false;
-  familyInfoToggle = false;
-  commentsInfoToggle = false;
   wb: XLSX.WorkBook;
   selectedTab = 0;
   avatarQuery = {
@@ -68,50 +72,18 @@ export class ReportComponent implements OnInit {
     employeeStatus: 'active',
   };
 
-  constructor(private employeeService: EmployeeService, private fb: FormBuilder) {
+  constructor(private _reportService: ReportService, private _service: EmployeeService, private fb: FormBuilder) {
     this.clients = [];
     this.campaigns = [];
-    this.status = this.employeeService.status;
-  }
-
-  public clickMain(event) {
-    this.mainInfoToggle = !this.mainInfoToggle;
-  }
-
-  public clickCompany(event) {
-    this.companyInfoToggle = !this.companyInfoToggle;
-  }
-
-  public clickPersonal(event) {
-    this.personalInfoToggle = !this.personalInfoToggle;
-  }
-
-  public clickPosition(event) {
-    this.positionInfoToggle = !this.positionInfoToggle;
-  }
-
-  public clickShift(event) {
-    this.shiftInfoToggle = !this.shiftInfoToggle;
-  }
-
-  public clickAttrition(event) {
-    this.attritionInfoToggle = !this.attritionInfoToggle;
-  }
-
-  public clickEmergency(event) {
-    this.familyInfoToggle = !this.familyInfoToggle;
-  }
-
-  public clickComments(event) {
-    this.commentsInfoToggle = !this.commentsInfoToggle;
+    this.status = this._service.status;
   }
 
   async ngOnInit() {
-    this.auth = this.employeeService.getDecodedToken();
+    this.auth = this._service.getDecodedToken();
     this.buildForm();
     try {
-      this.clients = await this.employeeService.getClient(this.auth.clients).toPromise();
-      this.superiors = await this.employeeService.getEmployeeManagers(this.auth.clients).toPromise();
+      this.clients = await this._service.getClient(this.auth.clients).toPromise();
+      this.superiors = await this._service.getEmployeeManagers(this.auth.clients).toPromise();
     } catch (e) {
       return;
     }
@@ -123,7 +95,7 @@ export class ReportComponent implements OnInit {
     this.queryForm.controls[control].setValue(items); // To trigger change detection
   }
 
-  private removeFirst<T>(array: T[], toRemove: T): void {
+  removeFirst<T>(array: T[], toRemove: T): void {
     const index = array.indexOf(toRemove);
     if (index !== -1) {
       array.splice(index, 1);
@@ -134,6 +106,7 @@ export class ReportComponent implements OnInit {
     this.reportForm = this.fb.group({
       hireDateCheck: [false],
       terminationDateCheck: [false],
+      reportSelector: [Validators.required],
     });
 
     this.queryForm = this.fb.group({
@@ -146,304 +119,67 @@ export class ReportComponent implements OnInit {
       trainer: [],
       hireDate: [],
       terminationDate: [],
-      trainingGroup: ['GEN'],
-      trainingNo: [],
+      trainingGroupRef: ['GEN'],
+      trainingGroupNum: [],
     });
 
     this.sheetControl = new FormControl();
-    this.wb = XLSX.utils.book_new();
-    this.mainInfoToggle = true;
-    this.companyInfoToggle = false;
-    this.personalInfoToggle = false;
-    this.positionInfoToggle = false;
-    this.shiftInfoToggle = false;
-    this.attritionInfoToggle = false;
-    this.familyInfoToggle = false;
-    this.commentsInfoToggle = false;
-  }
-
-  getStatusQuery(item) {
-    const query = {$in: item};
-    if (item.length > 0) {
-      return query;
-    }
-    this.auth.clients.length > 0 ?
-      query.$in = this.auth.clients :
-      query.$in = [/./];
-    return query;
   }
 
   async getReport() {
-    // console.log(this.queryForm.value);
-    const {value: q} = this.queryForm;
-    //     // const obj = {
-    //     //   status: this.getStatusQuery(q.status),
-    //     //   'company.client':
-    //     //     this.auth.clients.length > 0 && !queryParam.client.name
-    //     //       ? { $in: this.auth.clients }
-    //     //       : queryParam.client.name,
-    //     //   'company.campaign': queryParam.campaign.name,
-    //     //   'company.supervisor': queryParam.supervisor,
-    //     //   'company.manager': queryParam.manager,
-    //     //   'company.hireDate': {
-    //     //     $gte: moment(queryParam.hireDateFrom).format('MM/DD/YYYY').toString(),
-    //     //     $lte: moment(queryParam.hireDateTo).format('MM/DD/YYYY').toString(),
-    //     //   },
-    //     //   'company.terminationDate': {
-    //     //     $gte: moment(queryParam.terminationDateFrom)
-    //     //       .format('MM/DD/YYYY')
-    //     //       .toString(),
-    //     //     $lte: moment(queryParam.terminationDateTo)
-    //     //       .format('MM/DD/YYYY')
-    //     //       .toString(),
-    //     //   },
-    //     //   'company.trainingGroupRef': queryParam.trainingGroup,
-    //     //   'company.trainingGroupNum': queryParam.trainingNo,
-    //     // };
+    const { value } = this.queryForm;
+    const { reportSelector: report } = this.reportForm.value;
     try {
-      await this.employeeService.getReport(q).toPromise();
+      const result = await this._reportService.getReport(report.projection, value, report.options).toPromise();
+      return this.export(result);
     } catch (e) {
-      console.log(e);
-    }
-    // this.employeeService.getReport(obj).subscribe(
-    //   (data) => {
-    //     this.buildTable(data);
-    //   },
-    //   (error) => {
-    //     console.error(error);
-    //   }
-    // );
-  }
-
-  export() {
-    const data: any = this.dataSource.data;
-    const promiseArray = [];
-
-    if (this.mainInfoToggle) {
-      promiseArray.push(this.exportMain(data));
-    }
-    if (this.shiftInfoToggle) {
-      promiseArray.push(this.exportShift(data));
-    }
-    if (this.attritionInfoToggle) {
-      promiseArray.push(this.exportAttrition(data));
-    }
-    if (this.familyInfoToggle) {
-      promiseArray.push(this.exportEmergency(data));
-    }
-    /* generate worksheet */
-    Promise.all(promiseArray)
-      .then((result) => {
-        XLSX.writeFile(this.wb, 'export-info.xlsx');
-      })
-      .catch((err) => console.log(err));
-  }
-  exportMain(data) {
-    const promise = new Promise((res, rej) => {
-      const mainInfo: any[] = [];
-      data.forEach((element) => {
-        if (typeof element !== 'undefined' && element !== null) {
-          const companyData = this.exportCompany(element);
-          const personalData = this.exportPersonal(element);
-          const positionData = this.exportPosition(element);
-          const shiftData = this.exportShift(element);
-          const commentsData = this.exportComments(element);
-          const attritionData = this.exportAttrition(element);
-          const familyData = this.exportEmergency(element);
-          const mainData = {
-            employeeId: element.employeeId,
-            firstName: element.firstName,
-            middleName: element.middleName,
-            lastName: element.lastName,
-            gender: element.gender,
-            socialSecurity: element.socialSecurity,
-            status: element.status,
-            ...companyData,
-            ...positionData,
-            ...shiftData,
-            ...personalData,
-            ...commentsData,
-            ...attritionData,
-            ...familyData,
-          };
-          mainInfo.push(mainData);
-        }
-      });
-      const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mainInfo);
-      XLSX.utils.book_append_sheet(this.wb, main, 'main-info');
-      res();
-    });
-    return promise;
-  }
-  exportCompany(element) {
-    if (this.companyInfoToggle) {
-      return {
-        client:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.client
-            : '',
-        campaign:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.campaign
-            : '',
-        manager:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.manager
-            : '',
-        supervisor:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.supervisor
-            : '',
-        trainer:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.trainer
-            : '',
-        trainingGroupRef:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.trainingGroupRef : '',
-        trainingGroupNum:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.trainingGroupNum
-            : '',
-        hireDate:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.hireDate
-            : '',
-        terminationDate:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.terminationDate : '',
-        reapplicant:
-          typeof element.company !== 'undefined' && element.company !== null ? element.company.reapplicant : '',
-        reapplicantTimes:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.reapplicantTimes
-            : '',
-        bilingual:
-          typeof element.company !== 'undefined' && element.company !== null
-            ? element.company.bilingual
-            : '',
-      };
-    } else {
-      return {};
+      this.reportForm.markAllAsTouched();
+      this.errorAlert.fire();
     }
   }
-
-  exportPersonal(element) {
-    if (this.personalInfoToggle) {
-      const personal = typeof element.personal !== 'undefined' && element.personal !== null ? element.personal : null;
-      if (personal !== null && personal.hobbies && personal.hobbies.length > 0) {
-        for (let index = 0; index < personal.hobbies.length; index++) {
-          const hobby = personal.hobbies[index];
-          personal['Hobby Title.' + index] = hobby.hobbyTitle;
-          personal['Hobby Comment.' + index] = hobby.hobbyComment;
-          personal['Hobby Creation Date' + index] = hobby.createdAt;
-        }
-        return personal;
-      } else {
-        return personal;
+  export(report: any) {
+    const { reportSelector } = this.reportForm.value;
+    try {
+      if (report.length === 0) {
+        throw new Error('Looks like the result came back empty, please check your filters');
       }
-    } else {
-      return {};
-    }
-  }
-
-  exportPosition(element) {
-    if (this.positionInfoToggle) {
-      const position = element.position[element.position.length - 1];
-      if (position && position.position) {
-        position.name = position.position.name;
-        position.positionId = position.position.positionId;
-        const exportPosition = {
-          positionClient: position.client,
-          department: position.department,
-          positionId: position.positionId,
-          positionName: position.name,
-          positionStartDate: position.startDate,
-          positionEndDate: position.endDate,
-        };
-        return exportPosition;
+      this.wb = XLSX.utils.book_new();
+      if (reportSelector.projection === 'shift') {
+        report = this.exportShift(report);
       }
-    } else {
-      return {};
+      const sheet1: XLSX.WorkSheet = XLSX.utils.json_to_sheet(report);
+      XLSX.utils.book_append_sheet(this.wb, sheet1, 'sheet 1');
+      XLSX.writeFile(this.wb, reportSelector.name + '-' + moment().format('MM-DD-YYYY').toString() + '.xlsx');
+      this.successAlert.fire();
+    } catch (e) {
+      this.errorAlert.fire();
     }
   }
-
-  exportShift(element) {
-    const shift = element.shift;
-    if (this.shiftInfoToggle) {
+  exportShift(report) {
+    let returned = [];
+    returned = report.map((element) => {
+      const { shift } = element;
       const exportShift: any = {};
-      for (let i = 0; i < shift.length; i++) {
-        const day = shift[i];
-        exportShift[moment(day.date).format('MM/DD/YYYY').toString()] = `${this.transformTime(
-          day.shiftStartTime
-        )} - ${this.transformTime(day.shiftEndTime)}`;
+      if (shift) {
+        console.log(shift);
+        const length = shift.length;
+        for (let i = 0; i < length; i++) {
+          const day = shift[i];
+          exportShift[moment(day.date).format('MM/DD/YYYY').toString()] = `${this.transformTime(
+            day.shiftStartTime
+          )} - ${this.transformTime(day.shiftEndTime)}`;
+          if (exportShift[moment(day.date).format('MM/DD/YYYY').toString()] === '00:00 - 00:00') {
+            exportShift[moment(day.date).format('MM/DD/YYYY').toString()] = 'DAY OFF';
+          }
+        }
       }
-      return exportShift !== null && exportShift !== undefined ? exportShift : {};
-    } else {
-      return {};
-    }
-  }
-
-  exportComments(element) {
-    if (this.commentsInfoToggle) {
-      const returnItem: any = {};
-      if (element.comments !== undefined && element.comments !== null && element.comments.length > 0) {
-        element.comments.forEach((commentsItem, index) => {
-          returnItem['Comment.' + index] = commentsItem.comment;
-          returnItem['Comment Date.' + index] = commentsItem.commentDate;
-          returnItem['Submitted By' + index] =
-            commentsItem.submittedBy !== null
-              ? commentsItem.submittedBy.firstName + ' ' + commentsItem.submittedBy.lastName
-              : '';
-        });
-        return returnItem;
-      } else {
-        return {};
-      }
-    } else {
-      return {};
-    }
-  }
-
-  exportAttrition(element) {
-    if (this.attritionInfoToggle) {
-      const returnItem: any = {};
-      if (element.attrition !== undefined && element.attrition !== null && element.attrition.length > 0) {
-        element.attrition.forEach((attritionItem, index) => {
-          returnItem['Attrition Reason 1.' + index] = attritionItem.reason1 ? attritionItem.reason1 : '';
-          returnItem['Attrition Reason 2.' + index] = attritionItem.reason2 ? attritionItem.reason2 : '';
-          returnItem['Attrition Comment.' + index] = attritionItem.comment ? attritionItem.comment : '';
-          returnItem['Attrition Date.' + index] = attritionItem.commentDate ? attritionItem.date : '';
-        });
-        return returnItem;
-      } else {
-        return {};
-      }
-    } else {
-      return {};
-    }
-  }
-  exportEmergency(element) {
-    if (this.familyInfoToggle) {
-      const familyArr = element.family;
-      const returnItem: any = {};
-      if (typeof familyArr !== 'undefined' && familyArr !== null && familyArr.length !== 0) {
-        familyArr.forEach((item, index) => {
-          returnItem['Contact Reference Name.' + index] = item.referenceName;
-          returnItem['Contact Relationship.' + index] = item.relationship;
-          returnItem['Contact Cellphone.' + index] = item.celNumber;
-          returnItem['Contact Telephone.' + index] = item.telNumber;
-          returnItem['Contact Email.' + index] = item.emailAddress;
-          returnItem['Contact Home Address.' + index] = item.address;
-        });
-        return returnItem;
-      } else {
-        return {};
-      }
-    }
-    return {};
+      return Object.assign(element, exportShift);
+    });
+    return returned;
   }
   setCampaigns(event: any) {
     let currentCampaigns = [];
-    event.forEach(i => currentCampaigns = [...currentCampaigns, ...i.campaigns]);
+    event.forEach((i) => (currentCampaigns = [...currentCampaigns, ...i.campaigns]));
     this.campaigns = currentCampaigns;
   }
   transformTime(param: any): string {
@@ -455,36 +191,16 @@ export class ReportComponent implements OnInit {
       const stored = parseInt(param, 10);
       const hours = Math.floor(stored / TIME_VALUES.SECONDS_PER_MINUTE);
       const minutes = stored - hours * TIME_VALUES.SECONDS_PER_MINUTE;
-      const fixedMin = minutes === 0 ? '00' : minutes;
+      let fixedMin = minutes === 0 ? '00' : minutes;
+      minutes > 0 && minutes < 10 ? (fixedMin = '0' + minutes) : noop();
       result = hours + ':' + fixedMin;
       return result;
     } else {
       return result;
     }
   }
-
-  buildTable(event: any) {
-    if (event.length !== 0) {
-      this.displayedColumns = [
-        'employeeId',
-        'firstName',
-        'middleName',
-        'lastName',
-        'gender',
-        'socialSecurity',
-        'status',
-      ];
-      this.dataSource = new MatTableDataSource(event);
-      this.data = event;
-    }
-  }
-
   tabChanged(event) {
     this.selectedTab = event.index;
   }
-  clear() {
-    this.dataSource = null;
-    this.data = null;
-    this.buildForm();
-  }
+
 }
