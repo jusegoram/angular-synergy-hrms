@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, } from '@angular/core';
 import { EmployeePosition } from '@synergy-app/shared/models/employee/employee';
-import { EmployeeService } from '../../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

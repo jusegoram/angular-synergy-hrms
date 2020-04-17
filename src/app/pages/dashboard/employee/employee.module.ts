@@ -17,12 +17,12 @@ import { PayrollComponent } from './detail/payroll/payroll.component';
 import { PositionComponent } from './detail/position/position.component';
 import { MaterialSharedModule } from '../../../shared/material.shared.module';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
-import { EmployeeService } from './employee.service';
+import { EmployeeService } from '../../../shared/services/employee.service';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
 import { CommentComponent } from './detail/comment/comment.component';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NewComponent } from './new/new.component';
 import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
 import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
@@ -30,8 +30,6 @@ import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/fa
 import { DetailResolver } from './detail/detail.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
-import { TokenInterceptor } from '../../../token-interceptor.service';
-import { AuthenticationService } from '../../../authentication.service';
 import { AvailableInformationComponent } from './report/available-information/available-information.component';
 import { PipeModule } from '@synergy-app/shared/pipes/pipe/pipe.module';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
@@ -98,24 +96,13 @@ import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
     RangesFooterComponent,
   ],
   providers: [
-    EmployeeService,
     SuperiorsService,
     DetailResolver,
     TitleCasePipe,
     DatePipe,
     MinutesHoursPipe,
     TrackerStatusPipe,
-    TrackerTypePipe,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationService,
-      multi: true,
-    },
+    TrackerTypePipe
   ],
 })
 export class EmployeeModule {}

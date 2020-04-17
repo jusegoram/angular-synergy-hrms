@@ -1,0 +1,78 @@
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 164px !default;
+$mat-toolbar-height-mobile-portrait: 156px !default;
+$mat-toolbar-height-mobile-landscape: 148px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+
+.container {
+  max-width: 1150px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+}
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+.socialTable {
+  padding: 5px;
+}
+tr {
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 48px;
+}
+
+button {
+  margin-right: 5px;
+}
+
+mat-expansion-panel {
+  margin: 5px;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: left;
+}
+table.greyGridTable {
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+th {
+  background: #f2f2f2;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  font-size: 12px;
+}
+
+div.wrapper {
+  height: 240px; // change this to desired height
+  overflow: scroll;
+}
+div.wrapper::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #aaa;
+}
+div.wrapper::-webkit-scrollbar-thumb {
+  background: #000;
+}

@@ -1,4 +1,4 @@
-import { SessionService } from '../session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';

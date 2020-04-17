@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

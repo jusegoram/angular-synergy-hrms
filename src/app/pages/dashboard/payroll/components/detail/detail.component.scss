@@ -1,0 +1,71 @@
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 142px !default;
+$mat-toolbar-height-mobile-portrait: 134px !default;
+$mat-toolbar-height-mobile-landscape: 126px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+  width: 100%;
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+
+.header {
+  width: 100% !important;
+}
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
+
+mat-card {
+  margin: 20px;
+}
+
+.tables {
+  border: 1px solid #cfd8dc;
+  border-radius: 5px;
+  background: #cfd8dc;
+}
+.table {
+  border: 1px solid #cfd8dc;
+  border-radius: 5px;
+  width: 100% !important;
+  height: 400px;
+  overflow: auto;
+}
+
+.viewport {
+  height: 130px;
+  overflow-y: scroll;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+}
+.table-border {
+  height: 130px;
+  border: 1px solid gainsboro;
+  border-radius: 5px;
+}
+table.greyGridTable {
+  text-align: left;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+table.greyGridTable th {
+  background: #f2f2f2;
+  position: sticky;
+  top: 0;
+  text-align: center;
+  font-size: 12px;
+}

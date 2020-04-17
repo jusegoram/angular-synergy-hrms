@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SuperiorsService } from './superiors.service';
-import { EmployeeService } from '../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 
 @Component({
   selector: 'app-superiors',

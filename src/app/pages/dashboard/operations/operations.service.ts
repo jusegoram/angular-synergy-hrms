@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { interval, Observable } from 'rxjs';
 import { map, publishReplay, refCount, share } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '@synergy-app/pages/session/session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { environment } from '@synergy/environments/environment';
 
 @Injectable({

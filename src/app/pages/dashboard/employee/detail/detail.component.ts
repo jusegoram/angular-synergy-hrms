@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { EmployeeService } from '../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { ActivatedRoute } from '@angular/router';
 import { Employee } from '@synergy-app/shared/models/employee/employee';
 import { FormBuilder } from '@angular/forms';
@@ -8,7 +8,7 @@ import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
 import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals/on-delete-alert/on-delete-alert.component';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
-import { SessionService } from '@synergy-app/pages/session/session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
 import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';

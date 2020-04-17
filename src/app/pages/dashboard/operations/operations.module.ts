@@ -2,7 +2,6 @@ import { AttendanceHistoryComponent } from './report/attendance/attendance-histo
 import { HoursComponent } from './report/hours/hours.component';
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
-
 import { OperationsRoutingModule } from './operations.routing';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CloudUploadComponent } from './cloud-upload/cloud-upload.component';
@@ -14,17 +13,10 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FileUploadModule } from 'ng2-file-upload';
 import { FormsModule } from '@angular/forms';
-// Import FusionCharts library and chart modules
-// import * as FusionCharts from 'fusioncharts';
-// import * as Charts from 'fusioncharts/fusioncharts.charts';
-// import * as Widgets from 'fusioncharts/fusioncharts.widgets';
-// import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import { DetailComponent } from './detail/detail.component';
 import { KpiComponent } from './report/kpi/kpi.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { TokenInterceptor } from '../../../token-interceptor.service';
-import { AuthenticationService } from '../../../authentication.service';
 import { MatrixComponent } from './report/matrix/matrix.component';
 import { TimesheetComponent } from './report/timesheet/timesheet.component';
 import { AttendanceComponent } from './report/attendance/attendance.component';
@@ -45,7 +37,6 @@ export function provideSwal() {
     CommonModule,
     OperationsRoutingModule,
     MaterialSharedModule,
-    HttpClientModule,
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
@@ -72,17 +63,7 @@ export function provideSwal() {
     OperationsService,
     TitleCasePipe,
     DatePipe,
-    CdkColumnDef,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationService,
-      multi: true,
-    },
+    CdkColumnDef
   ],
 })
 export class OperationsModule {}

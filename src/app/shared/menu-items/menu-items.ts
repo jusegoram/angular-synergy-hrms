@@ -1,4 +1,4 @@
-import { SessionService } from '@synergy-app/pages/session/session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { Injectable } from '@angular/core';
 import { environment } from '@synergy/environments/environment';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
@@ -29,7 +29,7 @@ export class Menu {
 
 const MENUITEMS = [
   {
-    state: 'main',
+    state: 'home',
     name: 'Home',
     type: 'link',
     icon: 'home',

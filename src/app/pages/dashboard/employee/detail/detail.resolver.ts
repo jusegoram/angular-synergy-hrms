@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
-import { EmployeeService } from '../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { Employee } from '@synergy-app/shared/models/employee/employee';
 
 @Injectable()

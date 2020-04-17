@@ -1,5 +1,5 @@
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from './../../admin.service';
+import { AdminService } from '../../services/admin.service';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Page } from '@synergy-app/shared/models/page';
 import { ColumnMode } from '@swimlane/ngx-datatable';

@@ -1,0 +1,25 @@
+@import "./src/assets/styles/scss/material.variables";
+
+$mat-toolbar-height-desktop: 150px !default;
+$mat-toolbar-height-mobile-portrait: 142px !default;
+$mat-toolbar-height-mobile-landscape: 136px !default;
+
+.mat-card-top {
+  margin-top: -($mat-toolbar-height-desktop);
+}
+
+@media ($mat-xsmall) and (orientation: portrait) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-portrait);
+  }
+}
+
+@media ($mat-small) and (orientation: landscape) {
+  .mat-card-top {
+    margin-top: -($mat-toolbar-height-mobile-landscape);
+  }
+}
+.container {
+  width: 690px;
+  margin: 0 auto;
+}

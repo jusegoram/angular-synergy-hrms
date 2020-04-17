@@ -1,4 +1,4 @@
-import { SessionService } from '../session.service';
+import { SessionService } from '../../../shared/services/session.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, CanActivate, CanActivateChild, CanLoad, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';

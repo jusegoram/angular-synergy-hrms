@@ -1,5 +1,5 @@
 import { SessionGuard } from './pages/session/guards/session.guard';
-import { SessionService } from './pages/session/session.service';
+import { SessionService } from './shared/services/session.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialSharedModule } from './shared/material.shared.module';
@@ -12,13 +12,14 @@ import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
-import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
-import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
+import { AdminLayoutComponent } from './shared/layouts/admin/admin-layout.component';
+import { AuthLayoutComponent } from './shared/layouts/auth/auth-layout.component';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 import { GuardDialogComponent } from '@synergy-app/pages/session/guards/guard-dialog/guard-dialog.component';
 import { RootGuard } from '@synergy-app/pages/session/guards/root.guard';
-import { TokenInterceptor } from './token-interceptor.service';
-import { AuthenticationService } from './authentication.service';
+import { TokenInterceptor } from './shared/interceptors/token.interceptor';
+import { AuthenticationInterceptor } from './shared/interceptors/authentication.interceptor';
+import { EmployeeService } from './shared/services/employee.service';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -48,6 +49,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SessionService,
     SessionGuard,
     RootGuard,
+    EmployeeService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
@@ -55,7 +57,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationService,
+      useClass: AuthenticationInterceptor,
       multi: true,
     },
   ],

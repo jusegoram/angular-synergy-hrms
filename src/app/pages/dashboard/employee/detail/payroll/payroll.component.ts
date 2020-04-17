@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EmployeeService } from '../../employee.service';
-import { SessionService } from '@synergy-app/pages/session/session.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeePayroll } from '@synergy-app/shared/models/employee/employee';
 

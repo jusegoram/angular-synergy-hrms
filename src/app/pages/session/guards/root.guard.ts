@@ -1,4 +1,4 @@
-import { SessionService } from '../session.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 import { CanActivate, CanLoad, Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 

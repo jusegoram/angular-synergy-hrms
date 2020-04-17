@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '../admin.service';
+import { AdminService } from '../services/admin.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Employee } from '@synergy-app/shared/models/employee/employee';

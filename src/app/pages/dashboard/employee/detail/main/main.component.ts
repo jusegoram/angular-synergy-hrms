@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Employee } from '@synergy-app/shared/models/employee/employee';
-import { EmployeeService } from '../../employee.service';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
