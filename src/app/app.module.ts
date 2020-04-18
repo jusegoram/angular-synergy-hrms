@@ -34,7 +34,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     BrowserModule,
     BrowserAnimationsModule,
     SharedModule,
-    RouterModule.forRoot(AppRoutes, { preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(AppRoutes),
     FormsModule,
     HttpClientModule,
     MaterialSharedModule,
