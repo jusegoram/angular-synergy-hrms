@@ -1,9 +1,9 @@
 export const REPORTS = [
   {
-    name: 'Restriction Report',
+    name: 'Contact Info Report',
     tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, celNumber,
-    telNumber, email, address, town, district, restriction`,
-    projection: 'restriction',
+    telNumber, email, address, town, district`,
+    projection: 'contact',
     options: [],
   },
   {
@@ -24,6 +24,19 @@ export const REPORTS = [
     shift
     `,
     projection: 'shift',
+    options: [],
+  },
+  {
+    name: 'Hours Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    lastName,
+    actualClient,
+    actualCampaign,
+    last-15-days-hours
+    `,
+    projection: 'hours',
     options: [],
   },
   {
@@ -92,6 +105,35 @@ export const REPORTS = [
     options: [],
   },
   {
+    name: 'Attrition Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    lastName,
+    actualClient,
+    actualCampaign,
+    terminationDate
+    `,
+    projection: 'attrition',
+    options: [
+      {
+        $unwind: {
+          path: '$attrition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          reason1: '$attrition.reason1',
+          reason2: '$attrition.reason2',
+          comment: '$attrition.comment',
+          submittedBy: {$concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName']},
+          commentDate: { $dateToString: { date: '$attrition.commentDate', format: '%m/%d/%Y' } },
+        },
+      },
+    ],
+  },
+  {
     name: 'Emergency Contact Report',
     tooltip: ` employeeId, firstName, lastName, actualClient, actualCampaign,
               celNumber, telNumber, email, address, town, district, family
@@ -101,7 +143,7 @@ export const REPORTS = [
   },
 ];
 export const PROJECTIONS = {
-  restriction: {
+  contact: {
     _id: 0,
     employeeId: 1,
     firstName: 1,
@@ -114,7 +156,6 @@ export const PROJECTIONS = {
     address: '$personal.address',
     town: '$personal.town',
     district: '$personal.district',
-    restriction: '$personal.restriction',
   },
   emergency: {
     _id: 0,
@@ -146,6 +187,15 @@ export const PROJECTIONS = {
     district: '$personal.district',
     restriction: '$personal.restriction',
     shift: 1,
+  },
+  hours: {
+    _id: 0,
+    employeeId: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hours: 1,
   },
   position: {
     _id: 0,
@@ -181,5 +231,15 @@ export const PROJECTIONS = {
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
     hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+  },
+  attrition: {
+    _id: 0,
+    employeeId: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+    attrition: 1,
   },
 };

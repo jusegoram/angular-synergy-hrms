@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import { REPORTS } from '@synergy-app/shared/models/reports.constants';
 import { noop } from 'rxjs';
@@ -10,7 +9,6 @@ import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert
 import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
 import { ReportService } from '@synergy-app/pages/dashboard/employee/report/report.service';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
-import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-report',
@@ -26,7 +24,7 @@ export class ReportComponent implements OnInit {
   successMessage = 'Great! The download is starting.';
   rangesFooter = RangesFooterComponent;
   private auth: any;
-  reports = REPORTS;
+  reports = REPORTS.sort((a , b ) => a.name.localeCompare(b.name));
   data: any;
   clients: any[];
   campaigns: any[];
@@ -130,77 +128,42 @@ export class ReportComponent implements OnInit {
     const { value } = this.queryForm;
     const { reportSelector: report } = this.reportForm.value;
     try {
+      if (!report.projection) {
+        throw new Error('Woops');
+      }
       const result = await this._reportService.getReport(report.projection, value, report.options).toPromise();
       return this.export(result);
     } catch (e) {
       this.reportForm.markAllAsTouched();
-      this.errorAlert.fire();
+      await this.errorAlert.fire();
     }
   }
-  export(report: any) {
+  async export(report: any) {
     const { reportSelector } = this.reportForm.value;
     try {
       if (report.length === 0) {
         throw new Error('Looks like the result came back empty, please check your filters');
       }
       this.wb = XLSX.utils.book_new();
-      if (reportSelector.projection === 'shift') {
-        report = this.exportShift(report);
-      }
+      reportSelector.projection === 'shift' ?
+        report = await this._reportService.mapShift(report) : noop();
+      reportSelector.projection === 'hours' ?
+        report = await this._reportService.mapHours(report) : noop();
       const sheet1: XLSX.WorkSheet = XLSX.utils.json_to_sheet(report);
       XLSX.utils.book_append_sheet(this.wb, sheet1, 'sheet 1');
       XLSX.writeFile(this.wb, reportSelector.name + '-' + moment().format('MM-DD-YYYY').toString() + '.xlsx');
-      this.successAlert.fire();
+      await this.successAlert.fire();
+      return;
     } catch (e) {
-      this.errorAlert.fire();
+      await this.errorAlert.fire();
+      return;
     }
   }
-  exportShift(report) {
-    let returned = [];
-    returned = report.map((element) => {
-      const { shift } = element;
-      const exportShift: any = {};
-      if (shift) {
-        console.log(shift);
-        const length = shift.length;
-        for (let i = 0; i < length; i++) {
-          const day = shift[i];
-          exportShift[moment(day.date).format('MM/DD/YYYY').toString()] = `${this.transformTime(
-            day.shiftStartTime
-          )} - ${this.transformTime(day.shiftEndTime)}`;
-          if (exportShift[moment(day.date).format('MM/DD/YYYY').toString()] === '00:00 - 00:00') {
-            exportShift[moment(day.date).format('MM/DD/YYYY').toString()] = 'DAY OFF';
-          }
-        }
-      }
-      return Object.assign(element, exportShift);
-    });
-    return returned;
-  }
+
   setCampaigns(event: any) {
     let currentCampaigns = [];
     event.forEach((i) => (currentCampaigns = [...currentCampaigns, ...i.campaigns]));
     this.campaigns = currentCampaigns;
-  }
-  transformTime(param: any): string {
-    let result = '00:00';
-    if (param !== null) {
-      if (param.toString().includes(':')) {
-        return param;
-      }
-      const stored = parseInt(param, 10);
-      const hours = Math.floor(stored / TIME_VALUES.SECONDS_PER_MINUTE);
-      const minutes = stored - hours * TIME_VALUES.SECONDS_PER_MINUTE;
-      let fixedMin = minutes === 0 ? '00' : minutes;
-      minutes > 0 && minutes < 10 ? (fixedMin = '0' + minutes) : noop();
-      result = hours + ':' + fixedMin;
-      return result;
-    } else {
-      return result;
-    }
-  }
-  tabChanged(event) {
-    this.selectedTab = event.index;
   }
 
 }

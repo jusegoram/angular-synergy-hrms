@@ -7,9 +7,9 @@ import { SessionGuard } from './session/guards/session.guard';
 const routes: Routes = [
   {
     path: '',
-    canActivate: [SessionGuard],
-    canActivateChild: [SessionGuard],
-    canLoad: [SessionGuard],
+    // canActivate: [SessionGuard],
+    // canActivateChild: [SessionGuard],
+    // canLoad: [SessionGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {

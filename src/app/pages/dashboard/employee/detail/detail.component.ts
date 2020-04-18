@@ -28,8 +28,8 @@ export class DetailComponent implements OnInit {
   @ViewChild('onErrorAlert', {static: false})
   onErrorAlert: OnErrorAlertComponent;
 
-  private auth: any;
-  private employee: Employee;
+  public auth: any;
+  public employee: Employee;
 
 
   hrTracker: HrTracker;

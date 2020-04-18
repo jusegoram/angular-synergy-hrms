@@ -16,3 +16,5 @@ export const TRACKER_STATUS = {
   IN_PROGRESS: 1,
   DONE: 2,
 };
+
+export const TRACKER_STATUS_LABELS = ['Pending', 'In progress', 'Done'];
