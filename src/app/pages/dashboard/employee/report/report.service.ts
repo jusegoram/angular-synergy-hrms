@@ -5,9 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@synergy/environments/environment';
 import { SessionService } from '@synergy-app/shared/services/session.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ReportService {
   api = environment.apiUrl;
   projections = PROJECTIONS;

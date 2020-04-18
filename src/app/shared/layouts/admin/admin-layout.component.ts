@@ -60,6 +60,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    console.log('loading... admin page');
     this.menuItems.getActiveMenus().subscribe((menu) => {
       this.menus = menu.map((item) => {
         if (item.type === 'link') {
@@ -195,7 +196,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.sessionService.logout();
-    this.router.navigateByUrl('/signin');
+    this.router.navigateByUrl('/auth/signin');
   }
 
   onProfile() {

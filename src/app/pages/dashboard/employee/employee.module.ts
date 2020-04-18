@@ -21,7 +21,6 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
 import { DialogComponent } from './detail/position/dialog/dialog.component';
 import { CommentComponent } from './detail/comment/comment.component';
-import { HttpClientModule } from '@angular/common/http';
 import { NewComponent } from './new/new.component';
 import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
 import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
@@ -49,7 +48,6 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     MaterialSharedModule,
     SharedModule,
     ModalsModule.forRoot(),
-    HttpClientModule,
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,

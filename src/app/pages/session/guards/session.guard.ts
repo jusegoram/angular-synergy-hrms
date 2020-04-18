@@ -13,28 +13,33 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     private router: Router,
     private dialog: MatDialog,
     private route: ActivatedRoute
-  ) {
-  }
+  ) {}
   // TODO: Re-evaluate current guards and checks to be able to reanbled routeguards.
   canActivate(): boolean {
     if (this.checkLogin()) {
       return true;
     } else {
-      return this.openDialog();
+      console.log('blocked can activate');
+      this.router.navigateByUrl('/auth/signin');
+      return false;
     }
   }
   canActivateChild(): boolean {
     if (this.checkLogin()) {
       return true;
     } else {
-      return this.openDialog();
+      console.log('blocked can activate child');
+      this.openDialog();
+      return false;
     }
   }
   canLoad(): boolean {
     if (this.checkLogin()) {
       return true;
     } else {
-      this.router.navigateByUrl('/signin');
+      console.log('blocked can load');
+      this.router.navigate(['/auth/signin']);
+      return false;
     }
   }
   checkLogin(): any {
@@ -51,7 +56,7 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     dialogRef.afterClosed().subscribe((data) => {
       if (!data) {
         answer = false;
-        this.router.navigateByUrl('/signin');
+        this.router.navigateByUrl('/auth/signin');
       } else {
         answer = true;
       }

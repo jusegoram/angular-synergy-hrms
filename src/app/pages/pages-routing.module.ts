@@ -1,26 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PagesComponent } from './pages.component';
 import { AuthLayoutComponent } from '@synergy-app/shared/layouts/auth/auth-layout.component';
 import { SessionGuard } from './session/guards/session.guard';
+
 
 const routes: Routes = [
   {
     path: '',
     canActivate: [SessionGuard],
-    canActivateChild: [SessionGuard],
-    canLoad: [SessionGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
   {
-    path: '',
+    path: 'auth',
     component: AuthLayoutComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./session/session.module').then((m) => m.SessionModule),
-      },
-    ],
+    loadChildren: () => import('./session/session.module').then((m) => m.SessionModule),
   },
   {
     path: '**',

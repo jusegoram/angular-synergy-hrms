@@ -2,11 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DashboardComponent } from './dashboard.component';
 import { AdminLayoutComponent } from '@synergy-app/shared/layouts/admin/admin-layout.component';
+import { SessionGuard } from '../session/guards/session.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminLayoutComponent,
+    canActivateChild: [SessionGuard],
+    canLoad: [SessionGuard],
     children: [
       {
         path: '',

@@ -11,7 +11,7 @@ export class RootGuard implements CanLoad, CanActivate {
     if (this.checkLogin()) {
       return true;
     } else {
-      this.router.navigate(['/signin']);
+      this.router.navigate(['/auth/signin']);
     }
   }
 
@@ -19,7 +19,7 @@ export class RootGuard implements CanLoad, CanActivate {
     if (this.checkLogin()) {
       return true;
     } else {
-      this.router.navigate(['/signin']);
+      this.router.navigate(['/auth/signin']);
     }
   }
   checkLogin(): any {
