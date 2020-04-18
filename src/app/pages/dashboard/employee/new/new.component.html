@@ -4,7 +4,7 @@
 ></shared-on-success-alert>
 <shared-on-error-alert
   #onErrorAlert
-  [text]="
+  [message]="
     'We could not save the changes made, please verify that the data was filled in correctly and try again'
   "
 ></shared-on-error-alert>
@@ -41,11 +41,13 @@
                   appearance="outline"
                 >
                   <mat-label>First Name</mat-label>
-                  <input
-                    matInput
-                    formControlName="firstName"
-                    placeholder="John"
-                  />
+                  <label>
+                    <input
+                      matInput
+                      formControlName="firstName"
+                      placeholder="John"
+                    />
+                  </label>
                   <mat-error
                   >First name is required to create a new Employee in the
                     synergy system</mat-error
@@ -58,11 +60,13 @@
                   appearance="outline"
                 >
                   <mat-label>Middle Name</mat-label>
-                  <input
-                    matInput
-                    formControlName="middleName"
-                    placeholder="Michael"
-                  />
+                  <label>
+                    <input
+                      matInput
+                      formControlName="middleName"
+                      placeholder="Michael"
+                    />
+                  </label>
                 </mat-form-field>
               </td>
               <td>
@@ -71,11 +75,13 @@
                   appearance="outline"
                 >
                   <mat-label>Last Name</mat-label>
-                  <input
-                    matInput
-                    formControlName="lastName"
-                    placeholder="Doe"
-                  />
+                  <label>
+                    <input
+                      matInput
+                      formControlName="lastName"
+                      placeholder="Doe"
+                    />
+                  </label>
                   <mat-error
                   >Last name is required to create a new Employee in the
                     synergy system</mat-error
@@ -126,11 +132,13 @@
                   appearance="outline"
                 >
                   <mat-label> Social Security No.</mat-label>
-                  <input
-                    matInput
-                    formControlName="socialSecurity"
-                    placeholder="Social Security No."
-                  />
+                  <label>
+                    <input
+                      matInput
+                      formControlName="socialSecurity"
+                      placeholder="Social Security No."
+                    />
+                  </label>
                   <mat-error
                   >Social Security Number is required to create a new Employee
                     in the synergy system</mat-error
