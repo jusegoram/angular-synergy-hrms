@@ -1,5 +1,5 @@
-<shared-on-success-alert [message]="successMessage"></shared-on-success-alert>
-<shared-on-error-alert [message]="errorMessage"></shared-on-error-alert>
+<shared-on-success-alert #successAlert [message]="successMessage"></shared-on-success-alert>
+<shared-on-error-alert #errorAlert [message]="errorMessage"></shared-on-error-alert>
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
     <span>Workforce Reports</span>
@@ -12,7 +12,7 @@
   <mat-toolbar-row *ngIf="!this.dataSource"> </mat-toolbar-row>
   <mat-toolbar-row *ngIf="!this.dataSource"> </mat-toolbar-row>
 </mat-toolbar>
-<div class="mat-card-top" *ngIf="!this.dataSource">
+<div class="mat-card-top">
   <mat-card class="pa-1">
     <div fxLayout="column" fxLayoutAlign="start">
       <form fxLayout="row" fxLayoutAlign="space-around" fxLayoutGap="5px" class="pa-1" [formGroup]="reportForm">
@@ -135,23 +135,27 @@
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill" [formGroup]="queryForm" floatLabel="always">
-          <mat-label>TRAINING GROUP</mat-label>
           <span matPrefix>GEN&nbsp;</span>
-          <input
-            matInput
-            placeholder="GROUP #"
-            formControlName="trainingNo"
-            type="number"
-          />
+          <mat-label>TRAINING GROUP</mat-label>
+          <label>
+            <input
+              matInput
+              placeholder="GROUP #"
+              formControlName="trainingGroupNum"
+              type="number"
+            />
+          </label>
         </mat-form-field>
       </form>
       <form fxLayout="row" fxLayoutAlign="start" fxLayoutGap="20px" class="px-1" [formGroup]="reportForm">
         <mat-form-field appearance="fill" *ngIf="reportForm.controls.hireDateCheck.value" [formGroup]="queryForm">
           <mat-label>HIRE DATE</mat-label>
-          <input matInput
-                 placeholder="CLICK ON CALENDAR"
-                 [satDatepicker]="hireDatePicker"
-                 formControlName="hireDate">
+          <label>
+            <input matInput
+                   placeholder="CLICK ON CALENDAR"
+                   [satDatepicker]="hireDatePicker"
+                   formControlName="hireDate">
+          </label>
           <sat-datepicker
             #hireDatePicker
             [rangeMode]="true"
@@ -171,10 +175,12 @@
         <mat-form-field appearance="fill" *ngIf="reportForm.controls.terminationDateCheck.value"
                         [formGroup]="queryForm">
           <mat-label>TERMINATION DATE</mat-label>
-          <input matInput
-                 placeholder="CLICK ON CALENDAR"
-                 [satDatepicker]="termDatePicker"
-                 formControlName="terminationDate">
+          <label>
+            <input matInput
+                   placeholder="CLICK ON CALENDAR"
+                   [satDatepicker]="termDatePicker"
+                   formControlName="terminationDate">
+          </label>
           <sat-datepicker
             #termDatePicker
             [rangeMode]="true"
@@ -195,205 +201,29 @@
 
     <mat-card-header>
       <mat-card-subtitle>
-        Choose the information you want to export (default - only main
-        information will be exported)
+       <span>
+         Choose the report you would like to export.
+       </span>
       </mat-card-subtitle>
     </mat-card-header>
     <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1px">
-      <mat-button-toggle
-        (click)="clickMain($event)"
-        [checked]="mainInfoToggle"
-        matTooltip="Information such as: names, social security...etc"
-      >
-        Main Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickCompany($event)"
-        matTooltip="Information such as: campaign, hire date...etc"
-      >
-        Company Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickPosition($event)"
-        matTooltip="Information such as: department, position, position dates...etc"
-      >
-        Position Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickShift($event)"
-        matTooltip="Information such as: shift...etc"
-      >
-        Shift Information
-      </mat-button-toggle>
-    </div>
-
-    <div fxLayout="row" fxLayoutAlign="center stretch" fxLayoutGap="1px">
-      <mat-button-toggle
-        (click)="clickPersonal($event)"
-        matTooltip="Information such as: address, email, phone...etc"
-      >
-        Personal Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickComments($event)"
-        matTooltip="Information such as: comments ...etc"
-      >
-        Comments Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickAttrition($event)"
-        matTooltip="Information such as: attrition...etc"
-      >
-        Attrition Information
-      </mat-button-toggle>
-      <mat-button-toggle
-        (click)="clickEmergency($event)"
-        matTooltip="Information such as: emergency contact...etc"
-      >
-        Emergency Information
-      </mat-button-toggle>
+      <mat-form-field appearance="outline" [formGroup]="reportForm">
+        <mat-select placeholder="REPORT" formControlName="reportSelector">
+          <mat-option *ngFor="let report of reports" [value]="report" [matTooltip]="report.tooltip">
+            <span>{{report.name}}</span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
 
     <button
       mat-button
       color="primary"
       (click)="getReport()"
-      *ngIf="!this.dataSource"
+
     >
-      <mat-icon>cached</mat-icon>&nbsp; &nbsp; LOAD INFORMATION
+      <mat-icon>get_app</mat-icon>
+      <span>DOWNLOAD</span>
     </button>
   </mat-card>
-
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>
-        Available Information Report
-      </mat-card-title>
-      <mat-card-subtitle>
-        Filter > Analyze > Fix
-      </mat-card-subtitle>
-    </mat-card-header>
-    <mat-tab-group (selectedTabChange)="tabChanged($event)">
-      <mat-tab label="PROFILE PICTURE">
-        <app-available-information
-          [focused]="this.selectedTab === 0"
-          [query]="this.avatarQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="MAIN">
-        <app-available-information
-          [focused]="this.selectedTab === 1"
-          [query]="this.mainQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="COMPANY">
-        <app-available-information
-          [focused]="this.selectedTab === 2"
-          [query]="this.companyQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="SHIFT">
-        <app-available-information
-          [focused]="this.selectedTab === 3"
-          [query]="this.shiftQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="POSITION">
-        <app-available-information
-          [focused]="this.selectedTab === 4"
-          [query]="this.positionQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="PAYROLL">
-        <app-available-information
-          [focused]="this.selectedTab === 5"
-          [query]="this.payrollQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="PERSONAL">
-        <app-available-information
-          [focused]="this.selectedTab === 6"
-          [query]="this.personalQuery"
-        ></app-available-information>
-      </mat-tab>
-      <mat-tab label="EMERGENCY CONTACT">
-        <app-available-information
-          [focused]="this.selectedTab === 7"
-          [query]="this.familyQuery"
-        ></app-available-information>
-      </mat-tab>
-    </mat-tab-group>
-  </mat-card>
-</div>
-
-<div class="pa-1" *ngIf="this.dataSource">
-  <mat-card-header>
-    <mat-card-title>Data Preview</mat-card-title>
-    <mat-card-subtitle
-      >to export to Excel click on the export button
-    </mat-card-subtitle>
-  </mat-card-header>
-  <div class="container">
-    <table mat-table #table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="employeeId">
-        <mat-header-cell *matHeaderCellDef>Employee ID</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.employeeId }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="firstName">
-        <mat-header-cell *matHeaderCellDef>First Name</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.firstName }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="middleName">
-        <mat-header-cell *matHeaderCellDef>Middle Name</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.middleName }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="lastName">
-        <mat-header-cell *matHeaderCellDef>Last Name</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.lastName }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="gender">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Gender
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.gender }} </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="socialSecurity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Social Security
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.socialSecurity }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="status">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Status
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{ element.status }}</mat-cell>
-      </ng-container>
-
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </table>
-  </div>
-  <br />
-  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
-    <button mat-button color="primary" (click)="export()">
-      <mat-icon>cloud_download</mat-icon>&nbsp; &nbsp; EXPORT
-    </button>
-    <div class="fill-remaining-space"></div>
-    <button mat-button color="warn" (click)="clear()">
-      <mat-icon>clear</mat-icon>&nbsp; &nbsp; CLEAR
-    </button>
-  </div>
 </div>

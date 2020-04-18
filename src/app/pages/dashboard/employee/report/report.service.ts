@@ -4,6 +4,8 @@ import { noop, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@synergy/environments/environment';
 import { SessionService } from '@synergy-app/shared/services/session.service';
+import moment from 'moment';
+import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Injectable()
 export class ReportService {
@@ -76,5 +78,57 @@ export class ReportService {
     return this.httpClient.post(this.api + '/employee/report/' + type, body, {
       headers: headers,
     });
+  }
+  mapShift(report: any[]): any[] {
+    return report.map((element) => {
+      const {shift } = element;
+      const mappedShift: any = {};
+      if (shift) {
+        console.log(shift);
+        const length = shift.length;
+        for (let i = 0; i < length; i++) {
+          const day = shift[i];
+          mappedShift[this.dateToString(day.date)] = `${this.transformTime(day.shiftStartTime)
+          } - ${this.transformTime(day.shiftEndTime)}`;
+          if (mappedShift[this.dateToString(day.date)] === '00:00 - 00:00') {
+            mappedShift[this.dateToString(day.date)] = 'DAY OFF';
+          }
+        }
+      }
+      return Object.assign(element, mappedShift);
+    });
+  }
+  mapHours(report: any[]): any[] {
+    return report.map(row => {
+      const { hours } = row;
+      const mappedHours: any = {};
+      if (hours) {
+        const length = hours.length;
+        for (let i = 0; i < length; i ++) {
+          const hour = hours[i];
+          mappedHours[this.dateToString(hour.date)] = hour.hasHours ? true : hour.hasHours === hour.onShift;       }
+      }
+      return Object.assign(row, mappedHours);
+    });
+  }
+  transformTime(param: any): string {
+    let result = '00:00';
+    if (param !== null) {
+      if (param.toString().includes(':')) {
+        return param;
+      }
+      const stored = parseInt(param, 10);
+      const hours = Math.floor(stored / TIME_VALUES.SECONDS_PER_MINUTE);
+      const minutes = stored - hours * TIME_VALUES.SECONDS_PER_MINUTE;
+      let fixedMin = minutes === 0 ? '00' : minutes;
+      minutes > 0 && minutes < 10 ? (fixedMin = '0' + minutes) : noop();
+      result = hours + ':' + fixedMin;
+      return result;
+    } else {
+      return result;
+    }
+  }
+  dateToString(date: Date): string {
+    return moment(date).format('MM/DD/YYYY').toString();
   }
 }

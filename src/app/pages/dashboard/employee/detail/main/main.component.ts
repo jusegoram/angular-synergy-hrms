@@ -27,8 +27,8 @@ export class MainComponent implements OnInit {
   };
   public form: FormGroup;
   public currentPositionForm: FormGroup;
-  private status;
-  private genders;
+  public status;
+  public genders;
   constructor(
     private _service: EmployeeService,
     private _formBuilder: FormBuilder) {

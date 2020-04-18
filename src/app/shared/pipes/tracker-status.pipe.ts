@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TRACKER_STATUS_LABELS } from '../../../environments/environment';
+import { TRACKER_STATUS_LABELS } from '@synergy/environments/environment';
 
 @Pipe({
   name: 'trackerStatus',
