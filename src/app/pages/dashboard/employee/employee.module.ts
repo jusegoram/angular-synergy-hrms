@@ -79,7 +79,7 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     AvailableInformationComponent,
     CompanyComponent,
     MainComponent,
-    SuperiorsComponent,
+    SuperiorsComponent
   ],
   entryComponents: [
     RequestInfoChangeDialogComponent,
