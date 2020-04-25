@@ -19,14 +19,14 @@ import { USER_ROLES } from '@synergy/environments/enviroment.common';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss']
+  styleUrls: ['./detail.component.scss'],
 })
 export class DetailComponent implements OnInit {
-  @ViewChild('successAlert', {static: false})
+  @ViewChild('successAlert', { static: false })
   successAlert: OnSuccessAlertComponent;
-  @ViewChild('onDeleteAlert', {static: false})
+  @ViewChild('onDeleteAlert', { static: false })
   onDeleteAlert: OnDeleteAlertComponent;
-  @ViewChild('onErrorAlert', {static: false})
+  @ViewChild('onErrorAlert', { static: false })
   onErrorAlert: OnErrorAlertComponent;
 
   public auth: any;
@@ -64,8 +64,7 @@ _roles = USER_ROLES;
     private fb: FormBuilder,
     public dialog: MatDialog,
     private sessionService: SessionService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.auth = this._service.getAuth();
@@ -83,39 +82,42 @@ _roles = USER_ROLES;
   openStatusDialog(): void {
     const dialogRef = this.dialog.open(StatusDialogComponent, {
       width: '700px',
-      data: { status: this.employee.status, hrTracker: this.hrTracker }
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+      result && result.state ? this.successAlert.fire() : this.onErrorAlert.fire();
     });
   }
+
   openTransferDialog(): void {
     const dialogRef = this.dialog.open(TransferDialogComponent, {
       width: '700px',
-      data: { status: this.employee.status, hrTracker: this.hrTracker }
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
     });
     dialogRef.afterClosed().subscribe((result) => {
-      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+      result && result.state ? this.successAlert.fire() : this.onErrorAlert.fire();
     });
   }
+
   openCertifyDialog(): void {
     const dialogRef = this.dialog.open(CertifyDialogComponent, {
       width: '700px',
-      data: { status: this.employee.status, hrTracker: this.hrTracker }
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+      result && result.state ? this.successAlert.fire() : this.onErrorAlert.fire();
     });
   }
+
   openRequestChangeDialog(): void {
     const dialogRef = this.dialog.open(RequestInfoChangeDialogComponent, {
       width: '700px',
-      data: { status: this.employee.status, hrTracker: this.hrTracker }
+      data: { status: this.employee.status, hrTracker: this.hrTracker },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      result ? this.successAlert.fire() : this.onErrorAlert.fire();
+      result && result.state ? this.successAlert.fire() : this.onErrorAlert.fire();
     });
   }
 
@@ -135,7 +137,7 @@ _roles = USER_ROLES;
   async onSuccess() {
     this.successAlert.fire();
     try {
-      return this.employee = await this._service.getEmployee(this.employee._id).toPromise();
+      return (this.employee = await this._service.getEmployee(this.employee._id).toPromise());
     } catch (e) {
       return;
     }

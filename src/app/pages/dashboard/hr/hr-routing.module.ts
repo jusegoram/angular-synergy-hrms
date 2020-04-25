@@ -1,14 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HrComponent } from './hr.component';
-import { TrackersComponent } from './trackers/trackers.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: HrComponent,
+    redirectTo: 'trackers',
   },
-  { path: 'trackers', component: TrackersComponent },
+  {
+    path: 'trackers',
+    loadChildren: () => import('./trackers/trackers.module').then((m) => m.TrackersModule),
+  },
+  {
+    path: 'leaves',
+    loadChildren: () => import('./leaves/leaves.module').then((m) => m.LeavesModule),
+  },
 ];
 
 @NgModule({

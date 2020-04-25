@@ -19,6 +19,10 @@ export const routes: Routes = [
         component: DetailComponent,
         resolve: {employee: DetailResolver},
       },
+      {
+        path: 'leaves',
+        loadChildren: () => import('./leaves/leaves.module').then((m) => m.LeavesModule),
+      },
       {path: 'new', component: NewComponent},
       {path: 'reports', component: ReportComponent},
       {

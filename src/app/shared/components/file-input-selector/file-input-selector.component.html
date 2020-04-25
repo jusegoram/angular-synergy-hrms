@@ -1,0 +1,14 @@
+<input #fileInput 
+        class="form-control-file" 
+        type="file" 
+        (change)="extractFile(fileInput.files)" 
+        style="display: none;"
+        [accept]="acceptedFilesTypes"
+/>
+<button
+    mat-button
+    (click)="fileInput.click();"
+    color="primary"
+>
+    <ng-content></ng-content>
+</button>

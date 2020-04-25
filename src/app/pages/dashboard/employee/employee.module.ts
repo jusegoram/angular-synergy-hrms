@@ -82,7 +82,7 @@ import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/auth
     AvailableInformationComponent,
     CompanyComponent,
     MainComponent,
-    SuperiorsComponent,
+    SuperiorsComponent
   ],
   entryComponents: [
     RequestInfoChangeDialogComponent,

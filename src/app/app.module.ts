@@ -13,7 +13,7 @@ import {
   PerfectScrollbarModule
 } from 'ngx-perfect-scrollbar';
 import { BidiModule } from '@angular/cdk/bidi';
-
+import { AdminService } from '@synergy-app/shared/services/admin.service';
 import { AppRoutes } from './app.routing';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './shared/layouts/admin/admin-layout.component';
@@ -56,6 +56,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RootGuard,
     PrivilegeGuard,
     EmployeeService,
+    AdminService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,

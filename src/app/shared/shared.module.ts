@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MaterialSharedModule } from './material.shared.module';
 import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
 import { TrackerTypePipe } from './pipes/tracker-type.pipe';
+import { FileInputSelectorComponent } from './components/file-input-selector/file-input-selector.component';
+import { LeaveStatusPipe } from './pipes/leave-status.pipe';
 import { DeniedAccessComponent } from '@synergy-app/shared/denied-access/denied-access.component';
 import { ExportComponent } from '@synergy-app/shared/export/export.component';
 import { ExportService } from '@synergy-app/shared/export/export.service';
@@ -30,7 +32,9 @@ export function provideSwal() {
     SignatureFieldComponent,
     TrackerStatusPipe,
     TrackerTypePipe,
+    LeaveStatusPipe,
     RangesFooterComponent,
+    FileInputSelectorComponent,
     DeniedAccessComponent,
     ExportComponent,
   ],
@@ -49,9 +53,11 @@ export function provideSwal() {
     SignatureFieldComponent,
     TrackerStatusPipe,
     TrackerTypePipe,
+    LeaveStatusPipe,
     RangesFooterComponent,
+    FileInputSelectorComponent,
     DeniedAccessComponent,
-    ExportComponent
+    ExportComponent,
   ],
   providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe, ExportService],
 })

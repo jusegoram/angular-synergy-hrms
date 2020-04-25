@@ -16,13 +16,13 @@ import {
   EmployeeFamily,
   EmployeePayroll,
   EmployeePersonal,
-  EmployeePosition
+  EmployeePosition,
 } from '@synergy-app/shared/models/employee/employee';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
-
+import { LeaveRequest } from '../models/leave-request';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class EmployeeService {
   api = environment.apiUrl;
@@ -32,7 +32,7 @@ export class EmployeeService {
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
   public status = [
-    {value: 'active', viewValue: 'Active'},
+    { value: 'active', viewValue: 'Active' },
     {
       value: 'resignation',
       viewValue: 'Resignation',
@@ -48,8 +48,8 @@ export class EmployeeService {
       viewValue: 'Termination',
       onclick: 'openStatusDialog()',
     },
-    {value: 'on-hold', viewValue: 'On-Hold'},
-    {value: 'transfer', viewValue: 'Transfer'},
+    { value: 'on-hold', viewValue: 'On-Hold' },
+    { value: 'transfer', viewValue: 'Transfer' },
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
 
@@ -63,8 +63,8 @@ export class EmployeeService {
 
   ];
   public genders = [
-    {value: 'male', viewValue: 'Male'},
-    {value: 'female', viewValue: 'Female'},
+    { value: 'male', viewValue: 'Male' },
+    { value: 'female', viewValue: 'Female' },
   ];
 
   constructor(
@@ -72,8 +72,7 @@ export class EmployeeService {
     private sessionService: SessionService,
     private trackerStatusPipe: TrackerStatusPipe,
     private trackerTypePipe: TrackerTypePipe
-  ) {
-  }
+  ) {}
 
   getTemplate(templateUrl) {
     return this.httpClient.get(this.api + templateUrl, {
@@ -94,7 +93,7 @@ export class EmployeeService {
         params = new HttpParams().set('clients', JSON.stringify(contextFilter));
       }
       this._clients = this.httpClient
-        .get<any>(this.api + '/admin/employee/client', {params: params})
+        .get<any>(this.api + '/admin/employee/client', { params: params })
         .pipe(
           map((data) => {
             this.clients = data;
@@ -133,7 +132,7 @@ export class EmployeeService {
     }
     if (!this._employees) {
       this._employees = this.httpClient
-        .get<Array<Employee>>(this.api + '/employee', {params: params})
+        .get<Array<Employee>>(this.api + '/employee', { params: params })
         .pipe(publishReplay(1), refCount());
     }
     return this._employees;
@@ -141,7 +140,6 @@ export class EmployeeService {
   getEmployee(param: string): Observable<Employee> {
     return (this._detail = this.httpClient.get<Employee>(`${this.api}/employee/${param}`));
   }
-
 
   /**
    *
@@ -192,7 +190,7 @@ export class EmployeeService {
   }
   updatePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', payroll._id);
 
     return this.httpClient.put(`${this.api}/employee/${payroll.employee}/payroll`, body, {
@@ -203,7 +201,7 @@ export class EmployeeService {
 
   updateEmployeeShift(employee: Employee, shift: any) {
     const body = shift;
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const params = new HttpParams().set('id', shift._id);
     return this.httpClient.put(`${this.api}/employee/${employee._id}/shift`, body, {
       headers: headers,
@@ -322,6 +320,30 @@ export class EmployeeService {
   //   return this.httpClient.post(this.api + '/employee/report/information', body, { headers: headers });
   // }
 
+  // TODO: feat/leaves
+  getLeaves(filters = {}): Promise<Array<LeaveRequest>> {
+    return this.httpClient
+      .get<Array<LeaveRequest>>(API.LEAVES, { params: filters })
+      .toPromise();
+  }
+
+  saveLeave(leaveRequest: Partial<LeaveRequest>) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(API.LEAVES, leaveRequest, { headers }).toPromise();
+  }
+
+  updateLeave(leaveRequest: Partial<LeaveRequest>) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put(API.LEAVE(leaveRequest._id), leaveRequest, { headers }).toPromise();
+  }
+
+  deleteLeave(_id: string) {
+    return this.httpClient.delete(API.LEAVE(_id)).toPromise();
+  }
+
+  getLeave(_id: string) {
+    return this.httpClient.get(API.LEAVE(_id)).toPromise();
+  }
 
   /**@todo: feat/hr-module
    * @function saveTracker
@@ -342,7 +364,7 @@ export class EmployeeService {
 
   saveTracker(hrTracker: HrTracker) {
     // TODO: feat/hr-module
-    const headers = new HttpHeaders({'Content-Type': 'application/json' });
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(API.TRACKERS, hrTracker, { headers }).toPromise();
   }
 
@@ -379,7 +401,9 @@ export class EmployeeService {
       hrTracker.stateName = this.trackerStatusPipe.transform(hrTracker.state);
       hrTracker.trackerTypeName = this.trackerTypePipe.transform(hrTracker.tracker);
       hrTracker.requestDateFormatted = moment(hrTracker.requestDate).format('MM/DD/YYYY');
-      hrTracker.deadlineDateFormatted = moment(hrTracker.requestDate).add(TIME_VALUES.THREE_DAYS, 'days').format('MM/DD/YYYY');
+      hrTracker.deadlineDateFormatted = moment(hrTracker.requestDate)
+        .add(TIME_VALUES.THREE_DAYS, 'days')
+        .format('MM/DD/YYYY');
 
       if (hrTracker.tracker.certifyTraining) {
         hrTracker.tracker.certifyTraining.managerSignature = this.bufferToBase64(
@@ -413,6 +437,6 @@ export class EmployeeService {
 
   getEmployeeManagers(clients: string[]) {
     const params = new HttpParams().set('clients', JSON.stringify(clients));
-    return this.httpClient.get(this.api + '/employee/managers', {params: params});
+    return this.httpClient.get(this.api + '/employee/managers', { params: params });
   }
 }
