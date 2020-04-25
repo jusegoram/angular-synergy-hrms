@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '../services/admin.service';
+import { AdminService } from '@synergy-app/shared/services/admin.service';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @Component({

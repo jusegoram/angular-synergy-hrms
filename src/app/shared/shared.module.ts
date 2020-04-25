@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MaterialSharedModule } from './material.shared.module';
 import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
 import { TrackerTypePipe } from './pipes/tracker-type.pipe';
+import { FileInputSelectorComponent } from './components/file-input-selector/file-input-selector.component';
+import { LeaveStatusPipe } from './pipes/leave-status.pipe';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -26,7 +28,9 @@ export function provideSwal() {
     SignatureFieldComponent,
     TrackerStatusPipe,
     TrackerTypePipe,
+    LeaveStatusPipe,
     RangesFooterComponent,
+    FileInputSelectorComponent
   ],
   imports: [
     HttpClientModule,
@@ -42,7 +46,9 @@ export function provideSwal() {
     SignatureFieldComponent,
     TrackerStatusPipe,
     TrackerTypePipe,
-    RangesFooterComponent
+    LeaveStatusPipe,
+    RangesFooterComponent,
+    FileInputSelectorComponent
   ],
   providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe],
 })
