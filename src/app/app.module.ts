@@ -3,11 +3,15 @@ import { SessionService } from './shared/services/session.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { MaterialSharedModule } from './shared/material.shared.module';
-import { PreloadAllModules, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface, PerfectScrollbarModule, } from 'ngx-perfect-scrollbar';
+import {
+  PERFECT_SCROLLBAR_CONFIG,
+  PerfectScrollbarConfigInterface,
+  PerfectScrollbarModule
+} from 'ngx-perfect-scrollbar';
 import { BidiModule } from '@angular/cdk/bidi';
 
 import { AppRoutes } from './app.routing';
@@ -20,6 +24,7 @@ import { RootGuard } from '@synergy-app/pages/session/guards/root.guard';
 import { TokenInterceptor } from './shared/interceptors/token.interceptor';
 import { AuthenticationInterceptor } from './shared/interceptors/authentication.interceptor';
 import { EmployeeService } from './shared/services/employee.service';
+import { PrivilegeGuard } from '@synergy-app/pages/session/guards/privilege.guard';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -49,6 +54,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SessionService,
     SessionGuard,
     RootGuard,
+    PrivilegeGuard,
     EmployeeService,
     {
       provide: HTTP_INTERCEPTORS,

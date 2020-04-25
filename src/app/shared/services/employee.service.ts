@@ -52,6 +52,16 @@ export class EmployeeService {
     {value: 'transfer', viewValue: 'Transfer'},
     //   { value: 'trainee', viewValue: 'Trainee' }
   ];
+
+  public restrictions = [
+    {value: 'student', viewValue: 'Student'},
+    {value: 'out-of-village', viewValue: 'Out of Village'},
+    {value: 'court', viewValue: 'Court'},
+    {value: 'adventist', viewValue: 'Adventist'},
+    {value: 'personal', viewValue: 'Personal'},
+    {value: 'other', viewValue: 'Other', other: true },
+
+  ];
   public genders = [
     {value: 'male', viewValue: 'Male'},
     {value: 'female', viewValue: 'Female'},
@@ -70,15 +80,6 @@ export class EmployeeService {
       responseType: 'blob',
     });
   }
-
-  getReport(query: any): Observable<any> {
-    const body = query;
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/report', body, {
-      headers: headers,
-    });
-  }
-
   /**
    *
    *
@@ -138,11 +139,7 @@ export class EmployeeService {
     return this._employees;
   }
   getEmployee(param: string): Observable<Employee> {
-    const params = new HttpParams().set('id', param);
-    return (this._detail = this.httpClient.get<Employee>(
-      this.api + '/employee/main',
-      {params: params}
-    ));
+    return (this._detail = this.httpClient.get<Employee>(`${this.api}/employee/${param}`));
   }
 
 
@@ -151,14 +148,17 @@ export class EmployeeService {
    *
    * @returns {Observable<Employee>}
    * @memberof EmployeeService
-   * @param employeeId
+   * @param employee
    * @param fromDate
    * @param toDate
    */
 
-  getEmployeeShift(employeeId, fromDate, toDate) {
-    const params = new HttpParams().set('employeeId', employeeId).set('fromDate', fromDate).set('toDate', toDate);
-    return this.httpClient.get(this.api + '/employee/shift', {
+  getEmployeeShift(employee: Employee, fromDate: Date, toDate: Date) {
+    const params = new HttpParams()
+      .set('employeeId', employee.employeeId.toString(10))
+      .set('fromDate', fromDate.toISOString())
+      .set('toDate', toDate.toISOString());
+    return this.httpClient.get(`${this.api}/employee/${employee._id}/shift`, {
       params: params,
     });
   }
@@ -172,21 +172,21 @@ export class EmployeeService {
   updateEmployee(employee: Employee) {
     const body = employee;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.put(this.api + '/employee/main', body, {
+    return this.httpClient.put(`${this.api}/employee/${employee._id}`, body, {
       headers: headers,
     });
   }
   updateCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.put(this.api + '/employee/company', body, {
+    return this.httpClient.put(`${this.api}/employee/${company.employee}/company`, body, {
       headers: headers,
     });
   }
   updatePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.put(this.api + '/employee/personal', body, {
+    return this.httpClient.put(`${this.api}/employee/${personal.employee}/personal`, body, {
       headers: headers,
     });
   }
@@ -195,18 +195,17 @@ export class EmployeeService {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const params = new HttpParams().set('id', payroll._id);
 
-    return this.httpClient.put(this.api + '/employee/payroll', body, {
+    return this.httpClient.put(`${this.api}/employee/${payroll.employee}/payroll`, body, {
       headers: headers,
       params: params,
     });
   }
 
-  updateEmployeeShift(shift) {
+  updateEmployeeShift(employee: Employee, shift: any) {
     const body = shift;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const params = new HttpParams().set('id', shift._id);
-
-    return this.httpClient.put(this.api + '/employee/shift', body, {
+    return this.httpClient.put(`${this.api}/employee/${employee._id}/shift`, body, {
       headers: headers,
       params: params,
     });
@@ -221,7 +220,7 @@ export class EmployeeService {
   saveEmployee(employee: Employee) {
     const body = JSON.stringify(employee);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/new', body, {
+    return this.httpClient.post(`${this.api}/employee/`, body, {
       headers: headers,
     });
   }
@@ -229,7 +228,7 @@ export class EmployeeService {
   saveCompany(company: EmployeeCompany) {
     const body = JSON.stringify(company);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/company', body, {
+    return this.httpClient.post(`${this.api}/employee/${company.employee}/company`, body, {
       headers: headers,
     });
   }
@@ -237,7 +236,7 @@ export class EmployeeService {
   savePosition(position: { employee: string; position: EmployeePosition }) {
     const body = JSON.stringify(position);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/position', body, {
+    return this.httpClient.post(`${this.api}/employee/${position.employee}/position`, body, {
       headers: headers,
     });
   }
@@ -245,21 +244,21 @@ export class EmployeeService {
   savePersonal(personal: EmployeePersonal) {
     const body = JSON.stringify(personal);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/personal', body, {
+    return this.httpClient.post(`${this.api}/employee/${personal.employee}/personal`, body, {
       headers: headers,
     });
   }
   savePayroll(payroll: EmployeePayroll) {
     const body = JSON.stringify(payroll);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/payroll', body, {
+    return this.httpClient.post(`${this.api}/employee/${payroll.employee}/payroll`, body, {
       headers: headers,
     });
   }
   saveFamily(family: EmployeeFamily) {
     const body = family;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/family', body, {
+    return this.httpClient.post(`${this.api}/employee/${family.employee}/family`, body, {
       headers: headers,
     });
   }
@@ -267,7 +266,7 @@ export class EmployeeService {
   saveComment(comment: EmployeeComment) {
     const body = comment;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/comment', body, {
+    return this.httpClient.post(`${this.api}/employee/${comment.employee}/comment`, body, {
       headers: headers,
     });
   }
@@ -275,7 +274,7 @@ export class EmployeeService {
   saveAttrition(attrition: EmployeeAttrition) {
     const body = attrition;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.httpClient.post(this.api + '/employee/attrition', body, {
+    return this.httpClient.post(`${this.api}/employee/${attrition.employee}/attrition`, body, {
       headers: headers,
     });
   }
@@ -298,7 +297,7 @@ export class EmployeeService {
   }
 
   deletePosition(position: { employee: string; position: EmployeePosition }) {
-    const url = `${this.api}/employee/position?position=${position.position._id}&employee=${position.employee}`;
+    const url = `${this.api}/employee/${position.employee}/position/${position.position._id}`;
     return this.httpClient.delete(url);
   }
 
@@ -317,11 +316,11 @@ export class EmployeeService {
     return this.httpClient.delete(url);
   }
 
-  availableInformation(query: any) {
-    const body = JSON.stringify(query);
-    const headers = new HttpHeaders({'Content-Type': 'application/json' });
-    return this.httpClient.post(this.api + '/employee/report/information', body, { headers: headers });
-  }
+  // availableInformation(query: any) {
+  //   const body = JSON.stringify(query);
+  //   const headers = new HttpHeaders({'Content-Type': 'application/json' });
+  //   return this.httpClient.post(this.api + '/employee/report/information', body, { headers: headers });
+  // }
 
 
   /**@todo: feat/hr-module

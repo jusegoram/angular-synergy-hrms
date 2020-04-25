@@ -7,6 +7,8 @@ import { ManageComponent } from './manage/manage.component';
 import { ReportComponent } from './report/report.component';
 import { NewComponent } from './new/new.component';
 import { SuperiorsComponent } from './superiors/superiors.component';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
+import { PrivilegeGuard } from '@synergy-app/pages/session/guards/privilege.guard';
 
 export const routes: Routes = [
   {
@@ -19,7 +21,13 @@ export const routes: Routes = [
       },
       {path: 'new', component: NewComponent},
       {path: 'reports', component: ReportComponent},
-      {path: 'upload', component: UploadComponent},
+      {
+        path: 'upload',
+        data: {
+          allowedRoles: [USER_ROLES.WEB_ADMINISTRATOR.value],
+        },
+        canActivate: [PrivilegeGuard],
+        component: UploadComponent},
       {path: 'manage', component: ManageComponent},
       {path: 'superiors', component: SuperiorsComponent},
     ],

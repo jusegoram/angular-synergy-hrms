@@ -1,0 +1,167 @@
+<shared-on-error-alert #errorAlert message="Sorry, we can only process CSV files."></shared-on-error-alert>
+<shared-on-success-alert #successAlert message="Great! Your upload was successful"></shared-on-success-alert>
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Operations Uploads</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<ng-container *ngIf="auth && auth.upload; else elseTemplate">
+  <mat-card class="mat-card-top">
+    <mat-card-content fxLayout="column">
+      <div fxLayout="column" fxLayoutAlign="start">
+        <div>
+          <mat-card-title fxLayout="row" fxLayoutAlign="space-between">
+            <span fxFlex>UPLOAD CSV FILES</span>
+            <span>QUEUE: {{ uploader?.queue?.length }}</span>
+          </mat-card-title>
+          <mat-table #table [dataSource]="dataSource">
+            <ng-container matColumnDef="name">
+              <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                {{ element?.file?.name }}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="size">
+              <mat-header-cell *matHeaderCellDef> Size </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element?.file?.size / 1024 / 1024 | number: '.2' }} MB </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="progress">
+              <mat-header-cell *matHeaderCellDef> Progress </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <mat-progress-bar mode="determinate" value="{{ element.progress }}"></mat-progress-bar>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <span *ngIf="element.isSuccess"><mat-icon>check</mat-icon></span>
+                <span *ngIf="element.isCancel"><mat-icon>cancel</mat-icon></span>
+                <span *ngIf="element.isError"><mat-icon>error</mat-icon></span>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="primary"
+                  type="button"
+                  (click)="element.upload(); refresh()"
+                  [disabled]="element.isReady || element.isUploading || element.isSuccess"
+                >
+                  <mat-icon>backup</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="warn"
+                  type="button"
+                  (click)="element.cancel(); refresh()"
+                  [disabled]="!element.isUploading"
+                >
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  mat-button-sm
+                  color="accent"
+                  type="button"
+                  (click)="element.remove(); refresh()"
+                >
+                  <mat-icon>remove_circle_outline</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+          </mat-table>
+
+          <div class="mb-1">
+            <mat-card-subtitle>PROGRESS</mat-card-subtitle>
+            <mat-progress-bar mode="determinate" value="{{ uploader?.progress }}"></mat-progress-bar>
+          </div>
+          <button
+            mat-button
+            mat-button-sm
+            color="primary"
+            type="button"
+            (click)="uploader.uploadAll(); refresh()"
+            [disabled]="!uploader?.getNotUploadedItems().length"
+          >
+            UPLOAD ALL
+          </button>
+          <button
+            mat-button
+            mat-button-sm
+            color="warn"
+            type="button"
+            (click)="uploader.cancelAll(); refresh()"
+            [disabled]="!uploader?.isUploading"
+          >
+            CANCEL ALL
+          </button>
+          <button
+            mat-button
+            mat-button-sm
+            color="accent"
+            type="button"
+            (click)="uploader.clearQueue(); refresh()"
+            [disabled]="!uploader?.queue.length"
+          >
+            REMOVE ALL
+          </button>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-vertical-stepper #stepper style="width: 100%">
+          <ng-template matStepperIcon="edit">
+            <mat-icon>check_circle</mat-icon>
+          </ng-template>
+        <mat-step>
+          <ng-template matStepLabel>DOWNLOAD THE TEMPLATE</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>DOWNLOAD TEMPLATE</mat-label>
+            <mat-select placeholder="DOWNLOAD TEMPLATE" [(ngModel)]="templateSelected">
+              <mat-option *ngFor="let option of templates" [value]="option.value" (click)="getTemplate(option); stepper.next()">
+                {{ option.viewValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-step>
+        <mat-step>
+
+          <ng-template matStepLabel>SELECT THE UPLOAD</ng-template>
+          <mat-form-field appearance="fill">
+            <mat-label>SELECT UPLOAD</mat-label>
+            <mat-select placeholder="SELECT UPLOAD" [(ngModel)]="selected" (selectionChange)="onSelectChange(); stepper.next()">
+              <mat-option *ngFor="let item of items" [value]="item" [swal]="item.swal"> {{ item.viewValue }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-step>
+        <mat-step>
+          <ng-template matStepLabel>ATTACH THE CSV</ng-template>
+          <button mat-flat-button color="primary" (click)="fileInput.click()" [disabled]="!uploader">
+            <mat-icon>attach_file</mat-icon>
+            <span>ATTACH FILE</span>
+          </button>
+          <span class="hidden">
+          <input type="file" #fileInput class="upload-button" ng2FileSelect [uploader]="uploader" multiple accept='text/csv|application/vnd.ms-excel'/><br />
+        </span>
+        </mat-step>
+          <ngx-datatable fxFlexFill></ngx-datatable>
+        </mat-vertical-stepper>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+<ng-template #elseTemplate>
+  <app-denied-access></app-denied-access>
+</ng-template>

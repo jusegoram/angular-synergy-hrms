@@ -1,22 +1,25 @@
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span>Operations Reports & Downloads</span>
+    <span>Operations Reports</span>
     <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
 </mat-toolbar>
 <mat-tab-group backgroundColor="primary">
+  <mat-tab label="REPORTS">
+    <app-export [reports]="reports"></app-export>
+  </mat-tab>
   <mat-tab label="MATRIX">
     <report-matrix></report-matrix>
   </mat-tab>
   <mat-tab label="ATTENDANCE">
     <report-attendance></report-attendance>
   </mat-tab>
-  <mat-tab label="KPI">
-    <report-kpi></report-kpi>
-  </mat-tab>
-  <mat-tab label="HOURS">
-    <report-hours></report-hours>
-  </mat-tab>
+<!--  <mat-tab label="KPI">-->
+<!--    <report-kpi></report-kpi>-->
+<!--  </mat-tab>-->
+<!--  <mat-tab label="HOURS">-->
+<!--    <report-hours></report-hours>-->
+<!--  </mat-tab>-->
 </mat-tab-group>
 <mat-table style="visibility: hidden;">
   <ng-container matColumnDef="employeeId">

@@ -1,0 +1,223 @@
+<shared-on-success-alert #successAlert [message]="successMessage"></shared-on-success-alert>
+<shared-on-error-alert #errorAlert [message]="errorMessage"></shared-on-error-alert>
+
+<ng-container *ngIf="auth && auth.rights.export; else elseTemplate">
+  <div>
+    <mat-card class="pa-1">
+      <div fxLayout="column" fxLayoutAlign="start">
+        <form fxLayout="row wrap" fxLayoutAlign="space-around" fxLayoutGap="5px" class="pa-1" [formGroup]="reportForm">
+          <mat-form-field appearance="fill" [formGroup]="queryForm">
+            <mat-label>STATUS</mat-label>
+            <mat-select formControlName="status" multiple placeholder="NO FILTER">
+              <mat-select-trigger>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let status of queryForm.controls['status'].value"
+                            [removable]="true" (removed)="onFilterRemoved(status, 'status')">
+                    {{ status === "" ? 'NO FILTER' : status | uppercase }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of status" [value]="item.value">
+                {{ item.viewValue | uppercase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" [formGroup]="queryForm">
+            <mat-label>CLIENT</mat-label>
+            <mat-select formControlName="client" multiple placeholder="NO FILTER"
+                        (selectionChange)="setCampaigns($event.value)">
+              <mat-select-trigger>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let client of queryForm.controls['client'].value"
+                            [removable]="true" (removed)="onFilterRemoved(client, 'client')">
+                    {{  client.name === "" ? 'NO FILTER' : client.name | uppercase }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of clients" [value]="item">
+                {{ item.name | uppercase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" [formGroup]="queryForm">
+            <mat-label>CAMPAIGN</mat-label>
+            <mat-select formControlName="campaign" multiple placeholder="NO FILTER">
+              <mat-select-trigger>
+                <mat-chip-list>
+                  <mat-chip *ngFor="let campaign of queryForm.controls['campaign'].value"
+                            [removable]="true" (removed)="onFilterRemoved(campaign,'campaign')">
+                    {{ campaign === "" ? 'NO FILTER' : campaign | uppercase }}
+                    <mat-icon matChipRemove>cancel</mat-icon>
+                  </mat-chip>
+                </mat-chip-list>
+              </mat-select-trigger>
+              <mat-option *ngFor="let item of campaigns" [value]="item.name">
+                {{ item.name | uppercase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </form>
+        <form fxLayout="row wrap" fxLayoutGap="5px" class="px-1" [formGroup]="queryForm">
+          <mat-form-field
+            appearance="fill"
+          >
+            <mat-label>MANAGER</mat-label>
+            <mat-select
+              placeholder="MANAGER"
+              formControlName="manager"
+            >
+              <mat-option
+                *ngFor="let item of superiors?.managers"
+                [value]="item"
+              >
+                {{ item?.name | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+          >
+            <mat-label>SHIFT MANAGER</mat-label>
+            <mat-select
+              placeholder="SHIFT MANAGER"
+              formControlName="shiftManager"
+            >
+              <mat-option
+                *ngFor="let item of superiors?.shiftManagers"
+                [value]="item"
+              >
+                {{ item?.name | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+          >
+            <mat-label>SUPERVISOR</mat-label>
+            <mat-select
+              placeholder="SUPERVISOR"
+              formControlName="supervisor"
+            >
+              <mat-option
+                *ngFor="let item of superiors?.shiftManagers"
+                [value]="item"
+              >
+                {{ item?.name | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field
+            appearance="fill"
+          >
+            <mat-label>TRAINER</mat-label>
+            <mat-select
+              placeholder="TRAINER"
+              formControlName="trainer"
+            >
+              <mat-option
+                *ngFor="let item of superiors?.trainers"
+                [value]="item"
+              >
+                {{ item?.name | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill" [formGroup]="queryForm" floatLabel="always">
+            <span matPrefix>GEN&nbsp;</span>
+            <mat-label>TRAINING GROUP</mat-label>
+            <label>
+              <input
+                matInput
+                placeholder="GROUP #"
+                formControlName="trainingGroupNum"
+                type="number"
+              />
+            </label>
+          </mat-form-field>
+        </form>
+        <form fxLayout="row wrap" fxLayoutAlign="start" fxLayoutGap="20px" class="px-1" [formGroup]="reportForm">
+          <mat-form-field appearance="fill" *ngIf="reportForm.controls.hireDateCheck.value" [formGroup]="queryForm">
+            <mat-label>HIRE DATE</mat-label>
+            <label>
+              <input matInput
+                     placeholder="CLICK ON CALENDAR"
+                     [satDatepicker]="hireDatePicker"
+                     formControlName="hireDate">
+            </label>
+            <sat-datepicker
+              #hireDatePicker
+              [rangeMode]="true"
+              [calendarFooterComponent]="rangesFooter"
+            ></sat-datepicker>
+            <sat-datepicker-toggle matSuffix [for]="hireDatePicker"></sat-datepicker-toggle>
+            <button class="picker-toggle-button" matPrefix mat-icon-button color="primary"
+                    (click)="reportForm.controls.hireDateCheck.setValue(false)">
+              <mat-icon>indeterminate_check_box</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-checkbox formControlName="hireDateCheck" value="" color="primary"
+                        *ngIf="!reportForm.controls.hireDateCheck.value">
+            <span>HIRE DATE</span>
+          </mat-checkbox>
+
+          <mat-form-field appearance="fill" *ngIf="reportForm.controls.terminationDateCheck.value"
+                          [formGroup]="queryForm">
+            <mat-label>TERMINATION DATE</mat-label>
+            <label>
+              <input matInput
+                     placeholder="CLICK ON CALENDAR"
+                     [satDatepicker]="termDatePicker"
+                     formControlName="terminationDate">
+            </label>
+            <sat-datepicker
+              #termDatePicker
+              [rangeMode]="true"
+              [calendarFooterComponent]="rangesFooter"
+            ></sat-datepicker>
+            <sat-datepicker-toggle matSuffix [for]="termDatePicker"></sat-datepicker-toggle>
+            <button class="picker-toggle-button" matPrefix mat-icon-button color="primary"
+                    (click)="reportForm.controls.terminationDateCheck.setValue(false)">
+              <mat-icon>indeterminate_check_box</mat-icon>
+            </button>
+          </mat-form-field>
+          <mat-checkbox formControlName="terminationDateCheck" value="" color="primary"
+                        *ngIf="!reportForm.controls.terminationDateCheck.value">
+            <span>TERMINATION DATE</span>
+          </mat-checkbox>
+        </form>
+      </div>
+
+      <mat-card-header>
+        <mat-card-subtitle>
+       <span>
+         Choose the report you would like to export.
+       </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <div fxLayout="row wrap" fxLayoutAlign="center stretch" fxLayoutGap="1px">
+        <mat-form-field appearance="outline" [formGroup]="reportForm">
+          <mat-select placeholder="REPORT" formControlName="reportSelector">
+            <mat-option *ngFor="let report of reports" [value]="report" [matTooltip]="report.tooltip">
+              <span>{{report.name}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <button
+        mat-button
+        color="primary"
+        (click)="getReport()"
+
+      >
+        <mat-icon>get_app</mat-icon>
+        <span>DOWNLOAD</span>
+      </button>
+    </mat-card>
+  </div>
+</ng-container>
+<ng-template #elseTemplate>
+  <app-denied-access ></app-denied-access>
+</ng-template>

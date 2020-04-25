@@ -1,6 +1,6 @@
 <mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
-    <span>Workforce Reports</span>
+    <span>Payroll Reports</span>
     <span class="fill-remaining-space"></span>
     <button mat-icon-button
             matTooltip="TO DOWNLOAD A REPORT PLEASE SELECT THE FILTER OPTIONS, LEAVING A FILTER EMPTY MEANS IT HAS NO FILTER">
@@ -11,6 +11,5 @@
   <mat-toolbar-row> </mat-toolbar-row>
 </mat-toolbar>
 <div class="mat-card-top">
-  <app-export [reports]=reports></app-export>
+  <app-export [reports]="reports"></app-export>
 </div>
-

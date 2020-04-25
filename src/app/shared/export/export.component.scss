@@ -1,15 +1,10 @@
-mat-form-field,
-mat-checkbox {
-  margin-top: 10px;
-  margin-right: 50px;
-}
 
-button {
-  width: 200px;
-  margin-left: 5px;
-  margin-right: 10px;
-  margin-top: 5px;
-}
+//button {
+//  width: 200px;
+//  margin-left: 5px;
+//  margin-right: 10px;
+//  margin-top: 5px;
+//}
 
 mat-card {
   margin: 20px;
@@ -57,6 +52,7 @@ mat-header-row {
 .header {
   width: 100% !important;
 }
+
 .fill-remaining-space {
   flex: 1 1 auto;
 }
@@ -64,4 +60,17 @@ mat-header-row {
 .center-block {
   width: 700px;
   margin: 0 auto;
+}
+
+.picker-toggle-button {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+mat-form-field {
+  max-width: 40%;
+  flex-grow: 1;
+}
+span {
+  margin: 10px;
 }

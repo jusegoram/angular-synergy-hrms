@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
-import { Employee, EmployeeCompany, Manager, } from '@synergy-app/shared/models/employee/employee';
+import { Employee, EmployeeCompany, Manager } from '@synergy-app/shared/models/employee/employee';
 import { noop } from 'rxjs';
 
 @Component({
@@ -38,6 +38,7 @@ export class CompanyComponent implements OnInit {
   campaigns: any;
   managers: Manager[];
   shiftManagers: Manager[];
+  supervisors: Manager[];
   trainers: Manager[];
 
   constructor(private _service: EmployeeService, private fb: FormBuilder) {}
@@ -52,6 +53,7 @@ export class CompanyComponent implements OnInit {
   buildForm() {
     const { _id: employee } = this.currentEmployee;
     const {
+      _id,
       client,
       campaign,
       shiftManager,
@@ -59,7 +61,6 @@ export class CompanyComponent implements OnInit {
       supervisor,
       trainer,
       branch,
-      trainingGroupRef,
       trainingGroupNum,
       hireDate,
       terminationDate,
@@ -68,6 +69,7 @@ export class CompanyComponent implements OnInit {
       bilingual,
     } = this.company;
     this.companyForm = this.fb.group({
+      _id: [_id],
       employee: [employee],
       client: [client, Validators.required],
       campaign: [campaign, Validators.required],
@@ -88,9 +90,10 @@ export class CompanyComponent implements OnInit {
   fetchSuperiors(client?) {
     client
       ? this._service.getEmployeeManagers([client]).subscribe((result: any) => {
-          const { managers, shiftManagers, trainers } = result;
+          const { managers, shiftManagers, trainers, supervisors} = result;
           this.managers = managers;
           this.shiftManagers = shiftManagers;
+          this.supervisors = supervisors;
           this.trainers = trainers;
         })
       : noop();
@@ -100,22 +103,10 @@ export class CompanyComponent implements OnInit {
     const query: EmployeeCompany = {
       ...values,
     };
-    query.manager =
-      values.manager === this.company.manager.manager_id
-        ? this.company.manager
-        : this.managerResolver(values.manager);
-    query.shiftManager =
-      values.shiftManager === this.company.shiftManager.manager_id
-        ? this.company.shiftManager
-        : this.shiftManagerResolver(values.shiftManager);
-    query.supervisor =
-      values.supervisor === this.company.supervisor.manager_id
-        ? this.company.supervisor
-        : this.shiftManagerResolver(values.supervisor);
-    query.trainer =
-      values.trainer === this.company.trainer.manager_id
-        ? this.company.trainer
-        : this.trainerResolver(values.trainer);
+    query.manager = this.managerResolver(values.manager);
+    query.shiftManager = this.shiftManagerResolver(values.shiftManager);
+    query.supervisor = this.supervisorResolver(values.supervisor);
+    query.trainer = this.trainerResolver(values.trainer);
     try {
       delete query._id;
       await this._service.saveCompany(query).toPromise();
@@ -130,20 +121,20 @@ export class CompanyComponent implements OnInit {
     const query: EmployeeCompany = {
       ...values,
     };
-    query.manager =
-      values.manager === this.company.manager.manager_id
-        ? this.company.manager
-        : this.managerResolver(values.manager);
+    console.log(this.company.manager);
+    query.manager = this.company.manager && this.company.manager.manager_id === values.manager
+      ? this.company.manager
+      : this.managerResolver(values.manager);
     query.shiftManager =
-      values.shiftManager === this.company.shiftManager.manager_id
+      this.company.shiftManager && this.company.shiftManager.manager_id === values.shiftManager
         ? this.company.shiftManager
         : this.shiftManagerResolver(values.shiftManager);
     query.supervisor =
-      values.supervisor === this.company.supervisor.manager_id
+      this.company.supervisor && this.company.supervisor.manager_id === values.supervisor
         ? this.company.supervisor
-        : this.shiftManagerResolver(values.supervisor);
+        : this.supervisorResolver(values.supervisor);
     query.trainer =
-      values.trainer === this.company.trainer.manager_id
+      this.company.trainer && this.company.trainer.manager_id === values.trainer
         ? this.company.trainer
         : this.trainerResolver(values.trainer);
     try {
@@ -171,32 +162,60 @@ export class CompanyComponent implements OnInit {
       return [];
     }
   }
-  managerResolver(_id) {
+  managerResolver(_id: string) {
     const date = new Date();
     const [found] = this.managers.filter((i) => i.manager_id === _id);
-    this.company.manager.date = date;
-    found.date = date;
-    return found;
+    if (found) {
+      this.company.manager = found;
+      this.company.manager.date = date;
+      found.date = date;
+      return found;
+    } else {
+      return null;
+    }
   }
-  shiftManagerResolver(_id) {
+  supervisorResolver(_id: string) {
+    const date = new Date();
+    const [found] = this.supervisors.filter((i) => i.manager_id === _id);
+    if (found) {
+      this.company.supervisor = found;
+      this.company.supervisor.date = date;
+      found.date = date;
+      return found;
+    } else {
+      return null;
+    }
+  }
+  shiftManagerResolver(_id: string) {
     const date = new Date();
     const [found] = this.shiftManagers.filter((i) => i.manager_id === _id);
-    this.company.shiftManager.date = date;
-    found.date = date;
-    return found;
+    if (found) {
+      this.company.shiftManager = found;
+      this.company.shiftManager.date = date;
+      found.date = date;
+      return found;
+    } else {
+      return null;
+    }
   }
-  trainerResolver(_id) {
+  trainerResolver(_id: string) {
     const date = new Date();
     const [found] = this.trainers.filter((i) => i.manager_id === _id);
-    this.company.trainer.date = date;
-    found.date = date;    return found;
+    if (found) {
+      this.company.trainer = found;
+      this.company.trainer.date = date;
+      found.date = date;
+      return found;
+    } else {
+      return null;
+    }
   }
   refreshCampaigns(value: string) {
     this.campaigns = this.setCampaigns(value);
   }
   onSubmit() {
     if (this.companyForm.valid && this.companyForm.touched) {
-      return this.companyForm.value._id !== ''
+      return !!this.company._id
         ? this.updateCompany()
         : this.createCompany();
     } else {

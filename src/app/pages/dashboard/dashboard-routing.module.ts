@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent } from './dashboard.component';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from '@synergy-app/shared/layouts/admin/admin-layout.component';
 import { SessionGuard } from '../session/guards/session.guard';
+import { PrivilegeGuard } from '@synergy-app/pages/session/guards/privilege.guard';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 const routes: Routes = [
   {
@@ -24,10 +25,6 @@ const routes: Routes = [
         loadChildren: () => import('./employee/employee.module').then((m) => m.EmployeeModule),
       },
       {
-        path: 'training',
-        loadChildren: () => import('./training/training.module').then((m) => m.TrainingModule),
-      },
-      {
         path: 'operations',
         loadChildren: () => import('./operations/operations.module').then((m) => m.OperationsModule),
       },
@@ -41,6 +38,11 @@ const routes: Routes = [
       },
       {
         path: 'admin',
+        data: {
+          allowedRoles: [USER_ROLES.WEB_ADMINISTRATOR.value],
+        },
+        canActivateChild: [PrivilegeGuard],
+        canLoad: [PrivilegeGuard],
         loadChildren: () => import('./administration/admin.module').then((m) => m.AdminModule),
       },
       {

@@ -1,7 +1,6 @@
 import { SessionService } from '@synergy-app/shared/services/session.service';
 import { Injectable } from '@angular/core';
 import { environment } from '@synergy/environments/environment';
-import { USER_ROLES } from '@synergy/environments/enviroment.common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 
 export class BadgeItem {
@@ -26,53 +25,53 @@ export class Menu {
     public position?: number
   ) {}
 }
-
-const MENUITEMS = [
-  {
-    state: 'home',
-    name: 'Home',
-    type: 'link',
-    icon: 'home',
-    roles: [
-      USER_ROLES.ACCOUNTING.value,
-      USER_ROLES.MANAGEMENT.value,
-      USER_ROLES.TRAINING.value,
-      USER_ROLES.ADMINISTRATOR.value,
-      USER_ROLES.UNKNOWN.value,
-    ],
-  },
-  {
-    state: 'employee',
-    name: 'Employee',
-    type: 'sub',
-    icon: 'people',
-    children: [
-      {state: 'manage', name: 'Manage'},
-      {state: 'download', name: 'Downloads'},
-      {state: 'reports', name: 'Reports'},
-      {state: 'upload', name: 'Uploads'},
-    ],
-    roles: [
-      USER_ROLES.ACCOUNTING.value,
-      USER_ROLES.MANAGEMENT.value,
-      USER_ROLES.TRAINING.value,
-      USER_ROLES.ADMINISTRATOR.value,
-      USER_ROLES.UNKNOWN.value,
-    ],
-  },
-  {
-    state: 'admin',
-    name: 'Administrator',
-    type: 'sub',
-    icon: 'settings',
-    children: [
-      {state: 'permissions', name: 'Users & Permissions'},
-      {state: 'content', name: 'Content'},
-      {state: 'employee', name: 'Employee'},
-    ],
-    roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.UNKNOWN.value],
-  },
-];
+// NOTE: THIS ITEM IS ONLY FOR REFERENCE, MENU ITEMS ARE STORED IN THE DATABASE
+// const MENUITEMS = [
+//   {
+//     state: 'home',
+//     name: 'Home',
+//     type: 'link',
+//     icon: 'home',
+//     roles: [
+//       USER_ROLES.ACCOUNTING.value,
+//       USER_ROLES.MANAGEMENT.value,
+//       USER_ROLES.TRAINING.value,
+//       USER_ROLES.ADMINISTRATOR.value,
+//       USER_ROLES.OPERATIONS.value,
+//     ],
+//   },
+//   {
+//     state: 'employee',
+//     name: 'Employee',
+//     type: 'sub',
+//     icon: 'people',
+//     children: [
+//       {state: 'manage', name: 'Manage'},
+//       {state: 'download', name: 'Downloads'},
+//       {state: 'reports', name: 'Reports'},
+//       {state: 'upload', name: 'Uploads'},
+//     ],
+//     roles: [
+//       USER_ROLES.ACCOUNTING.value,
+//       USER_ROLES.MANAGEMENT.value,
+//       USER_ROLES.TRAINING.value,
+//       USER_ROLES.ADMINISTRATOR.value,
+//       USER_ROLES.OPERATIONS.value,
+//     ],
+//   },
+//   {
+//     state: 'admin',
+//     name: 'Administrator',
+//     type: 'sub',
+//     icon: 'settings',
+//     children: [
+//       {state: 'permissions', name: 'Users & Permissions'},
+//       {state: 'content', name: 'Content'},
+//       {state: 'employee', name: 'Employee'},
+//     ],
+//     roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.OPERATIONS.value],
+//   },
+// ];
 
 @Injectable()
 export class MenuItems {
@@ -84,7 +83,7 @@ export class MenuItems {
 
   // TODO: fix Add method to add new menu items
   add(param: Menu) {
-    let res;
+    let res = {};
     this.addMenu(param).subscribe((response) => {
       res = response;
     });

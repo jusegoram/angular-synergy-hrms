@@ -12,7 +12,6 @@ import { CommonModule, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/co
 
 import { PayrollRoutingModule } from './payroll-routing.module';
 import { UploadComponent } from './components/upload/upload.component';
-import { ExportComponent } from './components/export/export.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
 import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -37,6 +36,12 @@ import { NewConceptComponent } from './components/concepts/new-concept/new-conce
 import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
 import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls/finalized-payrolls.component';
 import { EditPayrollDetailComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { TokenInterceptor } from '@synergy-app/shared/interceptors/token.interceptor';
+import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/authentication.interceptor';
+import { ReportComponent } from './components/report/report.component';
+import { SharedModule } from '@synergy-app/shared/shared.module';
+import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
 
@@ -56,11 +61,12 @@ export function provideSwal() {
     ExportAsModule,
     SweetAlert2Module.forRoot({ provideSwal }),
     PipeModule.forRoot(),
+    SharedModule,
+    ModalsModule
   ],
   declarations: [
     NewPayrollComponent,
     UploadComponent,
-    ExportComponent,
     PayslipsComponent,
     ExportBottomSheetComponent,
     MainComponent,
@@ -75,6 +81,7 @@ export function provideSwal() {
     EditPayrollDetailComponent,
     EditPayrollDetailVacationsComponent,
     PayslipDialogComponent,
+    ReportComponent,
   ],
   providers: [
     PayrollService,
@@ -83,7 +90,17 @@ export function provideSwal() {
     MinuteSecondsPipe,
     CdkColumnDef,
     CurrencyPipe,
-    DatePipe
+    DatePipe,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthenticationInterceptor,
+      multi: true,
+    },
   ],
   entryComponents: [PayslipDialogComponent, ExportBottomSheetComponent, EditPayrollDetailComponent],
 })

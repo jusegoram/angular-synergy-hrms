@@ -255,6 +255,7 @@
       <button
         mat-stroked-button
         color="primary"
+        *ngIf="authorization.edit"
         (click)="onAddHobby()">
         <mat-icon>add</mat-icon>
         <span>ADD HOBBY</span>

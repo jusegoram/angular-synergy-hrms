@@ -100,7 +100,7 @@
       </mat-paginator>
     </div>
     <ng-container
-      *ngIf="this.authorization.create && this.authorization.role === _roles.HUMAN_RESOURCES || authorization.role === _roles.WEB_ADMIN">
+      *ngIf="this.authorization.create && [_roles.HUMAN_RESOURCES.value, _roles.WEB_ADMINISTRATOR.value].includes(authorization.role)">
       <div [formGroup]="positionForm" fxLayout.xs="column">
         <table style="width: 100%;">
           <tr fxLayout.xs="column">

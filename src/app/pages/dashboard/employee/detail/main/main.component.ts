@@ -17,7 +17,7 @@ export class MainComponent implements OnInit {
   @Output() onError = new EventEmitter<any>();
   employee: Employee = {
     _id: '',
-    dialerId: null,
+    restriction: null,
     firstName: '',
     middleName: '',
     lastName: '',
@@ -25,13 +25,15 @@ export class MainComponent implements OnInit {
     status: '',
     socialSecurity: '',
   };
-  public form: FormGroup;
-  public currentPositionForm: FormGroup;
-  public status;
-  public genders;
+   form: FormGroup;
+   currentPositionForm: FormGroup;
+   status;
+   genders;
+   restrictions;
   constructor(
     private _service: EmployeeService,
     private _formBuilder: FormBuilder) {
+    this.restrictions = this._service.restrictions;
     this.status = this._service.status;
     this.genders = this._service.genders;
   }
@@ -43,7 +45,7 @@ export class MainComponent implements OnInit {
   buildForms() {
     this.form = this._formBuilder.group({
       _id: [this.currentEmployee._id],
-      dialerId: [this.currentEmployee.dialerId],
+      restriction: [this.currentEmployee.restriction],
       firstName: [this.currentEmployee.firstName],
       middleName: [this.currentEmployee.middleName],
       lastName: [this.currentEmployee.lastName],

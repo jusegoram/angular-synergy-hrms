@@ -1,11 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { EmployeePosition } from '@synergy-app/shared/models/employee/employee';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals/on-delete-alert/on-delete-alert.component';
-import { Roles } from '@synergy-app/shared/global-constants/global-constants';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({
@@ -20,7 +19,7 @@ export class PositionComponent implements OnInit {
   @Output() onError = new EventEmitter<any>();
   @ViewChild('onDeleteAlert', {static: false})
   onDeleteAlert: OnDeleteAlertComponent;
-  _roles = Roles;
+  _roles = USER_ROLES;
   public dataSource: any;
   public positions: any;
   public position: any;
@@ -69,9 +68,9 @@ export class PositionComponent implements OnInit {
   }
 
   addActionColumn() {
-    const {HUMAN_RESOURCES, WEB_ADMIN} = this._roles;
+    const {HUMAN_RESOURCES, WEB_ADMINISTRATOR} = this._roles;
     const {role} = this.authorization;
-    if ([HUMAN_RESOURCES, WEB_ADMIN].includes(role)) {
+    if ([HUMAN_RESOURCES.value, WEB_ADMINISTRATOR.value].includes(role)) {
       this.displayedColumns.push('action');
     }
   }

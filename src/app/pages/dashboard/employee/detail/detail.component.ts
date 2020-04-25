@@ -14,6 +14,7 @@ import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
 import { TRACKER_STATUS } from '@synergy/environments/environment';
 import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-detail',
@@ -31,7 +32,7 @@ export class DetailComponent implements OnInit {
   public auth: any;
   public employee: Employee;
 
-
+_roles = USER_ROLES;
   hrTracker: HrTracker;
   helpMessage = `
   HELPING TOOLTIP:
@@ -119,7 +120,6 @@ export class DetailComponent implements OnInit {
   }
 
   setHrTracker() {
-    console.log('decodeToken', this.sessionService.decodeToken());
     const { userId, name, role } = this.sessionService.decodeToken();
     this.hrTracker = {
       employee: {

@@ -17,18 +17,18 @@ export class AvailableInformationComponent implements OnInit {
   wb: XLSX.WorkBook;
   constructor(private _employeeService: EmployeeService) {}
   onLoad() {
-    if (!this.isLoaded) {
-      this._employeeService.availableInformation(this.query).subscribe(
-        (result) => {
-          this.populateTable(result);
-          this.isLoaded = true;
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-      this.wb = XLSX.utils.book_new();
-    }
+    // if (!this.isLoaded) {
+    //   this._employeeService.availableInformation(this.query).subscribe(
+    //     (result) => {
+    //       this.populateTable(result);
+    //       this.isLoaded = true;
+    //     },
+    //     (error) => {
+    //       console.error(error);
+    //     }
+    //   );
+    //   this.wb = XLSX.utils.book_new();
+    // }
   }
 
   ngOnInit() {
@@ -51,9 +51,8 @@ export class AvailableInformationComponent implements OnInit {
         const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(resolved);
         XLSX.utils.book_append_sheet(this.wb, main, 'exported-info');
         XLSX.writeFile(this.wb, 'export-info.xlsx');
-      },
-      (rejected) => {}
-    );
+      }
+      );
   }
 
   onClear() {
@@ -62,7 +61,7 @@ export class AvailableInformationComponent implements OnInit {
   }
 
   constructTableObj(arr: any[]) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const mapped = arr.map((item) => {
         let complementaryObject;
         switch (this.query.reportType) {
@@ -128,7 +127,7 @@ export class AvailableInformationComponent implements OnInit {
           default:
             break;
         }
-        const mappeditem = {
+        return {
           employeeId: item.employeeId,
           firstName: item.firstName,
           middleName: item.middleName,
@@ -138,7 +137,6 @@ export class AvailableInformationComponent implements OnInit {
           status: item.status,
           ...complementaryObject,
         };
-        return mappeditem;
       });
       resolve(mapped);
     });

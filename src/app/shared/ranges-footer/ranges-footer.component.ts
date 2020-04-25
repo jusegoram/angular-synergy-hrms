@@ -1,16 +1,18 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import * as moment from 'moment';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DateAdapter, SatCalendar, SatCalendarFooter, SatDatepicker } from 'saturn-datepicker';
+import moment from 'moment';
 
 @Component({
   templateUrl: './ranges-footer.component.html'
 })
 export class RangesFooterComponent<Date> implements SatCalendarFooter<Date> {
   public ranges: Array<{key: string, label: string}> = [
-    {key: 'today', label: 'TODAY'},
+    {key: 'twoWeeks', label: '2W'},
+    {key: 'lastWeek', label: '1W'},
     {key: 'thisWeek', label: 'THIS WEEK'},
+    {key: 'today', label: 'TODAY'},
   ];
   private destroyed = new Subject<void>();
 
@@ -27,6 +29,14 @@ export class RangesFooterComponent<Date> implements SatCalendarFooter<Date> {
 
   setRange(range: string) {
     switch (range) {
+      case 'twoWeeks':
+        this.calendar.beginDate = this.dateAdapter.deserialize(moment().weekday(1).subtract(2, 'week').toDate());
+        this.calendar.endDate = this.dateAdapter.deserialize(moment().weekday(0).subtract(1, 'week').toDate());
+        break;
+      case 'lastWeek':
+        this.calendar.beginDate = this.dateAdapter.deserialize(moment().weekday(1).subtract(1, 'week').toDate());
+        this.calendar.endDate = this.dateAdapter.deserialize(moment().weekday(0).toDate());
+        break;
       case 'today':
         this.calendar.beginDate = this.dateAdapter.deserialize(new Date());
         this.calendar.endDate = this.dateAdapter.deserialize(new Date());
@@ -34,8 +44,8 @@ export class RangesFooterComponent<Date> implements SatCalendarFooter<Date> {
         break;
       case 'thisWeek':
         const today = moment();
-        this.calendar.beginDate = this.dateAdapter.deserialize(today.weekday(0).toDate());
-        this.calendar.endDate = this.dateAdapter.deserialize(today.weekday(6).toDate());
+        this.calendar.beginDate = this.dateAdapter.deserialize(today.weekday(1).toDate());
+        this.calendar.endDate = this.dateAdapter.deserialize(today.add(1, 'week').weekday(0).toDate());
         break;
     }
     this.calendar.activeDate = this.calendar.beginDate;
