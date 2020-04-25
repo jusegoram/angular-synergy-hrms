@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LeavesComponent } from './leaves.component';
+import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 
 describe('LeavesComponent', () => {
   let component: LeavesComponent;
@@ -8,9 +11,14 @@ describe('LeavesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeavesComponent ]
-    })
-    .compileComponents();
+      declarations: [LeavesComponent],
+      imports: [MatDialogModule, HttpClientTestingModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        TrackerStatusPipe,
+        { provide: EmployeeService, useValue: {} },
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

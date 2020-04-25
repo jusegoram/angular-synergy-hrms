@@ -1,6 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GenerateLeaveModalComponent } from './generate-leave-modal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
+import { AdminService } from '@synergy-app/shared/services/admin.service';
+import { FormBuilder } from '@angular/forms';
+import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
+import { of } from 'rxjs';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+class AdminServiceMock {
+  getEmployees() {
+    return of([]);
+  }
+}
 
 describe('GenerateLeaveModalComponent', () => {
   let component: GenerateLeaveModalComponent;
@@ -8,9 +23,17 @@ describe('GenerateLeaveModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GenerateLeaveModalComponent ]
-    })
-    .compileComponents();
+      declarations: [GenerateLeaveModalComponent],
+      imports: [MaterialSharedModule, HttpClientTestingModule, BrowserAnimationsModule, NoopAnimationsModule],
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: EmployeeService, useValue: {} },
+        { provide: AdminService, useClass: AdminServiceMock },
+        { provide: SessionService, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        FormBuilder,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
