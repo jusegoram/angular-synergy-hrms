@@ -6,7 +6,6 @@ export interface UserFingerprint {
 
 export interface LeaveType {
   isCashVacations: boolean;
-  _id: string;
   name: string;
 }
 

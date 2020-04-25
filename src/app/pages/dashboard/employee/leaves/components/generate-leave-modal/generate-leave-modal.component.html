@@ -1,0 +1,80 @@
+<div class="wrapper">
+    <mat-card-header>
+      <mat-card-title fxLayout="row" fxLayoutAlign="center center">
+        <span class="align-text-icon">{{ title }}</span>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <form fxLayout="column" [formGroup]="generateLeaveRequestForm">
+            <div class="field-wrapper">                
+                <mat-form-field class="full-width" appearance="fill">
+                    <input
+                      matInput
+                      placeholder="Employee"
+                      [readonly]="isEditMode"
+                      [matAutocomplete]="auto"
+                      #inputSearchEmployee
+                    />
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option
+                            *ngFor="let employee of filteredEmployees | async"
+                            [value]="employee.fullSearchName"
+                            (click)="setEmployee(employee)"
+                            >
+                        {{ employee.fullSearchName }}
+                        </mat-option>
+                    </mat-autocomplete>
+
+                </mat-form-field>
+            </div>
+            <div class="field-wrapper" fxLayout="column">
+                <label>Leave type</label>
+                <mat-radio-group [disabled]="isEditMode" formControlName="leaveTypeName" (change)="checkIfLeaveTypeIsVacations($event)">
+                    <mat-radio-button class="example-radio-button" *ngFor="let leaveType of leaveTypes" [value]="leaveType">
+                        {{leaveType}}
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <div class="field-wrapper">
+                <mat-form-field class="full-width" appearance="fill">
+                    <input matInput
+                        placeholder="FROM-TO"
+                        formControlName="fromToDateRange"
+                        [satDatepicker]="picker">
+                    <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
+                    <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
+                </mat-form-field>
+            </div>
+            <div *ngIf="isLeaveTypeVacations" class="field-wrapper">
+                <mat-checkbox [disabled]="isEditMode" formControlName="isCashVacations">Cash Vacations</mat-checkbox>
+            </div>
+            <div *ngIf="data.isHRMode">
+                <app-file-input-selector [acceptedFilesTypes]="'image/jpeg,image/png,application/pdf'"><mat-icon>attach_file</mat-icon>SUPPORT DOCUMENT</app-file-input-selector>
+                <app-file-input-selector [acceptedFilesTypes]="'image/jpeg,image/png,application/pdf'"><mat-icon>attach_file</mat-icon>CERTIFICATION DOCUMENT</app-file-input-selector>
+            </div>
+            <div class="field-wrapper">
+                <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>Description</mat-label>
+                    <textarea
+                        matInput
+                        placeholder="Description"
+                        formControlName="excuseDescription"
+                    ></textarea>
+                </mat-form-field>
+            </div>
+        </form>
+    </mat-card-content>
+    <mat-card-actions
+        fxLayout="row"
+        fxLayoutAlign="space-between center"        
+    >    
+    <button mat-button color="warn" (click)="closeDialog()">
+        CANCEL
+    </button>
+    <button mat-button color="primary" 
+            [disabled]="!isFormValid"
+            (click)="manageLeaveRequest(generateLeaveRequestForm.value)">
+        SAVE
+    </button>
+  </mat-card-actions>
+</div>

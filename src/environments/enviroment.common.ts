@@ -72,3 +72,11 @@ export const TEMPERATURE_VALUES = {
   FREEZING_POINT: 32,
   DEGREE_RATIO: 1.8,
 };
+
+export const LEAVE_STATUS = {
+  REFUSED: -1,
+  SENT: 0,
+  CERTIFIED: 1,
+  SUPPORTED: 2,
+  APPROVED: 3,
+};

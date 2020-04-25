@@ -9,7 +9,6 @@ import { AccountComponent } from './account/acount.component';
 import { EmployeeComponent } from './employee/employee.component';
 import { ContentComponent } from './content/content.component';
 import { FormsModule } from '@angular/forms';
-import { AdminService } from './services/admin.service';
 import { ClientComponent } from './employee/client/client.component';
 import { WorkpatternComponent } from './employee/workpattern/workpattern.component';
 import { PositionComponent } from './employee/position/position.component';
@@ -53,7 +52,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     RecentActivitiesComponent,
   ],
   providers: [
-    AdminService,
+    // AdminService,
     CurrencyPipe,
     DatePipe
   ],

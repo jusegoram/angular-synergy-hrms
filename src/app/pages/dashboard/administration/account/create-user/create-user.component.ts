@@ -1,4 +1,4 @@
-import { AdminService } from '../../services/admin.service';
+import { AdminService } from '@synergy-app/shared/services/admin.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';

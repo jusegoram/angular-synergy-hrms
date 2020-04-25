@@ -14,6 +14,13 @@ export const API = {
   TRACKER: (id: string) => {
     return environment.siteUri + '/api/test/hr/trackers/' + id;
   },
+  LEAVES: environment.siteUri + '/api/test/employee/leave-request',
+  LEAVE: (id: string) => {
+    return environment.siteUri + '/api/test/employee/leave-request/' + id;
+  },
+  LEAVE_DOCUMENT: (id: string) => {
+    return environment.siteUri + '/api/test/employee/leave-request/' + id + '/document';
+  },
 };
 
 export const TRACKER_STATUS = {
