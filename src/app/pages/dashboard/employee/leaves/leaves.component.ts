@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { TIME_VALUES } from '@synergy/environments/enviroment.common';
+import { TIME_VALUES, LEAVE_STATUS } from '@synergy/environments/enviroment.common';
 import { MatDialog } from '@angular/material/dialog';
 import { GenerateLeaveModalComponent } from './components/generate-leave-modal/generate-leave-modal.component';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
@@ -22,10 +22,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
   isLoading = true;
   filter = '';
 
-  constructor(
-    public dialog: MatDialog,
-    private employeeService: EmployeeService
-  ) {}
+  constructor(public dialog: MatDialog, private employeeService: EmployeeService) {}
 
   ngOnInit() {
     this.fetchLeavesRequest();
@@ -84,6 +81,30 @@ export class LeavesComponent implements OnInit, AfterViewInit {
         });
       } else {
         this.onErrorAlert.fire();
+      }
+    });
+  }
+
+  openApproveDialog(leave: LeaveRequest) {
+    Swal.fire({
+      title: 'ARE YOU SURE',
+      text: 'Do you really want to approve the this leave request?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'YES',
+      cancelButtonText: 'NO',
+    }).then(async (result) => {
+      if (result.value) {
+        try {
+          const leaveRequest: Partial<LeaveRequest> = {
+            _id: leave._id,
+            state: LEAVE_STATUS.APPROVED,
+          };
+          await this.employeeService.updateLeave(leaveRequest);
+          location.reload();
+        } catch (error) {
+          Swal.fire('Done!', 'Error happened. Try again later.', 'error');
+        }
       }
     });
   }
