@@ -337,6 +337,16 @@ export class EmployeeService {
     return this.httpClient.put(API.LEAVE(leaveRequest._id), leaveRequest, { headers }).toPromise();
   }
 
+  updateLeaveWithDocument(file: File, leaveRequest: Partial<LeaveRequest>, documentType: string) {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('documentType', documentType);
+    if (leaveRequest.state) {
+      formData.append('state', leaveRequest.state + '');
+    }
+    return this.httpClient.post(API.LEAVE_DOCUMENT(leaveRequest._id), formData).toPromise();
+  }
+
   deleteLeave(_id: string) {
     return this.httpClient.delete(API.LEAVE(_id)).toPromise();
   }

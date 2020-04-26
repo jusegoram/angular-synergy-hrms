@@ -18,6 +18,8 @@ export class LeaveStatusPipe implements PipeTransform {
         return 'SUPPORTED';
       case LEAVE_STATUS.APPROVED:
         return 'APPROVED';
+      case LEAVE_STATUS.FINISHED:
+        return 'FINISHED';
     }
   }
 }

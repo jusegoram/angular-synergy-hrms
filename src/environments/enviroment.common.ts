@@ -81,4 +81,28 @@ export const LEAVE_STATUS = {
   CERTIFIED: 1,
   SUPPORTED: 2,
   APPROVED: 3,
+  FINISHED: 4,
+};
+
+export const LEAVE_STATUS_TYPES = {
+  SENT: {
+    name: 'SENT',
+    id: 0
+  },
+  CERTIFIED: {
+    name: 'CERTIFIED',
+    id: 1
+  },
+  SUPPORTED: {
+    name: 'SUPPORTED',
+    id: 2
+  },
+  APPROVED: {
+    name: 'APPROVED',
+    id: 3
+  },
+  FINISHED: {
+    name: 'FINISHED',
+    id: 4
+  },
 };
