@@ -62,6 +62,7 @@
           <ngx-datatable-column name="LEAVE TYPE" prop="leaveType.name">
             <ng-template let-row="row" ngx-datatable-cell-template>
               {{ row?.leaveType?.name }}
+              <span *ngIf="row?.leaveType?.isCashVacations">(Cashed)</span>
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="FROM" prop="excuseTimeFrom">
@@ -84,7 +85,10 @@
           <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
             <ng-template let-row="row" ngx-datatable-cell-template>          
               <div *ngIf="row.state==leaveStatusTypes.SENT" fxLayout="row">
-                <button mat-stroked-button color="primary" (click)="openApproveDialog(row)">
+                <button mat-stroked-button 
+                    [disabled]="(currentLoggedUser._id!=row.creationFingerprint?._id || row?.leaveType?.isCashVacations) && !currentUserIsWebAdmin" 
+                    color="primary" 
+                    (click)="openApproveDialog(row)">
                   <span>APPROVE</span>
                 </button>
                 <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>

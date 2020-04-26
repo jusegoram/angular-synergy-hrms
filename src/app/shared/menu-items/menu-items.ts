@@ -38,7 +38,7 @@ const MENUITEMS = [
       USER_ROLES.MANAGEMENT.value,
       USER_ROLES.TRAINING.value,
       USER_ROLES.ADMINISTRATOR.value,
-      USER_ROLES.UNKNOWN.value,
+      USER_ROLES.HUMAN_RESOURCES.value,
     ],
   },
   {
@@ -57,7 +57,7 @@ const MENUITEMS = [
       USER_ROLES.MANAGEMENT.value,
       USER_ROLES.TRAINING.value,
       USER_ROLES.ADMINISTRATOR.value,
-      USER_ROLES.UNKNOWN.value,
+      USER_ROLES.HUMAN_RESOURCES.value,
     ],
   },
   {
@@ -70,7 +70,7 @@ const MENUITEMS = [
       {state: 'content', name: 'Content'},
       {state: 'employee', name: 'Employee'},
     ],
-    roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.UNKNOWN.value],
+    roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.HUMAN_RESOURCES.value],
   },
 ];
 

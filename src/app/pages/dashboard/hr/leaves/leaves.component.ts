@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
-import { LEAVE_STATUS, TIME_VALUES, LEAVE_STATUS_TYPES } from '@synergy/environments/enviroment.common';
+import { LEAVE_STATUS, TIME_VALUES, LEAVE_STATUS_TYPES, USER_ROLES } from '@synergy/environments/enviroment.common';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { fromEvent } from 'rxjs';
@@ -26,7 +26,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
   leaveStatusTypes = new Map(Object.entries(LEAVE_STATUS_TYPES));
   selectedLeaveStatusType = -2;
   currentLoggedUser: User;
-
+  currentUserIsWebAdmin = false;
   constructor(
     public dialog: MatDialog,
     private employeeService: EmployeeService,
@@ -48,6 +48,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
     this.currentLoggedUser._id = userId;
     this.currentLoggedUser.firstName = name;
     this.currentLoggedUser.role = role;
+    this.currentUserIsWebAdmin = role === USER_ROLES.WEB_ADMINISTRATOR.value;
   }
 
   async fetchLeavesRequest() {
