@@ -1,15 +1,27 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
+import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
 import { LeavesRoutingModule } from './leaves-routing.module';
 import { LeavesComponent } from './leaves.component';
-
+import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
+import { SharedModule } from '@synergy-app/shared/shared.module';
+import { FormsModule } from '@angular/forms';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { MomentModule } from 'ngx-moment';
+import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
+import { LeaveStatusPipe } from '@synergy-app/shared/pipes/leave-status.pipe';
 
 @NgModule({
   declarations: [LeavesComponent],
   imports: [
     CommonModule,
-    LeavesRoutingModule
-  ]
+    LeavesRoutingModule,
+    MaterialSharedModule,
+    SharedModule,
+    FormsModule,
+    NgxDatatableModule,
+    MomentModule,
+    ModalsModule,
+  ],
+  providers: [TitleCasePipe, DatePipe, LeaveStatusPipe],
 })
-export class LeavesModule { }
+export class LeavesModule {}

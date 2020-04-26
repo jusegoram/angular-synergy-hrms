@@ -1,4 +1,5 @@
 export class User {
+  public _id?: string;
   constructor(
     public username: string,
     public password?: string,

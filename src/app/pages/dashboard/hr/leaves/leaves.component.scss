@@ -1,0 +1,22 @@
+.hidden{
+    display: none;
+}
+
+.leave-status{
+    border-radius: 15px;
+    background: #d6c4f9;
+    color: #7e32f0;
+    padding: 5px 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.details-column{
+    .details-title{
+        color: #969696;
+    }
+
+    p{
+        white-space: normal;
+    }
+}
