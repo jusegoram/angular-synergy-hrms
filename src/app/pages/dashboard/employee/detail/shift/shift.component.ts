@@ -3,7 +3,17 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild, } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import moment from 'moment';
 import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
@@ -136,7 +146,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       q.shiftStartTime = start;
       q.shiftEndTime = end;
       q.shiftScheduledBreakAndLunch = breakLunch;
-      await this._employeeService.updateEmployeeShift(q).toPromise();
+      await this._employeeService.updateEmployeeShift(this.employee, q).toPromise();
       this.openSB(
         'Perfect! The shift was updated successfully: Please refresh to verify'
       );
@@ -150,7 +160,7 @@ export class ShiftComponent implements OnInit, OnChanges {
   }
 
   onSearch(fromDate, toDate) {
-    this._employeeService.getEmployeeShift(this.employee.employeeId, fromDate, toDate).subscribe((result) => {
+    this._employeeService.getEmployeeShift(this.employee, fromDate, toDate).subscribe((result) => {
       this.populateTable(result);
     });
   }

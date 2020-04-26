@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { OPERATIONS_REPORTS } from '@synergy-app/shared/models/reports.constants';
 
 @Component({
   selector: 'app-report',
@@ -6,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./report.component.scss'],
 })
 export class ReportComponent {
+  reports = OPERATIONS_REPORTS.sort((a , b ) => a.name.localeCompare(b.name));
   displayedColumns2 = ['employeeId'];
   constructor() {}
 }

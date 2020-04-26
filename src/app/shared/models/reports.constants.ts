@@ -1,4 +1,4 @@
-export const REPORTS = [
+export const WORKFORCE_REPORTS = [
   {
     name: 'Contact Info Report',
     tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, celNumber,
@@ -7,7 +7,44 @@ export const REPORTS = [
     options: [],
   },
   {
-    name: 'Shift Report',
+    name: 'Leads Report',
+    tooltip: `
+    employeeId,
+    firstName,
+    lastName,
+    actualClient,
+    actualCampaign,
+    manager,
+    shiftManager,
+    supervisor,
+    trainer
+    `,
+    projection: 'leads',
+    options: [],
+  },
+  {
+    name: 'Hire Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    lastName,
+    actualClient,
+    actualCampaign,
+    hireDate
+    `,
+    projection: 'hire',
+    options: [],
+  },
+  {
+    name: 'Emergency Contact Report',
+    tooltip: ` employeeId, firstName, lastName, actualClient, actualCampaign,
+              celNumber, telNumber, email, address, town, district, family
+              `,
+    projection: 'emergency',
+    options: [],
+  },
+  {
+    name: 'Weekly Shift Report',
     tooltip: `
      employeeId,
     firstName,
@@ -27,7 +64,7 @@ export const REPORTS = [
     options: [],
   },
   {
-    name: 'Hours Report',
+    name: 'Hours Existence Report',
     tooltip: `
      employeeId,
     firstName,
@@ -39,8 +76,10 @@ export const REPORTS = [
     projection: 'hours',
     options: [],
   },
+];
+export const OPERATIONS_REPORTS = [
   {
-    name: 'Position Report',
+    name: 'Latest Position Report',
     tooltip: `
     employeeId,
     firstName,
@@ -75,35 +114,8 @@ export const REPORTS = [
       },
     ],
   },
-  {
-    name: 'Leads Report',
-    tooltip: `
-    employeeId,
-    firstName,
-    lastName,
-    actualClient,
-    actualCampaign,
-    manager,
-    shiftManager,
-    supervisor,
-    trainer
-    `,
-    projection: 'leads',
-    options: [],
-  },
-  {
-    name: 'Hire Report',
-    tooltip: `
-     employeeId,
-    firstName,
-    lastName,
-    actualClient,
-    actualCampaign,
-    hireDate
-    `,
-    projection: 'hire',
-    options: [],
-  },
+];
+export const HR_REPORTS = [
   {
     name: 'Attrition Report',
     tooltip: `
@@ -133,12 +145,65 @@ export const REPORTS = [
       },
     ],
   },
+];
+export const PAYROLL_REPORTS = [
   {
-    name: 'Emergency Contact Report',
-    tooltip: ` employeeId, firstName, lastName, actualClient, actualCampaign,
-              celNumber, telNumber, email, address, town, district, family
-              `,
-    projection: 'emergency',
+    name: 'Termination Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    middleName,
+    lastName,
+    emailAddress,
+    actualClient,
+    actualCampaign,
+    hireDate,
+    socialSecurity,
+    attritionReason,
+    bankAccount,
+    hourlyRate,
+    terminationDate,
+    last 3 positions,
+    `,
+    projection: 'termination',
+    options: [],
+  },
+  {
+    name: 'New Hires Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    middleName,
+    lastName,
+    emailAddress,
+    actualClient,
+    actualCampaign,
+    hireDate,
+    socialSecurity,
+    attritionReason,
+    bankAccount,
+    hourlyRate,
+    terminationDate,
+    `,
+    projection: 'payrollHires',
+    options: [],
+  },
+  {
+    name: 'Billing Report',
+    tooltip: `
+     employeeId,
+    firstName,
+    lastName,
+    actualClient,
+    actualCampaign,
+    billable,
+    systemHours,
+    tosHours,
+    trainingHours,
+    breakAndLunchHours,
+    scheduledHours,
+    `,
+    projection: 'billing',
     options: [],
   },
 ];
@@ -146,6 +211,7 @@ export const PROJECTIONS = {
   contact: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -160,6 +226,7 @@ export const PROJECTIONS = {
   emergency: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -175,6 +242,7 @@ export const PROJECTIONS = {
   shift: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -191,6 +259,7 @@ export const PROJECTIONS = {
   hours: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -200,6 +269,7 @@ export const PROJECTIONS = {
   position: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -214,6 +284,7 @@ export const PROJECTIONS = {
   leads: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -226,6 +297,7 @@ export const PROJECTIONS = {
   hire: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
@@ -235,11 +307,23 @@ export const PROJECTIONS = {
   attrition: {
     _id: 0,
     employeeId: 1,
+    status: 1,
     firstName: 1,
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
     terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
     attrition: 1,
+  },
+  billing: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    billing: 1
   },
 };

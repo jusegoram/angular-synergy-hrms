@@ -1,9 +1,0 @@
-export const Roles = {
-  ACCOUNTING: 0,
-  MANAGEMENT: 1,
-  TRAINING: 2,
-  ADMINISTRATOR: 3,
-  HUMAN_RESOURCES: 4,
-  OPERATIONS: 5,
-  WEB_ADMIN: 9999,
-};

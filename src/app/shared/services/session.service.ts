@@ -12,7 +12,7 @@ export function tokenGetter() {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SessionService {
   _login: Observable<boolean>;
@@ -29,7 +29,7 @@ export class SessionService {
   constructor(protected http: HttpClient) {}
   login(user: string, password: string) {
     return this.http
-      .post<User>(this.url + '/api/login', {user, password})
+      .post<User>(this.url + '/api/login', { user, password })
       .pipe(
         tap((res) => this.setSession(res)),
         shareReplay()
@@ -62,29 +62,22 @@ export class SessionService {
   }
   signup(user: User) {
     const body = JSON.stringify(user);
-    const headers = new HttpHeaders({'Content-Type': 'application/json'});
-    return this.http.post(this.api + '/signup', body, {headers: headers});
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post(this.api + '/signup', body, { headers: headers });
   }
-  // permission() {
-  //   if (this.isLoggedIn()) {
-  //     // const val: string;
-  //     // switch (val) {
-  //     //   case 'edit': return (this.getRole() >= 3) ? true : false;
-  //     //   case 'delete': return (this.getRole() >= 4) ? true : false;
-  //     //   case 'view': return (this.getRole() >= 0) ? true : false;
-  //     //   default: return false;
-  //     // };
-  //     console.log(this.getRights());
-  //     const auth = {
-  //       edit: (this.getRole() >= 3) ? true : false,
-  //       delete: (this.getRole() >= 4) ? true : false,
-  //       view: (this.getRole() >= 0) ? true : false
-  //     };
-  //     return auth;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  isAuthorized(allowedRoles: string[]): boolean {
+    if (allowedRoles == null || allowedRoles.length === 0) {
+      return true;
+    }
+    if (!this.decodeToken()) {
+      console.log('Invalid token');
+      return false;
+    }
+    return allowedRoles.includes(this.getRole());
+  }
+  getToken() {
+    return localStorage.getItem('id_token');
+  }
   decodeToken() {
     return this.jwtHelper.decodeToken();
   }

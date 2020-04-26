@@ -1,56 +1,49 @@
 <div>
   <mat-card-subtitle>
     <span fxFlex="auto" fxFlexFill></span>
-    <span stype="white-space: nowrap;">MAIN&nbsp;INFORMATION</span>
+    <span style="white-space: nowrap;">MAIN&nbsp;INFORMATION</span>
     <span fxFlex="auto" fxFlexFill></span>
   </mat-card-subtitle>
   <form class="ma-1" [formGroup]="form" fxLayoutGap="5px">
     <table style="width: 100%;">
-      <tr>
-        <td colspan="6">
-          <mat-form-field appearance="outline" [formGroup]="form">
-            <mat-label>DIALER ID</mat-label>
-            <input
-              matInput
-              placeholder=""
-              formControlName="dialerId"
-              [readonly]="!auth.edit"
-            />
-          </mat-form-field>
-        </td>
-      </tr>
       <tr fxLayout.xs="column">
         <td colspan="2">
           <mat-form-field appearance="outline" [formGroup]="form">
             <mat-label>FIRST NAME</mat-label>
-            <input
-              matInput
-              formControlName="firstName"
-              placeholder="FIRST NAME"
-              readonly="true"
-            />
+            <label>
+              <input
+                matInput
+                formControlName="firstName"
+                placeholder="FIRST NAME"
+                readonly="true"
+              />
+            </label>
           </mat-form-field>
         </td>
         <td colspan="2">
           <mat-form-field appearance="outline" [formGroup]="form">
             <mat-label>MIDDLE NAME</mat-label>
-            <input
-              matInput
-              formControlName="middleName"
-              placeholder="MIDDLE NAME"
-              readonly="true"
-            />
+            <label>
+              <input
+                matInput
+                formControlName="middleName"
+                placeholder="MIDDLE NAME"
+                readonly="true"
+              />
+            </label>
           </mat-form-field>
         </td>
         <td colspan="2">
           <mat-form-field appearance="outline" [formGroup]="form">
             <mat-label>LAST NAME</mat-label>
-            <input
-              matInput
-              formControlName="lastName"
-              placeholder="LAST NAME"
-              readonly="true"
-            />
+            <label>
+              <input
+                matInput
+                formControlName="lastName"
+                placeholder="LAST NAME"
+                readonly="true"
+              />
+            </label>
           </mat-form-field>
         </td>
       </tr>
@@ -93,12 +86,14 @@
         <td colspan="2">
           <mat-form-field appearance="outline" >
             <mat-label>POSITION</mat-label>
-            <input
-              matInput
-              [value]="this.currentEmployee?.position[0]?.name"
-              placeholder="POSITION"
-              readonly="true"
-            />
+            <label>
+              <input
+                matInput
+                [value]="this.currentEmployee?.position[0]?.name"
+                placeholder="POSITION"
+                readonly="true"
+              />
+            </label>
           </mat-form-field>
         </td>
         <td colspan="2">
@@ -136,6 +131,22 @@
               readonly="true"
             />
           </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+            <mat-form-field
+              appearance="outline"
+              [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+              [formGroup]="form"
+            >
+              <mat-label>RESTRICTION</mat-label>
+              <mat-select formControlName="restriction" placeholder="restriction">
+                <mat-option *ngFor="let item of restrictions" [value]="item.value">
+                  {{ item.viewValue | uppercase }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
         </td>
       </tr>
     </table>

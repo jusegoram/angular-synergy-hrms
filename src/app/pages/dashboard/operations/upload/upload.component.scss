@@ -1,5 +1,5 @@
 .upload-button {
-  content: wrap;
+  content: 'wrap';
 }
 mat-card {
   margin: 20px;
@@ -13,6 +13,9 @@ $mat-toolbar-height-mobile-landscape: 114px !default;
 
 .mat-card-top {
   margin-top: -($mat-toolbar-height-desktop);
+  margin-right: auto;
+  margin-left: auto;
+  width: 85vw;
 }
 
 @media ($mat-xsmall) and (orientation: portrait) {
@@ -36,4 +39,20 @@ $mat-toolbar-height-mobile-landscape: 114px !default;
 
 .mat-card-2 {
   margin-top: 10px;
+}
+.hidden {
+  visibility: hidden;
+  position: absolute;
+  overflow: hidden;
+  width: 0;
+  height: 0;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+span {
+  margin: 10px;
+}
+mat-form-field {
+  width: 300px;
 }

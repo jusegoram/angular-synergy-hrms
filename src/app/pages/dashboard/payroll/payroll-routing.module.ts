@@ -5,9 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
 import { UploadComponent } from './components/upload/upload.component';
-import { ExportComponent } from './components/export/export.component';
 import { DetailComponent } from './components/detail/detail.component';
 import { DetailResolver } from './components/detail/detail.resolver';
+import { ReportComponent } from '@synergy-app/pages/dashboard/payroll/components/report/report.component';
 
 export const routes: Routes = [
   {
@@ -23,7 +23,7 @@ export const routes: Routes = [
       {path: 'new', component: NewPayrollComponent},
       {path: 'payslip', component: PayslipsComponent},
       {path: 'upload', component: UploadComponent},
-      {path: 'export', component: ExportComponent},
+      {path: 'reports', component: ReportComponent},
     ],
   },
 ];

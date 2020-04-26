@@ -6,9 +6,10 @@
         [src]="imageData"
         (error)="onError($event)"
         (load)="onLoad($event)"
+        alt="/assets/images/default-avatar.png"
       />
     </div>
-    <div fxLayout="row" fxFlexAlign="space-around">
+    <div fxLayout="row" fxFlexAlign="center">
       <button
         mat-button
         [disabled]="!this.authorization.upload"
@@ -28,9 +29,6 @@
           [disabled]="!this.authorization.upload"
           accept='image/jpeg|image/pjpeg'/>
       </span>
-      <button mat-button color="warn" disabled="true">
-        DELETE
-      </button>
     </div>
   </div>
 </div>

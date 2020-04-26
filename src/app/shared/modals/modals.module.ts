@@ -7,7 +7,6 @@ import { OnSuccessAlertComponent } from './on-success-alert/on-success-alert.com
 import { GenerateLeaveModalComponent } from './generate-leave-modal/generate-leave-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialSharedModule } from '../material.shared.module';
-import { SharedModule } from '../shared.module';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -24,7 +23,6 @@ export function provideSwal() {
     SweetAlert2Module.forRoot({provideSwal}),
     FormsModule,
     MaterialSharedModule,
-    SharedModule
   ],
   exports: [
     OnDeleteAlertComponent,

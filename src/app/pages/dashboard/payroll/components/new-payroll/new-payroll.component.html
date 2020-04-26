@@ -1,87 +1,58 @@
-<mat-toolbar class="header" color="primary">
+<mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Calculate Payroll</span>
-    <span class="fill-remaining-space"></span>
+    <span>NEW PAYROLL</span>
   </mat-toolbar-row>
 </mat-toolbar>
 <br />
 <div
-  class="container"
+  class="mx-1"
   fxLayout="row"
-  fxLayoutAlign="start start"
+  fxLayoutAlign="space-between"
   fxLayoutGap="10px"
 >
-  <mat-form-field appearance="outline">
-    <mat-select placeholder="Type of Payroll" [formControl]="payrollType">
+  <mat-form-field appearance="fill">
+    <mat-label>PAYROLL TYPE</mat-label>
+    <mat-select placeholder="PAYROLL TYPE" [formControl]="payrollType">
       <mat-option value="BI-WEEKLY">
-        Bi-Weekly Payroll
+        WEEKLY PAYROLL
       </mat-option>
       <mat-option value="SEMIMONTHLY">
-        Semi-Monthly Payroll
+        SEMI-MONTHLY PAYROLL
       </mat-option>
     </mat-select>
   </mat-form-field>
-
-  <div class="fill-remaining-space"></div>
-  <mat-form-field appearance="outline">
-    <mat-error>Please select a date that is less than 15 days old.</mat-error>
-    <input
-      matInput
-      [matDatepicker]="pickerFrom"
-      [matDatepickerFilter]="dateFilterFrom"
-      placeholder="Get from (mm/dd/yyyy)"
-      [formControl]="fromDate"
-    />
-    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-    <mat-datepicker #pickerFrom></mat-datepicker>
-  </mat-form-field>
-  &nbsp;
-  <mat-form-field appearance="outline">
-    <mat-error
-      >Please select a date range that doesn't exceed 7 days.</mat-error
-    >
-    <input
-      matInput
-      [matDatepicker]="pickerTo"
-      [matDatepickerFilter]="dateFilterTo"
-      placeholder="To (mm/dd/yyyy)"
-      [formControl]="toDate"
-    />
-    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-    <mat-datepicker #pickerTo></mat-datepicker>
+  <mat-form-field appearance="fill">
+    <mat-label>DATE RANGE</mat-label>
+    <label>
+      <input matInput
+             placeholder="CLICK ON CALENDAR"
+             [satDatepicker]="datePicker"
+      [formControl]="dates">
+    </label>
+    <sat-datepicker
+      #datePicker
+      [rangeMode]="true"
+      [calendarFooterComponent]="rangesFooter"
+    ></sat-datepicker>
+    <sat-datepicker-toggle matSuffix [for]="datePicker"></sat-datepicker-toggle>
+    <mat-error *ngIf="dates.invalid && dates.touched">ERROR: You need to pick two dates between 21 days ago and today</mat-error>
   </mat-form-field>
 </div>
 <div
-  class="container"
+  class="mx-1"
   fxLayout="row"
   fxLayoutAlign="start start"
-  fxLayoutGap="gappx"
 >
-  <!-- <button mat-button (click)="fileInput.click()" *ngIf="dataSource">
-    <mat-icon>attach_money</mat-icon> LOAD BONUSES FROM FILE
-  </button>
-  <span
-    style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-    <input type="file" #fileInput (change)="onLoadBonus($event)" />
-  </span>
-  <button mat-button (click)="fileInput1.click()" *ngIf="dataSource">
-    <mat-icon>money_off</mat-icon> LOAD DEDUCTIONS FROM FILE
-  </button>
-  <span
-    style="visibility: hidden; position: absolute; overflow: hidden; width: 0px; height:0px;border:none;margin:0; padding:0">
-    <input type="file" #fileInput1 (change)="onLoadDeductions($event)" />
-  </span> -->
-
   <button
     mat-flat-button
     color="warn"
     (click)="
       loadPayrollType(
         this.payrollType.value,
-        this.fromDate.value,
-        this.toDate.value
+        this.dates.value
       )
     "
+    [disabled]="dates.invalid && dates.touched"
     *ngIf="rows.length === 0"
   >
     RUN PAYROLL
@@ -90,8 +61,8 @@
 <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
   <fusioncharts
     *ngIf="chartDataSource && rows.length !== 0"
-    [width]="'45%'"
-    [height]="500"
+    [width]="'40%'"
+    [height]="'400'"
     [type]="'stackedcolumn2d'"
     [dataFormat]="'json'"
     [dataSource]="chartDataSource"
@@ -103,8 +74,8 @@
 
   <fusioncharts
     *ngIf="rows.length !== 0"
-    [width]="'45%'"
-    [height]="500"
+    [width]="'40%'"
+    [height]="'400'"
     [type]="'doughnut2d'"
     [dataFormat]="'json'"
     [dataSource]="pieCharDataSource"
@@ -115,27 +86,26 @@
   <div class="pa-1">
     <h2
       fxLayout="row"
-      fxLayoutAlign="start start"
-      fxLayout="row"
-      fxLayoutAlign="start start"
+      fxLayoutAlign="space-between"
+      fxLayoutGap="10px"
     >
       PAYROLL TABLE
-      <span class="fill-remaining-space"></span>
-      <button mat-stroked-button color="warn" (click)="clearTable()">
-        CLEAR TABLE
-      </button>
-      <div>
+
+      <span>
+        <button mat-stroked-button color="warn" (click)="clearTable()">
+          CLEAR TABLE
+        </button>
         <button mat-stroked-button [swal]="confirmSwal">
           SAVE TO DATABASE
         </button>
-      </div>
+      </span>
     </h2>
     <mat-card-subtitle>{{ payrollType.value }} QUICK VIEW</mat-card-subtitle>
   </div>
   <ngx-datatable
     #myTable
     class="material fullscreen"
-    style="top: 0px; height: 850px;"
+    style="top: 0; height: 550px;"
     [columnMode]="ColumnMode.force"
     headerHeight="50"
     footerHeight="0"
@@ -584,13 +554,9 @@
     [showCancelButton]="true"
     [focusCancel]="true"
     (confirm)="
-      saveToDatabase(this.rows, this.fromDate.value, this.toDate.value)
+      saveToDatabase(this.rows, this.dates.value)
     "
   ></swal>
-  <swal
-    #successSwal
-    title="SAVED"
-    text="The payroll was saved succesfully!"
-    icon="success"
-  ></swal>
+  <shared-on-success-alert #successSwal message="The payroll was saved succesfully!"></shared-on-success-alert>
+  <shared-on-error-alert #errorSwal message='Remember the payroll can only be in 7 day periods and can not have duplicates with regards to other calculated payrolls' ></shared-on-error-alert>
 </div>

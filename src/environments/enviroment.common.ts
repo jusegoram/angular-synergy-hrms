@@ -1,3 +1,4 @@
+
 export const USER_ROLES = {
   ACCOUNTING: { value: 0, name: 'Accounting' },
   MANAGEMENT: { value: 1, name: 'Management' },

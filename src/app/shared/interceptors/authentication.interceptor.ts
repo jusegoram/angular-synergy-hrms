@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest, HttpResponse, HttpInterceptor } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { SessionService } from '@synergy-app/shared/services/session.service';
-import { MatDialog } from '@angular/material/dialog';
 import { HTTP_CODES } from '@synergy/environments/enviroment.common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationInterceptor implements HttpInterceptor {
-  constructor(private router: Router, private _session: SessionService, private dialog: MatDialog) {
+  constructor(private router: Router, private _session: SessionService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -28,7 +34,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
               // redirect to the login route
               // or show a modal
               this._session.logout();
-              this.router.navigate(['signin']);
+              this.router.navigate(['auth', 'signin']);
             }
           }
         }

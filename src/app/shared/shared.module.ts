@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { MenuItems } from './menu-items/menu-items';
-import { AccordionAnchorDirective, AccordionDirective, AccordionLinkDirective, } from './accordion';
+import { AccordionAnchorDirective, AccordionDirective, AccordionLinkDirective } from './accordion';
 import { ToggleFullscreenDirective } from './fullscreen/toggle-fullscreen.directive';
 import { HttpClientModule } from '@angular/common/http';
 import { SignatureFieldComponent } from './signature-field/signature-field.component';
@@ -13,6 +13,10 @@ import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
 import { TrackerTypePipe } from './pipes/tracker-type.pipe';
 import { FileInputSelectorComponent } from './components/file-input-selector/file-input-selector.component';
 import { LeaveStatusPipe } from './pipes/leave-status.pipe';
+import { DeniedAccessComponent } from '@synergy-app/shared/denied-access/denied-access.component';
+import { ExportComponent } from '@synergy-app/shared/export/export.component';
+import { ExportService } from '@synergy-app/shared/export/export.service';
+import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -30,13 +34,16 @@ export function provideSwal() {
     TrackerTypePipe,
     LeaveStatusPipe,
     RangesFooterComponent,
-    FileInputSelectorComponent
+    FileInputSelectorComponent,
+    DeniedAccessComponent,
+    ExportComponent,
   ],
   imports: [
     HttpClientModule,
     SignaturePadModule,
     CommonModule,
     MaterialSharedModule,
+    ModalsModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -48,8 +55,10 @@ export function provideSwal() {
     TrackerTypePipe,
     LeaveStatusPipe,
     RangesFooterComponent,
-    FileInputSelectorComponent
+    FileInputSelectorComponent,
+    DeniedAccessComponent,
+    ExportComponent,
   ],
-  providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe],
+  providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe, ExportService],
 })
 export class SharedModule {}
