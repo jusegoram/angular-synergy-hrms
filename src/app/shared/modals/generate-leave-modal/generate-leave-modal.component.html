@@ -40,6 +40,7 @@
                     <input matInput
                         placeholder="FROM-TO"
                         formControlName="fromToDateRange"
+                        [min]="today"
                         [satDatepicker]="picker">
                     <sat-datepicker #picker [rangeMode]="true"></sat-datepicker>
                     <sat-datepicker-toggle matSuffix [for]="picker"></sat-datepicker-toggle>
