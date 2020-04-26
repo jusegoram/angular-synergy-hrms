@@ -21,7 +21,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
   data: Array<LeaveRequest> = [];
   isLoading = true;
   filter = '';
-  APPROVED = LEAVE_STATUS.APPROVED;
+  leaveStatusTypes = LEAVE_STATUS;
   constructor(public dialog: MatDialog, private employeeService: EmployeeService) {}
 
   ngOnInit() {

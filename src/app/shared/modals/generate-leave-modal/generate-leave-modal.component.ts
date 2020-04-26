@@ -24,6 +24,7 @@ export class GenerateLeaveModalComponent implements OnInit {
   filteredEmployees: Observable<any[]>;
   leaveRequest: Partial<LeaveRequest>;
   isLeaveTypeVacations = true;
+  today = new Date();
   @ViewChild('inputSearchEmployee', { static: true }) inputSearchEmployee: any;
 
   constructor(
