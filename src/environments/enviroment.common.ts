@@ -5,7 +5,7 @@ export const USER_ROLES = {
   TRAINING: { value: 2, name: 'Training' },
   ADMINISTRATOR: { value: 3, name: 'Administrator' },
   HUMAN_RESOURCES: { value: 4, name: 'Human Resources' },
-  OPERATIONS: { value: 5, name: 'Operations'},
+  OPERATIONS: { value: 5, name: 'Operations' },
   WEB_ADMINISTRATOR: { value: 9999, name: 'Web Administrator' },
 };
 

@@ -4,6 +4,17 @@ import { LeavesComponent } from './leaves.component';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { SessionService } from '@synergy-app/shared/services/session.service';
+
+class SessionServiceMockup {
+  decodeToken() {
+    return {
+      userId: '',
+      name: '',
+      role: 0,
+    };
+  }
+}
 
 describe('LeavesComponent', () => {
   let component: LeavesComponent;
@@ -17,6 +28,7 @@ describe('LeavesComponent', () => {
         { provide: MatDialogRef, useValue: {} },
         TrackerStatusPipe,
         { provide: EmployeeService, useValue: {} },
+        { provide: SessionService, useClass: SessionServiceMockup },
       ],
     }).compileComponents();
   }));

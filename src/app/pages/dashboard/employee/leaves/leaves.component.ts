@@ -2,12 +2,14 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { TIME_VALUES, LEAVE_STATUS } from '@synergy/environments/enviroment.common';
+import { TIME_VALUES, LEAVE_STATUS, USER_ROLES } from '@synergy/environments/enviroment.common';
 import { MatDialog } from '@angular/material/dialog';
 import { GenerateLeaveModalComponent } from '@synergy-app/shared/modals/generate-leave-modal/generate-leave-modal.component';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 import Swal from 'sweetalert2';
+import { SessionService } from '@synergy-app/shared/services/session.service';
+import { User } from '@synergy-app/shared/models/user.model';
 
 @Component({
   selector: 'app-leaves',
@@ -22,14 +24,35 @@ export class LeavesComponent implements OnInit, AfterViewInit {
   isLoading = true;
   filter = '';
   leaveStatusTypes = LEAVE_STATUS;
-  constructor(public dialog: MatDialog, private employeeService: EmployeeService) {}
+  currentUserIsWebAdmin = false;
+  currentLoggedUser: User;
+  constructor(
+    public dialog: MatDialog,
+    private employeeService: EmployeeService,
+    private sessionService: SessionService
+  ) {}
 
   ngOnInit() {
+    this.setCurrentLoggedUser();
+    this.checkIfCurrentUserIsWebAdmin();
     this.fetchLeavesRequest();
   }
 
   ngAfterViewInit() {
     this.setUpInputFilter();
+  }
+
+  setCurrentLoggedUser() {
+    const { userId, name, role } = this.sessionService.decodeToken();
+    this.currentLoggedUser = new User('');
+    this.currentLoggedUser._id = userId;
+    this.currentLoggedUser.firstName = name;
+    this.currentLoggedUser.role = role;
+  }
+
+  checkIfCurrentUserIsWebAdmin() {
+    const { role } = this.sessionService.decodeToken();
+    this.currentUserIsWebAdmin = role === USER_ROLES.WEB_ADMINISTRATOR.value;
   }
 
   async fetchLeavesRequest() {

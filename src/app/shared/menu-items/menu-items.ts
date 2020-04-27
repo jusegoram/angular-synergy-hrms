@@ -25,6 +25,7 @@ export class Menu {
     public position?: number
   ) {}
 }
+
 // NOTE: THIS ITEM IS ONLY FOR REFERENCE, MENU ITEMS ARE STORED IN THE DATABASE
 // const MENUITEMS = [
 //   {
@@ -72,6 +73,7 @@ export class Menu {
 //     roles: [USER_ROLES.ADMINISTRATOR.value, USER_ROLES.OPERATIONS.value],
 //   },
 // ];
+
 
 @Injectable()
 export class MenuItems {
