@@ -52,6 +52,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
   }
 
   async fetchLeavesRequest() {
+    this.isLoading = true;
     try {
       this.data = await this.employeeService.getLeaves();
       this.isLoading = false;
@@ -105,9 +106,8 @@ export class LeavesComponent implements OnInit, AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result && result.state) {
-        Swal.fire('Done!', 'The changes were saved correctly', 'success').then(() => {
-          location.reload();
-        });
+        this.fetchLeavesRequest();
+        Swal.fire('Done!', 'The changes were saved correctly', 'success');
       } else {
         this.showErrorMessage();
       }
@@ -130,7 +130,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
             state: LEAVE_STATUS.APPROVED,
           };
           await this.employeeService.updateLeave(leaveRequest);
-          location.reload();
+          await this.fetchLeavesRequest();
         } catch (error) {
           Swal.fire('Done!', 'Error happened. Try again later.', 'error');
         }
@@ -159,7 +159,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
             },
           };
           await this.employeeService.updateLeave(leaveRequest);
-          location.reload();
+          await this.fetchLeavesRequest();
         } catch (error) {
           Swal.fire('Done!', 'Error happened. Try again later.', 'error');
         }
@@ -179,7 +179,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
       if (result.value) {
         try {
           await this.employeeService.deleteLeave(leave._id);
-          location.reload();
+          await this.fetchLeavesRequest();
         } catch (error) {
           Swal.fire('Done!', 'Error happened. Try again later.', 'error');
         }
@@ -204,7 +204,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
           };
           const documentType = leaveStatus === 'SUPPORTED' ? 'supportDocument' : 'certifyDocument';
           await this.employeeService.updateLeaveWithDocument(file, leaveRequest, documentType);
-          location.reload();
+          await this.fetchLeavesRequest();
         } catch (error) {
           Swal.fire('Done!', 'Error happened. Try again later.', 'error');
         }
