@@ -6,9 +6,9 @@
         [accept]="acceptedFilesTypes"
 />
 <button
-    mat-stroked-button 
+    mat-flat-button 
     (click)="fileInput.click();"
-    color="primary"
+    [class]="btnClass" 
 >
     <ng-content></ng-content>
 </button>
