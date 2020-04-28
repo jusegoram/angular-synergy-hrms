@@ -9,6 +9,7 @@ export class FileInputSelectorComponent implements OnInit {
   @Input() label = '';
   @Output() onSelectedFile: EventEmitter<File> = new EventEmitter<File>();
   @Input() acceptedFilesTypes = 'pdf';
+  @Input() btnClass = '';
   constructor() {}
 
   ngOnInit() {}
