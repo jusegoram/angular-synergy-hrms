@@ -32,7 +32,7 @@ export class DetailComponent implements OnInit {
   public auth: any;
   public employee: Employee;
 
-_roles = USER_ROLES;
+  _roles = USER_ROLES;
   hrTracker: HrTracker;
   helpMessage = `
   HELPING TOOLTIP:
@@ -92,7 +92,12 @@ _roles = USER_ROLES;
   openTransferDialog(): void {
     const dialogRef = this.dialog.open(TransferDialogComponent, {
       width: '700px',
-      data: { status: this.employee.status, hrTracker: this.hrTracker },
+      data: {
+        status: this.employee.status,
+        hrTracker: this.hrTracker,
+        selectedClient: this.employee.company.client,
+        selectedCampaign: this.employee.company.campaign,
+      },
     });
     dialogRef.afterClosed().subscribe((result) => {
       result && result.state ? this.successAlert.fire() : this.onErrorAlert.fire();
