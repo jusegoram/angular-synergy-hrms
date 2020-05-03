@@ -18,5 +18,12 @@
 
 /*leave table styles*/
 .btn-leave-table-action{
-    border-radius: 16px !important;
+    width: 120px;
+  span {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+ngx-datatable {
+  box-shadow: none !important;
 }

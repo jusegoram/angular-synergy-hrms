@@ -148,7 +148,6 @@ export class MatrixComponent implements OnInit, OnDestroy {
   }
 
   addPosition(event: MatChipInputEvent): void {
-    console.log(this.positions);
     // Add page only when MatAutocomplete is not open
     // To make sure this does not conflict with OptionSelected Event
     if (!this.matPositionAutocomplete.isOpen) {

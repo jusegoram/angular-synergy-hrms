@@ -87,7 +87,6 @@ export class HoursComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, main, 'hours-info');
     XLSX.writeFile(wb, 'export-hours.xlsx');
-    console.log(exportData.length === this.dataSource.data.length);
   }
   setCampaigns(event: any) {
     this.queryForm.value.Campaign = '';

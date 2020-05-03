@@ -1,88 +1,68 @@
 <mat-toolbar class="header">
   <mat-toolbar-row>
     <span>Workforce Management</span>
-    <span class="fill-remaining-space"></span>
   </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
-  <mat-toolbar-row> </mat-toolbar-row>
-</mat-toolbar>
-<div class="mat-card-top">
-  <div class="example-container">
-    <div class="example-header">
-      <mat-form-field appearance="outline">
-        <input
-          matInput
-          [(ngModel)]="filterValue"
-          (keyup)="applyFilter(filterValue)"
-          placeholder="Filter"
-        />
-      </mat-form-field>
-      <div fxFlex="auto"></div>
-      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
-        <button mat-button (click)="reload()">
-          REFRESH
-        </button>
-      </div>
-      <div *ngIf="auth.create" style="padding-left: 10px;">
-        <button
-          mat-raised-button
-          color="primary"
-          [routerLink]="['/', 'employee', 'new']"
+  <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between">
+    <div style="font: 400 14px Roboto, 'Helvetica Neue', sans-serif !important;">
+      <mat-form-field appearance="fill">
+        <mat-label>SEARCH</mat-label>
+        <input matInput
+               type="text"
+               placeholder="Search..."
+               [(ngModel)]="filterValue" (keyup)="applyFilter(filterValue)"
         >
-          NEW EMPLOYEE
-        </button>
-      </div>
+      </mat-form-field>
     </div>
-    <mat-table
-      #table
-      [dataSource]="dataSource"
-      matSort
-      (matSortChange)="sortData()"
-    >
-      <!--
-        <ng-container matColumnDef="selected">
-          <mat-header-cell *matHeaderCellDef> <mat-checkbox> Select all</mat-checkbox> </mat-header-cell>
-          <mat-cell *matCellDef="let element"> <mat-checkbox (click)="onSelected($event.currentTarget.id)" [id]="element.id"></mat-checkbox> </mat-cell>
-        </ng-container>
-
-         Position Column -->
-
+        <div fxLayoutGap="10px">
+          <button mat-button (click)="reload()">
+            REFRESH
+          </button>
+          <button mat-raised-button color="primary" [routerLink]="['/', 'employee', 'upload']" *ngIf="auth?.role === 9999">
+            ADMIN UPLOAD
+          </button>
+          <button mat-raised-button color="primary" [routerLink]="['/', 'employee', 'new']" *ngIf="auth?.create">
+            NEW EMPLOYEE
+          </button>
+        </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div>
+    <mat-table #table [dataSource]="dataSource" matSort >
       <ng-container matColumnDef="employeeId">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Employee ID.
+          EMPLOYEE ID
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.employeeId }}
+          <mat-chip-list>
+            <mat-chip
+              class="mat-indigo-50"
+              [routerLink]="['/', 'employee', 'detail']"
+              [queryParams]="{ id: element._id }"
+              matTooltip="Go to Profile"
+            >
+              <div class="embedded-avatar">
+                <avatar-detail [id]="element._id" [authorization]="this.auth" [embedded]="true"></avatar-detail>
+              </div>
+              <span>
+                <b> {{ element.employeeId }} </b>
+              </span>
+            </mat-chip>
+          </mat-chip-list>
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="firstName">
+      <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Name
+          NAME
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{
-            element.firstName +
-              " " +
-              element.middleName +
-              " " +
-              element.lastName
-          }}
-        </mat-cell>
-      </ng-container>
-
-      <ng-container matColumnDef="socialSecurity">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Social Security
-        </mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.socialSecurity }}
+          {{ [element?.firstName, element?.middleName, element?.lastName].join(' ') }}
         </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="company.client">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Client
+          CLIENT
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.company?.client }}
@@ -91,34 +71,36 @@
 
       <ng-container matColumnDef="company.campaign">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Campaign
+          CAMPAIGN
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
           {{ element.company?.campaign }}
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="status">
+      <ng-container matColumnDef="company.shiftManager">
         <mat-header-cell *matHeaderCellDef mat-sort-header>
-          Status
+          SHIFT MANAGER
         </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          {{ element.status | titlecase }}
+          {{ element.company?.shiftManager?.name }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="company.supervisor">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          SUPERVISOR
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.company?.supervisor?.name }}
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="details">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> </mat-header-cell>
+      <ng-container matColumnDef="status">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>
+          STATUS
+        </mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <a
-            [routerLink]="['/', 'employee', 'detail']"
-            [queryParams]="{ id: element._id }"
-            mat-menu-item
-            matTooltip="Go to details"
-          >
-            <span>Details </span>
-            <mat-icon>arrow_forward</mat-icon>
-          </a>
+          {{ element.status | uppercase }}
         </mat-cell>
       </ng-container>
 
@@ -126,14 +108,9 @@
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
     <mat-paginator
-      #paginator
       [pageSize]="10"
       [pageSizeOptions]="[10, 20, 30, 50, 100]"
-      (page)="onPageChange($event)"
       showFirstLastButtons
-      (keydown.arrowleft)="previousPage()"
-      (keyup.arrowright)="nextPage()"
     >
     </mat-paginator>
-  </div>
 </div>

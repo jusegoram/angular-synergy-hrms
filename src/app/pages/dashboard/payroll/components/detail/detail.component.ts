@@ -52,7 +52,6 @@ export class DetailComponent implements OnInit {
     private matDialog: MatDialog
   ) {
     this.user = this._payrollService.getDecodedToken();
-    console.log(this.user);
   }
 
   ngOnInit() {
@@ -306,7 +305,6 @@ export class DetailComponent implements OnInit {
     if (this.rows[0].isPayed) {
       const query = this.user;
       this._payrollService.updatePayroll(this.rows[0].payroll_Id, query, 'FIN').subscribe((result) => {
-        console.log(result);
         this.reloadAll();
       });
     } else {

@@ -78,7 +78,6 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   }
 
   loadData() {
-    console.log(this.row);
     this._payrollService
       .getConcepts({
         type: 'Other Payments',

@@ -1,0 +1,15 @@
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>HR Reports</span>
+    <span class="fill-remaining-space"></span>
+    <button mat-icon-button
+            matTooltip="TO DOWNLOAD A REPORT PLEASE SELECT THE FILTER OPTIONS, LEAVING A FILTER EMPTY MEANS IT HAS NO FILTER">
+      <mat-icon>help</mat-icon>
+    </button>
+  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <app-export [reports]=reports></app-export>
+</div>

@@ -74,7 +74,6 @@ export class LeavesComponent implements OnInit, AfterViewInit {
     if ((this.selectedLeaveStatusType > -2 || this.filter) && this.data) {
       const filterNormalized = this.filter.toLowerCase();
       return this.data.filter((item: LeaveRequest) => {
-        console.log('selectedLeaveStatusType', this.selectedLeaveStatusType);
         return (
           (this.selectedLeaveStatusType > -2 ? item.state === this.selectedLeaveStatusType : true) &&
           (item.employee?.employeeId.includes(filterNormalized) ||

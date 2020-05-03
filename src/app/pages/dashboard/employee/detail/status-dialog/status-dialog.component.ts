@@ -83,14 +83,12 @@ export class StatusDialogComponent implements AfterViewInit {
           reason,
         },
       };
-      console.log('data sent', hrTracker);
       const response = await this.employeeService.saveTracker(hrTracker);
       this.dialogRef.close({
         state: true,
         message: 'Status tracker send successfully',
       });
     } catch (errorResponse) {
-      console.log('status dialog', errorResponse);
       this.dialogRef.close({
         state: false,
         message: errorResponse.error.message,

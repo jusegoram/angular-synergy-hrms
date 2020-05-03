@@ -52,7 +52,6 @@ export class NewPayrollComponent implements OnInit {
 
 
   isValid() {
-    console.log('executed');
     return this.payrollType.valid && this.dates.valid;
   }
 
@@ -183,12 +182,10 @@ export class NewPayrollComponent implements OnInit {
     }
   }
   toggleExpandRow(row) {
-    console.log('Toggled Expand Row!', row);
     this.table.rowDetail.toggleExpandRow(row);
   }
 
   onDetailToggle(event) {
-    console.log('Detail Toggled', event);
   }
 
   // saveConcepts(){

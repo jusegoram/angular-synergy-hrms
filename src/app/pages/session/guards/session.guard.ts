@@ -19,7 +19,6 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     if (this.checkLogin()) {
       return true;
     } else {
-      console.log('blocked can activate');
       this.router.navigateByUrl('/auth/signin');
       return false;
     }
@@ -28,7 +27,6 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     if (this.checkLogin()) {
       return true;
     } else {
-      console.log('blocked can activate child');
       this.openDialog();
       return false;
     }
@@ -37,7 +35,6 @@ export class SessionGuard implements CanActivate, CanLoad, CanActivateChild {
     if (this.checkLogin()) {
       return true;
     } else {
-      console.log('blocked can load');
       this.router.navigate(['/auth/signin']);
       return false;
     }

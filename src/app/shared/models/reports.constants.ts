@@ -264,6 +264,7 @@ export const PROJECTIONS = {
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
+    billable: '$payroll.billable',
     hours: 1,
   },
   position: {

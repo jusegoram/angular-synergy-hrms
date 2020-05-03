@@ -16,36 +16,28 @@ export class UploadComponent {
   dataSource: any;
   response: string;
   displayedColumns: string[] = ['name', 'size', 'progress', 'status', 'action'];
-  public selected = {value: '/employee/upload', viewValue: 'Employee Main'};
+  public selected = {value: '/uploads/employee', viewValue: 'Employee Main'};
   api = environment.apiUrl;
   items = [
-    {value: '/employee/upload', viewValue: 'Employee Main'},
-    {value: '/employee/upload/company', viewValue: 'Employee Company'},
-    {value: '/employee/upload/position', viewValue: 'Employee Position'},
-    {value: '/employee/upload/shift', viewValue: 'Employee Shift'},
-    {value: '/employee/upload/personal', viewValue: 'Employee Personal'},
-    {
-      value: '/employee/upload/personal/hobbies',
-      viewValue: 'Employee Hobbies',
-    },
-    {value: '/employee/upload/payroll', viewValue: 'Employee Payroll'},
-    {value: '/employee/upload/family', viewValue: 'Employee Family'},
-    {value: '/employee/upload/education', viewValue: 'Employee Education'},
+    {value: '/uploads/employee', viewValue: 'Employee Main'},
+    {value: '/uploads/employee/company', viewValue: 'Employee Company'},
+    {value: '/uploads/employee/manager', viewValue: 'Employee Managers'},
+    {value: '/uploads/employee/position', viewValue: 'Employee Position'},
+    {value: '/uploads/employee/personal', viewValue: 'Employee Personal'},
+    {value: '/uploads/employee/payroll', viewValue: 'Employee Payroll'},
+    {value: '/uploads/employee/family', viewValue: 'Employee Family'},
+   // {value: '/uploads/employee/education', viewValue: 'Employee Education'},
   ];
 
   templates = [
-    {text: 'Main Information', value: '/employee/template'},
-    {text: 'Personal Information', value: '/employee/template/personal'},
-    {
-      text: 'Hobbies Information',
-      value: '/employee/template/personal/hobbies',
-    },
-    {text: 'Company Information', value: '/employee/template/company'},
-    {text: 'Position Information', value: '/employee/template/position'},
-    {text: 'Shift Information', value: '/employee/template/shift'},
-    {text: 'Payroll Information', value: '/employee/template/payroll'},
-    {text: 'Family Information', value: '/employee/template/family'},
-    {text: 'Education Information', value: '/employee/template/education'},
+    {text: 'Main Information', value: '/uploads/employee/templates/main'},
+    {text: 'Personal Information', value: '/uploads/employee/templates/personal'},
+    {text: 'Company Information', value: '/uploads/employee/templates/company'},
+    {text: 'Company Managers Information ', value: '/uploads/employee/templates/manager'},
+    {text: 'Position Information', value: '/uploads/employee/templates/position'},
+    {text: 'Payroll Information', value: '/uploads/employee/templates/payroll'},
+    {text: 'Family Information', value: '/uploads/employee/templates/family'},
+ //   {text: 'Education Information', value: '/uploads/employee/templates/education'},
   ];
   templateSelected = '';
 
@@ -56,7 +48,7 @@ export class UploadComponent {
   }
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 5000,
+      duration: 10000,
     });
   }
 
@@ -82,7 +74,12 @@ export class UploadComponent {
         this.refresh();
       }
     };
-
+    this.uploader.onErrorItem = (item, res) => {
+      const error = JSON.parse(res);
+      this.openSnackBar(
+        error.message || 'INTERNAL ERROR - CONTACT SYNERGY TEAM',
+        'DISMISS'
+      );    };
     this.hoursUploader = new FileUploader({
       url: '/',
       isHTML5: true,

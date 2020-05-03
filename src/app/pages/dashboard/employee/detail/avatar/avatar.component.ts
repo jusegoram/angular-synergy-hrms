@@ -11,6 +11,7 @@ import { FileUploader } from 'ng2-file-upload';
   styleUrls: ['./avatar.component.scss'],
 })
 export class AvatarComponent implements OnInit {
+  @Input() embedded: boolean;
   @Input() id: string;
   @Input() authorization: any;
   api = environment.apiUrl;
