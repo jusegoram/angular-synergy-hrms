@@ -75,7 +75,7 @@ export class ExportService {
       options: options,
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post(this.api + '/employee/report/' + type, body, {
+    return this.httpClient.post(`${this.api}/reports/employee/${type}`, body, {
       headers: headers,
     });
   }
@@ -84,7 +84,6 @@ export class ExportService {
       const {shift } = element;
       const mappedShift: any = {};
       if (shift) {
-        console.log(shift);
         const length = shift.length;
         for (let i = 0; i < length; i++) {
           const day = shift[i];

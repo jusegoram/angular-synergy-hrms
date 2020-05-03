@@ -6,14 +6,14 @@
       <mat-toolbar-row>
         <span>Workface Leaves</span>
         <span class="fill-remaining-space"></span>
-      </mat-toolbar-row>  
+      </mat-toolbar-row>
     </mat-toolbar>
     <div class="mat-card-top pa-2">
         <div fxLayout="row" fxLayoutAlign="space-between center">
             <mat-form-field appearance="fill">
                 <input
                   #inputFilter
-                  matInput          
+                  matInput
                   placeholder="Search"
                 />
             </mat-form-field>
@@ -21,26 +21,27 @@
                 NEW LEAVE
             </button>
         </div>
+      <mat-card>
         <ngx-datatable
           #trackerInboxTable
           class="material expandable expandable-datatable"
-          [rows]="filteredData"      
+          [rows]="filteredData"
           [loadingIndicator]="isLoading"
           [headerHeight]="50"
           [rowHeight]="60"
           [limit]="10"
-          [footerHeight]="50"           
+          [footerHeight]="50"
           [scrollbarH]="true"
-          >   
+        >
           <ngx-datatable-column
-              [width]="50"
-              [resizeable]="false"
-              [sortable]="false"
-              [canAutoResize]="false"
-            >
+            [width]="50"
+            [resizeable]="false"
+            [sortable]="false"
+            [canAutoResize]="false"
+          >
             <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
               <a
-                href="javascript:void(0)"            
+                href="javascript:void(0)"
                 title="Expand/Collapse Row"
                 (click)="toggleExpandRow(row)"
               >
@@ -77,21 +78,23 @@
           </ngx-datatable-column>
           <ngx-datatable-column name="REQUEST STATUS" prop="state" [sortable]="true">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <div class="leave-status">
+              <button mat-stroked-button disableRipple="true" matTooltip="Current leave status">
                 {{ row?.state | leaveStatus }}
-              </div>
+              </button>
             </ng-template>
           </ngx-datatable-column>
           <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>          
+            <ng-template let-row="row" ngx-datatable-cell-template>
               <div *ngIf="row.state==leaveStatusTypes.SENT" fxLayout="row">
-                <button 
-                    mat-flat-button 
-                    class="btn-leave-table-action mat-lime-500" 
-                    [disabled]="(currentLoggedUser._id!=row.creationFingerprint?._id || row?.leaveType?.isCashVacations) && !currentUserIsWebAdmin" 
+                <mat-chip-list>
+                  <mat-chip
+                    class="mat-lime-500"
+                    matTooltip="Approve this leave"
+                    [disabled]="(currentLoggedUser._id!=row.creationFingerprint?._id || row?.leaveType?.isCashVacations) && !currentUserIsWebAdmin"
                     (click)="openApproveDialog(row)">
-                  <span>APPROVE</span>
-                </button>
+                    <span>APPROVE</span>
+                  </mat-chip>
+                </mat-chip-list>
                 <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
                 <mat-menu #menu="matMenu">
                   <button mat-menu-item (click)="openGenerateLeaveDialog('edit', row)"><mat-icon>edit</mat-icon>EDIT</button>
@@ -99,8 +102,8 @@
                 </mat-menu>
               </div>
             </ng-template>
-          </ngx-datatable-column>      
-         
+          </ngx-datatable-column>
+
           <!-- Tracker details -->
           <ngx-datatable-row-detail rowHeight="auto" #myDetailRow>
             <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
@@ -120,7 +123,8 @@
               </div>
             </ng-template>
           </ngx-datatable-row-detail>
-    
+
         </ngx-datatable>
+      </mat-card>
     </div>
   </div>

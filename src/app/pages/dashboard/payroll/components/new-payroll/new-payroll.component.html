@@ -58,29 +58,31 @@
     RUN PAYROLL
   </button>
 </div>
-<div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
-  <fusioncharts
-    *ngIf="chartDataSource && rows.length !== 0"
-    [width]="'40%'"
-    [height]="'400'"
-    [type]="'stackedcolumn2d'"
-    [dataFormat]="'json'"
-    [dataSource]="chartDataSource"
-    (legendItemClicked)="dataplotClickHandler($event)"
-    (initialized)="initialized($event)"
-  >
+<div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-around" fxLayoutGap="10px" class="pa-1">
+  <div fxFlex>
+    <fusioncharts
+      *ngIf="chartDataSource && rows.length !== 0"
+      [width]="'100%'"
+      [height]="'400'"
+      [type]="'stackedcolumn2d'"
+      [dataFormat]="'json'"
+      [dataSource]="chartDataSource"
+      (legendItemClicked)="dataplotClickHandler($event)"
+      (initialized)="initialized($event)"
     >
-  </fusioncharts>
-
-  <fusioncharts
-    *ngIf="rows.length !== 0"
-    [width]="'40%'"
-    [height]="'400'"
-    [type]="'doughnut2d'"
-    [dataFormat]="'json'"
-    [dataSource]="pieCharDataSource"
-  >
-  </fusioncharts>
+    </fusioncharts>
+  </div>
+  <div fxFlex>
+    <fusioncharts
+      *ngIf="rows.length !== 0"
+      [width]="'100%'"
+      [height]="'400'"
+      [type]="'doughnut2d'"
+      [dataFormat]="'json'"
+      [dataSource]="pieCharDataSource"
+    >
+    </fusioncharts>
+  </div>
 </div>
 <div style="width: 100%;" *ngIf="rows.length !== 0">
   <div class="pa-1">

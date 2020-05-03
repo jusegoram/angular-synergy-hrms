@@ -70,7 +70,6 @@ export class SessionService {
       return true;
     }
     if (!this.decodeToken()) {
-      console.log('Invalid token');
       return false;
     }
     return allowedRoles.includes(this.getRole());

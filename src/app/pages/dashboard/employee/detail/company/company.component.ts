@@ -121,7 +121,6 @@ export class CompanyComponent implements OnInit {
     const query: EmployeeCompany = {
       ...values,
     };
-    console.log(this.company.manager);
     query.manager = this.company.manager && this.company.manager.manager_id === values.manager
       ? this.company.manager
       : this.managerResolver(values.manager);

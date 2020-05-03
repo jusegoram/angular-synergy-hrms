@@ -67,6 +67,9 @@ mat-form-field {
 
 
 .profileImage {
+  position: absolute;
+  z-index: 1000;
   margin-left: 25px;
-  width: 150px;
+  margin-top: -160px !important;
+  width: 155px;
 }

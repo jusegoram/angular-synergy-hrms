@@ -1,14 +1,13 @@
-<input #fileInput 
-        class="form-control-file" 
-        type="file" 
-        (change)="extractFile(fileInput.files)" 
+<input #fileInput
+        class="form-control-file"
+        type="file"
+        (change)="extractFile(fileInput.files)"
         style="display: none;"
         [accept]="acceptedFilesTypes"
 />
-<button
-    mat-flat-button 
+<mat-chip-list>
+  <mat-chip
     (click)="fileInput.click();"
-    [class]="btnClass" 
->
-    <ng-content></ng-content>
-</button>
+    [class]="btnClass"
+  ><ng-content></ng-content></mat-chip>
+</mat-chip-list>

@@ -45,11 +45,11 @@
   <mat-toolbar-row></mat-toolbar-row>
 </mat-toolbar>
 <div class="mat-card-top">
+  <div class="profileImage">
+    <avatar-detail [id]="this.employee._id" [authorization]="this.auth" [embedded]="false"></avatar-detail>
+  </div>
   <div fxLayout="column" fxLayout.xs="column">
     <mat-card class="main-info pa-1">
-      <div class="profileImage">
-        <avatar-detail [id]="this.employee._id" [authorization]="this.auth"></avatar-detail>
-      </div>
       <mat-card-header>
         <mat-card-title>
           {{

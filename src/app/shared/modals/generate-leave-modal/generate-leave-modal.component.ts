@@ -97,7 +97,6 @@ export class GenerateLeaveModalComponent implements OnInit {
           '(' + item.employeeId + ') - ' + item.firstName + ' ' + item.middleName + ' ' + item.lastName;
         if (this.isEditMode && item._id === this.leaveRequest.employee._id) {
           this.selectedEmployee = item;
-          console.log('selected employee:', item);
           this.inputSearchEmployee.nativeElement.value = item.fullSearchName;
         }
       });

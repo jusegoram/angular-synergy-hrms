@@ -23,31 +23,16 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div>
-  <!-- <app-time-off-requests></app-time-off-requests> -->
-  <mat-accordion>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        LEAVES
-      </mat-expansion-panel-header>
-      vacations works
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        FINAL PAYMENT
-      </mat-expansion-panel-header>
-      content
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        ADD CONCEPT
-      </mat-expansion-panel-header>
-      <app-new-concept></app-new-concept>
-    </mat-expansion-panel>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        VERIFY CONCEPT
-      </mat-expansion-panel-header>
-      <app-concept-verification></app-concept-verification>
-    </mat-expansion-panel>
-  </mat-accordion>
+  <mat-tab-group backgroundColor="primary">
+    <mat-tab label="CONCEPTS" >
+      <div class="pa-2">
+        <app-new-concept></app-new-concept>
+      </div>
+    </mat-tab>
+    <mat-tab label="VERIFICATION">
+      <div class="pa-2">
+        <app-concept-verification></app-concept-verification>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>

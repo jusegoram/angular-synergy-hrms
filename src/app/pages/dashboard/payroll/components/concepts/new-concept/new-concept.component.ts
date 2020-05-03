@@ -165,7 +165,7 @@ export class NewConceptComponent implements OnInit {
     this.selectedEmployee = employee;
     this.resetForm();
   }
-  onAddConcept() {
+   onAddConcept() {
     const form = this.conceptFormGroup.value;
     const employee = this.selectedEmployee;
     const newConcept = new PayrollConcept(
@@ -237,6 +237,8 @@ export class NewConceptComponent implements OnInit {
         this.refreshTable(res);
         this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
         resolve();
+      }, error => {
+        this.openSnackbar('ERROR: ' + error.error.message, 'Dismiss');
       });
     });
   }

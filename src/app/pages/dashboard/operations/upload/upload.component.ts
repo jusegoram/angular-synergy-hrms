@@ -6,6 +6,7 @@ import { OperationsService } from '../operations.service';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
 import { UploadService } from '@synergy-app/pages/dashboard/operations/upload/upload.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cloud-upload',
@@ -72,9 +73,16 @@ export class UploadComponent implements OnInit {
     this.uploader = this._uploadService.uploaderFactory( this.api + this.selected.value);
     this.refresh();
     this.uploader.onAfterAddingFile = (file) => this.refresh();
-    this.uploader.onWhenAddingFileFailed = (item) => this.refresh();
+    this.uploader.onWhenAddingFileFailed = (item) => {
+      Swal.fire('WRONG FILE', 'Only CSV files are allowed', 'error');
+      this.refresh();
+    };
     this.uploader.onSuccessItem = (res) => this.refresh();
-    this.uploader.onErrorItem = (item, res) => this.refresh();
+    this.uploader.onErrorItem = (item, res) => {
+      this.refresh();
+      const error = JSON.parse(res);
+      Swal.fire('UPLOAD ERROR', error.message , 'error');
+    };
   }
   refresh() {
     this.dataSource = new MatTableDataSource(this.uploader.queue);

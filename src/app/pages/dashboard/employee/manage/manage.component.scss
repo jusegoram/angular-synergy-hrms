@@ -1,7 +1,4 @@
-.example-container {
-  display: block;
-  width: 100% !important;
-}
+
 
 .mat-table {
   overflow: hidden;
@@ -9,10 +6,6 @@
 
 .mat-header-cell.mat-sort-header-sorted {
   color: black;
-}
-.example-header {
-  min-height: 64px;
-  padding: 8px 24px 0;
 }
 
 @import "./src/assets/styles/scss/material.variables";
@@ -44,6 +37,23 @@ $mat-toolbar-height-mobile-landscape: 136px !default;
   flex: 1 1 auto;
 }
 
-.mat-column-details {
+.mat-column-employeeId {
   flex: 0 0 150px;
+}
+.mat-cell {
+  text-align: center;
+  justify-content:center;
+}
+.mat-header-cell {
+  text-align: center;
+  justify-content:center;
+}
+span {
+  margin: 15px;
+}
+.embedded-avatar {
+  width: 30px;
+  display: block;
+  margin-left: -11px;
+  margin-bottom: -5px;
 }

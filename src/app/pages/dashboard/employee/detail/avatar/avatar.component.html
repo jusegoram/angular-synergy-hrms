@@ -9,7 +9,7 @@
         alt="/assets/images/default-avatar.png"
       />
     </div>
-    <div fxLayout="row" fxFlexAlign="center">
+    <div *ngIf="!embedded" fxLayout="row" fxFlexAlign="center">
       <button
         mat-button
         [disabled]="!this.authorization.upload"

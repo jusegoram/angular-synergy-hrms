@@ -105,16 +105,19 @@ export class ExportComponent implements OnInit {
   }
   async export(report: any) {
     const { reportSelector } = this.reportForm.value;
+    let result = report;
     try {
       if (report.length === 0) {
         throw new Error('Looks like the result came back empty, please check your filters');
       }
       this.wb = XLSX.utils.book_new();
-      reportSelector.projection === 'shift' ?
-        report = await this._reportService.mapShift(report) : noop();
-      reportSelector.projection === 'hours' ?
-        report = await this._reportService.mapHours(report) : noop();
-      const sheet1: XLSX.WorkSheet = XLSX.utils.json_to_sheet(report);
+        switch (reportSelector.projection) {
+          case 'shift': result = await this._reportService.mapShift(report);
+          break;
+          case  'hours': result = await this._reportService.mapHours(report);
+          break;
+        }
+      const sheet1: XLSX.WorkSheet = XLSX.utils.json_to_sheet(result);
       XLSX.utils.book_append_sheet(this.wb, sheet1, 'sheet 1');
       XLSX.writeFile(this.wb, reportSelector.name + '-' + moment().format('MM-DD-YYYY').toString() + '.xlsx');
       await this.successAlert.fire();
