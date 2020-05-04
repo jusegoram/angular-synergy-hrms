@@ -30,7 +30,6 @@ import * as Charts from 'fusioncharts/fusioncharts.charts';
 import * as FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
 import { ExportAsModule } from 'ngx-export-as';
 import { ConceptsComponent } from './components/concepts/concepts.component';
-import { TimeOffRequestsComponent } from './components/concepts/time-off-requests/time-off-requests.component';
 import { NewConceptComponent } from './components/concepts/new-concept/new-concept.component';
 // tslint:disable-next-line:max-line-length
 import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
@@ -42,6 +41,7 @@ import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/auth
 import { ReportComponent } from './components/report/report.component';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
+import { LeavesComponent } from './components/concepts/leaves/leaves.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
 
@@ -72,7 +72,6 @@ export function provideSwal() {
     MainComponent,
     DetailComponent,
     ConceptsComponent,
-    TimeOffRequestsComponent,
     NewConceptComponent,
     FinalizedPayrollsComponent,
     NonFinalizedPayrollsComponent,
@@ -82,6 +81,7 @@ export function provideSwal() {
     EditPayrollDetailVacationsComponent,
     PayslipDialogComponent,
     ReportComponent,
+    LeavesComponent,
   ],
   providers: [
     PayrollService,

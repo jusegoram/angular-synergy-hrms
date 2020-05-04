@@ -82,6 +82,7 @@ export const LEAVE_STATUS = {
   SUPPORTED: 2,
   APPROVED: 3,
   FINISHED: 4,
+  PROCESSED: 5,
 };
 
 export const LEAVE_STATUS_TYPES = {

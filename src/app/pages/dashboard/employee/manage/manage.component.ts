@@ -68,7 +68,6 @@ export class ManageComponent implements OnInit, AfterViewInit {
   async ngOnInit() {
     await this.populateTable();
     this.auth = this.employeeService.getAuth();
-    console.log(this.auth);
   }
   applyFilter(filter: string) {
     if (filter) {

@@ -63,7 +63,6 @@ export class TrackersComponent implements OnInit, AfterViewInit {
       if (result.value) {
         try {
           await this.employeeService.updateTracker(hrTracker);
-          location.reload();
         } catch (error) {
           Swal.fire('Done!', 'Error happened. Try again later.', 'error');
         }

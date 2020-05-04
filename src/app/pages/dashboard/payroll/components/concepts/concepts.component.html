@@ -25,7 +25,11 @@
 <div>
   <mat-tab-group backgroundColor="primary">
     <mat-tab label="CONCEPTS" >
-      <div class="pa-2">
+      <div class="pa-2" fxLayoutGap="10px">
+        <mat-card-header>
+          <mat-card-subtitle>SELECT EMPLOYEE - CHOOSE TYPE - SELECT CONCEPT - CHOOSE EFFECTIVE DATE</mat-card-subtitle>
+        </mat-card-header>
+        <app-leaves></app-leaves>
         <app-new-concept></app-new-concept>
       </div>
     </mat-tab>

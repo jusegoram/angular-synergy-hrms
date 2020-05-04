@@ -68,11 +68,12 @@ export class ExportService {
       return {};
     }
   }
-  getReport(type: string, query: any, options?): Observable<any> {
+  getReport(type: string, query: any, options?, extras?): Observable<any> {
     const body = {
       filter: this.toQuery(query),
       projection: this.projections[type],
       options: options,
+      extras: extras
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(`${this.api}/reports/employee/${type}`, body, {

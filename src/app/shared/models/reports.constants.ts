@@ -7,6 +7,14 @@ export const WORKFORCE_REPORTS = [
     options: [],
   },
   {
+    name: 'Leave Report',
+    tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, excuseTimeFrom, excuseTimeTo, reason, description, isSupported, isCertified`,
+    projection: 'leaves',
+    options: [],
+    extras: [],
+    extraFilters: [],
+  },
+  {
     name: 'Leads Report',
     tooltip: `
     employeeId,
@@ -139,7 +147,7 @@ export const HR_REPORTS = [
           reason1: '$attrition.reason1',
           reason2: '$attrition.reason2',
           comment: '$attrition.comment',
-          submittedBy: {$concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName']},
+          submittedBy: { $concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName'] },
           commentDate: { $dateToString: { date: '$attrition.commentDate', format: '%m/%d/%Y' } },
         },
       },
@@ -222,6 +230,16 @@ export const PROJECTIONS = {
     address: '$personal.address',
     town: '$personal.town',
     district: '$personal.district',
+  },
+  leaves: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    leaves: 1
   },
   emergency: {
     _id: 0,
@@ -325,6 +343,6 @@ export const PROJECTIONS = {
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
     hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
-    billing: 1
+    billing: 1,
   },
 };

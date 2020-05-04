@@ -32,6 +32,7 @@ export class ExportComponent implements OnInit {
   dataSource: any;
   reportForm: FormGroup;
   queryForm: FormGroup;
+  extrasForm: FormGroup;
   sheetControl: FormControl;
   displayedColumns = [];
   wb: XLSX.WorkBook;
@@ -88,15 +89,24 @@ export class ExportComponent implements OnInit {
 
     this.sheetControl = new FormControl();
   }
-
+  buildExtrasForm(extras: any[]) {
+    const group = {};
+    extras.forEach(i => {
+      group[i] = [];
+    });
+    this.extrasForm = this.fb.group(group);
+  }
   async getReport() {
     const { value } = this.queryForm;
     const { reportSelector: report } = this.reportForm.value;
     try {
-      if (!report.projection) {
+      let extras = {};
+      const { projection, options } = report;
+      if (!projection) {
         throw new Error('Woops');
       }
-      const result = await this._reportService.getReport(report.projection, value, report.options).toPromise();
+      if (!!this.extrasForm) { extras = this.extrasForm.value; }
+      const result = await this._reportService.getReport(projection, value, options, extras).toPromise();
       return this.export(result);
     } catch (e) {
       this.reportForm.markAllAsTouched();

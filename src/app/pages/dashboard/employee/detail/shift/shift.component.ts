@@ -170,10 +170,10 @@ export class ShiftComponent implements OnInit, OnChanges {
       const currentDSIndex = e.pageIndex * e.pageSize;
       const currentPage = [];
       const mapForTotal = (item, field) => {
-        return item.map((i) => (i[field] ? i[field] : 0));
+        return item.map((i) => (i && i[field] || 0));
       };
       const reduceForTotal = (item, field) => {
-        return item.reduce((p, c) => p + c[field], 0);
+        return item.reduce((p, c) => p + (c && c[field] || 0), 0);
       };
       for (let i = 0; i < e.pageSize; i++) {
         currentPage.push(this.dataSource.data[currentDSIndex + i]);

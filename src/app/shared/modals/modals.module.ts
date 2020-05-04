@@ -7,6 +7,7 @@ import { OnSuccessAlertComponent } from './on-success-alert/on-success-alert.com
 import { GenerateLeaveModalComponent } from './generate-leave-modal/generate-leave-modal.component';
 import { FormsModule } from '@angular/forms';
 import { MaterialSharedModule } from '../material.shared.module';
+import { PdfViewerComponent } from '@synergy-app/shared/modals/pdf-viewer/pdf-viewer.component';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -16,7 +17,8 @@ export function provideSwal() {
     OnDeleteAlertComponent,
     OnErrorAlertComponent,
     OnSuccessAlertComponent,
-    GenerateLeaveModalComponent
+    GenerateLeaveModalComponent,
+    PdfViewerComponent,
   ],
   imports: [
     CommonModule,
@@ -28,9 +30,10 @@ export function provideSwal() {
     OnDeleteAlertComponent,
     OnErrorAlertComponent,
     OnSuccessAlertComponent,
-    GenerateLeaveModalComponent
+    GenerateLeaveModalComponent,
+    PdfViewerComponent
   ],
-  entryComponents: [GenerateLeaveModalComponent],
+  entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent],
 })
 export class ModalsModule {
   static forRoot() {

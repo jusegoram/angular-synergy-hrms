@@ -18,6 +18,7 @@
       [limit]="10"
       [footerHeight]="50"
       [scrollbarH]="true"
+      columnMode="force"
     >
       <ngx-datatable-column
         [width]="50"
@@ -41,46 +42,44 @@
           {{ row?.employeeId }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="NAME" prop="employee.fullName">
+      <ngx-datatable-column name="NAME" prop="employee.fullName" [width]="200">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.employee.fullName }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="TRACKER" prop="trackerTypeName" [sortable]="true">
+      <ngx-datatable-column name="TRACKER" prop="trackerTypeName" [sortable]="true" [width]="100">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.trackerTypeName }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="SUBMITTED DATE" prop="requestDate">
+      <ngx-datatable-column name="SUBMIT DATE" prop="requestDate" [width]="100">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.requestDateFormatted }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="DEADLINE" prop="requestDate">
+      <ngx-datatable-column name="DEADLINE" prop="requestDate" [width]="100">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.deadlineDateFormatted }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="STATUS" prop="stateName" [sortable]="true">
+      <ngx-datatable-column name="STATUS" prop="stateName" [sortable]="true" [width]="100">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.stateName| uppercase }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="SUBMITTED BY" prop="creationFingerprint.name">
+      <ngx-datatable-column name="SUBMITTED BY" prop="creationFingerprint.name" [width]="200">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row?.creationFingerprint?.name | uppercase }}
         </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
+      <ngx-datatable-column name="ACTIONS" [sortable]="false" [resizeable]="false" [width]="200">
         <ng-template let-row="row" ngx-datatable-cell-template>
-          <button mat-button color="primary" (click)="saveAcceptedTrackerStatus(row)">
-            <mat-icon>save</mat-icon>
+          <button mat-flat-button class="mat-lime-400" (click)="saveAcceptedTrackerStatus(row)">
             <span>ACCEPT</span>
           </button>
-          <a mat-button color="accent"
+          <a mat-button color="primary"
              [routerLink]="['/', 'employee', 'detail']"
              [queryParams]="{ id: row.employee._id }">
-            <mat-icon>person</mat-icon>
             <span>PROFILE</span>
           </a>
         </ng-template>
