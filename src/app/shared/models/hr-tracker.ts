@@ -15,4 +15,5 @@ export interface HrTracker {
   creationFingerprint?: any;
   tracker?: Tracker;
   trackerTypeName?: string;
+  verificationFingerprint?: string;
 }

@@ -94,7 +94,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
     this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
-  openGenerateLeaveDialog(mode: string, leaveRequest: LeaveRequest) {
+  openGenerateLeaveDialog(mode: string, leaveRequest?: LeaveRequest) {
     const dialogRef = this.dialog.open(GenerateLeaveModalComponent, {
       width: '600px',
       data: { mode, leaveRequest, isHRMode: false },

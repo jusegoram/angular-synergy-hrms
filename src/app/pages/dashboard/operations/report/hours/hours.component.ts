@@ -1,9 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OperationsService } from '../../operations.service';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
+import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ColumnMode } from '@swimlane/ngx-datatable';
+import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 
 @Component({
   selector: 'report-hours',
@@ -11,98 +17,122 @@ import * as XLSX from 'xlsx';
   styleUrls: ['./hours.component.scss'],
 })
 export class HoursComponent implements OnInit {
-  dataSource = null;
-  auth: any;
-  hours: any[];
-  displayedColumns = [
-    'employeeID',
-    'fullName',
-    'dialerID',
-    'hours',
-    'tosHours',
-    'timeIn',
-    'date',
-    'action',
-  ];
+  @ViewChild('employeeInput') employeeInput: ElementRef<HTMLInputElement>;
+  @ViewChild('onError', {static: false}) onError: OnErrorAlertComponent;
   clients = [];
   campaigns = [];
+  employees = [];
   queryForm: FormGroup;
-  notfound;
-  displayedColumns2 = ['employeeId'];
+  rangesFooter = RangesFooterComponent;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  data: any[];
+  columns: any[];
+  columnMode = ColumnMode;
+
   constructor(private _opsService: OperationsService, private fb: FormBuilder) {}
+
   ngOnInit() {
-    this._opsService.getClient().subscribe((data) => {
-      this.clients = data;
-    });
-    this.buildQueryForm();
+    this.buildForm();
+    this.buildTable();
+    this.fetchClients();
   }
-
-  populateTable(query) {
-    this._opsService.getHours(query).subscribe(
-      (res) => {
-        res.map((item) => {
-          item.date = new Date(item.date);
-        });
-        this.hours = res;
-        this.notfound = this.hours.length === 0 ? true : false;
-        this.dataSource = new MatTableDataSource(this.hours);
-      },
-      (error) => console.log(error),
-      () => {}
-    );
-  }
-  buildQueryForm() {
+  buildForm(): void {
     this.queryForm = this.fb.group({
-      From: [''],
-      To: [new Date()],
-      Client: [''],
-      Campaign: [''],
-      dialerId: [''],
+      date: [Validators.required],
+      employeeId: [],
+      client: [],
+      campaign: [],
     });
   }
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
+  buildTable() {
+    this.columns = [
+      { name: 'EMPLOYEE ID', prop: 'employeeId' },
+      { name: 'DIALER ID', prop: 'dialerId' },
+      { name: 'NAME', prop: 'employeeName' },
+      { name: 'CLIENT', prop: 'client' },
+      { name: 'CAMPAIGN', prop: 'campaign' },
+      { name: 'DATE', prop: 'date' },
+      { name: 'SYSTEM', prop: 'systemHours' },
+      { name: 'TOS', prop: 'tosHours' },
+      { name: 'BREAK', prop: 'breakHours' },
+      { name: 'LUNCH', prop: 'lunchHours' },
+      { name: 'TRAINING', prop: 'trainingHours' },
+      { name: 'TIME IN', prop: 'timeIn' },
+    ];
   }
-  reload() {
-    this.queryForm.reset();
-    this.notfound = false;
-    this.dataSource = null;
+  async fetchClients() {
+    this.clients = await this._opsService.getClient().toPromise();
   }
-  export() {
-    const exportData = JSON.parse(JSON.stringify(this.dataSource.data));
+  onFilterRemoved(item: string, control?: string) {
+    const items = this.queryForm.controls[control].value as string[];
+    this.removeFirst(items, item);
+    this.queryForm.controls[control].setValue(items);
+  }
 
-    const mappedData = exportData.map((item) => {
-      delete item._id;
-      delete item.__v;
-      delete item.employee;
-      item.date = moment(item.date).format('MM/DD/YYYY').toString();
-      item.systemHours = item.systemHours.value;
-      item.tosHours = item.tosHours.value;
-      item.timeIn = item.timeIn.value;
-      return item;
-    });
-    const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mappedData);
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, main, 'hours-info');
-    XLSX.writeFile(wb, 'export-hours.xlsx');
+  removeFirst<T>(array: T[], toRemove: T): void {
+    const index = array.indexOf(toRemove);
+    if (index !== -1) {
+      array.splice(index, 1);
+    }
   }
   setCampaigns(event: any) {
-    this.queryForm.value.Campaign = '';
-    this.campaigns = event.campaigns;
+    let currentCampaigns = [];
+    event.forEach((i) => (currentCampaigns = [...currentCampaigns, ...i.campaigns]));
+    this.campaigns = currentCampaigns;
   }
-  runQuery() {
-    const queryParam = this.queryForm.value;
-    const query = {
-      client: queryParam.Client && queryParam.Client.name,
-      campaign: queryParam.Campaign,
-      date: {
-        $gte: moment(queryParam.From).startOf('day').toDate(),
-        $lte: moment(queryParam.To).endOf('day').toDate(),
-      },
-      dialerId: queryParam.dialerId,
-    };
-    this.populateTable(query);
+  addEmployee(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    if ((value || '').trim()) {
+      this.employees.push(value.trim());
+    }
+    if (input) {
+      input.value = '';
+    }
+    this.queryForm.controls['employeeId'].setValue(this.employees);
   }
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.employees.push(event.option.viewValue);
+    this.employeeInput.nativeElement.value = '';
+    this.queryForm.controls['employeeId'].setValue(this.employees);
+  }
+  async populateTable() {
+    try {
+      const query  = this.queryForm.value;
+      query.client = query.client && query.client.map(client => client.name);
+      query.employeeId = query.employeeId && query.employeeId.length === 0 ? null : query.employeeId;
+      query.client = query.client && query.client.length === 0 ? null : query.client;
+      query.campaign = query.campaign && query.campaign.length === 0 ? null : query.campaign;
+      this.data = await this._opsService.getHours(query).toPromise();
+    } catch (e) {
+      await this.onError.fire();
+    }
+  }
+  clearTable() {
+    this.data = undefined;
+  }
+
+  export() {
+    const mapped = this.data.map( i => {
+      const {_id, ...rest} = i;
+      return rest;
+    } );
+    try {
+      const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mapped);
+      const wb: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, main, 'sheet 1');
+      XLSX.writeFile(wb, 'hours_' + new Date().toISOString() + '.xlsx');
+    } catch (e) {
+       this.onError.fire();
+    }
+  }
+  async delete() {
+    const mapped = this.data.map(i => i._id);
+    try {
+      await this._opsService.deleteHours(mapped).toPromise();
+    } catch (e) {
+      await this.onError.fire();
+    }
+  }
+
 }

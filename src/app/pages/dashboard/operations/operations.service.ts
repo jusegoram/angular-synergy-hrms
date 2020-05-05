@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
 import { interval, Observable } from 'rxjs';
 import { map, publishReplay, refCount, share } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { SessionService } from '@synergy-app/shared/services/session.service';
 import { environment } from '@synergy/environments/environment';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -37,12 +37,23 @@ export class OperationsService {
     return this._departments;
   }
   getHours(query): Observable<any> {
+    const contextFilter = this.getDecodedToken().clients;
     const body = query;
+    if (!query.clients && contextFilter && contextFilter > 0) {
+      query.clients = contextFilter;
+    }
+      console.log(query);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/hour', body, {
       headers: headers,
     });
   }
+
+  deleteHours(query): Observable<any> {
+    const params = new HttpParams().set('ids', JSON.stringify(query));
+    return this.httpClient.delete(this.api + '/operations/hour', {params: params});
+  }
+
   getKpis(query): Observable<any> {
     const body = query;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});

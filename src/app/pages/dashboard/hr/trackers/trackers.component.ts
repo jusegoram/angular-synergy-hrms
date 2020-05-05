@@ -31,7 +31,7 @@ export class TrackersComponent implements OnInit, AfterViewInit {
       });
       this.inProgressTrackersInbox = await this.employeeService.getTrackers({
         state: TRACKER_STATUS.IN_PROGRESS + '.' + TRACKER_STATUS.DONE,
-        creationFingerprintUserId: this.sessionService.getId(),
+        verificationFingerprint: this.sessionService.getId(),
       });
     } catch (error) {
       console.log('TrackersComponent', error);

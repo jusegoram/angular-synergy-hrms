@@ -1,215 +1,103 @@
-<div class="pa-1">
-  <mat-card-header>
-    <mat-card-subtitle>
-      Select filter values and Run Query, you will export all records if left
-      blank.
-    </mat-card-subtitle>
-  </mat-card-header>
-  <div
-    fxLayout="row"
-    fxLayoutAlign="start center"
-    fxLayoutGap="10px"
-    [formGroup]="queryForm"
-  >
-    <mat-form-field appearance="outline">
-      <mat-label>From (MM/DD/YYYY)</mat-label>
+<shared-on-delete-alert #onDelete message="You cant undo a deletion" (confirm)="delete()"></shared-on-delete-alert>
+<shared-on-success-alert #onSuccess message="Your download will start shortly"></shared-on-success-alert>
+<shared-on-error-alert #onError message="There was an error please narrow down your search"></shared-on-error-alert>
+<div class="pa-1" fxLayout="row wrap" fxLayoutAlign="space-evenly">
+  <mat-form-field appearance="fill" [formGroup]="queryForm" >
+    <mat-label>DATE RANGE</mat-label>
+    <label>
+      <input matInput
+             placeholder="CLICK ON CALENDAR"
+             [satDatepicker]="datePicker"
+             formControlName="date">
+    </label>
+    <sat-datepicker
+      #datePicker
+      [rangeMode]="true"
+      [calendarFooterComponent]="rangesFooter"
+    ></sat-datepicker>
+    <sat-datepicker-toggle matSuffix [for]="datePicker"></sat-datepicker-toggle>
+  </mat-form-field>
+  <mat-form-field appearance="fill" [formGroup]="queryForm">
+    <mat-label>CLIENT</mat-label>
+    <mat-select formControlName="client" multiple placeholder="NO FILTER"
+                (selectionChange)="setCampaigns($event.value)">
+      <mat-select-trigger>
+        <mat-chip-list>
+          <mat-chip *ngFor="let client of queryForm.controls['client'].value"
+                    [removable]="true" (removed)="onFilterRemoved(client, 'client')">
+            {{  client.name === "" ? 'NO FILTER' : client.name | uppercase }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </mat-select-trigger>
+      <mat-option *ngFor="let item of clients" [value]="item">
+        {{ item.name | uppercase }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill" [formGroup]="queryForm">
+    <mat-label>CAMPAIGN</mat-label>
+    <mat-select formControlName="campaign" multiple placeholder="NO FILTER">
+      <mat-select-trigger>
+        <mat-chip-list>
+          <mat-chip *ngFor="let campaign of queryForm.controls['campaign'].value"
+                    [removable]="true" (removed)="onFilterRemoved(campaign,'campaign')">
+            {{ campaign === "" ? 'NO FILTER' : campaign | uppercase }}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </mat-select-trigger>
+      <mat-option *ngFor="let item of campaigns" [value]="item.name">
+        {{ item.name | uppercase }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="fill" [formGroup]="queryForm">
+    <mat-chip-list #chipList>
+      <mat-chip
+        *ngFor="let employee of queryForm.controls['employeeId'].value"
+        [selectable]="true"
+        [removable]="true"
+        (removed)="onFilterRemoved(employee,'employeeId')">
+        {{employee}}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
       <input
-        matInput
-        [matDatepicker]="pickerFrom"
-        placeholder="title"
-        formControlName="From"
-      />
-      <mat-datepicker-toggle
-        matSuffix
-        [for]="pickerFrom"
-      ></mat-datepicker-toggle>
-      <mat-datepicker #pickerFrom></mat-datepicker>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>To (MM/DD/YYYY)</mat-label>
-      <input
-        matInput
-        [matDatepicker]="pickerTo"
-        placeholder="title"
-        formControlName="To"
-      />
-      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-      <mat-datepicker #pickerTo></mat-datepicker>
-    </mat-form-field>
-    <div class="fill-remaining-space"></div>
-    <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
-      <input
-        matInput
-        (keyup)="applyFilter($event.target.value)"
-        placeholder="Search..."
-      />
-    </mat-form-field>
-  </div>
-  <div
-    fxLayout="row"
-    fxLayoutAlign="start start"
-    fxLayoutGap="10px"
-    [formGroup]="queryForm"
-  >
-    <mat-form-field appearance="outline">
-      <mat-label>Client</mat-label>
-      <mat-select
-        placeholder="Client Filter"
-        formControlName="Client"
-        (selectionChange)="setCampaigns($event.value)"
+        placeholder="Employee ID..."
+        #employeeInput
+        [matChipInputFor]="chipList"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (matChipInputTokenEnd)="addEmployee($event)"
+        matTooltip="Write the Employee ID and then press Enter or Comma"
       >
-        <mat-option [value]="{ campaigns: [] }" *ngIf="clients.length > 5"
-          >-- ALL --</mat-option
-        >
-        <mat-option *ngFor="let item of clients" [value]="item">
-          {{ item.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline">
-      <mat-label>Campaign</mat-label>
-      <mat-select placeholder="Campaign Filter" formControlName="Campaign">
-        <mat-option value="">-- ALL --</mat-option>
-        <mat-option *ngFor="let item of campaigns" [value]="item.name">
-          {{ item.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <input matInput placeholder="Dialer ID" formControlName="dialerId" />
-      <mat-label>Dialer ID</mat-label>
-    </mat-form-field>
-    <div class="fill-remaining-space"></div>
-    <button mat-flat-button color="primary" (click)="runQuery()">
-      <mat-icon>search</mat-icon> Run Query
-    </button>
-  </div>
-
-  <mat-card *ngIf="notfound">
-    <mat-card-header>
-      <mat-card-title>NO RECORDS FOUND</mat-card-title>
-      <mat-card-subtitle
-        >try to be a little more specific or check your filter
-        values</mat-card-subtitle
-      >
-    </mat-card-header>
-    <mat-card-content> </mat-card-content>
-    <mat-card-actions>
-      <button mat-button (click)="reload()">Try Again</button>
-    </mat-card-actions>
-  </mat-card>
-
-  <mat-card *ngIf="dataSource && !notfound" class="pa-1">
-    <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="20px">
-      <button
-        mat-stroked-button
-        color="primary"
-        matTooltip="Export to Excel File"
-        (click)="export()"
-      >
-        EXPORT
-      </button>
-      <button
-        mat-stroked-button
-        color="warn"
-        matTooltip="Clear filter"
-        (click)="reload()"
-      >
-        CLEAR
-      </button>
-    </div>
-    <mat-card-content>
-      <cdk-virtual-scroll-viewport
-        mat-table
-        class="container"
-        itemSize="48"
-        minBufferPx="200"
-        maxBufferPx="400"
-      >
-        <tr class="mat-header-row">
-          <th mat-header-cell>
-            Employee ID
-          </th>
-          <th mat-header-cell>
-            Name
-          </th>
-          <th mat-header-cell>
-            Client
-          </th>
-          <th mat-header-cell>
-            Campaign
-          </th>
-          <th mat-header-cell>
-            Dialer ID.
-          </th>
-          <th mat-header-cell>
-            Hours
-          </th>
-          <th mat-header-cell>
-            TOS Hours
-          </th>
-          <th mat-header-cell>
-            Time In
-          </th>
-          <th mat-header-cell>
-            Date
-          </th>
-          <th mat-header-cell>
-            Action
-          </th>
-        </tr>
-        <ng-container *cdkVirtualFor="let n of dataSource">
-          <tr>
-            <td mat-cell width="10%">
-              <span>{{ n.employeeId }}</span>
-            </td>
-            <td mat-cell width="15%">
-              <span>{{ n.employeeName }}</span>
-            </td>
-            <td mat-cell width="10%">
-              <span>{{ n.client }}</span>
-            </td>
-            <td mat-cell width="10%">
-              <span>{{ n.campaign }}</span>
-            </td>
-            <td mat-cell width="10%">
-              <span>{{ n.dialerId }}</span>
-            </td>
-            <td mat-cell width="8%">
-              <span>{{ n.systemHours.value }}</span>
-            </td>
-            <td mat-cell width="8%">
-              <span>{{ n.tosHours.value }}</span>
-            </td>
-            <td mat-cell width="8%">
-              <span>{{ n.timeIn.value }}</span>
-            </td>
-            <td mat-cell width="25%">
-              <span>{{ n.date | date: "EEE MMM d, y - ( MM/dd/yy )" }}</span>
-            </td>
-            <td mat-cell>
-              <span>
-                <button mat-icon-button [matMenuTriggerFor]="menu">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                  <a
-                    [routerLink]="['/', 'employee', 'detail']"
-                    [queryParams]="{ id: n.employee }"
-                    mat-menu-item
-                  >
-                    <mat-icon>account_circle</mat-icon>
-                    <span>Go to agent</span>
-                  </a>
-                </mat-menu>
-              </span>
-            </td>
-          </tr>
-        </ng-container>
-      </cdk-virtual-scroll-viewport>
-    </mat-card-content>
-  </mat-card>
+    </mat-chip-list>
+  </mat-form-field>
 </div>
+<div fxLayout="row" fxLayoutAlign="space-between" class="px-1">
+  <span>
+    <button mat-flat-button color="primary" *ngIf="!data" [disabled]="this.queryForm.invalid" (click)="populateTable()">LOAD</button>
+    <button mat-flat-button color="accent" *ngIf="data" (click)="clearTable()">CLEAR</button>
+  </span>
+  <span fxLayoutGap="10px" *ngIf="data">
+    <button mat-flat-button color="warn" (click)="onDelete.fire('')">DELETE</button>
+    <button mat-flat-button (click)="export(); onSuccess.fire()">EXPORT</button>
+  </span>
+</div>
+<div class="pa-1">
+  <mat-card>
+      <mat-card-subtitle>PREVIEW TABLE</mat-card-subtitle>
+    <ngx-datatable
+      style="width: 100%; height: 550px;"
+      class="material"
+      [columns]="columns"
+      [columnMode]="columnMode.force"
+      [headerHeight]="50"
+      [rowHeight]="50"
+      [limit]="5"
+      [rows]="data"
+      [scrollbarV]="true"
+    ></ngx-datatable>
+  </mat-card>
+
+</div>
+

@@ -23,7 +23,7 @@ export class ExportComponent implements OnInit {
   errorMessage = 'Woops, looks like your search came back empty. Please check the filters';
   successMessage = 'Great! The download is starting.';
   rangesFooter = RangesFooterComponent;
-  private auth: any;
+  public auth: any;
   data: any;
   clients: any[];
   campaigns: any[];
@@ -88,13 +88,6 @@ export class ExportComponent implements OnInit {
     });
 
     this.sheetControl = new FormControl();
-  }
-  buildExtrasForm(extras: any[]) {
-    const group = {};
-    extras.forEach(i => {
-      group[i] = [];
-    });
-    this.extrasForm = this.fb.group(group);
   }
   async getReport() {
     const { value } = this.queryForm;

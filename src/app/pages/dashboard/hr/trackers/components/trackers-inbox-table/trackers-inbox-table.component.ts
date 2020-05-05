@@ -4,6 +4,7 @@ import { TRACKER_STATUS } from '@synergy/environments/environment';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
+import { SessionService } from '@synergy-app/shared/services/session.service';
 
 @Component({
   selector: 'app-trackers-inbox-table',
@@ -18,7 +19,7 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   filter = '';
 
-  constructor() {}
+  constructor(private sessionService: SessionService) {}
 
   ngOnInit() {}
 
@@ -64,6 +65,7 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
     this.onSavingAcceptedTrackerStatus.emit({
       _id,
       state: TRACKER_STATUS.IN_PROGRESS,
+      verificationFingerprint: this.sessionService.getId(),
     });
   }
 }

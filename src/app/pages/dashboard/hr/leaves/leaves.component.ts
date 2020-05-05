@@ -97,7 +97,7 @@ export class LeavesComponent implements OnInit, AfterViewInit {
     );
   }
 
-  openGenerateLeaveDialog(mode: string, leaveRequest: LeaveRequest) {
+  openGenerateLeaveDialog(mode: string, leaveRequest?: LeaveRequest) {
     const dialogRef = this.dialog.open(GenerateLeaveModalComponent, {
       width: '600px',
       data: { mode, leaveRequest, isHRMode: true },
