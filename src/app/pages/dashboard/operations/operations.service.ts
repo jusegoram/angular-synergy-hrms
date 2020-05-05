@@ -42,7 +42,6 @@ export class OperationsService {
     if (!query.clients && contextFilter && contextFilter > 0) {
       query.clients = contextFilter;
     }
-      console.log(query);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/hour', body, {
       headers: headers,

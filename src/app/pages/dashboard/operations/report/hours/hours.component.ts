@@ -10,6 +10,7 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'report-hours',
@@ -28,13 +29,15 @@ export class HoursComponent implements OnInit {
   data: any[];
   columns: any[];
   columnMode = ColumnMode;
-
+  auth;
+  roles = USER_ROLES;
   constructor(private _opsService: OperationsService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.buildForm();
     this.buildTable();
     this.fetchClients();
+    this.auth = this._opsService.getDecodedToken();
   }
   buildForm(): void {
     this.queryForm = this.fb.group({

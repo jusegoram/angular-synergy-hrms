@@ -79,7 +79,7 @@
     <button mat-flat-button color="accent" *ngIf="data" (click)="clearTable()">CLEAR</button>
   </span>
   <span fxLayoutGap="10px" *ngIf="data">
-    <button mat-flat-button color="warn" (click)="onDelete.fire('')">DELETE</button>
+    <button mat-flat-button color="warn" (click)="onDelete.fire('')" *ngIf="this.auth.role === roles.WEB_ADMINISTRATOR.value">DELETE</button>
     <button mat-flat-button (click)="export(); onSuccess.fire()">EXPORT</button>
   </span>
 </div>
