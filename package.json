@@ -22,7 +22,6 @@
     "@angular/cdk": "^9.0.0",
     "@angular/common": "9.1.4",
     "@angular/compiler": "9.1.4",
-    "@angular/compiler-cli": "9.1.4",
     "@angular/core": "9.1.4",
     "@angular/flex-layout": "^9.0.0-beta.29",
     "@angular/forms": "9.1.4",
@@ -63,9 +62,10 @@
     "zone.js": "^0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.0",
-    "@angular-devkit/core": "^9.0.1",
-    "@angular/cli": "^9.1.0",
+    "@angular-devkit/build-angular": "^0.901.4",
+    "@angular-devkit/core": "^9.1.4",
+    "@angular/cli": "^9.1.4",
+    "@angular/compiler-cli": "^9.1.4",
     "@angular/language-service": "9.1.4",
     "@types/jasmine": "^3.5.3",
     "@types/jasminewd2": "^2.0.8",
