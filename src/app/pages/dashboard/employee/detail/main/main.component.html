@@ -70,7 +70,7 @@
         <td colspan="6">
           <mat-form-field
             appearance="outline"
-            [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+            [ngClass]="{ 'readonly-wrapper': !auth.edit && auth.role !== roles.HUMAN_RESOURCES.value}"
             [formGroup]="form"
           >
             <mat-label>STATUS</mat-label>

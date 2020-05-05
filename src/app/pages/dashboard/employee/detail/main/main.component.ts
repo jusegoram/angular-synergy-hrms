@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Employee } from '@synergy-app/shared/models/employee/employee';
 import { EmployeeService } from '@synergy-app/shared/services/employee.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'main-info',
@@ -15,6 +16,7 @@ export class MainComponent implements OnInit {
   @Input('employee') currentEmployee: Employee;
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
+  roles = USER_ROLES;
   employee: Employee = {
     _id: '',
     restriction: null,
