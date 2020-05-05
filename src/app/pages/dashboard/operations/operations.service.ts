@@ -37,11 +37,7 @@ export class OperationsService {
     return this._departments;
   }
   getHours(query): Observable<any> {
-    const contextFilter = this.getDecodedToken().clients;
     const body = query;
-    if (!query.clients && contextFilter && contextFilter > 0) {
-      query.clients = contextFilter;
-    }
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.api + '/operations/hour', body, {
       headers: headers,

@@ -194,7 +194,7 @@ export class MatrixComponent implements OnInit, OnDestroy {
   exportAs(type) {
     const config: ExportAsConfig = {
       type: type,
-      elementId: 'matrix',
+      elementIdOrContent: 'matrix',
     };
     this._exportAsService
       .save(

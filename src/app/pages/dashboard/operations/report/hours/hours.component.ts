@@ -19,7 +19,7 @@ import { USER_ROLES } from '@synergy/environments/enviroment.common';
 })
 export class HoursComponent implements OnInit {
   @ViewChild('employeeInput') employeeInput: ElementRef<HTMLInputElement>;
-  @ViewChild('onError', {static: false}) onError: OnErrorAlertComponent;
+  @ViewChild('onError', { static: false }) onError: OnErrorAlertComponent;
   clients = [];
   campaigns = [];
   employees = [];
@@ -101,10 +101,15 @@ export class HoursComponent implements OnInit {
   }
   async populateTable() {
     try {
-      const query  = this.queryForm.value;
-      query.client = query.client && query.client.map(client => client.name);
+      const query = this.queryForm.value;
+      query.client = query.client && query.client.map((client) => client.name);
       query.employeeId = query.employeeId && query.employeeId.length === 0 ? null : query.employeeId;
-      query.client = query.client && query.client.length === 0 ? null : query.client;
+      query.client =
+        query.client && query.client.length > 0 && query.client[0]
+          ? query.client
+          : this.auth.clients.length !== 0
+          ? this.auth.clients
+          : null;
       query.campaign = query.campaign && query.campaign.length === 0 ? null : query.campaign;
       this.data = await this._opsService.getHours(query).toPromise();
     } catch (e) {
@@ -116,26 +121,25 @@ export class HoursComponent implements OnInit {
   }
 
   export() {
-    const mapped = this.data.map( i => {
-      const {_id, ...rest} = i;
+    const mapped = this.data.map((i) => {
+      const { _id, ...rest } = i;
       return rest;
-    } );
+    });
     try {
       const main: XLSX.WorkSheet = XLSX.utils.json_to_sheet(mapped);
       const wb: XLSX.WorkBook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, main, 'sheet 1');
       XLSX.writeFile(wb, 'hours_' + new Date().toISOString() + '.xlsx');
     } catch (e) {
-       this.onError.fire();
+      this.onError.fire();
     }
   }
   async delete() {
-    const mapped = this.data.map(i => i._id);
+    const mapped = this.data.map((i) => i._id);
     try {
       await this._opsService.deleteHours(mapped).toPromise();
     } catch (e) {
       await this.onError.fire();
     }
   }
-
 }

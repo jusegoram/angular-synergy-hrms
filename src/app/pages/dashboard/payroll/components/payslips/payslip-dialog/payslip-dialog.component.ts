@@ -56,7 +56,7 @@ export class PayslipDialogComponent implements OnInit {
   saveToPdf() {
     const config: ExportAsConfig = {
       type: 'pdf',
-      elementId: 'payslip',
+      elementIdOrContent: 'payslip',
       options: {
         format: 'letter',
         orientation: 'portrait',
