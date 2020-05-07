@@ -1,6 +1,6 @@
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, OnInit } from '@angular/core';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import * as XLSX from 'xlsx';
 
 @Component({

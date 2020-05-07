@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, ValidationErrors, ValidatorFn, Validators, FormControl } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
 import { CommonValidator } from '@synergy-app/shared/validators/common.validator';
 @Component({

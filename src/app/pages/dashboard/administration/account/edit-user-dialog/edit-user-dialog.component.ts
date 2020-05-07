@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AdminService } from '@synergy-app/shared/services/admin.service';
+import { AdminService } from '@synergy-app/core/services/admin.service';
 import { Component, ElementRef, Inject, OnInit, ViewChild, } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';

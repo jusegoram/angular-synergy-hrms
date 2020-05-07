@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { API, environment } from '@synergy/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
@@ -19,7 +19,7 @@ import {
   EmployeePosition,
 } from '@synergy-app/shared/models/employee/employee';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
-import { LeaveRequest } from '../models/leave-request';
+import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
 
 @Injectable({
   providedIn: 'root',

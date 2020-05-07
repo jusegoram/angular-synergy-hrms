@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

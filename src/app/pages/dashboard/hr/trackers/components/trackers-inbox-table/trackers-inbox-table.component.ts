@@ -4,7 +4,7 @@ import { TRACKER_STATUS } from '@synergy/environments/environment';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 
 @Component({
   selector: 'app-trackers-inbox-table',

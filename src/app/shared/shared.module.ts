@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { MenuItems } from './menu-items/menu-items';
 import { AccordionAnchorDirective, AccordionDirective, AccordionLinkDirective } from './accordion';
 import { ToggleFullscreenDirective } from './fullscreen/toggle-fullscreen.directive';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SignatureFieldComponent } from './signature-field/signature-field.component';
 import { SignaturePadModule } from 'angular2-signaturepad';
 import { RangesFooterComponent } from './ranges-footer/ranges-footer.component';
@@ -17,8 +16,6 @@ import { DeniedAccessComponent } from '@synergy-app/shared/denied-access/denied-
 import { ExportComponent } from '@synergy-app/shared/export/export.component';
 import { ExportService } from '@synergy-app/shared/export/export.service';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
-import { TokenInterceptor } from '@synergy-app/shared/interceptors/token.interceptor';
-import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/authentication.interceptor';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -41,7 +38,6 @@ export function provideSwal() {
     ExportComponent,
   ],
   imports: [
-    HttpClientModule,
     SignaturePadModule,
     CommonModule,
     MaterialSharedModule,
@@ -61,17 +57,6 @@ export function provideSwal() {
     DeniedAccessComponent,
     ExportComponent,
   ],
-  providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe, ExportService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    },
-  ],
+  providers: [MenuItems, TrackerStatusPipe, TrackerTypePipe, ExportService],
 })
 export class SharedModule {}

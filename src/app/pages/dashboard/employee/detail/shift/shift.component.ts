@@ -1,4 +1,4 @@
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';

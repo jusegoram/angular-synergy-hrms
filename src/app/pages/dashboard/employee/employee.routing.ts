@@ -8,7 +8,7 @@ import { ReportComponent } from './report/report.component';
 import { NewComponent } from './new/new.component';
 import { SuperiorsComponent } from './superiors/superiors.component';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
-import { PrivilegeGuard } from '@synergy-app/pages/session/guards/privilege.guard';
+import { PrivilegeGuard } from '@synergy-app/core/guards/privilege.guard';
 
 export const routes: Routes = [
   {

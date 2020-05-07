@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { LeavesComponent } from './leaves.component';
 import { LeaveStatusPipe } from '@synergy-app/shared/pipes/leave-status.pipe';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 
 class SessionServiceMockup {
   decodeToken() {

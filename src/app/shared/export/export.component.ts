@@ -4,7 +4,7 @@ import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert
 import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { noop } from 'rxjs';
 import moment from 'moment';
 import { ExportService } from '@synergy-app/shared/export/export.service';

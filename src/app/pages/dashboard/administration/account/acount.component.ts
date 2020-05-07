@@ -1,11 +1,11 @@
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '@synergy-app/shared/services/admin.service';
+import { AdminService } from '@synergy-app/core/services/admin.service';
 import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
 
 @Component({

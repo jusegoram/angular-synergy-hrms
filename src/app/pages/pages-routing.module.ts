@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthLayoutComponent } from '@synergy-app/shared/layouts/auth/auth-layout.component';
-import { SessionGuard } from './session/guards/session.guard';
+import { AuthLayoutComponent } from '@synergy-app/core/layouts/auth/auth-layout.component';
+import { SessionGuard } from '@synergy-app/core/guards/session.guard';
 
 
 const routes: Routes = [

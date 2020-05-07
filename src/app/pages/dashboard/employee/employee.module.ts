@@ -40,9 +40,6 @@ import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
 import { ReportService } from '@synergy-app/pages/dashboard/employee/report/report.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '@synergy-app/shared/interceptors/token.interceptor';
-import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/authentication.interceptor';
 
 @NgModule({
   imports: [
@@ -105,16 +102,6 @@ import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/auth
     MinutesHoursPipe,
     TrackerStatusPipe,
     TrackerTypePipe,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    },
   ],
 })
 export class EmployeeModule {}

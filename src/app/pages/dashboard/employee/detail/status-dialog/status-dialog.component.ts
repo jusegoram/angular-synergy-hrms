@@ -1,5 +1,5 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { SignatureFieldComponent } from '@synergy-app/shared/signature-field/signature-field.component';

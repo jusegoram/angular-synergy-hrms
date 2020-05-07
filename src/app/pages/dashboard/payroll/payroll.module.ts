@@ -35,9 +35,6 @@ import { NewConceptComponent } from './components/concepts/new-concept/new-conce
 import { ConceptVerificationComponent } from './components/concepts/concept-verification/concept-verification.component';
 import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls/finalized-payrolls.component';
 import { EditPayrollDetailComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '@synergy-app/shared/interceptors/token.interceptor';
-import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/authentication.interceptor';
 import { ReportComponent } from './components/report/report.component';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
@@ -90,17 +87,7 @@ export function provideSwal() {
     MinuteSecondsPipe,
     CdkColumnDef,
     CurrencyPipe,
-    DatePipe,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    },
+    DatePipe
   ],
   entryComponents: [PayslipDialogComponent, ExportBottomSheetComponent, EditPayrollDetailComponent],
 })

@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee, EmployeeAttrition } from '@synergy-app/shared/models/employee/employee';
 import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals/on-delete-alert/on-delete-alert.component';
 import { noop } from 'rxjs';
 

@@ -6,7 +6,7 @@ import { MenuItems } from '@synergy-app/shared/menu-items/menu-items';
 import { Subscription } from 'rxjs';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TEMPERATURE_VALUES, TIME_VALUES } from '@synergy/environments/enviroment.common';

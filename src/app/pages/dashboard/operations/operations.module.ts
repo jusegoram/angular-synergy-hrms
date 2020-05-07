@@ -25,8 +25,8 @@ import { UploadComponent } from '@synergy-app/pages/dashboard/operations/upload/
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { UploadService } from '@synergy-app/pages/dashboard/operations/upload/upload.service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '@synergy-app/shared/interceptors/token.interceptor';
-import { AuthenticationInterceptor } from '@synergy-app/shared/interceptors/authentication.interceptor';
+import { TokenInterceptor } from '@synergy-app/core/interceptors/token.interceptor';
+import { AuthenticationInterceptor } from '@synergy-app/core/interceptors/authentication.interceptor';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 // Import angular-fusioncharts
 // import { FusionChartsModule } from 'angular-fusioncharts';
@@ -71,17 +71,7 @@ export function provideSwal() {
     OperationsService,
     TitleCasePipe,
     DatePipe,
-    CdkColumnDef,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true,
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthenticationInterceptor,
-      multi: true,
-    },
+    CdkColumnDef
   ],
 })
 export class OperationsModule {}

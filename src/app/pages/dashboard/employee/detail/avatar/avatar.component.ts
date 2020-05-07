@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from '@synergy/environments/environment';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { FileUploader } from 'ng2-file-upload';
 
 @Component({

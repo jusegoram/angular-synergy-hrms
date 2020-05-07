@@ -3,7 +3,7 @@ import { PROJECTIONS } from '@synergy-app/shared/models/reports.constants';
 import { noop, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@synergy/environments/environment';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import moment from 'moment';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 

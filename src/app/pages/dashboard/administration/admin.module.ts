@@ -52,7 +52,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     RecentActivitiesComponent,
   ],
   providers: [
-    // AdminService,
     CurrencyPipe,
     DatePipe
   ],

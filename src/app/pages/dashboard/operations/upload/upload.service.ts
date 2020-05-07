@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 
 @Injectable({
   providedIn: 'root'

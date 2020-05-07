@@ -1,8 +1,8 @@
-import { AdminService } from '@synergy-app/shared/services/admin.service';
+import { AdminService } from '@synergy-app/core/services/admin.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { Employee } from '@synergy-app/shared/models/employee/employee';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';

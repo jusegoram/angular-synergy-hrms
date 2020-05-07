@@ -10,7 +10,7 @@ import {
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import { SessionService } from '@synergy-app/shared/services/session.service';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { HTTP_CODES } from '@synergy/environments/enviroment.common';
 
 @Injectable({

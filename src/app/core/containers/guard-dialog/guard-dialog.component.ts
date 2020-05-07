@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SessionService } from '../../../../shared/services/session.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'guard-dialog',

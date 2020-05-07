@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services/employee.service';
 import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import Swal from 'sweetalert2';
