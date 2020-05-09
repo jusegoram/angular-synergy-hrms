@@ -3,13 +3,10 @@ import { PayedPayrollsComponent } from './components/main/payed-payrolls/payed-p
 import { NonFinalizedPayrollsComponent } from './components/main/non-finalized-payrolls/non-finalized-payrolls.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { EditPayrollDetailVacationsComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail-vacations/edit-payroll-detail-vacations.component';
-
-import { PipeModule } from '@synergy-app/shared/pipes/pipe/pipe.module';
 import { MinuteSecondsPipe } from '@synergy-app/shared/pipes/minute-seconds.pipe';
 import { DetailResolver } from './components/detail/detail.resolver';
 import { NgModule } from '@angular/core';
 import { CommonModule, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
-
 import { PayrollRoutingModule } from './payroll-routing.module';
 import { UploadComponent } from './components/upload/upload.component';
 import { PayslipsComponent } from './components/payslips/payslips.component';
@@ -57,7 +54,6 @@ export function provideSwal() {
     FusionChartsModule,
     ExportAsModule,
     SweetAlert2Module.forRoot({ provideSwal }),
-    PipeModule.forRoot(),
     SharedModule,
     ModalsModule
   ],

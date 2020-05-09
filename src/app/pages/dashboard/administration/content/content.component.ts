@@ -1,6 +1,7 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Menu, MenuItems } from '@synergy-app/shared/menu-items/menu-items';
+import { MenuService } from '@synergy-app/shared/services/menu.service';
 import { Component, OnInit } from '@angular/core';
+import { MenuItem } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'app-content',
@@ -8,16 +9,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./content.component.scss'],
 })
 export class ContentComponent implements OnInit {
-  public menus: Menu[];
-  public selectedMenu: Menu;
+  public menus: MenuItem[];
+  public selectedMenu: MenuItem;
 
-  constructor(private menuItem: MenuItems, private snackbar: MatSnackBar) {
+  constructor(private menuItem: MenuService, private snackbar: MatSnackBar) {
     this.createSelectedItems();
   }
   ngOnInit() {}
 
   createSelectedItems() {
-    const newMenu: Menu = {
+    const newMenu: MenuItem = {
       _id: 'new',
       name: 'Add new',
       state: 'new',
@@ -27,7 +28,7 @@ export class ContentComponent implements OnInit {
       page: null,
       position: null,
     };
-    this.menuItem.getActiveMenus().subscribe((data: Menu[]) => {
+    this.menuItem.getActiveMenus().subscribe((data: MenuItem[]) => {
       this.menus = data;
       this.selectedMenu = this.menus[0];
       this.menus.push(newMenu);

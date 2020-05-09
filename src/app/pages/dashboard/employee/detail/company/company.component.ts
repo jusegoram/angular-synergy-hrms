@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { Employee, EmployeeCompany, Manager } from '@synergy-app/shared/models/employee/employee';
+import { EmployeeService } from '@synergy-app/core/services';
+import { Employee, EmployeeCompany, Manager } from '@synergy-app/shared/models';
 import { noop } from 'rxjs';
 
 @Component({

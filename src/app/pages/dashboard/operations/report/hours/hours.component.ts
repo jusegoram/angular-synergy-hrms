@@ -4,12 +4,12 @@ import { OperationsService } from '../../operations.service';
 import { MatTableDataSource } from '@angular/material/table';
 import moment from 'moment';
 import * as XLSX from 'xlsx';
-import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
+import { RangesFooterComponent } from '@synergy-app/shared/components';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { ColumnMode } from '@swimlane/ngx-datatable';
-import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
+import { OnErrorAlertComponent } from '@synergy-app/shared/modals';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({

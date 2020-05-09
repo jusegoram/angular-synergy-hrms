@@ -19,14 +19,10 @@ import { MatrixComponent } from './report/matrix/matrix.component';
 import { TimesheetComponent } from './report/timesheet/timesheet.component';
 import { AttendanceComponent } from './report/attendance/attendance.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
-import { PipeModule } from '@synergy-app/shared/pipes/pipe/pipe.module';
 import { ExportAsModule } from 'ngx-export-as';
 import { UploadComponent } from '@synergy-app/pages/dashboard/operations/upload/upload.component';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { UploadService } from '@synergy-app/pages/dashboard/operations/upload/upload.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { TokenInterceptor } from '@synergy-app/core/interceptors/token.interceptor';
-import { AuthenticationInterceptor } from '@synergy-app/core/interceptors/authentication.interceptor';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 // Import angular-fusioncharts
 // import { FusionChartsModule } from 'angular-fusioncharts';
@@ -48,7 +44,6 @@ export function provideSwal() {
     // FusionChartsModule,
     ScrollingModule,
     SweetAlert2Module.forRoot({ provideSwal }),
-    PipeModule.forRoot(),
     ExportAsModule,
     ModalsModule,
     SharedModule

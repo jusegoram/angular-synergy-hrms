@@ -9,9 +9,8 @@ import * as moment from 'moment';
 import { ExportBottomSheetComponent } from './export-bottom-sheet/export-bottom-sheet.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
-import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
-import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
-import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
+import { RangesFooterComponent } from '@synergy-app/shared/components';
+import { OnSuccessAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
 
 @Component({
   selector: 'app-manage',

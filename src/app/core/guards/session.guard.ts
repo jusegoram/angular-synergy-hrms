@@ -1,4 +1,4 @@
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, CanActivate, CanActivateChild, CanLoad, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';

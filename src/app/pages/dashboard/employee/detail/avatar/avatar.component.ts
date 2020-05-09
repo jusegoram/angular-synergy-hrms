@@ -1,8 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { environment } from '@synergy/environments/environment';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { environment } from '@synergy/environments';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { DomSanitizer } from '@angular/platform-browser';
-import { SessionService } from '@synergy-app/core/services/session.service';
 import { FileUploader } from 'ng2-file-upload';
 
 @Component({
@@ -25,15 +24,16 @@ export class AvatarComponent implements OnInit {
     isHTML5: true,
   });
 
-  ngOnInit(): void {
-    this.imageData = '/assets/employee/avatar/' + this.id + '.jpg';
-    this.getPermission();
-  }
   constructor(
     private employeeService: EmployeeService,
     private sanitizer: DomSanitizer,
     private sessionService: SessionService
   ) {}
+
+  ngOnInit(): void {
+    this.imageData = '/assets/employee/avatar/' + this.id + '.jpg';
+    this.getPermission();
+  }
 
   public onclick() {
     this.uploader = new FileUploader({

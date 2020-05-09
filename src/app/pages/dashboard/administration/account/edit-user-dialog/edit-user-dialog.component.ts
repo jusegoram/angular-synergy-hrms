@@ -1,12 +1,12 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { AdminService } from '@synergy-app/core/services/admin.service';
+import { AdminService } from '@synergy-app/core/services';
 import { Component, ElementRef, Inject, OnInit, ViewChild, } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent, } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup, Validators, } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { Employee } from '@synergy-app/shared/models';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({

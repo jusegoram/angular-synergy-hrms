@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services';
 import { CommonValidator } from '@synergy-app/shared/validators/common.validator';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
+import { HrTracker } from '@synergy-app/shared/models';
 @Component({
   selector: 'app-certify-dialog',
   templateUrl: './certify-dialog.component.html',

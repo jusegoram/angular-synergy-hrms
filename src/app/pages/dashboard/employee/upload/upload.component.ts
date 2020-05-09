@@ -1,4 +1,4 @@
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services';
 import { Component } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '@synergy/environments/environment';

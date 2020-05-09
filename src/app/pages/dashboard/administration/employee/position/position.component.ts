@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Department, Position } from '@synergy-app/shared/models/positions-models';
-import { AdminService } from '@synergy-app/core/services/admin.service';
+import { AdminService } from '@synergy-app/core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';

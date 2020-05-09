@@ -1,6 +1,6 @@
 import { PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { AdminService } from '@synergy-app/core/services/admin.service';
+import { AdminService } from '@synergy-app/core/services';
 import { Component, OnInit } from '@angular/core';
 import { DATA_TABLE } from '@synergy/environments/enviroment.common';
 

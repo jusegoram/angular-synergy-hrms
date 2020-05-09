@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
+import { HrTracker } from '@synergy-app/shared/models';
 import Swal from 'sweetalert2';
-import { TRACKER_STATUS } from '@synergy/environments/environment';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { TRACKER_STATUS } from '@synergy/environments';
 
 @Component({
   selector: 'app-trackers',

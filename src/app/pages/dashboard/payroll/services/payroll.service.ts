@@ -1,4 +1,4 @@
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';

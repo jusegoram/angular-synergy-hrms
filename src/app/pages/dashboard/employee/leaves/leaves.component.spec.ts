@@ -3,8 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { LeavesComponent } from './leaves.component';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
 
 class SessionServiceMockup {
   decodeToken() {

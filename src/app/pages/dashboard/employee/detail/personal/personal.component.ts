@@ -1,10 +1,10 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { Employee, EmployeePersonal } from '@synergy-app/shared/models/employee/employee';
+import { Employee, EmployeePersonal } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'personal-info',

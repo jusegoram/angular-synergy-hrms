@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { EmployeeService } from '@synergy-app/core/services';
+import { Employee } from '@synergy-app/shared/models';
 import { Router } from '@angular/router';
-import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
-import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
-
+import { OnSuccessAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
 @Component({
   selector: 'new',
   templateUrl: './new.component.html',

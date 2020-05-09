@@ -1,14 +1,12 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
 import { LEAVE_STATUS, TIME_VALUES, LEAVE_STATUS_TYPES, USER_ROLES } from '@synergy/environments/enviroment.common';
 import { MatDialog } from '@angular/material/dialog';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { GenerateLeaveModalComponent } from '@synergy-app/shared/modals/generate-leave-modal/generate-leave-modal.component';
+import { GenerateLeaveModalComponent } from '@synergy-app/shared/modals';
 import Swal from 'sweetalert2';
-import { SessionService } from '@synergy-app/core/services/session.service';
-import { User } from '@synergy-app/shared/models/user.model';
+import { User, LeaveRequest } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'app-leaves',

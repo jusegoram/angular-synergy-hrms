@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminLayoutComponent } from '@synergy-app/core/layouts/admin/admin-layout.component';
-import { SessionGuard } from '@synergy-app/core/guards/session.guard';
-import { PrivilegeGuard } from '@synergy-app/core/guards/privilege.guard';
+import { AdminLayoutComponent } from '@synergy-app/core/layouts/';
+import { PrivilegeGuard, SessionGuard } from '@synergy-app/core/guards/';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 const routes: Routes = [

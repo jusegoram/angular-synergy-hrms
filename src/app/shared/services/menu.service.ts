@@ -1,30 +1,9 @@
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 import { Injectable } from '@angular/core';
 import { environment } from '@synergy/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { MenuItem } from '@synergy-app/shared/models';
 
-export class BadgeItem {
-  constructor(public type: string, public value: string) {
-  }
-}
-
-export class ChildrenItems {
-  constructor(public state: string, public name: string, public type?: string) {}
-}
-
-export class Menu {
-  constructor(
-    public state: any,
-    public name: string,
-    public type: string,
-    public icon: string,
-    public badge?: BadgeItem[],
-    public children?: ChildrenItems[],
-    public page?: number,
-    public _id?: string,
-    public position?: number
-  ) {}
-}
 
 // NOTE: THIS ITEM IS ONLY FOR REFERENCE, MENU ITEMS ARE STORED IN THE DATABASE
 // const MENUITEMS = [
@@ -76,15 +55,15 @@ export class Menu {
 
 
 @Injectable()
-export class MenuItems {
+export class MenuService {
   api = environment.apiUrl;
   constructor(private sessionService: SessionService, private http: HttpClient) {}
   getActiveMenus() {
-    return this.http.get<Array<Menu>>(this.api + '/admin/menu');
+    return this.http.get<Array<MenuItem>>(this.api + '/admin/menu');
   }
 
   // TODO: fix Add method to add new menu items
-  add(param: Menu) {
+  add(param: MenuItem) {
     let res = {};
     this.addMenu(param).subscribe((response) => {
       res = response;
@@ -92,22 +71,22 @@ export class MenuItems {
     return res;
   }
 
-  delete(param: Menu) {
+  delete(param: MenuItem) {
     return this.deleteMenu(param);
   }
 
   // TODO: Add save method to update menu items
-  save(param: Menu) {
+  save(param: MenuItem) {
     return this.saveMenu(param);
   }
 
-  addMenu(param: Menu) {
+  addMenu(param: MenuItem) {
     const body = param;
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post(this.api + '/admin/menu', body, {headers: headers});
   }
 
-  saveMenu(param: Menu) {
+  saveMenu(param: MenuItem) {
     const body = JSON.stringify(param);
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const params = new HttpParams().set('name', param.name);
@@ -117,7 +96,7 @@ export class MenuItems {
     });
   }
 
-  deleteMenu(param: Menu) {
+  deleteMenu(param: MenuItem) {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     const params = new HttpParams().set('name', param.name);
     return this.http.delete(this.api + '/admin/menu', {

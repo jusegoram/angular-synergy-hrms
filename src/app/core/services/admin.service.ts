@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { environment } from '@synergy/environments/environment';
+import { environment } from '@synergy/environments';
 import { Client, Department, Position } from '@synergy-app/shared/models/positions-models';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
-import { Menu } from '@synergy-app/shared/menu-items/menu-items';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
+import { Employee, MenuItem } from '@synergy-app/shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -269,7 +268,7 @@ export class AdminService {
   TimeToMinutes(shift) {}
 
   getAllMenus() {
-    return this.httpClient.get<Array<Menu>>(this.api + '/admin/menu');
+    return this.httpClient.get<Array<MenuItem>>(this.api + '/admin/menu');
   }
   getLogs(query) {
     const { _id, page, limit } = query;

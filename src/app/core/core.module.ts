@@ -5,8 +5,7 @@ import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { AuthenticationInterceptor } from './interceptors/authentication.interceptor';
-import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
-import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
+import { AdminLayoutComponent, AuthLayoutComponent } from './layouts';
 import {
   PERFECT_SCROLLBAR_CONFIG,
   PerfectScrollbarConfigInterface,

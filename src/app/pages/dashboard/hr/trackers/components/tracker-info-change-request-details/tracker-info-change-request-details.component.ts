@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Tracker } from '@synergy-app/shared/models/tracker';
+import { Tracker } from '@synergy-app/shared/models/tracker.model';
 
 @Component({
   selector: 'app-tracker-info-change-request-details',

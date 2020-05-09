@@ -11,7 +11,7 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 
 @Injectable({
   providedIn: 'root'

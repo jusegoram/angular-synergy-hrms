@@ -1,14 +1,13 @@
-import { AdminService } from '@synergy-app/core/services/admin.service';
+import { AdminService, SessionService } from '@synergy-app/core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { SessionService } from '@synergy-app/core/services/session.service';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { Employee } from '@synergy-app/shared/models/employee/employee.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { User } from '@synergy-app/shared/models/user.model';
+import { User } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'adm-create-user',
@@ -88,7 +87,7 @@ export class CreateUserComponent implements OnInit {
     return this.selectedEmployee;
   }
   onSubmit() {
-    const log: object = {date: new Date(), log: 'User Creation'};
+    const log: object = { date: new Date(), log: 'User Creation' };
     const user = new User(
       this.myForm.value.username,
       this.myForm.value.password,

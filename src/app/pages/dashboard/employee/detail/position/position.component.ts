@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { EmployeePosition } from '@synergy-app/shared/models/employee/employee';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeePosition } from '@synergy-app/shared/models';
+import { EmployeeService } from '@synergy-app/core/services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OnDeleteAlertComponent } from '@synergy-app/shared/modals/on-delete-alert/on-delete-alert.component';
-import { USER_ROLES } from '@synergy/environments/enviroment.common';
+import { OnDeleteAlertComponent } from '@synergy-app/shared/modals';
+import { USER_ROLES } from '@synergy/environments';
 
 @Component({
   selector: 'position-info',

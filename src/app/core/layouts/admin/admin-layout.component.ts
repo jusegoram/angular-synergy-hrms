@@ -1,12 +1,12 @@
 import { filter } from 'rxjs/operators';
-import { Menu } from '@synergy-app/shared/menu-items/menu-items';
+import { MenuItem } from '@synergy-app/shared/models';
 import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { MenuItems } from '@synergy-app/shared/menu-items/menu-items';
+import { MenuService } from '@synergy-app/shared/services/menu.service';
 import { Subscription } from 'rxjs';
 
 import { PerfectScrollbarConfigInterface, PerfectScrollbarDirective } from 'ngx-perfect-scrollbar';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material/icon';
 import { TEMPERATURE_VALUES, TIME_VALUES } from '@synergy/environments/enviroment.common';
@@ -42,11 +42,11 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   directiveScroll: PerfectScrollbarDirective;
 
   public config: PerfectScrollbarConfigInterface = {};
-  menus: Menu[];
+  menus: MenuItem[];
 
   constructor(
     private router: Router,
-    public menuItems: MenuItems,
+    public menuService: MenuService,
     zone: NgZone,
     private sessionService: SessionService,
     private domSanitizer: DomSanitizer,
@@ -60,7 +60,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.menuItems.getActiveMenus().subscribe((menu) => {
+    this.menuService.getActiveMenus().subscribe((menu) => {
       this.menus = menu.map((item) => {
         if (item.type === 'link') {
           item.state = decodeURI(item.state);

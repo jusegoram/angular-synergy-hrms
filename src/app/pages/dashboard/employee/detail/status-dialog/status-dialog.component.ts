@@ -1,9 +1,9 @@
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services';
 import { AfterViewInit, Component, Inject, QueryList, ViewChildren } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { SignatureFieldComponent } from '@synergy-app/shared/signature-field/signature-field.component';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
+import { SignatureFieldComponent } from '@synergy-app/shared/components';
+import { HrTracker } from '@synergy-app/shared/models';
 import { CommonValidator } from '@synergy-app/shared/validators/common.validator';
 import moment from 'moment';
 

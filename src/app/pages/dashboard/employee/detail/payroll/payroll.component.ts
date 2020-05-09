@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeePayroll } from '@synergy-app/shared/models/employee/employee';
+import { EmployeePayroll } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'payroll-info',

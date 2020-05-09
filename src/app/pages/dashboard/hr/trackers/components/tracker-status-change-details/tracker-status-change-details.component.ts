@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { Tracker } from '@synergy-app/shared/models/tracker';
-import { Chance } from '@synergy-app/shared/models/chance';
+import { Component, OnInit, Input } from '@angular/core';
+import { Chance, Tracker } from '@synergy-app/shared/models';
 import { MatDialog } from '@angular/material/dialog';
 import { SignatureRenderModalComponent } from '../signature-render-modal/signature-render-modal.component';
 

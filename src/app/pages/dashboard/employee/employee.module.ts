@@ -15,7 +15,7 @@ import { PersonalComponent } from './detail/personal/personal.component';
 import { FamilyComponent } from './detail/family/family.component';
 import { PayrollComponent } from './detail/payroll/payroll.component';
 import { PositionComponent } from './detail/position/position.component';
-import { MaterialSharedModule } from '../../../shared/material.shared.module';
+import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { FileUploadModule } from 'ng2-file-upload';
 import { AvatarComponent } from './detail/avatar/avatar.component';
@@ -29,13 +29,12 @@ import { DetailResolver } from './detail/detail.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
 import { AvailableInformationComponent } from './report/available-information/available-information.component';
-import { PipeModule } from '@synergy-app/shared/pipes/pipe/pipe.module';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { CompanyComponent } from './detail/company/company.component';
 import { MainComponent } from './detail/main/main.component';
 import { SuperiorsComponent } from './superiors/superiors.component';
 import { SuperiorsService } from './superiors/superiors.service';
-import { RangesFooterComponent } from '@synergy-app/shared/ranges-footer/ranges-footer.component';
+import { RangesFooterComponent } from '@synergy-app/shared/components/ranges-footer/ranges-footer.component';
 import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
@@ -51,7 +50,6 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,
-    PipeModule.forRoot(),
   ],
   declarations: [
     UploadComponent,

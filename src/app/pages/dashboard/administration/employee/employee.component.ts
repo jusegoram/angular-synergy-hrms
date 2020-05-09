@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AdminService } from '@synergy-app/core/services/admin.service';
+import { AdminService } from '@synergy-app/core/services';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { Employee } from '@synergy-app/shared/models';
 import { FormControl } from '@angular/forms';
 
 @Component({

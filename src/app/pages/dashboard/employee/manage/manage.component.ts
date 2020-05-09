@@ -1,9 +1,9 @@
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { Employee } from '@synergy-app/shared/models';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService } from '@synergy-app/core/services';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({

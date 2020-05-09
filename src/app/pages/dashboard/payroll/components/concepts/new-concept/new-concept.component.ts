@@ -4,12 +4,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PayrollService } from '../../../services/payroll.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SessionService } from '@synergy-app/core/services/session.service';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { SessionService } from '@synergy-app/core/services';
+import { Employee, PayrollConcept } from '@synergy-app/shared/models';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { PayrollConcept } from '@synergy-app/shared/models/concepts.model';
-import { TIME_VALUES } from '@synergy/environments/enviroment.common';
+import { TIME_VALUES } from '@synergy/environments';
 
 @Component({
   selector: 'app-new-concept',

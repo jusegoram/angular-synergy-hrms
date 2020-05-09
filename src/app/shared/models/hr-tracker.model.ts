@@ -1,4 +1,4 @@
-import { Tracker } from './tracker';
+import { Tracker } from './tracker.model';
 
 export interface HrTracker {
   _id?: string;

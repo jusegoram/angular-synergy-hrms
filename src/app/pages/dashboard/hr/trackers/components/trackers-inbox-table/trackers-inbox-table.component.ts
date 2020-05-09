@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
-import { TRACKER_STATUS } from '@synergy/environments/environment';
+import { HrTracker } from '@synergy-app/shared/models';
+import { TRACKER_STATUS, TIME_VALUES } from '@synergy/environments';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 import { SessionService } from '@synergy-app/core/services/session.service';
 
 @Component({

@@ -1,20 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
+import { Employee } from '@synergy-app/shared/models/employee/employee.model';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker';
-import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
-import { OnDeleteAlertComponent } from '@synergy-app/shared/modals/on-delete-alert/on-delete-alert.component';
-import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
-import { SessionService } from '@synergy-app/core/services/session.service';
+import { HrTracker } from '@synergy-app/shared/models/hr-tracker.model';
+import { OnSuccessAlertComponent, OnDeleteAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
 import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
 import { StatusDialogComponent } from './status-dialog/status-dialog.component';
 import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
-import { TRACKER_STATUS } from '@synergy/environments/environment';
+import { TRACKER_STATUS, USER_ROLES } from '@synergy/environments';
 import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
-import { USER_ROLES } from '@synergy/environments/enviroment.common';
 
 @Component({
   selector: 'app-detail',

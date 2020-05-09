@@ -1,15 +1,13 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { EmployeeService } from '@synergy-app/core/services/employee.service';
-import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
+import { LeaveRequest } from '@synergy-app/shared/models';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import Swal from 'sweetalert2';
-import { LEAVE_STATUS } from '@synergy/environments/enviroment.common';
+import { LEAVE_STATUS } from '@synergy/environments';
 import moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { PdfViewerComponent } from '@synergy-app/shared/modals/pdf-viewer/pdf-viewer.component';
-import { Department } from '@synergy-app/shared/models/positions-models';
-import { CreateDepartmentDialogComponent } from '@synergy-app/pages/dashboard/administration/employee/position/create-department-dialog/create-department-dialog.component';
+import { PdfViewerComponent } from '@synergy-app/shared/modals';
 
 @Component({
   selector: 'app-leaves',

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SessionService } from '../../services/session.service';
+import { SessionService } from '@synergy-app/core/services';
 
 @Component({
   selector: 'guard-dialog',
   templateUrl: './guard-dialog.component.html',
-  styleUrls: ['./guard-dialog.component.css'],
+  styleUrls: ['./guard-dialog.component.scss'],
 })
 export class GuardDialogComponent implements OnInit {
   form: FormGroup;

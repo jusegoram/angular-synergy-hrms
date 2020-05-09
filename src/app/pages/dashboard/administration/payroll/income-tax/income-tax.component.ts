@@ -1,7 +1,7 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AdminService } from '@synergy-app/core/services/admin.service';
-import { Page } from '@synergy-app/shared/models/page';
+import { Page } from '@synergy-app/shared/models';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { CurrencyPipe } from '@angular/common';
 import { DATA_TABLE } from '@synergy/environments/enviroment.common';
