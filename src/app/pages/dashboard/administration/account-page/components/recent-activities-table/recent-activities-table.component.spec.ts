@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RecentActivitiesTableComponent } from './recent-activities-table.component';
 
-describe('RecentActivitiesTableComponent', () => {
+xdescribe('RecentActivitiesTableComponent', () => {
   let component: RecentActivitiesTableComponent;
   let fixture: ComponentFixture<RecentActivitiesTableComponent>;
 
