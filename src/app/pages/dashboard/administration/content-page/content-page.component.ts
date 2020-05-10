@@ -1,21 +1,23 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MenuService } from '@synergy-app/shared/services/menu.service';
+import { MenuService } from '@synergy-app/shared/services';
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from '@synergy-app/shared/models';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-content',
-  templateUrl: './content.component.html',
-  styleUrls: ['./content.component.scss'],
+  templateUrl: './content-page.component.html',
+  styleUrls: ['./content-page.component.scss'],
 })
-export class ContentComponent implements OnInit {
+export class ContentPageComponent implements OnInit {
   public menus: MenuItem[];
   public selectedMenu: MenuItem;
+  public selectedMenu$: Observable<MenuItem>;
 
-  constructor(private menuItem: MenuService, private snackbar: MatSnackBar) {
+  constructor(private menuItem: MenuService, private snackbar: MatSnackBar) {}
+  ngOnInit() {
     this.createSelectedItems();
   }
-  ngOnInit() {}
 
   createSelectedItems() {
     const newMenu: MenuItem = {
@@ -28,6 +30,7 @@ export class ContentComponent implements OnInit {
       page: null,
       position: null,
     };
+    this.selectedMenu = newMenu;
     this.menuItem.getActiveMenus().subscribe((data: MenuItem[]) => {
       this.menus = data;
       this.selectedMenu = this.menus[0];
@@ -48,7 +51,7 @@ export class ContentComponent implements OnInit {
 
   onAddSubmenu(name, state) {
     if (name !== '' && state !== '') {
-      this.selectedMenu.children.push({name: name, state: state});
+      this.selectedMenu.children.push({ name: name, state: state });
     }
   }
   onDelete() {

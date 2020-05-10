@@ -7,7 +7,6 @@ import { SharedModule } from '@synergy-app/shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MomentModule } from 'ngx-moment';
-import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { LeaveStatusPipe } from '@synergy-app/shared/pipes/leave-status.pipe';
 
 @NgModule({
@@ -20,7 +19,6 @@ import { LeaveStatusPipe } from '@synergy-app/shared/pipes/leave-status.pipe';
     FormsModule,
     NgxDatatableModule,
     MomentModule,
-    ModalsModule,
   ],
   providers: [TitleCasePipe, DatePipe, LeaveStatusPipe],
 })

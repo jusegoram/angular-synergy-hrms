@@ -1,0 +1,46 @@
+<div style="margin-top: 25px;">
+    <mat-card-header>
+      <mat-card-title>
+        RECENT LOGS
+      </mat-card-title>
+    </mat-card-header>
+  </div>
+  <mat-table #table [dataSource]="logsDatasource">
+    <ng-container matColumnDef="user">
+      <mat-header-cell *matHeaderCellDef> USER </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.user.name }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="method">
+      <mat-header-cell *matHeaderCellDef> METHOD </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.method }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="apiPath">
+      <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.apiPath }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="ip">
+      <mat-header-cell *matHeaderCellDef> IP Address </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.ip }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="date">
+      <mat-header-cell *matHeaderCellDef> DATE </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.date | date: "M/d/yy, h:mm a" }}
+      </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="logsTableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: logsTableColumns"></mat-row>
+  </mat-table>
+  <mat-paginator
+    #paginator
+    [length]="logsPaginationOptions.length"
+    [pageSize]="logsPaginationOptions.limit"
+    [pageSizeOptions]="logsPaginationOptions.pageSizeOptions"
+    (page)="onLogsPageEvent($event)"
+  >
+  </mat-paginator>

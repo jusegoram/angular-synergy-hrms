@@ -1,0 +1,79 @@
+<div style="margin-top: 25px;">
+  <mat-card-header>
+    <mat-card-title>
+      {{title}}
+    </mat-card-title>
+  </mat-card-header>
+</div>
+<ng-container *ngIf="isLogsTable">
+  <mat-table #table [dataSource]="datasource">
+    <ng-container matColumnDef="user">
+      <mat-header-cell *matHeaderCellDef> USER </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.user.name }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="method">
+      <mat-header-cell *matHeaderCellDef> METHOD </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.method }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="apiPath">
+      <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.apiPath }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="ip">
+      <mat-header-cell *matHeaderCellDef> IP Address </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.ip }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="date">
+      <mat-header-cell *matHeaderCellDef> DATE </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.date | date: "M/d/yy, h:mm a" }}
+      </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+  </mat-table>
+</ng-container>
+<ng-container *ngIf="!isLogsTable">
+  <mat-table #table2 [dataSource]="datasource">
+    <ng-container matColumnDef="user">
+      <mat-header-cell *matHeaderCellDef> USER </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.user.name }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="apiPath">
+      <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.apiPath }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="fileName">
+      <mat-header-cell *matHeaderCellDef> FILE NAME </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.fileName }} </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fileId">
+      <mat-header-cell *matHeaderCellDef> FILE ID </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element?.fileId }} </mat-cell>
+    </ng-container>
+  
+    <ng-container matColumnDef="date">
+      <mat-header-cell *matHeaderCellDef> DATE </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element.date | date: "M/d/yy, h:mm a" }}
+      </mat-cell>
+    </ng-container>
+  
+    <mat-header-row *matHeaderRowDef="tableColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: tableColumns"></mat-row>
+  </mat-table>
+</ng-container>
+<mat-paginator
+  [length]="paginationOptions.length"
+  [pageSize]="paginationOptions.limit"
+  [pageSizeOptions]="paginationOptions.pageSizeOptions"
+  (page)="onLogsPageEvent($event)"
+>
+</mat-paginator>

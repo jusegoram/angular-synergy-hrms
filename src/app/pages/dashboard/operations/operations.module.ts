@@ -21,7 +21,6 @@ import { AttendanceComponent } from './report/attendance/attendance.component';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { ExportAsModule } from 'ngx-export-as';
 import { UploadComponent } from '@synergy-app/pages/dashboard/operations/upload/upload.component';
-import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { UploadService } from '@synergy-app/pages/dashboard/operations/upload/upload.service';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 // Import angular-fusioncharts
@@ -45,7 +44,6 @@ export function provideSwal() {
     ScrollingModule,
     SweetAlert2Module.forRoot({ provideSwal }),
     ExportAsModule,
-    ModalsModule,
     SharedModule
   ],
   declarations: [

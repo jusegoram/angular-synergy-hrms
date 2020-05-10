@@ -1,18 +1,26 @@
-import { PayrollComponent } from './payroll/payroll.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ContentComponent } from './content/content.component';
-import { AccountComponent } from './account/acount.component';
-import { EmployeeComponent } from './employee/employee.component';
 import { NgModule } from '@angular/core';
 
 export const routes: Routes = [
   {
     path: '',
     children: [
-      {path: 'employee', component: EmployeeComponent},
-      {path: 'payroll', component: PayrollComponent},
-      {path: 'permissions', component: AccountComponent},
-      {path: 'content', component: ContentComponent},
+      {
+        path: 'employee',
+        loadChildren: () => import('./employee-page/employee-page.module').then((m) => m.EmployeePageModule),
+      },
+      {
+        path: 'payroll',
+        loadChildren: () => import('./payroll-page/payroll-page.module').then((m) => m.PayrollPageModule),
+      },
+      {
+        path: 'permissions',
+        loadChildren: () => import('./account-page/account-page.module').then((m) => m.AccountPageModule),
+      },
+      {
+        path: 'content',
+        loadChildren: () => import('./content-page/content-page.module').then((m) => m.ContentPageModule),
+      },
     ],
   },
 ];

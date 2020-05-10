@@ -15,8 +15,16 @@ import { LeaveStatusPipe } from './pipes/leave-status.pipe';
 import { DeniedAccessComponent } from '@synergy-app/shared/components/denied-access/denied-access.component';
 import { ExportComponent } from '@synergy-app/shared/components/export/export.component';
 import { ExportService } from '@synergy-app/shared/services/export.service';
-import { ModalsModule } from '@synergy-app/shared/modals';
+import {
+  OnDeleteAlertComponent,
+  OnErrorAlertComponent,
+  OnSuccessAlertComponent,
+  GenerateLeaveModalComponent,
+  PdfViewerComponent,
+} from '@synergy-app/shared/modals';
 import { MinuteSecondsPipe, MinutesHoursPipe } from './pipes';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { FormsModule } from '@angular/forms';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -33,13 +41,24 @@ export function provideSwal() {
     FileInputSelectorComponent,
     DeniedAccessComponent,
     ExportComponent,
+    OnDeleteAlertComponent,
+    OnErrorAlertComponent,
+    OnSuccessAlertComponent,
+    GenerateLeaveModalComponent,
+    PdfViewerComponent,
     TrackerStatusPipe,
     TrackerTypePipe,
     LeaveStatusPipe,
     MinuteSecondsPipe,
     MinutesHoursPipe,
   ],
-  imports: [SignaturePadModule, CommonModule, MaterialSharedModule, ModalsModule],
+  imports: [
+    SignaturePadModule,
+    CommonModule,
+    MaterialSharedModule,
+    SweetAlert2Module.forRoot({ provideSwal }),
+    FormsModule,
+  ],
   exports: [
     AccordionAnchorDirective,
     AccordionLinkDirective,
@@ -55,7 +74,13 @@ export function provideSwal() {
     LeaveStatusPipe,
     MinuteSecondsPipe,
     MinutesHoursPipe,
+    OnDeleteAlertComponent,
+    OnErrorAlertComponent,
+    OnSuccessAlertComponent,
+    GenerateLeaveModalComponent,
+    PdfViewerComponent,
   ],
   providers: [MenuService, TrackerStatusPipe, TrackerTypePipe, ExportService],
+  entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent],
 })
 export class SharedModule {}

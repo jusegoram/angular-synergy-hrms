@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HR_REPORTS, WORKFORCE_REPORTS } from '@synergy-app/shared/models/reports.constants';
+import { HR_REPORTS, WORKFORCE_REPORTS } from '@synergy/environments';
 
 @Component({
   selector: 'app-reports',

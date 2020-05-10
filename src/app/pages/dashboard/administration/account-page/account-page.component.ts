@@ -5,14 +5,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { EditUserDialogComponent } from './edit-user-dialog/edit-user-dialog.component';
+import { EditUserDialogComponent } from './containers/edit-user-dialog/edit-user-dialog.component';
 
 @Component({
   selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss'],
+  templateUrl: './account-page.component.html',
+  styleUrls: ['./account-page.component.scss'],
 })
-export class AccountComponent implements OnInit {
+export class AccountPageComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 

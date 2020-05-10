@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PAYROLL_REPORTS } from '@synergy-app/shared/models/reports.constants';
+import { PAYROLL_REPORTS } from '@synergy/environments';
 
 @Component({
   selector: 'app-report',

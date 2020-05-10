@@ -29,7 +29,6 @@ import { DetailResolver } from './detail/detail.resolver';
 import { ShiftComponent } from './detail/shift/shift.component';
 import { AttritionComponent } from './detail/attrition/attrition.component';
 import { AvailableInformationComponent } from './report/available-information/available-information.component';
-import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { CompanyComponent } from './detail/company/company.component';
 import { MainComponent } from './detail/main/main.component';
 import { SuperiorsComponent } from './superiors/superiors.component';
@@ -46,7 +45,6 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     EmployeeRoutingModule,
     MaterialSharedModule,
     SharedModule,
-    ModalsModule.forRoot(),
     NgxDatatableModule,
     FileUploadModule,
     FormsModule,

@@ -7,10 +7,10 @@ import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.scss'],
+  templateUrl: './employee-page.component.html',
+  styleUrls: ['./employee-page.component.scss'],
 })
-export class EmployeeComponent implements OnInit {
+export class EmployeePageComponent implements OnInit {
   employeeCtrl = new FormControl();
   employees: any[];
   selectedEmployee: Employee;

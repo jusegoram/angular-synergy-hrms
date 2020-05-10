@@ -7,3 +7,10 @@ export class PagedData<T> {
   data = new Array<T>();
   page = new Page();
 }
+
+export interface PaginationOptions {
+  pageIndex: number;
+  length: number;
+  limit: number;
+  pageSizeOptions: number[];
+}

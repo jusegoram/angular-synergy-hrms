@@ -34,7 +34,6 @@ import { FinalizedPayrollsComponent } from './components/main/finalized-payrolls
 import { EditPayrollDetailComponent } from './components/detail/edit-payroll-detail/edit-payroll-detail.component';
 import { ReportComponent } from './components/report/report.component';
 import { SharedModule } from '@synergy-app/shared/shared.module';
-import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { LeavesComponent } from './components/concepts/leaves/leaves.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
@@ -55,7 +54,6 @@ export function provideSwal() {
     ExportAsModule,
     SweetAlert2Module.forRoot({ provideSwal }),
     SharedModule,
-    ModalsModule
   ],
   declarations: [
     NewPayrollComponent,
