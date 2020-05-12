@@ -125,6 +125,9 @@ export class LeavesComponent implements OnInit, AfterViewInit {
             _id: leave._id,
             state: LEAVE_STATUS.APPROVED,
           };
+          if (['Vacations', 'Leave without pay'].includes(leave.leaveType.name)) {
+            leaveRequest.state = LEAVE_STATUS.CERTIFIED;
+          }
           await this.employeeService.updateLeave(leaveRequest);
           await this.fetchLeavesRequest();
         } catch (error) {
