@@ -173,8 +173,55 @@ export const PAYROLL_REPORTS = [
     terminationDate,
     last 3 positions,
     `,
-    projection: 'termination',
-    options: [],
+    projection: 'payrollTermination',
+    options: [
+      {
+        $unwind: {
+          path: '$currentPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$olderPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$oldestPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$attrition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {$project: {
+          employeeId: 1,
+          firstName: 1,
+          lastName: 1,
+          socialSecurity: 1,
+          status: 1,
+          actualClient: 1,
+          actualCampaign: 1,
+          hireDate: 1,
+          bankAccount: 1,
+          hourlyRate: {$divide:  [{$divide: [{$multiply: ['$currentPosition.baseWage', 12]}, 52]}, 45]},
+          currentPosition: '$currentPosition.name',
+          olderPosition: '$olderPosition.name',
+          oldestPosition: '$oldestPosition.name',
+          terminationDate: 1,
+          attrition_reason1: '$attrition.reason1',
+          attrition_reason2: '$attrition.reason2',
+          attrition_comment: '$attrition.comment',
+          attrition_submittedBy: {
+            $concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName'],
+          },
+        }}
+    ],
   },
   {
     name: 'New Hires Report',
@@ -194,7 +241,25 @@ export const PAYROLL_REPORTS = [
     terminationDate,
     `,
     projection: 'payrollHires',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$attrition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          attrition_reason1: '$attrition.reason1',
+          attrition_reason2: '$attrition.reason2',
+          attrition_comment: '$attrition.comment',
+          attrition_submittedBy: {
+            $concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName'],
+          },
+          attrition_commentDate: { $dateToString: { date: '$attrition.commentDate', format: '%m/%d/%Y' } },
+        },
+      },
+    ],
   },
   {
     name: 'Billing Report',
@@ -239,7 +304,7 @@ export const PROJECTIONS = {
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
-    leaves: 1
+    leaves: 1,
   },
   emergency: {
     _id: 0,
@@ -344,5 +409,36 @@ export const PROJECTIONS = {
     actualCampaign: '$company.campaign',
     hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
     billing: 1,
+  },
+  payrollHires: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    socialSecurity: 1,
+    bankAccount: '$payroll.bankAccount',
+    attrition: { $arrayElemAt: ['$attrition', 0] },
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+  },
+  payrollTermination: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    socialSecurity: 1,
+    bankAccount: '$payroll.bankAccount',
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+    attrition: { $arrayElemAt: ['$attrition', 0] },
+    currentPosition: { $arrayElemAt: ['$position', 0] },
+    olderPosition: { $arrayElemAt: ['$position', 1] },
+    oldestPosition: { $arrayElemAt: ['$position', 2] },
   },
 };

@@ -39,6 +39,8 @@ export class NewConceptComponent implements OnInit {
     {
       type: 'Deduction',
       concepts: [
+        { concept: 'Tax' },
+        { concept: 'Lost Access Token' },
         { concept: 'Magistrate Court' },
         { concept: 'Loan/Salary Advance' },
         { concept: 'Police Record' },
@@ -52,6 +54,7 @@ export class NewConceptComponent implements OnInit {
     {
       type: 'Other Payments',
       concepts: [
+        { concept: 'Vacations' },
         { concept: 'Certify Sick Leave' },
         { concept: 'Compassionate Leave' },
         { concept: 'Maternity Leave' },
