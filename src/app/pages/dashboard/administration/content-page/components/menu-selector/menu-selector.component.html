@@ -1,0 +1,17 @@
+<mat-form-field appearance="outline" style="width: 100%;">
+    <mat-select
+      color="primary"
+      placeholder="Menu Items"
+      (selectionChange)="setMenuItem($event.value)"
+      [value]="newMenuItem"
+      name="item"
+    >
+        <mat-option *ngFor="let menu of menus" 
+                    [value]="menu">
+        {{ menu.name }}
+        </mat-option>
+        <mat-option [value]="newMenuItem">
+        {{ newMenuItem.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

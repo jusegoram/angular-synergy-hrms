@@ -9,18 +9,10 @@
 <div class="mat-card-top">
   <mat-card class="container pa-1">
     <h2>Menus</h2>
-    <mat-form-field appearance="outline" style="width: 100%;">
-      <mat-select
-        color="primary"
-        placeholder="Menu Items"
-        [(ngModel)]="selectedMenu"
-        name="item"
-      >
-        <mat-option *ngFor="let menu of menus" [value]="menu">
-          {{ menu.name }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <app-menu-selector
+        [menus]="menus$ | async"
+        (onMenuItemSelected)="setSelectedMenuItem($event)"
+    ></app-menu-selector>
 
     <div class="menuCard pa-1">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
@@ -56,67 +48,10 @@
         </mat-select>
       </mat-form-field>
 
-      <div
+      <app-menu-items-editor 
         *ngIf="selectedMenu.type === 'sub'; else addChildren"
-        fxLayout="column"
-        fxLayoutAlign="center center"
-        fxLayoutGap="5px"
-      >
-        <mat-card-subtitle
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          fxLayoutGap="0px"
-        >
-          MENU ITEM CHILDREN
-        </mat-card-subtitle>
-        <mat-divider [inset]="true"> </mat-divider>
-        <mat-accordion *ngFor="let child of selectedMenu.children">
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              {{ child.name }}
-            </mat-expansion-panel-header>
-            <div
-              fxLayout="row"
-              fxLayoutAlign="center center"
-              fxLayoutGap="10px"
-            >
-              <mat-form-field appearance="outline">
-                <mat-label> Child Name </mat-label>
-                <input matInput placeholder="Name" [(ngModel)]="child.name" />
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label> Child URL State </mat-label>
-                <input
-                  matInput
-                  placeholder="URL State"
-                  [(ngModel)]="child.state"
-                />
-              </mat-form-field>
-            </div>
-          </mat-expansion-panel>
-        </mat-accordion>
-        <p></p>
-        <mat-divider [inset]="true"> </mat-divider>
-
-        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-          <mat-form-field appearance="outline">
-            <mat-label> Child Name </mat-label>
-            <input matInput #childName placeholder="Name" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label> Child URL State </mat-label>
-            <input matInput #childState placeholder="URL State" />
-          </mat-form-field>
-          <button
-            mat-flat-button
-            class="submenu-button"
-            color="primary"
-            (click)="onAddSubmenu(childName.value, childState.value)"
-          >
-            ADD SUBMENU
-          </button>
-        </div>
-      </div>
+        [selectedMenu]="selectedMenu"
+      ></app-menu-items-editor>
 
       <ng-template #addChildren> </ng-template>
       <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
@@ -126,7 +61,7 @@
             matInput
             placeholder="Enter Page ID"
             type="number"
-            [(ngModel)]="this.selectedMenu.page"
+            [(ngModel)]="selectedMenu.page"
           />
         </mat-form-field>
         <div class="fill-remaining-space"></div>
@@ -136,7 +71,7 @@
             matInput
             placeholder="Enter Position value"
             type="number"
-            [(ngModel)]="this.selectedMenu.position"
+            [(ngModel)]="selectedMenu.position"
           />
         </mat-form-field>
       </div>

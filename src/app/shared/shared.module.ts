@@ -12,8 +12,7 @@ import { TrackerStatusPipe } from './pipes/tracker-status.pipe';
 import { TrackerTypePipe } from './pipes/tracker-type.pipe';
 import { FileInputSelectorComponent } from './components/file-input-selector/file-input-selector.component';
 import { LeaveStatusPipe } from './pipes/leave-status.pipe';
-import { DeniedAccessComponent } from '@synergy-app/shared/components/denied-access/denied-access.component';
-import { ExportComponent } from '@synergy-app/shared/components/export/export.component';
+import { ExportComponent, PageTitleComponent, DeniedAccessComponent } from '@synergy-app/shared/components';
 import { ExportService } from '@synergy-app/shared/services/export.service';
 import {
   OnDeleteAlertComponent,
@@ -51,6 +50,7 @@ export function provideSwal() {
     LeaveStatusPipe,
     MinuteSecondsPipe,
     MinutesHoursPipe,
+    PageTitleComponent
   ],
   imports: [
     SignaturePadModule,
@@ -79,6 +79,7 @@ export function provideSwal() {
     OnSuccessAlertComponent,
     GenerateLeaveModalComponent,
     PdfViewerComponent,
+    PageTitleComponent
   ],
   providers: [MenuService, TrackerStatusPipe, TrackerTypePipe, ExportService],
   entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent],

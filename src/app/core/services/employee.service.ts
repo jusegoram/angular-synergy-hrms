@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { API, environment } from '@synergy/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '@synergy-app/core/services';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { TrackerStatusPipe, TrackerTypePipe } from '@synergy-app/shared/pipes';
 import moment from 'moment';
 import {

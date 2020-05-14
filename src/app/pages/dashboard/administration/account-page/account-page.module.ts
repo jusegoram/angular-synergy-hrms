@@ -7,8 +7,6 @@ import { CreateUserComponent } from './containers/create-user/create-user.compon
 import { RecentActivitiesComponent } from './containers/recent-activities/recent-activities.component';
 import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
 import { FormsModule } from '@angular/forms';
-import { RecentLogsTableComponent } from './components/recent-logs-table/recent-logs-table.component';
-import { RecentUploadTableComponent } from './components/recent-upload-table/recent-upload-table.component';
 import {
   RecentActivitiesTableComponent
 } from './components/recent-activities-table/recent-activities-table.component';
@@ -18,7 +16,8 @@ import {
     AccountPageComponent,
     EditUserDialogComponent,
     CreateUserComponent,
-    RecentActivitiesComponent, RecentLogsTableComponent, RecentUploadTableComponent, RecentActivitiesTableComponent
+    RecentActivitiesComponent,
+    RecentActivitiesTableComponent
   ],
   imports: [
     CommonModule,

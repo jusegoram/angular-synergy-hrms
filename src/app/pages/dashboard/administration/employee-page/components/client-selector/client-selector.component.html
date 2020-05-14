@@ -1,0 +1,17 @@
+<mat-form-field>
+    <mat-select
+      placeholder="Select Client"
+      name="cli"
+      (selectionChange)="onClientSelected.emit($event.value)"
+      [value]="defaultSelectedItem"
+      >
+      <mat-option
+        *ngFor="let client of clients"
+        [value]="client"
+        (click)="onSelectorItemClicked.emit()"
+      >
+        {{ client.name }}
+      </mat-option>
+    </mat-select>
+    <mat-hint>Select New for a new Client</mat-hint>
+</mat-form-field>
