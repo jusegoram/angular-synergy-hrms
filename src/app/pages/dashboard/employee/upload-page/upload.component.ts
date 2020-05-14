@@ -7,10 +7,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-form-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss'],
+  templateUrl: './upload-page.component.html',
+  styleUrls: ['./upload-page.component.scss'],
 })
-export class UploadComponent {
+export class UploadPageComponent {
   uploader: FileUploader;
   hoursUploader: FileUploader;
   dataSource: any;

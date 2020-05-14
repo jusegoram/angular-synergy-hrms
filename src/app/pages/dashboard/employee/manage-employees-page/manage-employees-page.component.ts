@@ -7,10 +7,10 @@ import { EmployeeService } from '@synergy-app/core/services';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  templateUrl: 'manage.component.html',
-  styleUrls: ['manage.component.scss'],
+  templateUrl: 'manage-employees-page.component.html',
+  styleUrls: ['manage-employees-page.component.scss'],
 })
-export class ManageComponent implements OnInit, AfterViewInit {
+export class ManageEmployeesComponent implements OnInit, AfterViewInit {
   // FIXME: sort not working ( search for new sort implementation material.angular.io/components/sort/overview)
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;

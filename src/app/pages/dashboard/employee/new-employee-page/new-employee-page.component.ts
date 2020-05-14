@@ -6,10 +6,10 @@ import { Router } from '@angular/router';
 import { OnSuccessAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
 @Component({
   selector: 'new',
-  templateUrl: './new.component.html',
-  styleUrls: ['./new.component.scss'],
+  templateUrl: './new-employee-page.component.html',
+  styleUrls: ['./new-employee-page.component.scss'],
 })
-export class NewComponent implements OnInit {
+export class NewEmployeePageComponent implements OnInit {
   @ViewChild('successAlert', {static: false})
   successAlert: OnSuccessAlertComponent;
   @ViewChild('onErrorAlert', {static: false})

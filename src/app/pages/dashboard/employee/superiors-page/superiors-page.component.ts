@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { SuperiorsService } from './superiors.service';
+import { SuperiorsService } from './services/superiors.service';
 import { EmployeeService } from '@synergy-app/core/services';
 
 @Component({
   selector: 'app-superiors',
-  templateUrl: './superiors.component.html',
-  styleUrls: ['./superiors.component.css']
+  templateUrl: './superiors-page.component.html',
+  styleUrls: ['./superiors-page.component.css']
 })
-export class SuperiorsComponent implements OnInit {
+export class SuperiorsPageComponent implements OnInit {
 
   constructor(private _service: SuperiorsService, private _employee: EmployeeService) {
 

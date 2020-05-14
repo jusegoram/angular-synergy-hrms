@@ -6,18 +6,18 @@ import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { HrTracker } from '@synergy-app/shared/models/hr-tracker.model';
 import { OnSuccessAlertComponent, OnDeleteAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
-import { RequestInfoChangeDialogComponent } from './request-info-change-dialog/request-info-change-dialog.component';
-import { StatusDialogComponent } from './status-dialog/status-dialog.component';
-import { CertifyDialogComponent } from './certify-dialog/certify-dialog.component';
+import { RequestInfoChangeDialogComponent } from './containers/request-info-change-dialog/request-info-change-dialog.component';
+import { StatusDialogComponent } from './containers/status-dialog/status-dialog.component';
+import { CertifyDialogComponent } from './containers/certify-dialog/certify-dialog.component';
 import { TRACKER_STATUS, USER_ROLES } from '@synergy/environments';
-import { TransferDialogComponent } from './transfer-dialog/transfer-dialog.component';
+import { TransferDialogComponent } from './containers/transfer-dialog/transfer-dialog.component';
 
 @Component({
   selector: 'app-detail',
-  templateUrl: './detail.component.html',
-  styleUrls: ['./detail.component.scss'],
+  templateUrl: './detail-page.component.html',
+  styleUrls: ['./detail-page.component.scss'],
 })
-export class DetailComponent implements OnInit {
+export class DetailPageComponent implements OnInit {
   @ViewChild('successAlert', { static: false })
   successAlert: OnSuccessAlertComponent;
   @ViewChild('onDeleteAlert', { static: false })

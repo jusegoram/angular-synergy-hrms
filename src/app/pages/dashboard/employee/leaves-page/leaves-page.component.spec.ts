@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { LeavesComponent } from './leaves.component';
+import { LeavesPageComponent } from './leaves-page.component';
 import { MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { EmployeeService, SessionService } from '@synergy-app/core/services';
@@ -16,12 +16,12 @@ class SessionServiceMockup {
 }
 
 describe('LeavesComponent', () => {
-  let component: LeavesComponent;
-  let fixture: ComponentFixture<LeavesComponent>;
+  let component: LeavesPageComponent;
+  let fixture: ComponentFixture<LeavesPageComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LeavesComponent],
+      declarations: [LeavesPageComponent],
       imports: [MatDialogModule, HttpClientTestingModule],
       providers: [
         { provide: MatDialogRef, useValue: {} },
@@ -33,7 +33,7 @@ describe('LeavesComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LeavesComponent);
+    fixture = TestBed.createComponent(LeavesPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

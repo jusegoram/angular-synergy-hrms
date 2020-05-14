@@ -1,43 +1,45 @@
 import { SharedModule } from '../../../shared/shared.module';
-import { RequestInfoChangeDialogComponent } from './detail/request-info-change-dialog/request-info-change-dialog.component';
-import { CertifyDialogComponent } from './detail/certify-dialog/certify-dialog.component';
-import { TransferDialogComponent } from './detail/transfer-dialog/transfer-dialog.component';
-import { StatusDialogComponent } from './detail/status-dialog/status-dialog.component';
+import { RequestInfoChangeDialogComponent } from './detail-page/containers/request-info-change-dialog/request-info-change-dialog.component';
+import { CertifyDialogComponent } from './detail-page/containers/certify-dialog/certify-dialog.component';
+import { TransferDialogComponent } from './detail-page/containers/transfer-dialog/transfer-dialog.component';
+import { StatusDialogComponent } from './detail-page/containers/status-dialog/status-dialog.component';
 import { NgModule } from '@angular/core';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
-import { UploadComponent } from './upload/upload.component';
-import { ReportComponent } from './report/report.component';
-import { DetailComponent } from './detail/detail.component';
-import { ManageComponent } from './manage/manage.component';
+import { UploadPageComponent } from './upload-page/upload.component';
+import { ReportPageComponent } from './report-page/report-page.component';
+import { DetailPageComponent } from './detail-page/detail-page.component';
+import { ManageEmployeesComponent } from './manage-employees-page/manage-employees-page.component';
 import { EmployeeRoutingModule } from './employee.routing';
-import { PersonalComponent } from './detail/personal/personal.component';
-import { FamilyComponent } from './detail/family/family.component';
-import { PayrollComponent } from './detail/payroll/payroll.component';
-import { PositionComponent } from './detail/position/position.component';
+import { PersonalComponent } from './detail-page/personal/personal.component';
+import { FamilyComponent } from './detail-page/family/family.component';
+import { PayrollComponent } from './detail-page/payroll/payroll.component';
+import { PositionComponent } from './detail-page/position/position.component';
 import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
 import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { FileUploadModule } from 'ng2-file-upload';
-import { AvatarComponent } from './detail/avatar/avatar.component';
-import { DialogComponent } from './detail/position/dialog/dialog.component';
-import { CommentComponent } from './detail/comment/comment.component';
-import { NewComponent } from './new/new.component';
-import { PersonalEditDialogComponent } from './detail/personal/edit-dialog/personal-edit-dialog.component';
-import { PayrollEditDialogComponent } from './detail/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
-import { FamilyEditDialogComponent } from './detail/family/family-edit-dialog/family-edit-dialog.component';
-import { DetailResolver } from './detail/detail.resolver';
-import { ShiftComponent } from './detail/shift/shift.component';
-import { AttritionComponent } from './detail/attrition/attrition.component';
-import { AvailableInformationComponent } from './report/available-information/available-information.component';
-import { CompanyComponent } from './detail/company/company.component';
-import { MainComponent } from './detail/main/main.component';
-import { SuperiorsComponent } from './superiors/superiors.component';
-import { SuperiorsService } from './superiors/superiors.service';
+import { AvatarComponent } from './detail-page/avatar/avatar.component';
+import { DialogComponent } from './detail-page/position/dialog/dialog.component';
+import { CommentComponent } from './detail-page/comment/comment.component';
+import { NewEmployeePageComponent } from './new-employee-page/new-employee-page.component';
+import { PersonalEditDialogComponent } from './detail-page/personal/edit-dialog/personal-edit-dialog.component';
+import { PayrollEditDialogComponent } from './detail-page/payroll/payroll-edit-dialog/payroll-edit-dialog.component';
+import { FamilyEditDialogComponent } from './detail-page/family/family-edit-dialog/family-edit-dialog.component';
+import { DetailResolver } from './detail-page/detail-page.resolver';
+import { ShiftComponent } from './detail-page/shift/shift.component';
+import { AttritionComponent } from './detail-page/attrition/attrition.component';
+import {
+  AvailableInformationComponent
+} from './report-page/containers/available-information/available-information.component';
+import { CompanyComponent } from './detail-page/company/company.component';
+import { MainComponent } from './detail-page/main/main.component';
+import { SuperiorsPageComponent } from './superiors-page/superiors-page.component';
+import { SuperiorsService } from './superiors-page/services/superiors.service';
 import { RangesFooterComponent } from '@synergy-app/shared/components/ranges-footer/ranges-footer.component';
 import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TrackerStatusPipe } from '@synergy-app/shared/pipes/tracker-status.pipe';
 import { TrackerTypePipe } from '@synergy-app/shared/pipes/tracker-type.pipe';
-import { ReportService } from '@synergy-app/pages/dashboard/employee/report/report.service';
+import { ReportService } from '@synergy-app/pages/dashboard/employee/report-page/services/report.service';
 
 @NgModule({
   imports: [
@@ -50,10 +52,10 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     FormsModule,
   ],
   declarations: [
-    UploadComponent,
-    ReportComponent,
-    DetailComponent,
-    ManageComponent,
+    UploadPageComponent,
+    ReportPageComponent,
+    DetailPageComponent,
+    ManageEmployeesComponent,
     PersonalComponent,
     FamilyComponent,
     PositionComponent,
@@ -65,7 +67,7 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     CertifyDialogComponent,
     DialogComponent,
     CommentComponent,
-    NewComponent,
+    NewEmployeePageComponent,
     PayrollEditDialogComponent,
     PayrollEditDialogComponent,
     FamilyEditDialogComponent,
@@ -75,7 +77,7 @@ import { ReportService } from '@synergy-app/pages/dashboard/employee/report/repo
     AvailableInformationComponent,
     CompanyComponent,
     MainComponent,
-    SuperiorsComponent
+    SuperiorsPageComponent
   ],
   entryComponents: [
     RequestInfoChangeDialogComponent,
