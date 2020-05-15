@@ -1,12 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { DetailResolver } from './detail-page/detail-page.resolver';
-import { DetailPageComponent } from './detail-page/detail-page.component';
-import { UploadPageComponent } from './upload-page/upload.component';
-import { ManageEmployeesComponent } from './manage-employees-page/manage-employees-page.component';
-import { ReportPageComponent } from './report-page/report-page.component';
-import { NewEmployeePageComponent } from './new-employee-page/new-employee-page.component';
-import { SuperiorsPageComponent } from './superiors-page/superiors-page.component';
 import { USER_ROLES } from '@synergy/environments/enviroment.common';
 import { PrivilegeGuard } from '@synergy-app/core/guards/privilege.guard';
 
@@ -16,24 +9,40 @@ export const routes: Routes = [
     children: [
       {
         path: 'detail',
-        component: DetailPageComponent,
-        resolve: {employee: DetailResolver},
+        loadChildren: () => import('./detail-page/detail-page.module').then((m) => m.DetailPageModule),
       },
       {
         path: 'leaves',
         loadChildren: () => import('./leaves-page/leaves-page.module').then((m) => m.LeavesModule),
       },
-      {path: 'new', component: NewEmployeePageComponent},
-      {path: 'reports', component: ReportPageComponent},
+      {
+        path: 'new',
+        loadChildren: () => import('./new-employee-page/new-employee-page.module').then(
+          (m) => m.NewEmployeePageModule
+        ),
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('./report-page/report-page.module').then((m) => m.ReportPageModule),
+      },
       {
         path: 'upload',
         data: {
           allowedRoles: [USER_ROLES.WEB_ADMINISTRATOR.value],
         },
         canActivate: [PrivilegeGuard],
-        component: UploadPageComponent},
-      {path: 'manage', component: ManageEmployeesComponent},
-      {path: 'superiors', component: SuperiorsPageComponent},
+        loadChildren: () => import('./upload-page/upload-page.module').then((m) => m.UploadPageModule),
+      },
+      {
+        path: 'manage',
+        loadChildren: () => import('./manage-employees-page/manage-employees-page.module').then(
+          (m) => m.ManageEmployeesPageModule
+        )
+      },
+      {
+        path: 'superiors',
+        loadChildren: () => import('./superiors-page/superiors-page.module').then((m) => m.SuperiorsPageModule)
+      },
     ],
   },
 ];
