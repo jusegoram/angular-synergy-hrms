@@ -109,7 +109,7 @@
                 <mat-label>CLIENT</mat-label>
                 <mat-select placeholder="SELECT CLIENT" formControlName="client">
                   <mat-option
-                    *ngFor="let client of clients | async"
+                    *ngFor="let client of clients"
                     [value]="client.name"
                   >{{ client.name }}</mat-option
                   >
@@ -126,7 +126,7 @@
                   formControlName="department"
                 >
                   <mat-option
-                    *ngFor="let department of departments | async"
+                    *ngFor="let department of departments"
                     [value]="department"
                   >{{ department.name }}</mat-option
                   >

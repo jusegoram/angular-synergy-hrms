@@ -1,50 +1,37 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { EmployeePosition } from '@synergy-app/shared/models';
-import { EmployeeService } from '@synergy-app/core/services';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals';
 import { USER_ROLES } from '@synergy/environments';
 
 @Component({
-  selector: 'position-info',
+  selector: 'app-position-info',
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.css'],
 })
 export class PositionComponent implements OnInit {
   @Input() employee: any;
   @Input() authorization: any;
-  @Output() onSuccess = new EventEmitter<any>();
-  @Output() onError = new EventEmitter<any>();
-  @ViewChild('onDeleteAlert', {static: false})
+  @Output() onDeleteConfirmation = new EventEmitter<any>();
+  @Output() onAddButtonClicked = new EventEmitter<any>();
+  @Input() departments;
+  @Input() clients;
+  @ViewChild('onDeleteAlert', { static: false })
   onDeleteAlert: OnDeleteAlertComponent;
   _roles = USER_ROLES;
   public dataSource: any;
   public positions: any;
   public position: any;
-  public departments;
-  public clients;
-  positionForm: FormGroup;
-  displayedColumns = [
-    'client',
-    'department',
-    'position',
-    'positionId',
-    'startDate',
-    'endDate',
-  ];
 
-  constructor(
-    private fb: FormBuilder,
-    public dialog: MatDialog,
-    private _service: EmployeeService
-  ) {
-  }
+  positionForm: FormGroup;
+  displayedColumns = ['client', 'department', 'position', 'positionId', 'startDate', 'endDate'];
+
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
-    this.clients = this._service.getClient();
-    this.departments = this._service.getDepartment();
+    // this.clients = this._service.getClient(); <<<remove
+    // this.departments = this._service.getDepartment(); <<<remove
     this.addActionColumn();
     this.populateTable(this.employee.position);
     this.buildForm();
@@ -68,8 +55,8 @@ export class PositionComponent implements OnInit {
   }
 
   addActionColumn() {
-    const {HUMAN_RESOURCES, WEB_ADMINISTRATOR} = this._roles;
-    const {role} = this.authorization;
+    const { HUMAN_RESOURCES, WEB_ADMINISTRATOR } = this._roles;
+    const { role } = this.authorization;
     if ([HUMAN_RESOURCES.value, WEB_ADMINISTRATOR.value].includes(role)) {
       this.displayedColumns.push('action');
     }
@@ -77,14 +64,7 @@ export class PositionComponent implements OnInit {
 
   async onAdd() {
     if (this.positionForm.valid && this.positionForm.touched) {
-      const {
-        employee,
-        client,
-        department,
-        position,
-        start,
-        end,
-      } = this.positionForm.value;
+      const { employee, client, department, position, start, end } = this.positionForm.value;
       const newPosition: EmployeePosition = {
         employee: employee,
         client: client,
@@ -95,16 +75,14 @@ export class PositionComponent implements OnInit {
         startDate: start,
         endDate: end,
       };
-      try {
-        const {doc}: any = await this._service
-          .savePosition({employee: this.employee._id, position: newPosition})
-          .toPromise();
-        this.populateTable(doc.position);
-        this.clearForm();
-        return this.onSuccess.emit();
-      } catch (e) {
-        return this.onError.emit();
-      }
+
+      this.onAddButtonClicked.emit({
+        data: { employee: this.employee._id, position: newPosition },
+        onPositionAdded: (docPosition) => {
+          this.populateTable(docPosition);
+          this.clearForm();
+        },
+      });
     } else {
       return this.positionForm.markAllAsTouched();
     }
@@ -137,15 +115,13 @@ export class PositionComponent implements OnInit {
     this.positions = event;
   }
 
-  async onDelete(position: EmployeePosition) {
-    try {
-      await this._service
-        .deletePosition({employee: this.employee._id, position: position})
-        .toPromise();
-      await this.removeItemTable(position);
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
+  onDelete(position: EmployeePosition) {
+    this.onDeleteConfirmation.emit({
+      data: {
+        employee: this.employee._id,
+        position: position,
+      },
+      removingItemFromTable: () => this.removeItemTable(position),
+    });
   }
 }

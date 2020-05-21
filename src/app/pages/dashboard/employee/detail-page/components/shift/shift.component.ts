@@ -1,45 +1,37 @@
-import { EmployeeService } from '@synergy-app/core/services';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import moment from 'moment';
 import { MinutesHoursPipe } from '@synergy-app/shared/pipes/minutes-hours.pipe';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 
 @Component({
-  selector: 'shift',
+  selector: 'app-shift',
   templateUrl: './shift.component.html',
   styleUrls: ['./shift.component.scss'],
 })
-export class ShiftComponent implements OnInit, OnChanges {
-  @Input() employee: any;
+export class ShiftComponent implements OnInit {
   @Input() authorization: any;
+  @Input() set employee(value) {
+    this.populateTable(value.shift);
+    this._employee = value;
+  }
+  @Input() set shifts(value) {
+    if (value) {
+      this.populateTable(value);
+    }
+  }
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @Output() onResearchButtonClicked = new EventEmitter<any>();
+  @Output() onSaveButtonClicked = new EventEmitter<any>();
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
-  onFirstLoad = {previousPageIndex: 0, pageIndex: 0, pageSize: 7};
-  dayMap = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ];
+  _employee: any;
+  onFirstLoad = { previousPageIndex: 0, pageIndex: 0, pageSize: 7 };
+  dayMap = TIME_VALUES.WEEK_NAMES;
   items = ['PRESENT', 'LATE', 'ABSENT', 'ON LEAVE', 'ON VACATIONS', 'N/A'];
   startOfWeek = moment().startOf('week');
   endOfWeek = moment().endOf('week').add(1, 'day');
@@ -80,18 +72,11 @@ export class ShiftComponent implements OnInit, OnChanges {
     value: number;
     valueString: string;
   };
-  constructor(private fb: FormBuilder, private _employeeService: EmployeeService, private sb: MatSnackBar,
-    private timeString: MinutesHoursPipe
-  ) {
+
+  constructor(private fb: FormBuilder, private sb: MatSnackBar, private timeString: MinutesHoursPipe) {
     this.buildForm(this.startOfWeek, this.endOfWeek);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const employee: SimpleChange = changes.employee;
-    if (employee) {
-      this.populateTable(employee.currentValue.shift);
-    }
-  }
   ngOnInit() {}
 
   buildForm(start, end) {
@@ -105,9 +90,7 @@ export class ShiftComponent implements OnInit, OnChanges {
       obj.readOnly = false;
       obj.shiftStartTime = this.timeString.transform(obj.shiftStartTime);
       obj.shiftEndTime = this.timeString.transform(obj.shiftEndTime);
-      obj.shiftScheduledBreakAndLunch = this.timeString.transform(
-        obj.shiftScheduledBreakAndLunch
-      );
+      obj.shiftScheduledBreakAndLunch = this.timeString.transform(obj.shiftScheduledBreakAndLunch);
       return obj;
     });
     this.dataSource = new MatTableDataSource(shift);
@@ -125,7 +108,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     item.readonly = !item.readonly;
   }
 
-  async onSave(item) {
+  onSave(item) {
     const start = this.timeToMinutes(item.shiftStartTime);
     const end = this.timeToMinutes(item.shiftEndTime);
     const breakLunch = this.timeToMinutes(item.shiftScheduledBreakAndLunch);
@@ -135,21 +118,19 @@ export class ShiftComponent implements OnInit, OnChanges {
       : (item.onShift = true);
     try {
       if (moment(item.date).isBefore(moment(), 'day')) {
-        throw new Error(
-          'Woops! An Error ocurred: You can\'t modify the shift of a day in the past'
-        );
+        throw new Error('Woops! An Error ocurred: You can\'t modify the shift of a day in the past');
       }
       if (start === 0 && end === 0) {
         item.shiftScheduledBreakAndLunch = 0;
       }
-      const q = {...item};
+      const q = { ...item };
       q.shiftStartTime = start;
       q.shiftEndTime = end;
       q.shiftScheduledBreakAndLunch = breakLunch;
-      await this._employeeService.updateEmployeeShift(this.employee, q).toPromise();
-      this.openSB(
-        'Perfect! The shift was updated successfully: Please refresh to verify'
-      );
+      this.onSaveButtonClicked.emit({
+        employee: this._employee,
+        shift: q,
+      });
     } catch (e) {
       this.onSearch(this.startOfWeek, this.endOfWeek);
       this.openSB(e.message);
@@ -160,8 +141,10 @@ export class ShiftComponent implements OnInit, OnChanges {
   }
 
   onSearch(fromDate, toDate) {
-    this._employeeService.getEmployeeShift(this.employee, fromDate, toDate).subscribe((result) => {
-      this.populateTable(result);
+    this.onResearchButtonClicked.emit({
+      employee: this._employee,
+      fromDate,
+      toDate,
     });
   }
 
@@ -170,18 +153,16 @@ export class ShiftComponent implements OnInit, OnChanges {
       const currentDSIndex = e.pageIndex * e.pageSize;
       const currentPage = [];
       const mapForTotal = (item, field) => {
-        return item.map((i) => (i && i[field] || 0));
+        return item.map((i) => (i && i[field]) || 0);
       };
       const reduceForTotal = (item, field) => {
-        return item.reduce((p, c) => p + (c && c[field] || 0), 0);
+        return item.reduce((p, c) => p + ((c && c[field]) || 0), 0);
       };
       for (let i = 0; i < e.pageSize; i++) {
         currentPage.push(this.dataSource.data[currentDSIndex + i]);
       }
       this.totalSched = reduceForTotal(currentPage, 'shiftScheduledHours');
-      this.totalReal = this.calculateTotalHours(
-        mapForTotal(currentPage, 'systemHours')
-      );
+      this.totalReal = this.calculateTotalHours(mapForTotal(currentPage, 'systemHours'));
     }
   }
   calculateTotalHours(arr: any[]) {
@@ -260,7 +241,7 @@ export class ShiftComponent implements OnInit, OnChanges {
     if (e.length === 1) {
       e = '0' + e;
     }
-    const {shiftScheduledBreakAndLunch} = row;
+    const { shiftScheduledBreakAndLunch } = row;
     const [hh, mm] = shiftScheduledBreakAndLunch.split(':');
     return hhmm === 'hh'
       ? (row.shiftScheduledBreakAndLunch = e + ':' + mm)
@@ -268,6 +249,6 @@ export class ShiftComponent implements OnInit, OnChanges {
   }
 
   openSB(message) {
-    this.sb.open(message, 'Thank you!', {duration: 10000});
+    this.sb.open(message, 'Thank you!', { duration: 10000 });
   }
 }

@@ -2,55 +2,29 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Employee, EmployeeFamily } from '@synergy-app/shared/models';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals';
 import { noop } from 'rxjs';
+import { SOCIAL } from '@synergy/environments';
 
 @Component({
-  selector: 'family-info',
+  selector: 'app-family-info',
   templateUrl: './family.component.html',
   styleUrls: ['./family.component.css'],
 })
 export class FamilyComponent implements OnInit, OnChanges {
   @Input() employee: Employee;
   @Input() authorization: any;
-  @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
-  @ViewChild('onDeleteAlert', {static: false})
+  @Output() onSubmitButtonClicked = new EventEmitter<EmployeeFamily>();
+  @Output() onDeleteConfirmation = new EventEmitter<EmployeeFamily>();
+  @ViewChild('onDeleteAlert', { static: false })
   onDeleteAlert: OnDeleteAlertComponent;
   public employeeFamily: any;
   public dataSource: any;
   public familyForm: FormGroup;
   public isEdit = false;
   public expandedComment = false;
-
-  public familyRelationships = [
-    {value: 'Partner', viewValue: 'Partner'},
-    {value: 'Son', viewValue: 'Son'},
-    {value: 'Daughter', viewValue: 'Daughter'},
-    {value: 'Son-in-law', viewValue: 'Son-in-law'},
-    {value: 'Daughter-in-law', viewValue: 'Daughter-in-law'},
-    {value: 'Niece', viewValue: 'Niece'},
-    {value: 'Nephew', viewValue: 'Nephew'},
-    {value: 'Cousin', viewValue: 'Cousin'},
-    {value: 'Cousin’s husband', viewValue: 'Cousin’s husband'},
-    {value: 'Cousin’s wife', viewValue: 'Cousin’s wife'},
-    {value: 'Wife', viewValue: 'Wife'},
-    {value: 'Husband', viewValue: 'Husband'},
-    {value: 'Brother', viewValue: 'Brother'},
-    {value: 'Sister', viewValue: 'Sister'},
-    {value: 'Brother-in-law', viewValue: 'Brother-in-law'},
-    {value: 'Sister-in-law', viewValue: 'Sister-in-law'},
-    {value: 'Father', viewValue: 'Father'},
-    {value: 'Mother', viewValue: 'Mother'},
-    {value: 'Uncle', viewValue: 'Uncle'},
-    {value: 'Aunt', viewValue: 'Aunt'},
-    {value: 'Great-uncle', viewValue: 'Great-uncle'},
-    {value: 'Great-aunt', viewValue: 'Great-aunt'},
-    {value: 'Grandmother', viewValue: 'Grandmother'},
-    {value: 'Grandfather', viewValue: 'Grandfather'},
-    {value: 'Friend', viewValue: 'Friend'},
-  ];
+  public familyRelationships = SOCIAL.FAMILY_RELATIONSHIPS;
   displayedColumns = [
     'emergencyContact',
     'name',
@@ -63,11 +37,7 @@ export class FamilyComponent implements OnInit, OnChanges {
     'comment',
   ];
 
-  constructor(
-    private fb: FormBuilder,
-    private _service: EmployeeService
-  ) {
-  }
+  constructor(private fb: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.employee) {
@@ -117,32 +87,21 @@ export class FamilyComponent implements OnInit, OnChanges {
     this.buildForms();
   }
 
-  async onSubmit() {
+  onSubmit() {
     if (this.familyForm.valid && this.familyForm.touched) {
       const current = this.familyForm.value;
       const family: EmployeeFamily = {
-        ...current
+        ...current,
       };
-      try {
-        await this._service.saveFamily(family).toPromise();
-        this.clearForm();
-        return this.onSuccess.emit();
-      } catch (e) {
-        console.log(e);
-        return this.onError.emit();
-      }
+      this.onSubmitButtonClicked.emit(family);
+      this.clearForm();
     } else {
       this.familyForm.markAllAsTouched();
     }
   }
 
-  async onDelete(item) {
-    try {
-      await this._service.deleteFamily(item).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
+  onDelete(item) {
+    this.onDeleteConfirmation.emit(item);
   }
 
   fireDelete(item) {

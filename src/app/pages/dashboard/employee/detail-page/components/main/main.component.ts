@@ -1,21 +1,19 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Employee } from '@synergy-app/shared/models';
-import { EmployeeService } from '@synergy-app/core/services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { USER_ROLES } from '@synergy/environments/enviroment.common';
+import { USER_ROLES, LABORAL, SOCIAL } from '@synergy/environments/enviroment.common';
 
 @Component({
-  selector: 'main-info',
+  selector: 'app-main-info',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  styleUrls: ['./main.component.css'],
 })
 export class MainComponent implements OnInit {
   // tslint:disable-next-line:no-input-rename
   @Input('authorization') auth;
   // tslint:disable-next-line:no-input-rename
   @Input('employee') currentEmployee: Employee;
-  @Output() onSuccess = new EventEmitter<any>();
-  @Output() onError = new EventEmitter<any>();
+  @Output() onSubmitButtonClicked = new EventEmitter<Employee>();
   roles = USER_ROLES;
   employee: Employee = {
     _id: '',
@@ -27,17 +25,15 @@ export class MainComponent implements OnInit {
     status: '',
     socialSecurity: '',
   };
-   form: FormGroup;
-   currentPositionForm: FormGroup;
-   status;
-   genders;
-   restrictions;
-  constructor(
-    private _service: EmployeeService,
-    private _formBuilder: FormBuilder) {
-    this.restrictions = this._service.restrictions;
-    this.status = this._service.status;
-    this.genders = this._service.genders;
+  form: FormGroup;
+  currentPositionForm: FormGroup;
+  status;
+  genders;
+  restrictions;
+  constructor(private _formBuilder: FormBuilder) {
+    this.restrictions = LABORAL.RESTRICTIONS;
+    this.status = LABORAL.STATUS;
+    this.genders = SOCIAL.GENDERS;
   }
 
   ngOnInit() {
@@ -54,20 +50,14 @@ export class MainComponent implements OnInit {
       gender: [this.currentEmployee.gender.toLowerCase()],
       status: [this.currentEmployee.status.toLowerCase()],
     });
-
   }
-  async onSubmit() {
+  onSubmit() {
     if (this.form.valid && this.form.touched) {
-      const {value: values} = this.form;
+      const { value: values } = this.form;
       const query: Employee = {
         ...values,
       };
-      try {
-        await this._service.updateEmployee(query).toPromise();
-        return this.onSuccess.emit();
-      } catch (e) {
-        return this.onError.emit();
-      }
+      this.onSubmitButtonClicked.emit(query);
     }
   }
 }

@@ -1,16 +1,27 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { ActivatedRoute } from '@angular/router';
-import { Employee } from '@synergy-app/shared/models/employee/employee.model';
-import { FormBuilder } from '@angular/forms';
+import {
+  Employee,
+  EmployeePayroll,
+  HrTracker,
+  EmployeePersonal,
+  EmployeeAttrition,
+  EmployeeComment,
+  EmployeeFamily,
+  EmployeeCompany,
+} from '@synergy-app/shared/models';
 import { MatDialog } from '@angular/material/dialog';
-import { HrTracker } from '@synergy-app/shared/models/hr-tracker.model';
 import { OnSuccessAlertComponent, OnDeleteAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
-import { RequestInfoChangeDialogComponent } from './containers/request-info-change-dialog/request-info-change-dialog.component';
+import {
+  RequestInfoChangeDialogComponent
+} from './containers/request-info-change-dialog/request-info-change-dialog.component';
 import { StatusDialogComponent } from './containers/status-dialog/status-dialog.component';
 import { CertifyDialogComponent } from './containers/certify-dialog/certify-dialog.component';
 import { TRACKER_STATUS, USER_ROLES } from '@synergy/environments';
 import { TransferDialogComponent } from './containers/transfer-dialog/transfer-dialog.component';
+import { Observable, noop } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-detail',
@@ -54,20 +65,193 @@ export class DetailPageComponent implements OnInit {
   request and info change to minimize report and payroll errors.
 
  `;
+  shifts$: Observable<any>;
+  clients$: Observable<any>;
+  departments$: Observable<any>;
+  superiors$: Observable<any>;
+  currentUser: any;
+
   constructor(
-    private _service: EmployeeService,
+    private employeeService: EmployeeService,
     private route: ActivatedRoute,
-    private fb: FormBuilder,
     public dialog: MatDialog,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private snackbar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    this.auth = this._service.getAuth();
+    this.auth = this.employeeService.getAuth();
     this.employee = this.route.snapshot.data['employee'];
+    this.setCurrentUser();
     this.setHrTracker();
+    this.fetchClients();
+    this.fetchDepartments();
   }
 
+  setCurrentUser() {
+    const userFullName = this.sessionService.getName();
+    const nameParts = userFullName.split(' ');
+    this.currentUser = {
+      _id: this.sessionService.getId(),
+      fullName: userFullName,
+      firstName: nameParts[0],
+      lastName: nameParts[nameParts.length - 1],
+    };
+  }
+
+  fetchClients() {
+    this.clients$ = this.employeeService.getClient();
+  }
+
+  fetchDepartments() {
+    this.departments$ = this.employeeService.getDepartment();
+  }
+
+  fetchEmployeeShifts(params) {
+    const { employee, fromDate, toDate } = params;
+    this.shifts$ = this.employeeService.getEmployeeShift(employee, fromDate, toDate);
+  }
+
+  async updateEmployeeShift(params) {
+    const { employee, shift } = params;
+    try {
+      await this.employeeService.updateEmployeeShift(employee, shift).toPromise();
+      this.snackbar.open('Perfect! The shift was updated successfully: Please refresh to verify', 'Thank you!', {
+        duration: 10000,
+      });
+    } catch (error) {
+      this.snackbar.open(error.message, 'Thank you!', { duration: 10000 });
+    }
+  }
+
+  async deletePosition(params: any) {
+    try {
+      await this.employeeService.deletePosition(params.data).toPromise();
+      await params.removingItemFromTable();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async addPosition(params: any) {
+    try {
+      const { doc }: any = await this.employeeService.savePosition(params.data).toPromise();
+      params.onPositionAdded(doc.position);
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async savePayroll(payroll: EmployeePayroll) {
+    try {
+      if (payroll._id === '') {
+        delete payroll._id;
+        await this.employeeService.savePayroll(payroll).toPromise();
+      } else {
+        await this.employeeService.updatePayroll(payroll).toPromise();
+      }
+      this.onSuccess();
+    } catch (e) {
+      this.onError();
+    }
+  }
+
+  async savePersonalInfo(employeePersonal: EmployeePersonal) {
+    try {
+      if (employeePersonal._id && employeePersonal._id.length > 0) {
+        delete employeePersonal._id;
+        await this.employeeService.updatePersonal(employeePersonal).toPromise();
+      } else {
+        delete employeePersonal._id;
+        await this.employeeService.savePersonal(employeePersonal).toPromise();
+      }
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async saveAttrition(attrition: EmployeeAttrition) {
+    try {
+      await this.employeeService.saveAttrition(attrition).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async deleteAttrition(attrition: EmployeeAttrition) {
+    try {
+      await this.employeeService.deleteAttrition(attrition).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async saveComment(comment: EmployeeComment) {
+    try {
+      await this.employeeService.saveComment(comment).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async deleteComment(comment: EmployeeComment) {
+    try {
+      await this.employeeService.deleteComment(comment).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async saveFamily(family: EmployeeFamily) {
+    try {
+      await this.employeeService.saveFamily(family).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async deleteFamily(family: EmployeeFamily) {
+    try {
+      await this.employeeService.deleteFamily(family).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async updateEmployeeMainInfo(employee: Employee) {
+    try {
+      await this.employeeService.updateEmployee(employee).toPromise();
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  async saveCompany(params: { company: EmployeeCompany; shouldUpdateCompany: boolean }) {
+    try {
+      if (params.shouldUpdateCompany) {
+        await this.employeeService.updateCompany(params.company).toPromise();
+      } else {
+        await this.employeeService.saveCompany(params.company).toPromise();
+      }
+      return this.onSuccess();
+    } catch (e) {
+      return this.onError();
+    }
+  }
+
+  fetchSuperiors(client) {
+    this.superiors$ = this.employeeService.getEmployeeManagers([client]);
+  }
   // transformDate(date: Date) {
   //   const dp = new DatePipe('en-US');
   //   const p = 'M/dd/yyyy';
@@ -138,7 +322,7 @@ export class DetailPageComponent implements OnInit {
   async onSuccess() {
     this.successAlert.fire();
     try {
-      return (this.employee = await this._service.getEmployee(this.employee._id).toPromise());
+      return (this.employee = await this.employeeService.getEmployee(this.employee._id).toPromise());
     } catch (e) {
       return;
     }

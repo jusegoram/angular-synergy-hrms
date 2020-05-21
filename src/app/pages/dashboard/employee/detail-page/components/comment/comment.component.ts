@@ -1,35 +1,30 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Employee, EmployeeComment, } from '@synergy-app/shared/models';
+import { Employee, EmployeeComment } from '@synergy-app/shared/models';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { OnDeleteAlertComponent } from '@synergy-app/shared/modals';
 import { noop } from 'rxjs';
 
 @Component({
-  selector: 'comment-info',
+  selector: 'app-comment-info',
   templateUrl: './comment.component.html',
   styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit, OnChanges {
   @Input() employee: Employee;
   @Input() authorization: any;
-  @Output() onSuccess = new EventEmitter<any>();
+  @Input() currentUser: any;
+  @Output() onSubmitButtonClicked = new EventEmitter<EmployeeComment>();
+  @Output() onDeleteConfirmation = new EventEmitter<EmployeeComment>();
   @Output() onError = new EventEmitter<any>();
-  @ViewChild('onDeleteAlert', {static: false})
+  @ViewChild('onDeleteAlert', { static: false })
   onDeleteAlert: OnDeleteAlertComponent;
   public dataSource: any;
   public displayedColumns = ['comment', 'by', 'date'];
   public commentForm: FormGroup;
   private employeeComment: any;
-  private userFullName: any;
 
-  constructor(
-    private _formBuilder: FormBuilder,
-    private _service: EmployeeService,
-    private _session: SessionService
-  ) {
-  }
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.employee) {
@@ -51,17 +46,17 @@ export class CommentComponent implements OnInit, OnChanges {
   }
 
   buildForms() {
-    this.userFullName = this._session.getName().split(' ');
+    const { _id, firstName, lastName } = this.currentUser;
     this.commentForm = this._formBuilder.group({
       employee: [this.employee._id],
       comment: ['', Validators.required],
       commentDate: [new Date()],
       submittedBy: [
         {
-          _id: this._session.getId(),
-          firstName: this.userFullName[0],
-          lastName: this.userFullName[this.userFullName.length - 1],
-        }
+          _id,
+          firstName,
+          lastName,
+        },
       ],
     });
   }
@@ -73,33 +68,23 @@ export class CommentComponent implements OnInit, OnChanges {
   async onSubmit() {
     if (this.commentForm.valid && this.commentForm.touched) {
       const comment: EmployeeComment = {
-        ...this.commentForm.value
+        ...this.commentForm.value,
       };
-      try {
-        await this._service.saveComment(comment).toPromise();
-        this.clearForm();
-        return this.onSuccess.emit();
-      } catch (e) {
-        return this.onError.emit();
-      }
+      this.onSubmitButtonClicked.emit(comment);
+      this.clearForm();
     }
     return;
   }
 
   fireDelete(item) {
-    if (item.submittedBy._id === this._session.getId()) {
+    if (item.submittedBy._id === this.currentUser._id) {
       return this.onDeleteAlert.fire(item);
     }
     return this.onError.emit();
   }
 
-  async onDelete(item) {
-    try {
-      await this._service.deleteComment(item).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
+  onDelete(item) {
+    this.onDeleteConfirmation.emit(item);
   }
 
   clearForm() {

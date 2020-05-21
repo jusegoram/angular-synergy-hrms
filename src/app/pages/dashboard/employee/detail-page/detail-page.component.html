@@ -63,56 +63,78 @@
         </mat-card-title>
       </mat-card-header>
 
-      <main-info [employee]="this.employee" [authorization]="this.auth" (onSuccess)="onSuccess()" (onError)="onError()">
-      </main-info>
-      <company-info
+      <app-main-info 
+        [employee]="this.employee" 
+        [authorization]="this.auth"
+        (onSubmitButtonClicked)="updateEmployeeMainInfo($event)">
+      </app-main-info>
+
+      <app-company-info
         [employee]="this.employee"
         [authorization]="this.auth"
-        (onSuccess)="onSuccess()"
-        (onError)="onError()"
-      ></company-info>
+        [clients]="clients$ | async"
+        [superiors]="superiors$ | async"
+        (onSuperiorsDataRequest)="fetchSuperiors($event)"
+        (onSubmitButtonClicked)="saveCompany($event)"
+      ></app-company-info>
     </mat-card>
   </div>
-  <shift [employee]="this.employee" [authorization]="this.auth"></shift>
-  <position-info
+  <app-shift [employee]="this.employee" 
+         [authorization]="this.auth"
+         [shifts]="shifts$ | async"
+         (onResearchButtonClicked)="fetchEmployeeShifts($event)"
+         (onSaveButtonClicked)="updateEmployeeShift($event)"></app-shift>
+  <app-position-info
     *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
     [employee]="this.employee"
     [authorization]="this.auth"
+    [departments]="departments$ | async"
+    [clients]="clients$ | async"
     (onSuccess)="onSuccess()"
     (onError)="onError()"
-  ></position-info>
-  <payroll-info
+    (onDeleteConfirmation)="deletePosition($event)"
+    (onAddButtonClicked)="addPosition($event)"
+  ></app-position-info>
+  <app-payroll-info
     *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
     [employee]="this.employee"
     [authorization]="this.auth"
-    (onSuccess)="onSuccess()"
-    (onError)="onError()"
-  ></payroll-info>
-  <personal-info
+    (onSaveButtonClicked)="savePayroll($event)"
+  ></app-payroll-info>
+  <app-personal-info
     [employee]="this.employee"
     [authorization]="this.auth"
-    (onSuccess)="onSuccess()"
-    (onError)="onError()"
-  ></personal-info>
-  <family-info
+    (onSaveButtonClicked)="savePersonalInfo($event)"
+  ></app-personal-info>
+
+
+  <app-family-info
     [employee]="this.employee"
     [authorization]="this.auth"
-    (onSuccess)="onSuccess()"
     (onError)="onError()"
-  ></family-info>
-  <comment-info
+    (onSubmitButtonClicked)="saveFamily($event)"
+    (onDeleteConfirmation)="deleteFamily($event)"
+  ></app-family-info>
+  
+  <app-comment-info
     *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
     [employee]="this.employee"
     [authorization]="this.auth"
-    (onSuccess)="onSuccess()"
+    [currentUser]="currentUser"
     (onError)="onError()"
-  ></comment-info>
-  <attrition-info
+    (onSubmitButtonClicked)="saveComment($event)"
+    (onDeleteConfirmation)="deleteComment($event)"
+  ></app-comment-info>
+
+  <app-attrition-info
     *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
     [employee]="this.employee"
     [authorization]="this.auth"
-    (onSuccess)="onSuccess()"
+    [currentUser]="currentUser"
     (onError)="onError()"
-  ></attrition-info>
+    (onSubmitButtonClicked)="saveAttrition($event)"
+    (onDeleteConfirmation)="deleteAttrition($event)"
+  ></app-attrition-info>
+
   <div style="width: 100%; height: 80px;"></div>
 </div>

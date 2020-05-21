@@ -42,7 +42,7 @@
             formControlName="client"
           >
             <mat-option
-              *ngFor="let client of clients | async"
+              *ngFor="let client of clients"
               [value]="client?.name"
             >
               {{ client.name | uppercase }}
@@ -58,7 +58,7 @@
           <mat-label>CAMPAIGN</mat-label>
           <mat-select placeholder="CAMPAIGN" formControlName="campaign">
             <mat-option
-              *ngFor="let campaign of campaigns | async"
+              *ngFor="let campaign of campaigns"
               [value]="campaign?.name"
             >
               {{ campaign.name | uppercase }}

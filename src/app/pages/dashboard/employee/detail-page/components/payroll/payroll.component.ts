@@ -1,10 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { EmployeeService, SessionService } from '@synergy-app/core/services';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { EmployeePayroll } from '@synergy-app/shared/models';
 
 @Component({
-  selector: 'payroll-info',
+  selector: 'app-payroll-info',
   templateUrl: './payroll.component.html',
   styleUrls: ['./payroll.component.scss'],
 })
@@ -13,6 +12,7 @@ export class PayrollComponent implements OnInit {
   @Input() authorization: any;
   @Output() onSuccess = new EventEmitter<any>();
   @Output() onError = new EventEmitter<any>();
+  @Output() onSaveButtonClicked = new EventEmitter<EmployeePayroll>();
   payroll: EmployeePayroll = {
     _id: '',
     employee: '',
@@ -25,16 +25,11 @@ export class PayrollComponent implements OnInit {
   };
   payrollForm: FormGroup;
   payrollTypes = [
-    {value: 'SEMIMONTHLY', name: 'SEMIMONTHLY'},
-    {value: 'BI-WEEKLY', name: 'BI-WEEKLY'},
+    { value: 'SEMIMONTHLY', name: 'SEMIMONTHLY' },
+    { value: 'BI-WEEKLY', name: 'BI-WEEKLY' },
   ];
 
-  constructor(
-    private _service: EmployeeService,
-    private _session: SessionService,
-    public _formBuilder: FormBuilder
-  ) {
-  }
+  constructor(public _formBuilder: FormBuilder) {}
 
   ngOnInit() {
     Object.assign(this.payroll, this.employee.payroll);
@@ -42,10 +37,8 @@ export class PayrollComponent implements OnInit {
   }
 
   buildForm() {
-    const {
-        _id, TIN, payrollType, bankName, bankAccount, billable, paymentType
-      } = this.payroll,
-      {_id: employee} = this.employee;
+    const { _id, TIN, payrollType, bankName, bankAccount, billable, paymentType } = this.payroll,
+      { _id: employee } = this.employee;
     this.payrollForm = this._formBuilder.group({
       _id: [_id],
       employee: [employee],
@@ -58,36 +51,12 @@ export class PayrollComponent implements OnInit {
     });
   }
 
-  async savePayroll() {
-    const {value: values} = this.payrollForm;
-    const payroll: EmployeePayroll = {
-      ...values
-    };
-    delete payroll._id;
-    try {
-      await this._service.savePayroll(payroll).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
-  }
-
-  async updatePayroll() {
-    const {value: values} = this.payrollForm;
-    const payroll: EmployeePayroll = {
-      ...values
-    };
-    try {
-      await this._service.updatePayroll(payroll).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
-  }
-
   onSubmit() {
     if (this.payrollForm.valid && this.payrollForm.touched) {
-      return this.payrollForm.value._id === '' ? this.savePayroll() : this.updatePayroll();
+      const payroll: EmployeePayroll = {
+        ...this.payrollForm.value,
+      };
+      this.onSaveButtonClicked.emit(payroll);
     } else {
       return this.payrollForm.markAllAsTouched();
     }

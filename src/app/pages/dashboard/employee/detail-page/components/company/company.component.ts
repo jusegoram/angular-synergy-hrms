@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EmployeeService } from '@synergy-app/core/services';
 import { Employee, EmployeeCompany, Manager } from '@synergy-app/shared/models';
 import { noop } from 'rxjs';
 
 @Component({
-  selector: 'company-info',
+  selector: 'app-company-info',
   templateUrl: './company.component.html',
   styleUrls: ['./company.component.css'],
 })
@@ -14,8 +13,18 @@ export class CompanyComponent implements OnInit {
   @Input('authorization') auth;
   // tslint:disable-next-line:no-input-rename
   @Input('employee') currentEmployee: Employee;
-  @Output() onSuccess = new EventEmitter<any>();
-  @Output() onError = new EventEmitter<any>();
+  @Input()
+  set superiors(superiors) {
+    if (superiors) {
+      const { managers, shiftManagers, trainers, supervisors } = superiors;
+      this.managers = managers;
+      this.shiftManagers = shiftManagers;
+      this.supervisors = supervisors;
+      this.trainers = trainers;
+    }
+  }
+  @Output() onSuperiorsDataRequest = new EventEmitter<any>();
+  @Output() onSubmitButtonClicked = new EventEmitter<{ company: EmployeeCompany; shouldUpdateCompany: boolean }>();
   company: EmployeeCompany = {
     employee: '',
     client: '',
@@ -34,19 +43,18 @@ export class CompanyComponent implements OnInit {
     bilingual: false,
   };
   companyForm: FormGroup;
-  clients: any;
+  @Input() clients: any;
   campaigns: any;
   managers: Manager[];
   shiftManagers: Manager[];
   supervisors: Manager[];
   trainers: Manager[];
 
-  constructor(private _service: EmployeeService, private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     Object.assign(this.company, this.currentEmployee.company);
-    this.fetchSuperiors(this.company.client);
-    this.clients = this._service.getClient();
+    this.requestSuperiors(this.company.client);
     this.campaigns = this.setCampaigns(this.company.client);
     this.buildForm();
   }
@@ -87,18 +95,12 @@ export class CompanyComponent implements OnInit {
       bilingual: [bilingual],
     });
   }
-  fetchSuperiors(client?) {
-    client
-      ? this._service.getEmployeeManagers([client]).subscribe((result: any) => {
-          const { managers, shiftManagers, trainers, supervisors} = result;
-          this.managers = managers;
-          this.shiftManagers = shiftManagers;
-          this.supervisors = supervisors;
-          this.trainers = trainers;
-        })
-      : noop();
+
+  requestSuperiors(client?) {
+    client ? this.onSuperiorsDataRequest.emit(client) : noop();
   }
-  async createCompany() {
+
+  getNewCompany() {
     const { value: values } = this.companyForm;
     const query: EmployeeCompany = {
       ...values,
@@ -107,23 +109,20 @@ export class CompanyComponent implements OnInit {
     query.shiftManager = this.shiftManagerResolver(values.shiftManager);
     query.supervisor = this.supervisorResolver(values.supervisor);
     query.trainer = this.trainerResolver(values.trainer);
-    try {
-      delete query._id;
-      await this._service.saveCompany(query).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
+    delete query._id;
+    return query;
   }
-  async updateCompany() {
-    const { value: values } = this.companyForm;
 
+  getCompanyToUpdate(): EmployeeCompany {
+    const { value: values } = this.companyForm;
     const query: EmployeeCompany = {
       ...values,
     };
-    query.manager = this.company.manager && this.company.manager.manager_id === values.manager
-      ? this.company.manager
-      : this.managerResolver(values.manager);
+
+    query.manager =
+      this.company.manager && this.company.manager.manager_id === values.manager
+        ? this.company.manager
+        : this.managerResolver(values.manager);
     query.shiftManager =
       this.company.shiftManager && this.company.shiftManager.manager_id === values.shiftManager
         ? this.company.shiftManager
@@ -136,23 +135,17 @@ export class CompanyComponent implements OnInit {
       this.company.trainer && this.company.trainer.manager_id === values.trainer
         ? this.company.trainer
         : this.trainerResolver(values.trainer);
-    try {
-      delete query._id;
-      await this._service.updateCompany(query).toPromise();
-      return this.onSuccess.emit();
-    } catch (e) {
-      return this.onError.emit();
-    }
+    delete query._id;
+    return query;
   }
 
-  async setCampaigns($event: string) {
-    this.fetchSuperiors($event);
+  setCampaigns($event: string) {
+    this.requestSuperiors($event);
     try {
-      const clients = await this._service.getClient().toPromise();
-      if (clients) {
-        const i = clients.findIndex((result) => result.name === $event);
+      if (this.clients) {
+        const i = this.clients.findIndex((result) => result.name === $event);
         if (i >= 0) {
-          return clients[i].campaigns;
+          return this.clients[i].campaigns;
         } else {
           return [];
         }
@@ -161,6 +154,7 @@ export class CompanyComponent implements OnInit {
       return [];
     }
   }
+
   managerResolver(_id: string) {
     const date = new Date();
     const [found] = this.managers.filter((i) => i.manager_id === _id);
@@ -212,11 +206,15 @@ export class CompanyComponent implements OnInit {
   refreshCampaigns(value: string) {
     this.campaigns = this.setCampaigns(value);
   }
+
   onSubmit() {
     if (this.companyForm.valid && this.companyForm.touched) {
-      return !!this.company._id
-        ? this.updateCompany()
-        : this.createCompany();
+      const shouldUpdateCompany = !!this.company._id;
+      const company = shouldUpdateCompany ? this.getCompanyToUpdate() : this.getNewCompany();
+      this.onSubmitButtonClicked.emit({
+        company,
+        shouldUpdateCompany,
+      });
     } else {
       this.companyForm.markAllAsTouched();
     }
