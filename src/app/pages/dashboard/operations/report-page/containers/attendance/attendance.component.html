@@ -196,6 +196,8 @@
     <div fxFlex style="height: 100%;">
       <app-attendance-history
         [employee]="employeeHistory"
+        [attendanceHistory]="attendanceHistory$ | async"
+        (onRefreshButtonClicked)="fetchAttendanceHistory($event)"
       ></app-attendance-history>
     </div>
   </mat-card>

@@ -1,7 +1,7 @@
 import { interval, Observable } from 'rxjs';
 import { map, publishReplay, refCount, share } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SessionService } from '@synergy-app/core/services';
+import { SessionService } from '@synergy-app/core/services/session.service';
 import { environment } from '@synergy/environments/environment';
 import { Injectable } from '@angular/core';
 
@@ -16,7 +16,7 @@ export class OperationsService {
   public clients: any;
   private clock: Observable<Date>;
 
-  constructor(private httpClient: HttpClient, private _session: SessionService) {
+  constructor(private httpClient: HttpClient, private sessionService: SessionService) {
     this.clock = interval(1000).pipe(
       map((tick) => new Date()),
       share()
@@ -127,6 +127,6 @@ export class OperationsService {
     return 'JWT ' + localStorage.getItem('id_token');
   }
   getDecodedToken() {
-    return this._session.decodeToken();
+    return this.sessionService.decodeToken();
   }
 }

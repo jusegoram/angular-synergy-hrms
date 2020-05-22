@@ -1,6 +1,6 @@
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from '../../operations.service';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import moment from 'moment';
@@ -14,14 +14,15 @@ import { TIME_VALUES } from '@synergy/environments/enviroment.common';
 })
 export class AttendanceComponent implements OnInit {
   CurrentTime: Observable<Date>;
+  attendanceHistory$: Observable<any>;
   queryForm: FormGroup;
   clients = [];
   campaigns = [];
   dataSource: MatTableDataSource<any>;
   columns: string[] = ['employeeId', 'name', 'shift', 'timeIn', 'attendance', 'action'];
   employeeHistory: any;
-  constructor(private _operationsService: OperationsService, private fb: FormBuilder) {
-    this.CurrentTime = this._operationsService.getClock();
+  constructor(private operationsService: OperationsService, private fb: FormBuilder) {
+    this.CurrentTime = this.operationsService.getClock();
   }
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -29,7 +30,7 @@ export class AttendanceComponent implements OnInit {
   // start <= 9:00 && end <= 12:00
 
   ngOnInit() {
-    this._operationsService.getClient().subscribe((result) => (this.clients = result));
+    this.operationsService.getClient().subscribe((result) => (this.clients = result));
     this.buildQueryForm();
   }
 
@@ -44,9 +45,14 @@ export class AttendanceComponent implements OnInit {
   }
 
   getAttendance() {
-    this._operationsService.getAttendance({}).subscribe((result) => {
+    this.operationsService.getAttendance({}).subscribe((result) => {
       console.log(result);
     });
+  }
+
+  fetchAttendanceHistory(params) {
+    const { employeeId, from, to } = params;
+    this.attendanceHistory$ = this.operationsService.getAttendanceHistory(employeeId, from, to);
   }
 
   onHistory(e) {
@@ -79,7 +85,7 @@ export class AttendanceComponent implements OnInit {
       client: v.Client.name,
       campaign: v.Campaign,
     };
-    this._operationsService.getAttendance(query).subscribe((result) => {
+    this.operationsService.getAttendance(query).subscribe((result) => {
       this.refreshTable(result);
     });
   }

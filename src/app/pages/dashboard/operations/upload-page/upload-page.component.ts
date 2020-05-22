@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '@synergy/environments/environment';
 import { MatTableDataSource } from '@angular/material/table';
-import { OperationsService } from '../operations.service';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
 import { UploadService } from './services/upload.service';

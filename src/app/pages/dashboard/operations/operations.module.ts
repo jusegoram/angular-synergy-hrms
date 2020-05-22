@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OperationsRoutingModule } from './operations.routing';
-import { OperationsService } from './operations.service';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ExportAsModule } from 'ngx-export-as';
 // Import angular-fusioncharts

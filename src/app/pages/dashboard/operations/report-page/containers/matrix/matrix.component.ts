@@ -1,7 +1,7 @@
 import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { OperationsService } from '../../operations.service';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import moment from 'moment';
 import { Observable, Subscription } from 'rxjs';
@@ -38,11 +38,11 @@ export class MatrixComponent implements OnInit, OnDestroy {
   positionsMap: any = {};
   timeInterval: Subscription;
   constructor(
-    private _operationsService: OperationsService,
+    private operationsService: OperationsService,
     private fb: FormBuilder,
-    private _exportAsService: ExportAsService
+    private exportAsService: ExportAsService
   ) {
-    this.CurrentTime = this._operationsService.getClock();
+    this.CurrentTime = this.operationsService.getClock();
     this.buildForm();
     this.filteredPositions = this.queryForm.controls.position.valueChanges.pipe(
       startWith(null),
@@ -55,10 +55,10 @@ export class MatrixComponent implements OnInit, OnDestroy {
     this.getClients();
   }
   getClients() {
-    this._operationsService.getClient().subscribe((result) => (this.clients = result));
+    this.operationsService.getClient().subscribe((result) => (this.clients = result));
   }
   getPositions() {
-    this._operationsService.getDepartment().subscribe((result: any[]) => {
+    this.operationsService.getDepartment().subscribe((result: any[]) => {
       const filtered: any[] = [].concat.apply(
         [],
         result
@@ -127,7 +127,7 @@ export class MatrixComponent implements OnInit, OnDestroy {
       i = this.positionsMap[i];
       return i;
     });
-    this._operationsService.getMatrix(client, campaign, from, to, queryPositions).subscribe((result: any[]) => {
+    this.operationsService.getMatrix(client, campaign, from, to, queryPositions).subscribe((result: any[]) => {
       this.results = [];
       result.forEach((i) => {
         let mappedResult: { values; keys; header };
@@ -196,7 +196,7 @@ export class MatrixComponent implements OnInit, OnDestroy {
       type: type,
       elementIdOrContent: 'matrix',
     };
-    this._exportAsService
+    this.exportAsService
       .save(
         config,
         `${this.startOfWeek.format('MM-DD-YY').toString()}_${this.endOfWeek.format('MM-DD-YY').toString()}_MATRIX`

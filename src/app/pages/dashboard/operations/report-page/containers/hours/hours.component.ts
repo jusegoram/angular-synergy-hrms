@@ -1,8 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OperationsService } from '../../operations.service';
-import { MatTableDataSource } from '@angular/material/table';
-import moment from 'moment';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import * as XLSX from 'xlsx';
 import { RangesFooterComponent } from '@synergy-app/shared/components';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
@@ -31,13 +29,13 @@ export class HoursComponent implements OnInit {
   columnMode = ColumnMode;
   auth;
   roles = USER_ROLES;
-  constructor(private _opsService: OperationsService, private fb: FormBuilder) {}
+  constructor(private operationsService: OperationsService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.buildForm();
     this.buildTable();
     this.fetchClients();
-    this.auth = this._opsService.getDecodedToken();
+    this.auth = this.operationsService.getDecodedToken();
   }
   buildForm(): void {
     this.queryForm = this.fb.group({
@@ -64,7 +62,7 @@ export class HoursComponent implements OnInit {
     ];
   }
   async fetchClients() {
-    this.clients = await this._opsService.getClient().toPromise();
+    this.clients = await this.operationsService.getClient().toPromise();
   }
   onFilterRemoved(item: string, control?: string) {
     const items = this.queryForm.controls[control].value as string[];
@@ -111,7 +109,7 @@ export class HoursComponent implements OnInit {
           ? this.auth.clients
           : null;
       query.campaign = query.campaign && query.campaign.length === 0 ? null : query.campaign;
-      this.data = await this._opsService.getHours(query).toPromise();
+      this.data = await this.operationsService.getHours(query).toPromise();
     } catch (e) {
       await this.onError.fire();
     }
@@ -137,7 +135,7 @@ export class HoursComponent implements OnInit {
   async delete() {
     const mapped = this.data.map((i) => i._id);
     try {
-      await this._opsService.deleteHours(mapped).toPromise();
+      await this.operationsService.deleteHours(mapped).toPromise();
     } catch (e) {
       await this.onError.fire();
     }

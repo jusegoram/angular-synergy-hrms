@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OperationsService } from '../../operations.service';
+import { OperationsService } from '@synergy-app/core/services/operations.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import * as XLSX from 'xlsx';
@@ -75,10 +75,10 @@ export class KpiComponent implements OnInit {
   displayedColumns = ['employeeId', 'fullName', 'client', 'campaign', 'teamId', 'kpiName', 'score', 'date', 'action'];
   notfound;
 
-  constructor(private _opsService: OperationsService, private fb: FormBuilder) {}
+  constructor(private operationsService: OperationsService, private fb: FormBuilder) {}
 
   ngOnInit() {
-    this._opsService.getClient().subscribe((data) => {
+    this.operationsService.getClient().subscribe((data) => {
       this.clients = data;
     });
     this.buildQueryForm();
@@ -96,7 +96,7 @@ export class KpiComponent implements OnInit {
   }
 
   populateTable(query) {
-    this._opsService.getKpis(query).subscribe(
+    this.operationsService.getKpis(query).subscribe(
       (res) => {
         res.map((item) => {
           item.date = new Date(item.date);
