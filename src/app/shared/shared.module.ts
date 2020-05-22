@@ -87,6 +87,7 @@ export function provideSwal() {
     PdfViewerComponent,
     PageTitleComponent,
     AvatarComponent,
+    SweetAlert2Module
   ],
   providers: [MenuService, TrackerStatusPipe, TrackerTypePipe, ExportService],
   entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent],

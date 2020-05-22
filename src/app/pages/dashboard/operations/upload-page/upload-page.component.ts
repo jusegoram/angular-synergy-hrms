@@ -5,15 +5,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { OperationsService } from '../operations.service';
 import { OnErrorAlertComponent } from '@synergy-app/shared/modals/on-error-alert/on-error-alert.component';
 import { OnSuccessAlertComponent } from '@synergy-app/shared/modals/on-success-alert/on-success-alert.component';
-import { UploadService } from '@synergy-app/pages/dashboard/operations/upload/upload.service';
+import { UploadService } from './services/upload.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-cloud-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.scss'],
+  templateUrl: './upload-page.component.html',
+  styleUrls: ['./upload-page.component.scss'],
 })
-export class UploadComponent implements OnInit {
+export class UploadPageComponent implements OnInit {
   @ViewChild('errorAlert', {static: false})
   errorAlert: OnErrorAlertComponent;
   @ViewChild('successAlert', {static: false})
