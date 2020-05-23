@@ -5,16 +5,16 @@ import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  selector: 'app-profile-page',
+  templateUrl: './profile-page.component.html',
+  styleUrls: ['./profile-page.component.scss'],
 })
-export class ProfileComponent implements OnInit {
+export class ProfilePageComponent implements OnInit {
   hide = true;
   name = '';
   changePwdForm: FormGroup;
-  constructor(private _session: SessionService, private _userService: UserService, private snackBar: MatSnackBar) {
-    this.name = this._session.getName();
+  constructor(private sessionService: SessionService, private userService: UserService, private snackBar: MatSnackBar) {
+    this.name = this.sessionService.getName();
   }
 
   ngOnInit() {
@@ -37,12 +37,12 @@ export class ProfileComponent implements OnInit {
   }
   onSubmitPwdChange() {
     const query = {
-      _id: this._session.getId(),
+      _id: this.sessionService.getId(),
       password: this.changePwdForm.value.oldPassword,
       newPassword: this.changePwdForm.value.confirmPassword,
     };
     if (query.password && query.newPassword) {
-      this._userService.updateUser(query).subscribe(
+      this.userService.updateUser(query).subscribe(
         (data) => {
           this.openSnackBar('Password changed successfully', 'thanks!');
         },

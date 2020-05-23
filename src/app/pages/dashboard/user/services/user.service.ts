@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '@synergy/environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class UserService {
   api = environment.apiUrl;
 
