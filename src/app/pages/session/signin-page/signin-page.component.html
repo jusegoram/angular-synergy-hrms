@@ -1,0 +1,19 @@
+<div class="session mat-indigo">
+  <div class="session-content">
+    <div class="session-wrapper">
+      <mat-card>
+        <mat-card-content>
+          <app-synergy-logo></app-synergy-logo>
+          <app-login-form (onLoginButtonClick)="logIn($event)"></app-login-form>
+          <div class="pt-1 pb-1 text-xs-center">
+            <!-- [routerLink]="['/session/forgot']" -->
+            <a
+              (click)="openSnackBar('Notify Synergy Administrator', 'thanks')"
+              >Forgot your password?</a
+            >&nbsp;&nbsp;&nbsp;&nbsp;
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

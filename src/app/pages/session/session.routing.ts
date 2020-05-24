@@ -1,29 +1,24 @@
 import { Routes } from '@angular/router';
 
-import { NotFoundComponent } from './not-found/not-found.component';
-import { ErrorComponent } from './error/error.component';
-import { ForgotComponent } from './forgot/forgot.component';
-import { SigninComponent } from './signin/signin.component';
-
 export const SessionRoutes: Routes = [
   {
     path: '',
     children: [
       {
         path: '404',
-        component: NotFoundComponent,
+        loadChildren: () => import('./not-found-page/not-found-page.module').then((m) => m.NotFoundPageModule)
       },
       {
         path: 'error',
-        component: ErrorComponent,
+        loadChildren: () => import('./error-page/error-page.module').then((m) => m.ErrorPageModule)
       },
       {
         path: 'forgot',
-        component: ForgotComponent,
+        loadChildren: () => import('./forgot-page/forgot-page.module').then((m) => m.ForgotPageModule)
       },
       {
         path: 'signin',
-        component: SigninComponent,
+        loadChildren: () => import('./signin-page/signin-page.module').then((m) => m.SigninPageModule)
       },
     ],
   },

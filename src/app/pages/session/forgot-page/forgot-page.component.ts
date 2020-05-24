@@ -4,11 +4,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 
 @Component({
-  selector: 'app-forgot',
-  templateUrl: './forgot.component.html',
-  styleUrls: ['./forgot.component.scss'],
+  selector: 'app-forgot-page',
+  templateUrl: './forgot-page.component.html',
+  styleUrls: ['./forgot-page.component.scss'],
 })
-export class ForgotComponent implements OnInit {
+export class ForgotPageComponent implements OnInit {
   public form: FormGroup;
 
   constructor(private fb: FormBuilder, private router: Router) {
