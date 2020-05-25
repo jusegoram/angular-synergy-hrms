@@ -5,6 +5,7 @@ export interface Employee {
   leaveType?: string;
   employeeId?: number;
   restriction?: string;
+  fullName?: string;
   firstName: string;
   middleName: string;
   lastName: string;

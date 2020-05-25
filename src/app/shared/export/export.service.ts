@@ -17,7 +17,7 @@ export class ExportService {
   }
 
   toQuery(form: Object): any {
-    const toArray = (param) => (param instanceof Array ? {$in: param}  : {$in: [param]});
+    const toArray = (param) => (param instanceof Array ? { $in: param } : { $in: [param] });
     const assertEmpty = (param) => {
       if ([null, '', {}, []].includes(param)) {
         return true;
@@ -30,9 +30,7 @@ export class ExportService {
       keys.forEach((key) => {
         switch (true) {
           case ['manager', 'shiftManager', 'supervisor', 'trainer'].includes(key):
-            !assertEmpty(form[key])
-              ? query['company.' + key + '.manager_id'] = form[key].manager_id
-              : noop();
+            !assertEmpty(form[key]) ? (query['company.' + key + '.manager_id'] = form[key].manager_id) : noop();
             break;
           case ['hireDate', 'terminationDate'].includes(key):
             !assertEmpty(form[key])
@@ -41,25 +39,19 @@ export class ExportService {
             break;
           case key === 'client':
             if (assertEmpty(form[key])) {
-              this.auth.clients.length > 0 ? query['company.' + key] = toArray(this.auth.clients) : noop();
+              this.auth.clients.length > 0 ? (query['company.' + key] = toArray(this.auth.clients)) : noop();
             } else {
-              query['company.' + key] = toArray(form[key].map(i => i.name));
+              query['company.' + key] = toArray(form[key].map((i) => i.name));
             }
             break;
           case key === 'trainingGroupRef':
-            !assertEmpty(form['trainingGroupNum'])
-              ? (query['company.' + key ] =  toArray(form[key]))
-              : noop();
+            !assertEmpty(form['trainingGroupNum']) ? (query['company.' + key] = toArray(form[key])) : noop();
             break;
           case key === 'status':
-            !assertEmpty(form[key])
-              ? (query[key] = toArray(form[key]))
-              : noop();
+            !assertEmpty(form[key]) ? (query[key] = toArray(form[key])) : noop();
             break;
           default:
-            !assertEmpty(form[key])
-              ? (query['company.' + key] = toArray(form[key]))
-              : noop();
+            !assertEmpty(form[key]) ? (query['company.' + key] = toArray(form[key])) : noop();
         }
       });
       return query;
@@ -73,7 +65,7 @@ export class ExportService {
       filter: this.toQuery(query),
       projection: this.projections[type],
       options: options,
-      extras: extras
+      extras: extras,
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.httpClient.post(`${this.api}/reports/employee/${type}`, body, {
@@ -82,14 +74,15 @@ export class ExportService {
   }
   mapShift(report: any[]): any[] {
     return report.map((element) => {
-      const {shift } = element;
+      const { shift } = element;
       const mappedShift: any = {};
       if (shift) {
         const length = shift.length;
         for (let i = 0; i < length; i++) {
           const day = shift[i];
-          mappedShift[this.dateToString(day.date)] = `${this.transformTime(day.shiftStartTime)
-          } - ${this.transformTime(day.shiftEndTime)}`;
+          mappedShift[this.dateToString(day.date)] = `${this.transformTime(day.shiftStartTime)} - ${this.transformTime(
+            day.shiftEndTime
+          )}`;
           if (mappedShift[this.dateToString(day.date)] === '00:00 - 00:00') {
             mappedShift[this.dateToString(day.date)] = 'DAY OFF';
           }
@@ -99,14 +92,19 @@ export class ExportService {
     });
   }
   mapHours(report: any[]): any[] {
-    return report.map(row => {
+    return report.map((row) => {
       const { hours } = row;
       const mappedHours: any = {};
       if (hours) {
         const length = hours.length;
-        for (let i = 0; i < length; i ++) {
+        for (let i = 0; i < length; i++) {
           const hour = hours[i];
-          mappedHours[this.dateToString(hour.date)] = hour.hasHours ? true : hour.hasHours === hour.onShift;       }
+          mappedHours[this.dateToString(hour.date)] = hour.hasHours
+            ? true
+            : hour.onShift
+            ? false
+            : 'DAY OFF';
+        }
       }
       return Object.assign(row, mappedHours);
     });

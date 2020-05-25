@@ -19,7 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { PayrollService } from './services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { CdkColumnDef } from '@angular/cdk/table';
-import { ExportBottomSheetComponent } from './components/new-payroll/export-bottom-sheet/export-bottom-sheet.component';
+import { ExportBottomSheetComponent } from './components/export-bottom-sheet/export-bottom-sheet.component';
 import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
 import { MainComponent } from './components/main/main.component';
 import { DetailComponent } from './components/detail/detail.component';
@@ -42,6 +42,7 @@ import { ReportComponent } from './components/report/report.component';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 import { ModalsModule } from '@synergy-app/shared/modals/modals.module';
 import { LeavesComponent } from './components/concepts/leaves/leaves.component';
+import { OnFinalpaymentComponent } from './components/concepts/on-finalpayment/on-finalpayment.component';
 
 FusionChartsModule.fcRoot(FusionCharts, Charts, FusionTheme, ExcelExport);
 
@@ -82,6 +83,7 @@ export function provideSwal() {
     PayslipDialogComponent,
     ReportComponent,
     LeavesComponent,
+    OnFinalpaymentComponent,
   ],
   providers: [
     PayrollService,

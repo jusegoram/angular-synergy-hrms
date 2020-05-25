@@ -115,14 +115,25 @@
       <mat-label>SEARCH</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="..." />
     </mat-form-field>
-    <button
-      mat-flat-button
-      (click)="stepper.next()"
-      color="accent"
-      *ngIf="!payroll[0].isFinalized"
-    >
-      FINALIZE
-    </button>
+
+    <div>
+      <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+        <span>MENU</span>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="openExportBottomSheet()">
+          EXPORT
+        </button>
+        <button
+          mat-menu-item
+          (click)="stepper.next()"
+          color="accent"
+          *ngIf="!payroll[0].isFinalized"
+        >
+          FINALIZE
+        </button>
+      </mat-menu>
+    </div>
   </div>
 
   <ngx-datatable

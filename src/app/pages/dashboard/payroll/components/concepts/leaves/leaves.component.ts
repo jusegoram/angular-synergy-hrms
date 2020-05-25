@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PdfViewerComponent } from '@synergy-app/shared/modals/pdf-viewer/pdf-viewer.component';
 import { Department } from '@synergy-app/shared/models/positions-models';
 import { CreateDepartmentDialogComponent } from '@synergy-app/pages/dashboard/administration/employee/position/create-department-dialog/create-department-dialog.component';
+import { Employee } from '@synergy-app/shared/models/employee/employee';
 
 @Component({
   selector: 'app-leaves',
@@ -80,11 +81,5 @@ export class LeavesComponent implements OnInit {
     } catch (error) {
       Swal.fire('Woa!', 'Error happened. Try again later.', 'error');
     }
-  }
-  openViewDocDialog(url) {
-    const ref = this.dialog.open(PdfViewerComponent, {
-      width: '500px',
-      data: url,
-    });
   }
 }

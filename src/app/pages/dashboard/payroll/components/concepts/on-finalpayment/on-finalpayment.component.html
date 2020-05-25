@@ -1,0 +1,20 @@
+<mat-accordion displayMode="flat" [multi]="true"
+               [hideToggle]="true">
+  <mat-expansion-panel [hideToggle]="true">
+    <mat-expansion-panel-header>EMPLOYEES MARKED FOR FINAL PAYMENT</mat-expansion-panel-header>
+    <ngx-datatable
+      class="material"
+      [rows]="data"
+      [columns]="columns"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      rowHeight="auto"
+    ></ngx-datatable>
+    <ng-template #payLeaveTemplate let-row="row" let-value="value">
+      <mat-chip-list>
+        <mat-chip class="mat-deep-orange-400" matTooltip="Only click this if you already created a concept for this leave" (click)="confirmConceptCreated(value)">CONCEPT CREATED</mat-chip>
+      </mat-chip-list>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>

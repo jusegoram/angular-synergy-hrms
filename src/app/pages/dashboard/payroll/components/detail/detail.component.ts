@@ -10,6 +10,8 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatStepper } from '@angular/material/stepper';
 import { noop } from 'rxjs';
 import { ChartData, Datum } from '@synergy-app/shared/models/chart-data.model';
+import { ExportBottomSheetComponent } from '@synergy-app/pages/dashboard/payroll/components/export-bottom-sheet/export-bottom-sheet.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
   selector: 'app-detail',
@@ -49,7 +51,8 @@ export class DetailComponent implements OnInit {
     private zone: NgZone,
     private minutesecondsPipe: MinuteSecondsPipe,
     private _payrollService: PayrollService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private _bottomSheet: MatBottomSheet,
   ) {
     this.user = this._payrollService.getDecodedToken();
   }
@@ -70,7 +73,7 @@ export class DetailComponent implements OnInit {
     this.table.rowDetail.toggleExpandRow(row);
   }
 
-  applyFilter(filter: string) {
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
     this.rows = this.dataSource.filteredData;
@@ -310,5 +313,80 @@ export class DetailComponent implements OnInit {
     } else {
       this.failedFinalizeSwal.fire().then((e) => noop());
     }
+  }
+  openExportBottomSheet() {
+    const exportData = this.rows.map( i =>  {
+      return {
+        fromDate: i.fromDate,
+        toDate: i.toDate,
+        employeeId: i.employeeId,
+        employeeName: i.employeeName,
+        status: i.employeeStatus,
+        employeeSSN: i.employeeSSN,
+        client: i.employeeCompany.client,
+        campaign: i.employeeCompany.campaign,
+        manager: i.employeeCompany.manager.name,
+        supervisor: i.employeeCompany.supervisor.name,
+        branch: i.employeeCompany.branch,
+        trainingGroup: [i.employeeCompany.trainingGroupRef, i.employeeCompany.trainingGroupNum].join(' '),
+        hireDate: i.employeeCompany.hireDate,
+        terminationDate: i.employeeCompany.terminationDate,
+        email: i.email,
+        TIN: i.employeePayroll.TIN,
+        payrollType: i.employeePayroll.payrollType,
+        bankName: i.employeePayroll.bankName,
+        bankAccount: i.employeePayroll.bankAccount,
+        billable: i.employeePayroll.billable,
+        paymentType: i.employeePayroll.paymentType,
+        position: i.employeePosition.name,
+        baseWage: i.positionBaseWage,
+        hourlyRate: i.positionBaseWage * 12 / 52 / 45,
+        totalScheduledMinutes: i.totalScheduledMinutes,
+        daysInShiftHolidayX1: i.employeeShiftHolidayX1.length || 0,
+        daysInShiftHolidayX2: i.employeeShiftHolidayX2.length || 0,
+        daysInShiftRegular: i.employeeShiftRegular.length || 0,
+        employeeOtherpays_Records: i.employeeOtherpays.length || 0,
+        employeeCSL_Records: i.employeeCSL.length || 0,
+        employeeCompassionate_Records: i.employeeCompassionate.length || 0,
+        employeeMaternities_Records: i.employeeMaternities.length || 0,
+        employeeFinalPayments_Records: i.employeeFinalPayments.length || 0,
+        employeeTaxableBonus_Records: i.employeeTaxableBonus.length || 0,
+        employeeNonTaxableBonus_Records: i.employeeNonTaxableBonus.length || 0,
+        employeeDeductions_Records: i.employeeDeductions.length || 0,
+        totalSystemHoursRegular: i.totalSystemRegularPay.hours || 0,
+        totalSystemRegularPay: i.totalSystemRegularPay.totalPayed['$numberDecimal'],
+        totalSystemHoursHolidayX1: i.totalSystemHolidayX1Pay.hours || 0,
+        totalSystemHolidayX1Pay: i.totalSystemHolidayX1Pay.totalPayed['$numberDecimal'],
+        totalSystemHoursHolidayX2: i.totalSystemHolidayX2Pay.hours || 0,
+        totalSystemHolidayX2Pay: i.totalSystemHolidayX2Pay.totalPayed['$numberDecimal'],
+        totalTosHoursRegular: i.totalTosRegularPay.hours || 0,
+        totalTosRegularPay: i.totalTosRegularPay.totalPayed['$numberDecimal'],
+        totalTosHoursHolidayX1: i.totalTosHolidayX1Pay.hours || 0,
+        totalTosHolidayX1Pay: i.totalTosHolidayX1Pay.totalPayed['$numberDecimal'],
+        totalTosHoursHolidayX2: i.totalTosHolidayX2Pay.hours || 0,
+        totalTosHolidayX2Pay: i.totalTosHolidayX2Pay.totalPayed['$numberDecimal'],
+        totalOtherPays: i.totalOtherPays['$numberDecimal'],
+        totalCSL: i.totalCSL['$numberDecimal'],
+        totalCompassionate: i.totalCompassionate['$numberDecimal'],
+        totalMaternities: i.totalMaternities['$numberDecimal'],
+        totalFinalPayments: i.totalFinalPayments['$numberDecimal'],
+        totalTaxableBonus: i.totalTaxableBonus['$numberDecimal'],
+        totalNonTaxableBonus: i.totalNonTaxableBonus['$numberDecimal'],
+        totalDeductions: i.totalDeductions['$numberDecimal'],
+        totalOvertime: i.totalOvertime,
+        totalOvertimePay: i.totalOvertimePay['$numberDecimal'],
+        ssEmployeeContribution: i.ssEmployeeContribution['$numberDecimal'],
+        ssEmployerContribution: i.ssEmployerContribution['$numberDecimal'],
+        socialContribution: i.socialContribution['$numberDecimal'],
+        grossBeforeCSLPayment: i.grossBeforeCSLPayment['$numberDecimal'],
+        grossPayment: i.grossPayment['$numberDecimal'],
+        incomeTax: i.incomeTax['$numberDecimal'],
+        netPayment: i.netPayment['$numberDecimal'],
+        isFinalized: i.isFinalized,
+        isPayed: i.isPayed,
+        onFinalPayment: i.onFinalPayment,
+      };
+    });
+    this._bottomSheet.open(ExportBottomSheetComponent, {data: exportData});
   }
 }
