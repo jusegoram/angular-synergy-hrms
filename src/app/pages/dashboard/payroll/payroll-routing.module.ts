@@ -1,29 +1,26 @@
-import { ConceptsComponent } from './components/concepts/concepts.component';
-import { MainComponent } from './components/main/main.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NewPayrollComponent } from './components/new-payroll/new-payroll.component';
-import { PayslipsComponent } from './components/payslips/payslips.component';
-import { UploadComponent } from './components/upload/upload.component';
-import { DetailComponent } from './components/detail/detail.component';
-import { DetailResolver } from './components/detail/detail.resolver';
-import { ReportComponent } from '@synergy-app/pages/dashboard/payroll/components/report/report.component';
 
 export const routes: Routes = [
   {
     path: '',
     children: [
-      {path: 'main', component: MainComponent},
-      {path: 'concepts', component: ConceptsComponent},
+      {path: 'main',
+      loadChildren: () => import('./main-page/main-page.module').then((m) => m.MainPageModule)},
+      {path: 'concepts',
+      loadChildren: () => import('./concepts-page/concepts-page.module').then((m) => m.ConceptsPageModule)},
       {
         path: 'detail',
-        component: DetailComponent,
-        resolve: {payroll: DetailResolver},
+        loadChildren: () => import('./detail-page/detail-page.module').then((m) => m.DetailPageModule)
       },
-      {path: 'new', component: NewPayrollComponent},
-      {path: 'payslip', component: PayslipsComponent},
-      {path: 'upload', component: UploadComponent},
-      {path: 'reports', component: ReportComponent},
+      {path: 'new',
+      loadChildren: () => import('./new-payroll-page/new-payroll-page.module').then((m) => m.NewPayrollPageModule)},
+      {path: 'payslip',
+      loadChildren: () => import('./payslips-page/payslips-page.module').then((m) => m.PayslipsPageModule)},
+      {path: 'upload',
+        loadChildren: () => import('./upload-page/upload-page.module').then((m) => m.UploadPageModule)},
+      {path: 'reports',
+        loadChildren: () => import('./report-page/report-page.module').then((m) => m.ReportPageModule)},
     ],
   },
 ];
