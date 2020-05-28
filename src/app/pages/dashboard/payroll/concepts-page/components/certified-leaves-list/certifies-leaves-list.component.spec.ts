@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeavesComponent } from './leaves.component';
+import { CertifiedLeavesListComponent } from './certified-leaves-list.component';
 
 xdescribe('LeavesComponent', () => {
-  let component: LeavesComponent;
-  let fixture: ComponentFixture<LeavesComponent>;
+  let component: CertifiedLeavesListComponent;
+  let fixture: ComponentFixture<CertifiedLeavesListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeavesComponent ]
+      declarations: [ CertifiedLeavesListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LeavesComponent);
+    fixture = TestBed.createComponent(CertifiedLeavesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

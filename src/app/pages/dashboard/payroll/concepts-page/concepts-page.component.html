@@ -29,8 +29,16 @@
         <mat-card-header>
           <mat-card-subtitle>SELECT EMPLOYEE - CHOOSE TYPE - SELECT CONCEPT - CHOOSE EFFECTIVE DATE</mat-card-subtitle>
         </mat-card-header>
-        <app-leaves></app-leaves>
-        <app-new-concept></app-new-concept>
+        <app-certified-leaves-list
+          [leaves]="certifiedLeaves$ | async"
+          (onMarkAsConceptCreatedConfirmation)="saveMarkAsConceptCreatedStatusToLeave($event)"
+          ></app-certified-leaves-list>
+        <app-new-concept
+          [currentUserId]="userId"
+          [concepts]="concepts$ | async"
+          [employees]="employees$ | async"
+          (onConceptTypeSelected)="fetchConcepts($event)"
+          (onAddConceptButtonClicked)="saveConcept($event)"></app-new-concept>
       </div>
     </mat-tab>
     <mat-tab label="VERIFICATION">

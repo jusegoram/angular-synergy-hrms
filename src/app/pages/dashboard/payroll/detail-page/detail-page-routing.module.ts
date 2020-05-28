@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { DetailPageComponent } from './detail-page.component';
-import { DetailResolver } from './detail-page.resolver';
-
+import { DetailResolver } from './resolvers/detail-page.resolver';
+import { FusionChartsModule } from 'angular-fusioncharts';
 
 const routes: Routes = [
   {

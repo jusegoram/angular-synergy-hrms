@@ -1,0 +1,135 @@
+<mat-table #table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="selected">
+      <mat-header-cell *matHeaderCellDef> SELECT </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <mat-checkbox
+          #checked
+          [id]="element?._id"
+          [disabled]="element?.isPayed"
+          (click)="$event.stopPropagation()"
+          (change)="$event ? checkedRows.toggle(element) : null"
+          [checked]="checkedRows.isSelected(element)"
+        >
+        </mat-checkbox>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="isPayed">
+      <mat-header-cell *matHeaderCellDef> PAYED </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <ng-container *ngIf="element?.isPayed; else elseTemplate">
+          <mat-icon color="primary">check_circle_outline</mat-icon>
+        </ng-container>
+        <ng-template #elseTemplate>
+          <mat-icon color="accent">panorama_fish_eye</mat-icon>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="fromDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        FROM
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element?.fromDate | date: "EEE - LLLL d - yyyy" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="toDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        TO
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element?.toDate | date: "EEE - LLLL d - yyyy" }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="employeesAmount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        EMPLOYEES PAYED
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{ element?.employeesAmount }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalPayed">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        AMOUNT
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{
+          (element?.totalPayed)["$numberDecimal"]
+            | currency: "BZD":"symbol-narrow":"1.2-2"
+        }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalCompanyContributions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header
+        >RCC SOCIAL CONT.</mat-header-cell
+      >
+      <mat-cell *matCellDef="let element">
+        {{
+          (element?.totalCompanyContributions)["$numberDecimal"]
+            | currency: "BZD":"symbol-narrow":"1.2-2"
+        }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalEmployeeContributions">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        EMP SOCIAL CONT.
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{
+          (element?.totalEmployeeContributions)["$numberDecimal"]
+            | currency: "BZD":"symbol-narrow":"1.2-2"
+        }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalTaxes">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        INCOME TAX
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        {{
+          (element?.totalTaxes)["$numberDecimal"]
+            | currency: "BZD":"symbol-narrow":"1.2-2"
+        }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="details">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <button
+          mat-flat-button
+          color="accent"
+          [disabled]="checkedRows?.selected?.length === 0"
+          (click)="onPaySelectedPayrollsBtnClicked.emit(checkedRows.selected)"
+        >
+          PAY SELECTED PAYROLLS
+        </button>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <a
+          [routerLink]="['/', 'payroll', 'detail']"
+          [queryParams]="{ id: element?._id }"
+          mat-menu-item
+          matTooltip="Go to details"
+        >
+          <span>EDIT &nbsp; &nbsp;</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+  <mat-paginator
+    #paginator
+    [pageSize]="10"
+    [pageSizeOptions]="[10, 20, 30, 50, 100]"
+    showFirstLastButtons
+  >
+  </mat-paginator>

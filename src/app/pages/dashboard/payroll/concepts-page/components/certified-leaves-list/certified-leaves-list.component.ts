@@ -1,31 +1,28 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { EmployeeService } from '@synergy-app/core/services/employee.service';
+import { Component, OnInit, TemplateRef, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { LeaveRequest } from '@synergy-app/shared/models';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import Swal from 'sweetalert2';
-import { LEAVE_STATUS } from '@synergy/environments';
-import moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { PdfViewerComponent } from '@synergy-app/shared/modals';
 
 @Component({
-  selector: 'app-leaves',
-  templateUrl: './leaves.component.html',
-  styleUrls: ['./leaves.component.css'],
+  selector: 'app-certified-leaves-list',
+  templateUrl: './certified-leaves-list.component.html',
+  styleUrls: ['./certified-leaves-list.component.css'],
 })
-export class LeavesComponent implements OnInit {
+export class CertifiedLeavesListComponent implements OnInit {
   @ViewChild('documentTemplate', { static: true }) documentTemplate: TemplateRef<any>;
   @ViewChild('payLeaveTemplate', { static: true }) payLeaveTemplate: TemplateRef<any>;
+  @Input() leaves: Array<LeaveRequest> = [];
+  @Output() onMarkAsConceptCreatedConfirmation = new EventEmitter<string>();
 
-  data: Array<LeaveRequest> = [];
   columns: Array<any> = [];
   ColumnMode = ColumnMode;
-  constructor(private _employeeService: EmployeeService, private datePipe: DatePipe, private dialog: MatDialog) {}
+  constructor(private datePipe: DatePipe, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.initTable();
-    this.getLeaves();
   }
   initTable() {
     this.columns = [
@@ -42,16 +39,7 @@ export class LeavesComponent implements OnInit {
   formatDate() {
     return {transform: (date) => this.datePipe.transform(date, 'MM/dd/yyyy')};
   }
-  async getLeaves() {
-    try {
-      this.data = await this._employeeService.getLeaves({
-        state: '4',
-        excuseTimeFrom: moment().endOf('day').toISOString(),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
+
   confirmConceptCreated(leaveId) {
     Swal.fire({
       title: 'ARE YOU SURE',
@@ -60,25 +48,13 @@ export class LeavesComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'CONFIRM',
       cancelButtonText: 'CANCEL',
-    }).then(async (result) => {
+    }).then( (result) => {
       if (result.value) {
-        await this.markAsConceptCreated(leaveId);
+        this.onMarkAsConceptCreatedConfirmation.emit(leaveId);
       }
     });
   }
-  async markAsConceptCreated(leaveId) {
-    try {
-      const leaveRequest: Partial<LeaveRequest> = {
-        _id: leaveId,
-        state: LEAVE_STATUS.PROCESSED,
-      };
-      await this._employeeService.updateLeave(leaveRequest);
-      await this.getLeaves();
-      await Swal.fire('Great!', 'The leave was processed successfully', 'success');
-    } catch (error) {
-      Swal.fire('Woa!', 'Error happened. Try again later.', 'error');
-    }
-  }
+
   openViewDocDialog(url) {
     const ref = this.dialog.open(PdfViewerComponent, {
       width: '500px',

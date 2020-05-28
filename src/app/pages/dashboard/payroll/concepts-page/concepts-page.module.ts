@@ -1,19 +1,30 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, DatePipe, CurrencyPipe } from '@angular/common';
+import { CommonModule, DatePipe, CurrencyPipe, AsyncPipe } from '@angular/common';
 import { ConceptsPageRoutingModule } from './concepts-page-routing.module';
 import { ConceptsPageComponent } from './concepts-page.component';
-import { MaterialSharedModule } from '@synergy-app/shared';
-import { NewConceptComponent } from './new-concept/new-concept.component';
-// tslint:disable-next-line:max-line-length
-import { ConceptVerificationComponent } from './concept-verification/concept-verification.component';
-import { LeavesComponent } from './leaves/leaves.component';
+import { MaterialSharedModule, SharedModule } from '@synergy-app/shared';
+import { NewConceptComponent } from './components/new-concept/new-concept.component';
+import { ConceptVerificationComponent } from './containers/concept-verification/concept-verification.component';
 import { PayrollService } from '../services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
+import { CertifiedLeavesListComponent } from './components/certified-leaves-list/certified-leaves-list.component';
 
 @NgModule({
-  declarations: [ConceptsPageComponent, NewConceptComponent, ConceptVerificationComponent, LeavesComponent],
-  imports: [CommonModule, ConceptsPageRoutingModule, MaterialSharedModule, NgxDatatableModule, FormsModule],
-  providers: [PayrollService, DatePipe, CurrencyPipe]
+  declarations: [
+    ConceptsPageComponent,
+    NewConceptComponent,
+    ConceptVerificationComponent,
+    CertifiedLeavesListComponent,
+  ],
+  imports: [
+    CommonModule,
+    ConceptsPageRoutingModule,
+    MaterialSharedModule,
+    NgxDatatableModule,
+    FormsModule,
+    SharedModule,
+  ],
+  providers: [PayrollService, DatePipe, CurrencyPipe, AsyncPipe],
 })
 export class ConceptsPageModule {}

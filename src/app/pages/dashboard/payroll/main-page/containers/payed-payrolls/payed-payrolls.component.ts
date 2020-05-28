@@ -3,7 +3,7 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '../../services/payroll.service';
+import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 import { ChartData, Datum } from '@synergy-app/shared/models/chart-data.model';

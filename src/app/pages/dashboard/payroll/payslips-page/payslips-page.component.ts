@@ -1,4 +1,4 @@
-import { PayslipDialogComponent } from './payslip-dialog/payslip-dialog.component';
+import { PayslipDialogComponent } from './containers/payslip-dialog/payslip-dialog.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 

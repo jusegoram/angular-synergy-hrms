@@ -189,6 +189,52 @@ export const LABORAL= {
     { value: 'transfer', viewValue: 'Transfer' },
     //   { value: 'trainee', viewValue: 'Trainee' }
   ],
+  PAYROLL:{
+    CONCEPT_TYPES : [
+      {
+        type: 'Taxable Bonus',
+        concepts: [{ concept: 'Other Bonus' }],
+      },
+      {
+        type: 'Non-Taxable Bonus',
+        concepts: [{ concept: 'Attendance Bonus (Falcon)' }],
+      },
+      {
+        type: 'Deduction',
+        concepts: [
+          { concept: 'Magistrate Court' },
+          { concept: 'Loan/Salary Advance' },
+          { concept: 'Police Record' },
+          { concept: 'Headset' },
+          { concept: 'Uniform' },
+          { concept: 'Quick Stop / AAA Loans' },
+          { concept: 'Overpayment' },
+          { concept: 'Early / Break Offender' },
+        ],
+      },
+      {
+        type: 'Other Payments',
+        concepts: [
+          { concept: 'Certify Sick Leave' },
+          { concept: 'Compassionate Leave' },
+          { concept: 'Maternity Leave' },
+          { concept: 'Training Hours' },
+          { concept: 'Training Stipend' },
+          { concept: 'Time off System' },
+          { concept: 'Time off System 1.5' },
+          { concept: 'Time off System 2X' },
+          { concept: 'Card (cleaners/Security)' },
+          { concept: 'Card 1.5' },
+          { concept: 'Card 2X' },
+          { concept: 'Salary Differences (Discrepancies)' },
+        ],
+      },
+      {
+        type: 'Final Payments',
+        concepts: [{ concept: 'Severance' }, { concept: 'Notice Payment' }],
+      },
+    ]
+  }
 };
 
 export const LOCATION = {

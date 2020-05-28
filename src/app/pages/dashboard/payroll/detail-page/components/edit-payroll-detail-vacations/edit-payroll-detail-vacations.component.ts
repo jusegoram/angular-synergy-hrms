@@ -1,11 +1,11 @@
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
 import { noop } from 'rxjs';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
+
 
 @Component({
   selector: 'app-edit-payroll-detail-vacations',
@@ -17,22 +17,30 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
   @ViewChild('confirmSwal') private confirmSwal: SwalComponent;
   @ViewChild('successSwal') private successSwal: SwalComponent;
 
+  @Input() user: any;
   @Input() row: any;
+  @Input() set concepts(value) {
+    if (value) {
+      this.rows = [...value];
+    }
+  }
+
+  @Output() onAddVacationsButtonClicked = new EventEmitter<any>();
+  @Output() onDeleteConceptButtonClicked = new EventEmitter<any>();
+  @Output() onConfirmConceptButtonClicked = new EventEmitter<any>();
+
   columns: any[] = [];
   rows = new Array<any>();
   vacationsForm: FormGroup;
   ColumnMode = ColumnMode;
-  user: any;
 
   constructor(
     private fb: FormBuilder,
-    private _payrollService: PayrollService,
     private _currencyPipe: CurrencyPipe,
     private _datePipe: DatePipe
   ) {}
 
   ngOnInit() {
-    this.user = this._payrollService.getDecodedToken();
     this.columns = [
       {name: 'FROM', prop: 'from', pipe: this.datePipe()},
       {name: 'TO', prop: 'to', pipe: this.datePipe()},
@@ -40,7 +48,6 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
       {name: 'CONFIRM | DELETE', cellTemplate: this.editCell, width: 155},
     ];
     this.buildForm();
-    this.loadData();
   }
 
   datePipe() {
@@ -77,67 +84,46 @@ export class EditPayrollDetailVacationsComponent implements OnInit {
     return null;
   }
 
-  loadData() {
-    this._payrollService
-      .getConcepts({
-        type: 'Other Payments',
-        id: this.row.employee,
-        vacations: true,
-        assigned: true,
-        payroll: this.row.payroll_Id,
-      })
-      .subscribe((result) => {
-        this.rows = [...result];
-      });
-  }
   saveValue() {
-    this._payrollService
-      .updatePayroll(
-        this.row.payroll_Id,
-        {
-          ...this.vacationsForm.value,
-          totalDays: this.calculateDaysDiff(this.vacationsForm.value.from, this.vacationsForm.value.to),
-        },
-        'VAC'
-      )
-      .subscribe((result) => {
-        this.rows = [...this.rows, result];
+    this.onAddVacationsButtonClicked.emit({
+      payroll: {
+        ...this.vacationsForm.value,
+        totalDays: this.calculateDaysDiff(this.vacationsForm.value.from, this.vacationsForm.value.to),
+      },
+      onPayrollSaved: (response) => {
+        this.rows = [...this.rows, response];
         this.buildForm();
-      });
+      }
+    });
   }
+
   confirmValue(...args) {
     const [rowItem, index] = args;
     if (this.user.userId === rowItem.creationFingerprint) {
       this.confirmSwal.fire().then((e) => noop());
     } else {
-      this._payrollService
-        .updateConcept({
-          type: 'Other Payments',
-          id: [rowItem._id],
-          query: {
-            verified: true,
-            verificationFingerprint: this.user.userId,
-          },
-        })
-        .subscribe((result) => {
-          if (result) {
-            rowItem.verified = true;
-            rowItem.verificationFingerprint = this.user.userId;
-            this._payrollService
-              .updatePayroll(rowItem.payroll, rowItem, 'VAC', this.row._id)
-              .subscribe((finalResult) => {
-                this.successSwal
-                  .fire()
-                  .then((e) => console.log(e))
-                  .catch((e) => console.log(e));
-              });
+      this.onConfirmConceptButtonClicked.emit(
+        {
+          payroll: rowItem,
+          onConceptConfirmStatusSaved: (response) => {
+            if (response) {
+              rowItem.verified = true;
+              rowItem.verificationFingerprint = this.user.userId;
+              this.successSwal
+                    .fire()
+                    .then((e) => console.log(e))
+                    .catch((e) => console.log(e));
+            }
           }
-        });
+        }
+      );
+
+
     }
   }
   deleteValue(item, index) {
-    this._payrollService.deleteConcept({type: 'Other Payments', id: item._id}).subscribe((result) => {
-      this.rows.splice(index, 1);
-    });
+    this.onDeleteConceptButtonClicked.emit(item);
+    this.rows.splice(index, 1);
+    // this.rows.splice(index, 1);
   }
 }

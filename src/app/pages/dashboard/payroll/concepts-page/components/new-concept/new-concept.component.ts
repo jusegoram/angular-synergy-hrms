@@ -1,14 +1,15 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '../../services/payroll.service';
-import { Component, OnInit } from '@angular/core';
+import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SessionService } from '@synergy-app/core/services';
 import { Employee, PayrollConcept } from '@synergy-app/shared/models';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { TIME_VALUES } from '@synergy/environments';
+import { LABORAL } from '@synergy/environments';
+
 
 @Component({
   selector: 'app-new-concept',
@@ -16,6 +17,20 @@ import { TIME_VALUES } from '@synergy/environments';
   styleUrls: ['./new-concept.component.scss'],
 })
 export class NewConceptComponent implements OnInit {
+  @Input() currentUserId: string;
+  @Input() set employees(value: Employee[]) {
+    if (value) {
+      this.filterEmployeesOnEmployeeFieldValueChanges(value);
+    }
+  }
+  @Input() set concepts(value: PayrollConcept[]) {
+    if (value) {
+      this.populateTable(value);
+    }
+  }
+  @Output() onConceptTypeSelected = new EventEmitter<any>();
+  @Output() onAddConceptButtonClicked = new EventEmitter<{concept: PayrollConcept, onConceptSaved: Function}>();
+
   bonuses: PayrollConcept[];
   deductions: PayrollConcept[];
   otherPayments: PayrollConcept[];
@@ -26,53 +41,9 @@ export class NewConceptComponent implements OnInit {
     emptyMessage: 'PLEASE SELECT AN EMPLOYEE AND A CONCEPT TYPE TO LOAD INFO.',
   };
 
-  conceptTypeList = [
-    {
-      type: 'Taxable Bonus',
-      concepts: [{ concept: 'Other Bonus' }],
-    },
-    {
-      type: 'Non-Taxable Bonus',
-      concepts: [{ concept: 'Attendance Bonus (Falcon)' }],
-    },
-    {
-      type: 'Deduction',
-      concepts: [
-        { concept: 'Magistrate Court' },
-        { concept: 'Loan/Salary Advance' },
-        { concept: 'Police Record' },
-        { concept: 'Headset' },
-        { concept: 'Uniform' },
-        { concept: 'Quick Stop / AAA Loans' },
-        { concept: 'Overpayment' },
-        { concept: 'Early / Break Offender' },
-      ],
-    },
-    {
-      type: 'Other Payments',
-      concepts: [
-        { concept: 'Certify Sick Leave' },
-        { concept: 'Compassionate Leave' },
-        { concept: 'Maternity Leave' },
-        { concept: 'Training Hours' },
-        { concept: 'Training Stipend' },
-        { concept: 'Time off System' },
-        { concept: 'Time off System 1.5' },
-        { concept: 'Time off System 2X' },
-        { concept: 'Card (cleaners/Security)' },
-        { concept: 'Card 1.5' },
-        { concept: 'Card 2X' },
-        { concept: 'Salary Differences (Discrepancies)' },
-      ],
-    },
-    {
-      type: 'Final Payments',
-      concepts: [{ concept: 'Severance' }, { concept: 'Notice Payment' }],
-    },
-  ];
+  conceptTypeList = LABORAL.PAYROLL.CONCEPT_TYPES;
 
   conceptFormGroup: FormGroup;
-  employeeList: any;
   employeeConcepts: any;
   selectedEmployee: any;
   employeeConceptsColumns = ['type', 'concept', 'amount', 'date', 'status'];
@@ -80,7 +51,6 @@ export class NewConceptComponent implements OnInit {
   conceptTotalDays: number;
   constructor(
     public fb: FormBuilder,
-    private sessionService: SessionService,
     private payrollService: PayrollService,
     private snackbar: MatSnackBar,
     private currency: CurrencyPipe,
@@ -95,14 +65,7 @@ export class NewConceptComponent implements OnInit {
       { name: 'EFFECTIVE', prop: 'date', pipe: this.datePipe() },
       { name: 'VERIFIED', prop: 'verified' },
     ];
-    this.getEmployees();
     this.buildForm();
-    this.filteredEmployees = this.conceptFormGroup.controls['employee'].valueChanges.pipe(
-      startWith(''),
-      map((value) => {
-        return this.employeeList ? this._filterEmployees(value) : this.employeeList;
-      })
-    );
   }
   isNotice = (concept) => concept === 'Notice Payment';
   isSeverance = (concept) => concept === 'Severance';
@@ -145,26 +108,30 @@ export class NewConceptComponent implements OnInit {
     // this.employeeConcepts = new MatTableDataSource(data);
     this.rows = data;
   }
-  getEmployees() {
-    this.payrollService.getEmployees().subscribe((result) => {
-      this.employeeList = result.map((item) => {
-        item.fullSearchName = `(${item.employeeId}) ${item.firstName} ${item.middleName} ${item.lastName}`;
-        return item;
-      });
-    });
-  }
+
   refreshTable(event) {
-    this.populateTable([event]);
+    this.populateTable([...this.rows, event]);
   }
-  _filterEmployees(value: string): Employee[] {
+
+  filterEmployeesOnEmployeeFieldValueChanges(employees: Employee[]) {
+    this.filteredEmployees = this.conceptFormGroup.controls['employee'].valueChanges.pipe(
+      startWith(''),
+      map((value) => {
+        return employees ? this._filterEmployees(value, employees) : employees;
+      })
+    );
+  }
+
+  _filterEmployees(value: string, employees: Employee[]): Employee[] {
     const filterValue = value.toString().toLowerCase();
-    return this.employeeList.filter((employee) => employee['fullSearchName'].toLowerCase().includes(filterValue));
+    return employees.filter((employee) => employee['fullSearchName'].toLowerCase().includes(filterValue));
   }
   setEmployee(employee: Employee) {
     this.selectedEmployee = employee;
     this.resetForm();
   }
-   onAddConcept() {
+
+  addConcept() {
     const form = this.conceptFormGroup.value;
     const employee = this.selectedEmployee;
     const newConcept = new PayrollConcept(
@@ -176,12 +143,12 @@ export class NewConceptComponent implements OnInit {
       form.date,
       new Date(),
       parseFloat(form.amount),
-      this.sessionService.getId(),
+      this.currentUserId,
       null,
       false,
       false,
       new Date(),
-      this.sessionService.getId(),
+      this.currentUserId,
       this.isMaternity(form.concept),
       this.isCSL(form.concept),
       form.from,
@@ -199,9 +166,17 @@ export class NewConceptComponent implements OnInit {
       false,
       this.isTaxableBonus(form.type.type)
     );
-    this.saveConcept(newConcept).then((resolved) => {
-      this.resetForm();
+    this.onAddConceptButtonClicked.emit({
+      concept:  newConcept,
+      onConceptSaved: (response) => {
+        this.refreshTable(response);
+        this.resetForm();
+      }
     });
+
+    /*this.saveConcept(newConcept).then((resolved) => {
+      this.resetForm();
+    });*/
   }
 
   calculateDaysDiff(from, to) {
@@ -226,21 +201,24 @@ export class NewConceptComponent implements OnInit {
         taxable: this.isTaxableBonus(form.type.type),
       });
     }
-    this.payrollService.getConcepts(query).subscribe((res) => {
-      this.populateTable(res);
-    });
+    this.onConceptTypeSelected.emit(query);
   }
-  saveConcept(concept) {
+
+  /*saveConcept(concept) {
     return new Promise((resolve, reject) => {
-      this.payrollService.saveConcept(concept).subscribe((res) => {
-        this.refreshTable(res);
-        this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
-        resolve();
-      }, error => {
-        this.openSnackbar('ERROR: ' + error.error.message, 'Dismiss');
-      });
+      this.payrollService.saveConcept(concept).subscribe(
+        (res) => {
+          this.refreshTable(res);
+          this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
+          resolve();
+        },
+        (error) => {
+          this.openSnackbar('ERROR: ' + error.error.message, 'Dismiss');
+        }
+      );
     });
-  }
+  }*/
+
   openSnackbar(message, button) {
     this.snackbar.open(message, button, { duration: 10 * 1000 });
   }
