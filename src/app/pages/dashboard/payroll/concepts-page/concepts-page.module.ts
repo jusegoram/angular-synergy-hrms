@@ -9,6 +9,7 @@ import { PayrollService } from '../services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
 import { CertifiedLeavesListComponent } from './components/certified-leaves-list/certified-leaves-list.component';
+import { OnFinalpaymentComponent } from './containers/on-finalpayment/on-finalpayment.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CertifiedLeavesListComponent } from './components/certified-leaves-list
     NewConceptComponent,
     ConceptVerificationComponent,
     CertifiedLeavesListComponent,
+    OnFinalpaymentComponent
   ],
   imports: [
     CommonModule,

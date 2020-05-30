@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { TIME_VALUES } from '@synergy/environments';
 import { LABORAL } from '@synergy/environments';
 
-
 @Component({
   selector: 'app-new-concept',
   templateUrl: './new-concept.component.html',
@@ -29,7 +28,7 @@ export class NewConceptComponent implements OnInit {
     }
   }
   @Output() onConceptTypeSelected = new EventEmitter<any>();
-  @Output() onAddConceptButtonClicked = new EventEmitter<{concept: PayrollConcept, onConceptSaved: Function}>();
+  @Output() onAddConceptButtonClicked = new EventEmitter<{ concept: PayrollConcept; onConceptSaved: Function }>();
 
   bonuses: PayrollConcept[];
   deductions: PayrollConcept[];
@@ -42,7 +41,6 @@ export class NewConceptComponent implements OnInit {
   };
 
   conceptTypeList = LABORAL.PAYROLL.CONCEPT_TYPES;
-
   conceptFormGroup: FormGroup;
   employeeConcepts: any;
   selectedEmployee: any;
@@ -104,8 +102,6 @@ export class NewConceptComponent implements OnInit {
     this.conceptFormGroup.controls.doctorName.reset();
   }
   populateTable(data) {
-    // this.employeeConcepts = null;
-    // this.employeeConcepts = new MatTableDataSource(data);
     this.rows = data;
   }
 
@@ -167,16 +163,12 @@ export class NewConceptComponent implements OnInit {
       this.isTaxableBonus(form.type.type)
     );
     this.onAddConceptButtonClicked.emit({
-      concept:  newConcept,
+      concept: newConcept,
       onConceptSaved: (response) => {
         this.refreshTable(response);
         this.resetForm();
-      }
+      },
     });
-
-    /*this.saveConcept(newConcept).then((resolved) => {
-      this.resetForm();
-    });*/
   }
 
   calculateDaysDiff(from, to) {
@@ -203,21 +195,6 @@ export class NewConceptComponent implements OnInit {
     }
     this.onConceptTypeSelected.emit(query);
   }
-
-  /*saveConcept(concept) {
-    return new Promise((resolve, reject) => {
-      this.payrollService.saveConcept(concept).subscribe(
-        (res) => {
-          this.refreshTable(res);
-          this.openSnackbar('The concept was succesfully saved', 'Great thanks!');
-          resolve();
-        },
-        (error) => {
-          this.openSnackbar('ERROR: ' + error.error.message, 'Dismiss');
-        }
-      );
-    });
-  }*/
 
   openSnackbar(message, button) {
     this.snackbar.open(message, button, { duration: 10 * 1000 });

@@ -208,9 +208,6 @@ export class PayrollService {
   getEmployees() {
     if (!this._employees) {
       this._employees = this.httpClient.get<any>(this.api + '/admin/employee/employee').pipe(
-        map((data) => {
-          return data;
-        }),
         publishReplay(1),
         refCount()
       );

@@ -39,6 +39,7 @@
           [employees]="employees$ | async"
           (onConceptTypeSelected)="fetchConcepts($event)"
           (onAddConceptButtonClicked)="saveConcept($event)"></app-new-concept>
+        <app-on-finalpayment></app-on-finalpayment>
       </div>
     </mat-tab>
     <mat-tab label="VERIFICATION">

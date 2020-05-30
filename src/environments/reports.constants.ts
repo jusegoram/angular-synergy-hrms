@@ -2,15 +2,39 @@ export const WORKFORCE_REPORTS = [
   {
     name: 'Contact Info Report',
     tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, celNumber,
-    telNumber, email, address, town, district`,
+    telNumber, email, address, town, district, position, hireDate`,
     projection: 'contact',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          position: '$position.name',
+        },
+      },
+    ],
   },
   {
     name: 'Leave Report',
-    tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, excuseTimeFrom, excuseTimeTo, reason, description, isSupported, isCertified`,
+    tooltip: `employeeId, firstName, lastName, actualClient, actualCampaign, excuseTimeFrom, excuseTimeTo, reason, description, isSupported, isCertified, position, hireDate`,
     projection: 'leaves',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          position: '$position.name',
+        },
+      },
+    ],
     extras: [],
     extraFilters: [],
   },
@@ -25,10 +49,22 @@ export const WORKFORCE_REPORTS = [
     manager,
     shiftManager,
     supervisor,
-    trainer
+    trainer, position, hireDate
     `,
     projection: 'leads',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          position: '$position.name',
+        },
+      },
+    ],
   },
   {
     name: 'Hire Report',
@@ -38,18 +74,33 @@ export const WORKFORCE_REPORTS = [
     lastName,
     actualClient,
     actualCampaign,
+    position,
     hireDate
     `,
     projection: 'hire',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          position: '$position.name',
+        },
+      },
+    ],
   },
   {
     name: 'Emergency Contact Report',
     tooltip: ` employeeId, firstName, lastName, actualClient, actualCampaign,
-              celNumber, telNumber, email, address, town, district, family
+              celNumber, telNumber, email, address, town, district, family, position, hireDate
               `,
     projection: 'emergency',
-    options: [],
+    options: [
+
+    ],
   },
   {
     name: 'Weekly Shift Report',
@@ -66,6 +117,7 @@ export const WORKFORCE_REPORTS = [
     town,
     district,
     restriction,
+    position, hireDate
     shift
     `,
     projection: 'shift',
@@ -79,6 +131,7 @@ export const WORKFORCE_REPORTS = [
     lastName,
     actualClient,
     actualCampaign,
+    position, hireDate
     last-15-days-hours
     `,
     projection: 'hours',
@@ -99,7 +152,8 @@ export const OPERATIONS_REPORTS = [
     supervisor,
     trainer,
     billable,
-    position
+    position,
+    hireDate,
     `,
     projection: 'position',
     options: [
@@ -138,12 +192,19 @@ export const HR_REPORTS = [
     options: [
       {
         $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
           path: '$attrition',
           preserveNullAndEmptyArrays: true,
         },
       },
       {
         $addFields: {
+          position: '$position.name',
           reason1: '$attrition.reason1',
           reason2: '$attrition.reason2',
           comment: '$attrition.comment',
@@ -173,8 +234,56 @@ export const PAYROLL_REPORTS = [
     terminationDate,
     last 3 positions,
     `,
-    projection: 'termination',
-    options: [],
+    projection: 'payrollTermination',
+    options: [
+      {
+        $unwind: {
+          path: '$currentPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$olderPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$oldestPosition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$attrition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {$project: {
+          employeeId: 1,
+          firstName: 1,
+          lastName: 1,
+          socialSecurity: 1,
+          status: 1,
+          actualClient: 1,
+          actualCampaign: 1,
+          hireDate: 1,
+          bankAccount: 1,
+          baseWage: '$currentPosition.baseWage',
+          hourlyRate: {$divide:  [{$divide: [{$multiply: ['$currentPosition.baseWage', 12]}, 52]}, 45]},
+          currentPosition: '$currentPosition.name',
+          olderPosition: '$olderPosition.name',
+          oldestPosition: '$oldestPosition.name',
+          terminationDate: 1,
+          attrition_reason1: '$attrition.reason1',
+          attrition_reason2: '$attrition.reason2',
+          attrition_comment: '$attrition.comment',
+          attrition_submittedBy: {
+            $concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName'],
+          },
+        }}
+    ],
   },
   {
     name: 'New Hires Report',
@@ -194,7 +303,32 @@ export const PAYROLL_REPORTS = [
     terminationDate,
     `,
     projection: 'payrollHires',
-    options: [],
+    options: [
+      {
+        $unwind: {
+          path: '$position',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$attrition',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          position: '$position.name',
+          baseWage: '$position.baseWage',
+          attrition_reason: '$attrition.reason1',
+          attrition_comment: '$attrition.comment',
+          attrition_submittedBy: {
+            $concat: ['$attrition.submittedBy.firstName', ' ', '$attrition.submittedBy.lastName'],
+          },
+          attrition_commentDate: { $dateToString: { date: '$attrition.commentDate', format: '%m/%d/%Y' } },
+        },
+      },
+    ],
   },
   {
     name: 'Billing Report',
@@ -230,6 +364,8 @@ export const PROJECTIONS = {
     address: '$personal.address',
     town: '$personal.town',
     district: '$personal.district',
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
   },
   leaves: {
     _id: 0,
@@ -239,7 +375,10 @@ export const PROJECTIONS = {
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
-    leaves: 1
+    generation: { $concat: ['GEN ', { $toString: '$company.trainingGroupNum' }]},
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    leaves: 1,
   },
   emergency: {
     _id: 0,
@@ -249,6 +388,8 @@ export const PROJECTIONS = {
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
     celNumber: '$personal.celNumber',
     telNumber: '$personal.telNumber',
     email: '$personal.emailAddress',
@@ -272,6 +413,9 @@ export const PROJECTIONS = {
     town: '$personal.town',
     district: '$personal.district',
     restriction: '$personal.restriction',
+    generation: { $concat: ['GEN ', { $toString: '$company.trainingGroupNum' }]},
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
     shift: 1,
   },
   hours: {
@@ -283,6 +427,9 @@ export const PROJECTIONS = {
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
     billable: '$payroll.billable',
+    generation: { $concat: ['GEN ', { $toString: '$company.trainingGroupNum' }]},
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
     hours: 1,
   },
   position: {
@@ -299,6 +446,7 @@ export const PROJECTIONS = {
     trainer: '$company.trainer.name',
     billable: '$payroll.billable',
     position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
   },
   leads: {
     _id: 0,
@@ -312,6 +460,9 @@ export const PROJECTIONS = {
     shiftManager: '$company.shiftManager.name',
     supervisor: '$company.supervisor.name',
     trainer: '$company.trainer.name',
+    generation: { $concat: ['GEN ', { $toString: '$company.trainingGroupNum' }]},
+    position: { $arrayElemAt: ['$position', 0] },
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
   },
   hire: {
     _id: 0,
@@ -321,6 +472,8 @@ export const PROJECTIONS = {
     lastName: 1,
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
+    generation: { $concat: ['GEN ', { $toString: '$company.trainingGroupNum' }]},
+    position: { $arrayElemAt: ['$position', 0] },
     hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
   },
   attrition: {
@@ -329,9 +482,19 @@ export const PROJECTIONS = {
     status: 1,
     firstName: 1,
     lastName: 1,
+    celNumber: '$personal.celNumber',
+    telNumber: '$personal.telNumber',
+    email: '$personal.emailAddress',
+    socialSecurity: 1,
+    manager: '$company.manager.name',
+    supervisor: '$company.supervisor.name',
     actualClient: '$company.client',
     actualCampaign: '$company.campaign',
-    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+    restriction: '$personal.restriction',
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' }},
+    generation: { $concat: ['GEN ', { $toString: { $toString: '$company.trainingGroupNum' } }]},
+    position: { $arrayElemAt: ['$position', 0]},
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' }},
     attrition: 1,
   },
   billing: {
@@ -344,5 +507,38 @@ export const PROJECTIONS = {
     actualCampaign: '$company.campaign',
     hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
     billing: 1,
+  },
+  payrollHires: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    socialSecurity: 1,
+    bankAccount: '$payroll.bankAccount',
+    attrition: { $arrayElemAt: ['$attrition', 0] },
+    position: { $arrayElemAt: ['$position', 0]},
+    baseWage: '',
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+  },
+  payrollTermination: {
+    _id: 0,
+    employeeId: 1,
+    status: 1,
+    firstName: 1,
+    lastName: 1,
+    actualClient: '$company.client',
+    actualCampaign: '$company.campaign',
+    hireDate: { $dateToString: { date: '$company.hireDate', format: '%m/%d/%Y' } },
+    socialSecurity: 1,
+    bankAccount: '$payroll.bankAccount',
+    terminationDate: { $dateToString: { date: '$company.terminationDate', format: '%m/%d/%Y' } },
+    attrition: { $arrayElemAt: ['$attrition', 0] },
+    currentPosition: { $arrayElemAt: ['$position', 0] },
+    olderPosition: { $arrayElemAt: ['$position', 1] },
+    oldestPosition: { $arrayElemAt: ['$position', 2] },
   },
 };

@@ -186,35 +186,83 @@ export class NewPayrollPageComponent implements OnInit {
   onDetailToggle(event) {
   }
 
-  // saveConcepts(){
-  //   if(this.otherpay.length > 0){
-  //     let id = this.otherpay.map(i => i._id);
-  //     let opts = {
-  //       type: 'otherpayments',
-  //       id: id,
-  //       query: {
-  //         payed: true
-  //       }
-  //     }
-  //     this._payrollService.updateConcept(opts).subscribe(res => {});
-  //   }
-  //   if(this.deductions.length > 0){
-  //     let id = this.deductions.map(i => i._id);
-  //     let opts = {
-  //       type: 'deduction',
-  //       id: id,
-  //       query: {
-  //         payed: true
-  //       }
-  //     }
-  //     this._payrollService.updateConcept(opts).subscribe(res => {});
-  //   }
-  // }
   clearTable() {
     this.rows = [];
   }
 
   openExportBottomSheet() {
-    this._bottomSheet.open(ExportBottomSheetComponent);
+    const exportData = this.rows.map( i =>  {
+      return {
+        fromDate: i.fromDate,
+        toDate: i.toDate,
+        employeeId: i.employeeId,
+        employeeName: i.employeeName,
+        status: i.employeeStatus,
+        employeeSSN: i.employeeSSN,
+        client: i.employeeCompany.client,
+        campaign: i.employeeCompany.campaign,
+        manager: i.employeeCompany.manager.name,
+        supervisor: i.employeeCompany.supervisor.name,
+        branch: i.employeeCompany.branch,
+        trainingGroup: [i.employeeCompany.trainingGroupRef, i.employeeCompany.trainingGroupNum].join(' '),
+        hireDate: i.employeeCompany.hireDate,
+        terminationDate: i.employeeCompany.terminationDate,
+        email: i.email,
+        TIN: i.employeePayroll.TIN,
+        payrollType: i.employeePayroll.payrollType,
+        bankName: i.employeePayroll.bankName,
+        bankAccount: i.employeePayroll.bankAccount,
+        billable: i.employeePayroll.billable,
+        paymentType: i.employeePayroll.paymentType,
+        position: i.employeePosition.name,
+        baseWage: i.positionBaseWage,
+        hourlyRate: i.positionBaseWage * 12 / 52 / 45,
+        totalScheduledMinutes: i.totalScheduledMinutes,
+        daysInShiftHolidayX1: i.employeeShiftHolidayX1.length || 0,
+        daysInShiftHolidayX2: i.employeeShiftHolidayX2.length || 0,
+        daysInShiftRegular: i.employeeShiftRegular.length || 0,
+        employeeOtherpays_Records: i.employeeOtherpays.length || 0,
+        employeeCSL_Records: i.employeeCSL.length || 0,
+        employeeCompassionate_Records: i.employeeCompassionate.length || 0,
+        employeeMaternities_Records: i.employeeMaternities.length || 0,
+        employeeFinalPayments_Records: i.employeeFinalPayments.length || 0,
+        employeeTaxableBonus_Records: i.employeeTaxableBonus.length || 0,
+        employeeNonTaxableBonus_Records: i.employeeNonTaxableBonus.length || 0,
+        employeeDeductions_Records: i.employeeDeductions.length || 0,
+        totalSystemHoursRegular: i.totalSystemRegularPay.hours || 0,
+        totalSystemRegularPay: i.totalSystemRegularPay.totalPayed['$numberDecimal'],
+        totalSystemHoursHolidayX1: i.totalSystemHolidayX1Pay.hours || 0,
+        totalSystemHolidayX1Pay: i.totalSystemHolidayX1Pay.totalPayed['$numberDecimal'],
+        totalSystemHoursHolidayX2: i.totalSystemHolidayX2Pay.hours || 0,
+        totalSystemHolidayX2Pay: i.totalSystemHolidayX2Pay.totalPayed['$numberDecimal'],
+        totalTosHoursRegular: i.totalTosRegularPay.hours || 0,
+        totalTosRegularPay: i.totalTosRegularPay.totalPayed['$numberDecimal'],
+        totalTosHoursHolidayX1: i.totalTosHolidayX1Pay.hours || 0,
+        totalTosHolidayX1Pay: i.totalTosHolidayX1Pay.totalPayed['$numberDecimal'],
+        totalTosHoursHolidayX2: i.totalTosHolidayX2Pay.hours || 0,
+        totalTosHolidayX2Pay: i.totalTosHolidayX2Pay.totalPayed['$numberDecimal'],
+        totalOtherPays: i.totalOtherPays['$numberDecimal'],
+        totalCSL: i.totalCSL['$numberDecimal'],
+        totalCompassionate: i.totalCompassionate['$numberDecimal'],
+        totalMaternities: i.totalMaternities['$numberDecimal'],
+        totalFinalPayments: i.totalFinalPayments['$numberDecimal'],
+        totalTaxableBonus: i.totalTaxableBonus['$numberDecimal'],
+        totalNonTaxableBonus: i.totalNonTaxableBonus['$numberDecimal'],
+        totalDeductions: i.totalDeductions['$numberDecimal'],
+        totalOvertime: i.totalOvertime,
+        totalOvertimePay: i.totalOvertimePay['$numberDecimal'],
+        ssEmployeeContribution: i.ssEmployeeContribution['$numberDecimal'],
+        ssEmployerContribution: i.ssEmployerContribution['$numberDecimal'],
+        socialContribution: i.socialContribution['$numberDecimal'],
+        grossBeforeCSLPayment: i.grossBeforeCSLPayment['$numberDecimal'],
+        grossPayment: i.grossPayment['$numberDecimal'],
+        incomeTax: i.incomeTax['$numberDecimal'],
+        netPayment: i.netPayment['$numberDecimal'],
+        isFinalized: i.isFinalized,
+        isPayed: i.isPayed,
+        onFinalPayment: i.onFinalPayment,
+      };
+    });
+    this._bottomSheet.open(ExportBottomSheetComponent, {data: exportData});
   }
 }
