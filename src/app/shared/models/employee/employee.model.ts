@@ -6,6 +6,7 @@ export interface Employee {
   employeeId?: number;
   restriction?: string;
   fullName?: string;
+  fullSearchName?: string;
   firstName: string;
   middleName: string;
   lastName: string;

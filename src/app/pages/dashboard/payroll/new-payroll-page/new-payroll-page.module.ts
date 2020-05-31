@@ -5,12 +5,11 @@ import { NewPayrollPageComponent } from './new-payroll-page.component';
 import { MaterialSharedModule, SharedModule } from '@synergy-app/shared';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FusionChartsModule } from 'angular-fusioncharts';
-import { ExportBottomSheetComponent } from './components/export-bottom-sheet/export-bottom-sheet.component';
 import { PayrollService } from '../services/payroll.service';
 
 
 @NgModule({
-  declarations: [NewPayrollPageComponent, ExportBottomSheetComponent],
+  declarations: [NewPayrollPageComponent],
   imports: [
     CommonModule,
     NewPayrollPageRoutingModule,
@@ -19,7 +18,6 @@ import { PayrollService } from '../services/payroll.service';
     FusionChartsModule,
     SharedModule,
   ],
-  entryComponents: [ExportBottomSheetComponent],
   providers: [PayrollService, DatePipe, CurrencyPipe]
 })
 export class NewPayrollPageModule { }

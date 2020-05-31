@@ -10,8 +10,8 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatStepper } from '@angular/material/stepper';
 import { noop } from 'rxjs';
 import { ChartData, Datum } from '@synergy-app/shared/models/chart-data.model';
-import { ExportBottomSheetComponent } from '@synergy-app/pages/dashboard/payroll/components/export-bottom-sheet/export-bottom-sheet.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { ExportBottomSheetComponent } from '@synergy-app/shared/components';
 
 @Component({
   selector: 'app-detail',

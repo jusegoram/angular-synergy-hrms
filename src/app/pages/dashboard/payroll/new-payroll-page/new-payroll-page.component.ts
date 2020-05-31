@@ -5,10 +5,9 @@ import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import * as moment from 'moment';
-import { ExportBottomSheetComponent } from './components/export-bottom-sheet/export-bottom-sheet.component';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { TIME_VALUES } from '@synergy/environments/enviroment.common';
-import { RangesFooterComponent } from '@synergy-app/shared/components';
+import { RangesFooterComponent, ExportBottomSheetComponent } from '@synergy-app/shared/components';
 import { OnSuccessAlertComponent, OnErrorAlertComponent } from '@synergy-app/shared/modals';
 
 @Component({

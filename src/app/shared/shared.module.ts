@@ -17,6 +17,7 @@ import {
   PageTitleComponent,
   DeniedAccessComponent,
   AvatarComponent,
+  ExportBottomSheetComponent
 } from '@synergy-app/shared/components';
 import { ExportService } from '@synergy-app/shared/services/export.service';
 import {
@@ -57,6 +58,7 @@ export function provideSwal() {
     MinutesHoursPipe,
     PageTitleComponent,
     AvatarComponent,
+    ExportBottomSheetComponent
   ],
   imports: [
     SignaturePadModule,
@@ -90,6 +92,6 @@ export function provideSwal() {
     SweetAlert2Module
   ],
   providers: [MenuService, TrackerStatusPipe, TrackerTypePipe, ExportService],
-  entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent],
+  entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent, ExportBottomSheetComponent],
 })
 export class SharedModule {}

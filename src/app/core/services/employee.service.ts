@@ -18,7 +18,7 @@ import {
   LeaveRequest,
   HrTracker
 } from '@synergy-app/shared/models';
-import { TIME_VALUES } from '@synergy/environments';
+import { TIME_VALUES, LABORAL, SOCIAL } from '@synergy/environments';
 
 @Injectable({
   providedIn: 'root',
@@ -30,40 +30,9 @@ export class EmployeeService {
   _departments: Observable<any> = null;
   _employees: Observable<Array<Employee>> = null;
   _detail: Observable<Employee> = null;
-  public status = [
-    { value: 'active', viewValue: 'Active' },
-    {
-      value: 'resignation',
-      viewValue: 'Resignation',
-      onclick: 'openStatusDialog()',
-    },
-    {
-      value: 'dissmisal',
-      viewValue: 'Dissmisal',
-      onclick: 'openStatusDialog()',
-    },
-    {
-      value: 'termination',
-      viewValue: 'Termination',
-      onclick: 'openStatusDialog()',
-    },
-    { value: 'on-hold', viewValue: 'On-Hold' },
-    { value: 'transfer', viewValue: 'Transfer' },
-    //   { value: 'trainee', viewValue: 'Trainee' }
-  ];
-
-  public restrictions = [
-    { value: 'student', viewValue: 'Student' },
-    { value: 'out-of-village', viewValue: 'Out of Village' },
-    { value: 'court', viewValue: 'Court' },
-    { value: 'adventist', viewValue: 'Adventist' },
-    { value: 'personal', viewValue: 'Personal' },
-    { value: 'other', viewValue: 'Other', other: true },
-  ];
-  public genders = [
-    { value: 'male', viewValue: 'Male' },
-    { value: 'female', viewValue: 'Female' },
-  ];
+  public status = LABORAL.STATUS;
+  public restrictions = LABORAL.RESTRICTIONS;
+  public genders = SOCIAL.GENDERS;
 
   constructor(
     protected httpClient: HttpClient,
