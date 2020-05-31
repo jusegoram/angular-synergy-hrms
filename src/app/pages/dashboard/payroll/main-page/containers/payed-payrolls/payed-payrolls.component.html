@@ -11,12 +11,11 @@
           <button mat-button color="primary" (click)="loadPayedPayrolls()">
             REFRESH
           </button>
-          <!--
-            REPAIR URGENT
-            <app-payslips
-            [payrollRun]="exportInfo"
-            *ngIf="statsRows && doughnutChartData"
-          ></app-payslips>-->
+
+          <button mat-flat-button color="accent" (click)="openPayslipDialog()" *ngIf="statsRows && doughnutChartData">
+            SEND PAYSLIPS
+          </button>
+          
           <button
             mat-flat-button
             *ngIf="statsRows && doughnutChartData"

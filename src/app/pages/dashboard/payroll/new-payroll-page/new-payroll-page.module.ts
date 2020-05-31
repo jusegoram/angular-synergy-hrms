@@ -5,7 +5,7 @@ import { NewPayrollPageComponent } from './new-payroll-page.component';
 import { MaterialSharedModule, SharedModule } from '@synergy-app/shared';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FusionChartsModule } from 'angular-fusioncharts';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 
 
 @NgModule({

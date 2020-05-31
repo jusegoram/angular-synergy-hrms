@@ -5,7 +5,7 @@ import { ConceptsPageComponent } from './concepts-page.component';
 import { MaterialSharedModule, SharedModule } from '@synergy-app/shared';
 import { NewConceptComponent } from './components/new-concept/new-concept.component';
 import { ConceptVerificationComponent } from './containers/concept-verification/concept-verification.component';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FormsModule } from '@angular/forms';
 import { CertifiedLeavesListComponent } from './components/certified-leaves-list/certified-leaves-list.component';

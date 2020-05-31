@@ -1,4 +1,4 @@
-import { PayslipDialogComponent } from './containers/payslip-dialog/payslip-dialog.component';
+import { PayslipDialogComponent } from '@synergy-app/shared/modals/payslip-dialog/payslip-dialog.component';
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -8,7 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./payslips-page.component.scss'],
 })
 export class PayslipsPageComponent implements OnInit {
-  @Input() payrollRun: any[];
+  payrollRun: any[];
 
   constructor(public dialog: MatDialog) {
   }

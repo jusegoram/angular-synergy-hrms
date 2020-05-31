@@ -17,7 +17,7 @@ import {
   PageTitleComponent,
   DeniedAccessComponent,
   AvatarComponent,
-  ExportBottomSheetComponent
+  ExportBottomSheetComponent,
 } from '@synergy-app/shared/components';
 import { ExportService } from '@synergy-app/shared/services/export.service';
 import {
@@ -26,10 +26,13 @@ import {
   OnSuccessAlertComponent,
   GenerateLeaveModalComponent,
   PdfViewerComponent,
+  PayslipDialogComponent,
 } from '@synergy-app/shared/modals';
 import { MinuteSecondsPipe, MinutesHoursPipe } from './pipes';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { ExportAsModule } from 'ngx-export-as';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -58,7 +61,8 @@ export function provideSwal() {
     MinutesHoursPipe,
     PageTitleComponent,
     AvatarComponent,
-    ExportBottomSheetComponent
+    ExportBottomSheetComponent,
+    PayslipDialogComponent,
   ],
   imports: [
     SignaturePadModule,
@@ -66,6 +70,8 @@ export function provideSwal() {
     MaterialSharedModule,
     SweetAlert2Module.forRoot({ provideSwal }),
     FormsModule,
+    ExportAsModule,
+    MatDialogModule,
   ],
   exports: [
     AccordionAnchorDirective,
@@ -89,9 +95,21 @@ export function provideSwal() {
     PdfViewerComponent,
     PageTitleComponent,
     AvatarComponent,
-    SweetAlert2Module
+    SweetAlert2Module,
   ],
-  providers: [MenuService, TrackerStatusPipe, TrackerTypePipe, ExportService],
-  entryComponents: [GenerateLeaveModalComponent, PdfViewerComponent, ExportBottomSheetComponent],
+  providers: [
+    MenuService,
+    TrackerStatusPipe,
+    TrackerTypePipe,
+    ExportService,
+    { provide: MAT_DIALOG_DATA, useValue: {} },
+    { provide: MatDialogRef, useValue: {} },
+  ],
+  entryComponents: [
+    GenerateLeaveModalComponent,
+    PdfViewerComponent,
+    ExportBottomSheetComponent,
+    PayslipDialogComponent,
+  ],
 })
 export class SharedModule {}

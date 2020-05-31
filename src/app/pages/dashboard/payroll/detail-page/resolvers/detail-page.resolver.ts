@@ -1,4 +1,4 @@
-import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot, } from '@angular/router';
 import { Observable } from 'rxjs';

@@ -10,7 +10,7 @@ import {
 } from './components/edit-payroll-detail-vacations/edit-payroll-detail-vacations.component';
 import { DetailResolver } from './resolvers/detail-page.resolver';
 import { EditPayrollDetailComponent } from './containers/edit-payroll-detail/edit-payroll-detail.component';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { CdkColumnDef } from '@angular/cdk/table';
 import { MinuteSecondsPipe } from '@synergy-app/shared/pipes';
 import * as FusionCharts from 'fusioncharts';

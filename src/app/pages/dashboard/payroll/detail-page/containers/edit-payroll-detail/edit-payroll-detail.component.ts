@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PayrollService } from '../../../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { Observable } from 'rxjs';
 
 @Component({

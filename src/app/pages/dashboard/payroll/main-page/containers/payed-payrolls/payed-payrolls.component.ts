@@ -3,10 +3,12 @@ import { ColumnMode, SelectionType } from '@swimlane/ngx-datatable';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 import { ChartData, Datum } from '@synergy-app/shared/models/chart-data.model';
+import { PayslipDialogComponent } from '@synergy-app/shared/modals';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payed-payrolls',
@@ -24,16 +26,16 @@ export class PayedPayrollsComponent implements OnInit {
   SelectionType = SelectionType;
   statsRows = [];
   statsColumns = [
-    {name: 'CONCEPT', prop: 'concept'},
-    {name: 'AMOUNT', prop: 'amount'},
+    { name: 'CONCEPT', prop: 'concept' },
+    { name: 'AMOUNT', prop: 'amount' },
   ];
   tableMessages = {
     emptyMessage: 'PLEASE CLICK ON A PAYROLL RUN TO LOAD THE STATS',
   };
   clientStatsRows = [];
   clientStatsColumns = [
-    {name: 'CONCEPT', prop: 'concept'},
-    {name: 'AMOUNT', prop: 'amount'},
+    { name: 'CONCEPT', prop: 'concept' },
+    { name: 'AMOUNT', prop: 'amount' },
   ];
   clientTableMessages = {
     emptyMessage: 'PLEASE CLICK ON A CLIENT IN THE CHART TO LOAD THIS TABLE',
@@ -47,13 +49,14 @@ export class PayedPayrollsComponent implements OnInit {
     private _payrollService: PayrollService,
     private _minuteSeconds: MinuteSecondsPipe,
     private snackBar: MatSnackBar,
-    private zone: NgZone
+    private zone: NgZone,
+    public dialog: MatDialog
   ) {
     this.columns = [
-      {name: 'PAY RUN DATE', prop: 'paymentDate', pipe: this.datePipe()},
-      {name: 'FROM DATE', prop: 'fromDate', pipe: this.datePipe()},
-      {name: 'TO DATE', prop: 'toDate', pipe: this.datePipe()},
-      {name: 'EMPLOYEES', prop: 'employeesAmount'},
+      { name: 'PAY RUN DATE', prop: 'paymentDate', pipe: this.datePipe() },
+      { name: 'FROM DATE', prop: 'fromDate', pipe: this.datePipe() },
+      { name: 'TO DATE', prop: 'toDate', pipe: this.datePipe() },
+      { name: 'EMPLOYEES', prop: 'employeesAmount' },
       {
         name: 'TOTAL NET',
         prop: 'totalPayed.$numberDecimal',
@@ -220,8 +223,8 @@ export class PayedPayrollsComponent implements OnInit {
       if (this.selectedClient.length === 1) {
         const [clientStats] = this.clientStats.filter((c) => c._id.client === this.selectedClient[0]);
         this.clientStatsColumns = [
-          {name: this.selectedClient[0].toUpperCase(), prop: 'concept'},
-          {name: 'AMOUNT', prop: 'amount'},
+          { name: this.selectedClient[0].toUpperCase(), prop: 'concept' },
+          { name: 'AMOUNT', prop: 'amount' },
         ];
         this.clientStatsRows = this.mapTotalStats(clientStats);
       }
@@ -260,5 +263,12 @@ export class PayedPayrollsComponent implements OnInit {
       };
     });
     return mappedData;
+  }
+
+  openPayslipDialog() {
+    const payslipDialogRef = this.dialog.open(PayslipDialogComponent, {
+      width: '500px',
+      data: this.exportInfo,
+    });
   }
 }

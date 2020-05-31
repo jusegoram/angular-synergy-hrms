@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { map, startWith } from 'rxjs/operators';
 import { ExportAsConfig, ExportAsService } from 'ngx-export-as';
 import { MinuteSecondsPipe } from '@synergy-app/shared/pipes/minute-seconds.pipe';
-import { PayrollService } from '../../../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 
 @Component({
@@ -22,10 +22,10 @@ export class PayslipDialogComponent implements OnInit {
   bulkPayslipSent = false;
 
   constructor(
-    private _exportasService: ExportAsService,
+    private exportasService: ExportAsService,
     public dialogRef: MatDialogRef<PayslipDialogComponent>,
     private minutesSecondsPipe: MinuteSecondsPipe,
-    private _payrollService: PayrollService,
+    private payrollService: PayrollService,
     @Inject(MAT_DIALOG_DATA) public data
   ) {}
 
@@ -62,7 +62,7 @@ export class PayslipDialogComponent implements OnInit {
         orientation: 'portrait',
       },
     };
-    this._exportasService.save(config, `${this.employeePayslip.fullSearchName}`).subscribe(() => {
+    this.exportasService.save(config, `${this.employeePayslip.fullSearchName}`).subscribe(() => {
       this.downloadSwal.fire().then((fired) => {});
     });
   }
@@ -72,13 +72,13 @@ export class PayslipDialogComponent implements OnInit {
   }
   onSend() {
     const { employeeId, payment_Id } = this.employeePayslip;
-    this._payrollService.sendPayslips(employeeId, payment_Id).subscribe((result) => {
+    this.payrollService.sendPayslips(employeeId, payment_Id).subscribe((result) => {
       this.sentSwal.fire().then((fired) => {});
     });
   }
   onSendAll() {
     const { payment_Id } = this.data[0];
-    this._payrollService.sendPayslips('all', payment_Id).subscribe((result) => {
+    this.payrollService.sendPayslips('all', payment_Id).subscribe((result) => {
       this.sentSwal.fire().then((fired) => {
       });
     });

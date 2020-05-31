@@ -4,7 +4,7 @@ import moment from 'moment';
 import { LeaveRequest, Employee, PayrollConcept } from '@synergy-app/shared/models';
 import { LEAVE_STATUS } from '@synergy/environments/enviroment.common';
 import Swal from 'sweetalert2';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';

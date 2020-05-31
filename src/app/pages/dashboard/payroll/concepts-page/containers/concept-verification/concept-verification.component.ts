@@ -1,5 +1,5 @@
 import { SessionService } from '@synergy-app/core/services';
-import { PayrollService } from '../../../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';

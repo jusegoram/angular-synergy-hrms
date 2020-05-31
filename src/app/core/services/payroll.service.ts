@@ -5,7 +5,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, publishReplay, refCount } from 'rxjs/operators';
 import { environment } from '@synergy/environments/environment';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class PayrollService {
   api = environment.apiUrl;
   public status = [

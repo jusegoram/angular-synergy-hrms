@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { AbstractControl, FormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';

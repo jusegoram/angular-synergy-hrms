@@ -1,7 +1,7 @@
 import { SwalComponent } from '@sweetalert2/ngx-sweetalert2';
 import { EditPayrollDetailComponent } from './containers/edit-payroll-detail/edit-payroll-detail.component';
 import { MatDialog } from '@angular/material/dialog';
-import { PayrollService } from '../services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { MinuteSecondsPipe } from '@synergy-app/shared/pipes/minute-seconds.pipe';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, NgZone, OnInit, ViewChild } from '@angular/core';

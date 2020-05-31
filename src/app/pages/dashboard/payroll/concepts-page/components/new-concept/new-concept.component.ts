@@ -1,7 +1,7 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { PayrollService } from '@synergy-app/pages/dashboard/payroll/services/payroll.service';
+import { PayrollService } from '@synergy-app/core/services/payroll.service';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee, PayrollConcept } from '@synergy-app/shared/models';
