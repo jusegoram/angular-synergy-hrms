@@ -3,10 +3,10 @@ import { HR_REPORTS, WORKFORCE_REPORTS } from '@synergy/environments';
 
 @Component({
   selector: 'app-reports',
-  templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  templateUrl: './reports-page.component.html',
+  styleUrls: ['./reports-page.component.scss']
 })
-export class ReportsComponent implements OnInit {
+export class ReportsPageComponent implements OnInit {
   reports = HR_REPORTS.sort((a , b ) => a.name.localeCompare(b.name));
   constructor() { }
 

@@ -6,18 +6,20 @@ import { TRACKER_STATUS } from '@synergy/environments';
 
 @Component({
   selector: 'app-trackers',
-  templateUrl: './trackers.component.html',
-  styleUrls: ['./trackers.component.scss'],
+  templateUrl: './trackers-page.component.html',
+  styleUrls: ['./trackers-page.component.scss'],
 })
-export class TrackersComponent implements OnInit, AfterViewInit {
+export class TrackersPageComponent implements OnInit, AfterViewInit {
   @ViewChild('trackerInboxTable', { static: false }) trackerInboxTable: any;
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   pendingTrackersInbox: Array<HrTracker> = [];
   inProgressTrackersInbox: Array<HrTracker> = [];
   isLoading = true;
+  currentUserId: string;
   constructor(private employeeService: EmployeeService, private sessionService: SessionService) {}
 
   ngOnInit() {
+    this.currentUserId = this.sessionService.getId();
     this.fetchTrackers();
   }
 
@@ -30,7 +32,7 @@ export class TrackersComponent implements OnInit, AfterViewInit {
       });
       this.inProgressTrackersInbox = await this.employeeService.getTrackers({
         state: TRACKER_STATUS.IN_PROGRESS + '.' + TRACKER_STATUS.DONE,
-        verificationFingerprint: this.sessionService.getId(),
+        verificationFingerprint: this.currentUserId,
       });
     } catch (error) {
       console.log('TrackersComponent', error);

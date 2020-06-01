@@ -8,7 +8,7 @@
   <!--tabhost-->
   <mat-tab-group backgroundColor="primary">
     <mat-tab label="Tracker Inbox">
-      <app-trackers-inbox-table [data]="pendingTrackersInbox" [isLoading]="isLoading" (onSavingAcceptedTrackerStatus)="saveNewTrackerStatus($event)"></app-trackers-inbox-table>
+      <app-trackers-inbox-table [data]="pendingTrackersInbox" [isLoading]="isLoading" (onSavingAcceptedTrackerStatus)="saveNewTrackerStatus($event)" [userId]="currentUserId"></app-trackers-inbox-table>
     </mat-tab>
     <mat-tab label="Accepted Trackers">
       <app-accepted-trackers-table [data]="inProgressTrackersInbox" [isLoading]="isLoading" (onSavingFinishedTrackerStatus)="saveNewTrackerStatus($event)"></app-accepted-trackers-table>

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TrackersComponent } from './trackers.component';
+import { TrackersPageComponent } from './trackers-page.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: TrackersComponent,
+    component: TrackersPageComponent,
   },
 ];
 

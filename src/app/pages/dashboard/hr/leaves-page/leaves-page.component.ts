@@ -10,10 +10,10 @@ import { User, LeaveRequest } from '@synergy-app/shared/models';
 
 @Component({
   selector: 'app-leaves',
-  templateUrl: './leaves.component.html',
-  styleUrls: ['./leaves.component.scss'],
+  templateUrl: './leaves-page.component.html',
+  styleUrls: ['./leaves-page.component.scss'],
 })
-export class LeavesComponent implements OnInit, AfterViewInit {
+export class LeavesPageComponent implements OnInit, AfterViewInit {
   @ViewChild('trackerInboxTable', { static: false }) trackerInboxTable: any;
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   data: Array<LeaveRequest> = [];

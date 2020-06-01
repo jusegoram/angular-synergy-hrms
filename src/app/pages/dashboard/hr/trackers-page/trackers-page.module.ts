@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, TitleCasePipe, DatePipe } from '@angular/common';
-import { TrackersRoutingModule } from './trackers-routing.module';
-import { TrackersComponent } from './trackers.component';
-import { HttpClientModule } from '@angular/common/http';
+import { TrackersRoutingModule } from './trackers-page-routing.module';
+import { TrackersPageComponent } from './trackers-page.component';
 import { MaterialSharedModule } from '@synergy-app/shared/material.shared.module';
 import { SharedModule } from '@synergy-app/shared/shared.module';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -19,7 +18,7 @@ import { AcceptedTrackersTableComponent } from './components/accepted-trackers-t
 
 @NgModule({
   declarations: [
-    TrackersComponent,
+    TrackersPageComponent,
     TrackerTransferDetailsComponent,
     TrackerCertifyTrainingDetailsComponent,
     TrackerInfoChangeRequestDetailsComponent,

@@ -3,7 +3,6 @@ import { HrTracker } from '@synergy-app/shared/models';
 import { TRACKER_STATUS, TIME_VALUES } from '@synergy/environments';
 import { fromEvent } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { SessionService } from '@synergy-app/core/services/session.service';
 
 @Component({
   selector: 'app-trackers-inbox-table',
@@ -13,12 +12,13 @@ import { SessionService } from '@synergy-app/core/services/session.service';
 export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
   @Input() data: Array<HrTracker> = [];
   @Input() isLoading = true;
+  @Input() userId: string;
   @Output() onSavingAcceptedTrackerStatus = new EventEmitter<Partial<HrTracker>>();
   @ViewChild('trackerInboxTable', { static: false }) trackerInboxTable: any;
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   filter = '';
 
-  constructor(private sessionService: SessionService) {}
+  constructor() {}
 
   ngOnInit() {}
 
@@ -29,7 +29,7 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
   setUpInputFilter() {
     fromEvent(this.inputFilter.nativeElement, 'keydown')
       .pipe(
-        debounceTime( TIME_VALUES.SHORT_DEBOUNCE_TIME ),
+        debounceTime(TIME_VALUES.SHORT_DEBOUNCE_TIME),
         map((event: any) => event.target.value)
       )
       .subscribe((value) => {
@@ -64,7 +64,7 @@ export class TrackersInboxTableComponent implements OnInit, AfterViewInit {
     this.onSavingAcceptedTrackerStatus.emit({
       _id,
       state: TRACKER_STATUS.IN_PROGRESS,
-      verificationFingerprint: this.sessionService.getId(),
+      verificationFingerprint: this.userId,
     });
   }
 }
