@@ -7,4 +7,6 @@ export * from './page-title/page-title.component';
 export * from './export/export.component';
 export * from './avatar/avatar.component';
 export * from './export-bottom-sheet/export-bottom-sheet.component';
-
+export * from './leaves-table/leaves-table.component';
+export * from './leave-row-details/leave-row-details.component';
+export * from './leave-search-filter/leave-search-filter.component';

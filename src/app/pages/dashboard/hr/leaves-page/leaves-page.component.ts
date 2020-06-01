@@ -1,9 +1,7 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { LEAVE_STATUS, TIME_VALUES, LEAVE_STATUS_TYPES, USER_ROLES } from '@synergy/environments/enviroment.common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LEAVE_STATUS, LEAVE_STATUS_TYPES, USER_ROLES } from '@synergy/environments/enviroment.common';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeService, SessionService } from '@synergy-app/core/services';
-import { fromEvent } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
 import { GenerateLeaveModalComponent } from '@synergy-app/shared/modals';
 import Swal from 'sweetalert2';
 import { User, LeaveRequest } from '@synergy-app/shared/models';
@@ -13,10 +11,10 @@ import { User, LeaveRequest } from '@synergy-app/shared/models';
   templateUrl: './leaves-page.component.html',
   styleUrls: ['./leaves-page.component.scss'],
 })
-export class LeavesPageComponent implements OnInit, AfterViewInit {
-  @ViewChild('trackerInboxTable', { static: false }) trackerInboxTable: any;
+export class LeavesPageComponent implements OnInit {
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   data: Array<LeaveRequest> = [];
+  filteredData: Array<LeaveRequest> = [];
   isLoading = true;
   filter = '';
   APPROVED = LEAVE_STATUS.APPROVED;
@@ -36,10 +34,6 @@ export class LeavesPageComponent implements OnInit, AfterViewInit {
     this.fetchLeavesRequest();
   }
 
-  ngAfterViewInit() {
-    this.setUpInputFilter();
-  }
-
   setCurrentLoggedUser() {
     const { userId, name, role } = this.sessionService.decodeToken();
     this.currentLoggedUser = new User('');
@@ -54,37 +48,8 @@ export class LeavesPageComponent implements OnInit, AfterViewInit {
     try {
       this.data = await this.employeeService.getLeaves();
       this.isLoading = false;
+      this.filteredData = this.data;
     } catch (error) {}
-  }
-
-  setUpInputFilter() {
-    fromEvent(this.inputFilter.nativeElement, 'keydown')
-      .pipe(
-        debounceTime(TIME_VALUES.SHORT_DEBOUNCE_TIME),
-        map((event: any) => event.target.value)
-      )
-      .subscribe((value) => {
-        this.filter = value.trim();
-      });
-  }
-
-  get filteredData(): Array<LeaveRequest> {
-    if ((this.selectedLeaveStatusType > -2 || this.filter) && this.data) {
-      const filterNormalized = this.filter.toLowerCase();
-      return this.data.filter((item: LeaveRequest) => {
-        return (
-          (this.selectedLeaveStatusType > -2 ? item.state === this.selectedLeaveStatusType : true) &&
-          (item.employee?.employeeId.includes(filterNormalized) ||
-            item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
-            item.leaveType?.name.toLowerCase().includes(filterNormalized))
-        );
-      });
-    }
-    return this.data;
-  }
-
-  toggleExpandRow(row) {
-    this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
   showErrorMessage() {
@@ -126,9 +91,9 @@ export class LeavesPageComponent implements OnInit, AfterViewInit {
             _id: leave._id,
             state: LEAVE_STATUS.APPROVED,
           };
-         if (['Vacations', 'Leave without pay'].includes(leave.leaveType.name)) {
-           leaveRequest.state = LEAVE_STATUS.CERTIFIED;
-         }
+          if (['Vacations', 'Leave without pay'].includes(leave.leaveType.name)) {
+            leaveRequest.state = LEAVE_STATUS.CERTIFIED;
+          }
           await this.employeeService.updateLeave(leaveRequest);
           await this.fetchLeavesRequest();
         } catch (error) {

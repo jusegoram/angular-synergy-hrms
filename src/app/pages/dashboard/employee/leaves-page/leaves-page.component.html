@@ -9,123 +9,26 @@
       </mat-toolbar-row>
     </mat-toolbar>
     <div class="mat-card-top pa-2">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <mat-form-field appearance="fill">
-                <input
-                  #inputFilter
-                  matInput
-                  placeholder="Search"
-                />
-            </mat-form-field>
-            <button mat-raised-button color="primary" (click)="openGenerateLeaveDialog('create')">
-                NEW LEAVE
-            </button>
-        </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+          <app-leave-search-filter
+            [leaves]="data"
+            (onLeavesFiltered)="filteredData= $event"
+          ></app-leave-search-filter>
+          <button mat-raised-button color="primary" (click)="openGenerateLeaveDialog('create')">
+              NEW LEAVE
+          </button>
+      </div>
       <mat-card>
-        <ngx-datatable
-          #trackerInboxTable
-          class="material expandable expandable-datatable"
-          [rows]="filteredData"
-          [loadingIndicator]="isLoading"
-          [headerHeight]="50"
-          [rowHeight]="60"
-          [limit]="10"
-          [footerHeight]="50"
-          [scrollbarH]="true"
-          columnMode="force"
-          >
-          <ngx-datatable-column
-            [width]="50"
-            [resizeable]="false"
-            [sortable]="false"
-            [canAutoResize]="false"
-          >
-            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
-              <a
-                href="javascript:void(0)"
-                title="Expand/Collapse Row"
-                (click)="toggleExpandRow(row)"
-              >
-                <mat-icon [class.hidden]="!expanded">expand_less</mat-icon>
-                <mat-icon [class.hidden]="expanded">expand_more</mat-icon>
-              </a>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="EMPLOYEE ID" [width]="90">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row?.employee.employeeId }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="NAME" prop="employee.fullName">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row?.employee.fullName }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="LEAVE TYPE" prop="leaveType.name">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row?.leaveType?.name }}
-              <span *ngIf="row?.leaveType?.isCashVacations">(Cashed)</span>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="FROM" prop="excuseTimeFrom">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row?.excuseTimeFrom | date: 'MM/dd/yyyy' }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="TO" prop="excuseTimeTo">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              {{ row?.excuseTimeTo | date: 'MM/dd/yyyy' }}
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="REQUEST STATUS" prop="state" [sortable]="true">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <button mat-stroked-button disableRipple="true" matTooltip="Current leave status">
-                {{ row?.state | leaveStatus }}
-              </button>
-            </ng-template>
-          </ngx-datatable-column>
-          <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <div *ngIf="row.state==leaveStatusTypes.SENT" fxLayout="row">
-                <mat-chip-list>
-                  <mat-chip
-                    class="mat-lime-500"
-                    matTooltip="Approve this leave"
-                    [disabled]="(currentLoggedUser._id!=row.creationFingerprint?._id || row?.leaveType?.isCashVacations) && !currentUserIsWebAdmin"
-                    (click)="openApproveDialog(row)">
-                    <span>APPROVE</span>
-                  </mat-chip>
-                </mat-chip-list>
-                <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
-                <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="openGenerateLeaveDialog('edit', row)"><mat-icon>edit</mat-icon>EDIT</button>
-                  <button mat-menu-item (click)="openDeleteDialog(row)"><mat-icon>delete</mat-icon>DELETE</button>
-                </mat-menu>
-              </div>
-            </ng-template>
-          </ngx-datatable-column>
-
-          <!-- Tracker details -->
-          <ngx-datatable-row-detail rowHeight="auto" #myDetailRow>
-            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
-              <div style="padding-left:35px;" fxLayout="row wrap">
-                <div fxFlex="1 1 0px" class="details-column">
-                  <span class="details-title">Leave Description:</span>
-                  <p>{{row.excuseDescription}}</p>
-                </div>
-                <div fxFlex="1 1 0px" class="details-column">
-                  <span class="details-title">Submitted By:</span>
-                  <p>{{row.creationFingerprint?.name}}</p>
-                </div>
-                <div fxFlex="1 1 0px" fxLayout="column" class="details-column">
-                  <mat-checkbox disabled="true" [checked]="row.supportDocument">Supported Document</mat-checkbox>
-                  <mat-checkbox disabled="true" [checked]="row.certificationDocument">Certification Document</mat-checkbox>
-                </div>
-              </div>
-            </ng-template>
-          </ngx-datatable-row-detail>
-
-        </ngx-datatable>
+        <app-leaves-table
+          [leaves]="filteredData"
+          [user]="currentLoggedUser"
+          [userIsWebAdmin]="currentUserIsWebAdmin"
+          [isLoading]="isLoading"
+          [isHrSubPage]="false"
+          (onEditButtonClicked)="openGenerateLeaveDialog('edit', $event)"
+          (onDeleteButtonClicked)="openDeleteDialog($event)"
+          (onApproveButtonClicked)="openApproveDialog($event)"
+        ></app-leaves-table>
       </mat-card>
     </div>
   </div>

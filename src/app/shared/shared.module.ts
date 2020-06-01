@@ -18,6 +18,8 @@ import {
   DeniedAccessComponent,
   AvatarComponent,
   ExportBottomSheetComponent,
+  LeaveSearchFilterComponent,
+  LeaveRowDetailsComponent,
 } from '@synergy-app/shared/components';
 import { ExportService } from '@synergy-app/shared/services/export.service';
 import {
@@ -33,6 +35,9 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { ExportAsModule } from 'ngx-export-as';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { LeavesTableComponent } from './components/leaves-table/leaves-table.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+
 
 export function provideSwal() {
   return import('sweetalert2/src/sweetalert2.js'); // instead of import('sweetalert2')
@@ -63,6 +68,9 @@ export function provideSwal() {
     AvatarComponent,
     ExportBottomSheetComponent,
     PayslipDialogComponent,
+    LeavesTableComponent,
+    LeaveRowDetailsComponent,
+    LeaveSearchFilterComponent
   ],
   imports: [
     SignaturePadModule,
@@ -72,6 +80,7 @@ export function provideSwal() {
     FormsModule,
     ExportAsModule,
     MatDialogModule,
+    NgxDatatableModule
   ],
   exports: [
     AccordionAnchorDirective,
@@ -96,6 +105,9 @@ export function provideSwal() {
     PageTitleComponent,
     AvatarComponent,
     SweetAlert2Module,
+    LeavesTableComponent,
+    LeaveRowDetailsComponent,
+    LeaveSearchFilterComponent
   ],
   providers: [
     MenuService,

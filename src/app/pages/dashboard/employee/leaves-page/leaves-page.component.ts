@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { fromEvent } from 'rxjs';
-import { debounceTime, map } from 'rxjs/operators';
-import { TIME_VALUES, LEAVE_STATUS, USER_ROLES } from '@synergy/environments';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LEAVE_STATUS, USER_ROLES } from '@synergy/environments';
 import { MatDialog } from '@angular/material/dialog';
 import { GenerateLeaveModalComponent } from '@synergy-app/shared/modals';
 import { EmployeeService, SessionService } from '@synergy-app/core/services';
@@ -14,16 +12,17 @@ import { User, LeaveRequest } from '@synergy-app/shared/models';
   templateUrl: './leaves-page.component.html',
   styleUrls: ['./leaves-page.component.scss'],
 })
-export class LeavesPageComponent implements OnInit, AfterViewInit {
+export class LeavesPageComponent implements OnInit {
   @ViewChild('onErrorAlert', { static: false }) onErrorAlert: OnErrorAlertComponent;
-  @ViewChild('trackerInboxTable', { static: false }) trackerInboxTable: any;
   @ViewChild('inputFilter', { static: false }) inputFilter: any;
   data: Array<LeaveRequest> = [];
+  filteredData: Array<LeaveRequest> = [];
   isLoading = true;
   filter = '';
   leaveStatusTypes = LEAVE_STATUS;
   currentUserIsWebAdmin = false;
   currentLoggedUser: User;
+
   constructor(
     public dialog: MatDialog,
     private employeeService: EmployeeService,
@@ -34,10 +33,6 @@ export class LeavesPageComponent implements OnInit, AfterViewInit {
     this.setCurrentLoggedUser();
     this.checkIfCurrentUserIsWebAdmin();
     this.fetchLeavesRequest();
-  }
-
-  ngAfterViewInit() {
-    this.setUpInputFilter();
   }
 
   setCurrentLoggedUser() {
@@ -57,39 +52,11 @@ export class LeavesPageComponent implements OnInit, AfterViewInit {
     this.isLoading = true;
     try {
       this.data = await this.employeeService.getLeaves({
-        owner_id: this.currentLoggedUser._id
+        owner_id: this.currentLoggedUser._id,
       });
+      this.filteredData = this.data;
       this.isLoading = false;
     } catch (error) {}
-  }
-
-  setUpInputFilter() {
-    fromEvent(this.inputFilter.nativeElement, 'keydown')
-      .pipe(
-        debounceTime(TIME_VALUES.SHORT_DEBOUNCE_TIME),
-        map((event: any) => event.target.value)
-      )
-      .subscribe((value) => {
-        this.filter = value.trim();
-      });
-  }
-
-  get filteredData(): Array<LeaveRequest> {
-    if (this.filter && this.data) {
-      const filterNormalized = this.filter.toLowerCase();
-      return this.data.filter((item: LeaveRequest) => {
-        return (
-          item.employee?.employeeId.includes(filterNormalized) ||
-          item.employee?.fullName.toLowerCase().includes(filterNormalized) ||
-          item.leaveType?.name.toLowerCase().includes(filterNormalized)
-        );
-      });
-    }
-    return this.data;
-  }
-
-  toggleExpandRow(row) {
-    this.trackerInboxTable.rowDetail.toggleExpandRow(row);
   }
 
   openGenerateLeaveDialog(mode: string, leaveRequest?: LeaveRequest) {

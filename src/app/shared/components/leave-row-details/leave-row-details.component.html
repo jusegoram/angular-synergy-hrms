@@ -1,0 +1,14 @@
+<div style="padding-left:35px;" fxLayout="row wrap">
+    <div fxFlex="1 1 0px" class="details-column">
+      <span class="details-title">Leave Description:</span>
+      <p>{{leaveRequest.excuseDescription}}</p>
+    </div>
+    <div fxFlex="1 1 0px" class="details-column">
+      <span class="details-title">Submitted By:</span>
+      <p>{{leaveRequest.creationFingerprint?.name}}</p>
+    </div>
+    <div fxFlex="1 1 0px" fxLayout="column" class="details-column">
+      <mat-checkbox disabled="true" [checked]="leaveRequest.supportDocument">Supported Document</mat-checkbox>
+      <mat-checkbox disabled="true" [checked]="leaveRequest.certificationDocument">Certification Document</mat-checkbox>
+    </div>
+</div>
