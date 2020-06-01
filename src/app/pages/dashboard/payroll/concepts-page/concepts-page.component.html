@@ -1,0 +1,51 @@
+<!-- <p>concepts works!
+    concepts must also display all time off requests and their proof to be able to validate the time off request and input a other payment record inside of the concepts db
+
+    Submitting concepts like bonuses, deductions, other payments;
+    allowing any OTHER accounting team personel to approve a concept;
+    if is verified it will display as verified and be able to include in future scheduled payroll;
+
+
+    TODO: Make a not athorized component that loads on ngif authorization is not passed for the selected view.
+
+    time off request table
+
+    table one - concepts for the selected employee
+    table two - all submitted but not verified concepts
+    table three - all submitted and verified concepts
+
+</p> -->
+
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Payroll Concepts</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div>
+  <mat-tab-group backgroundColor="primary">
+    <mat-tab label="CONCEPTS" >
+      <div class="pa-2" fxLayoutGap="10px">
+        <mat-card-header>
+          <mat-card-subtitle>SELECT EMPLOYEE - CHOOSE TYPE - SELECT CONCEPT - CHOOSE EFFECTIVE DATE</mat-card-subtitle>
+        </mat-card-header>
+        <app-certified-leaves-list
+          [leaves]="certifiedLeaves$ | async"
+          (onMarkAsConceptCreatedConfirmation)="saveMarkAsConceptCreatedStatusToLeave($event)"
+          ></app-certified-leaves-list>
+        <app-new-concept
+          [currentUserId]="userId"
+          [concepts]="concepts$ | async"
+          [employees]="employees$ | async"
+          (onConceptTypeSelected)="fetchConcepts($event)"
+          (onAddConceptButtonClicked)="saveConcept($event)"></app-new-concept>
+        <app-on-finalpayment></app-on-finalpayment>
+      </div>
+    </mat-tab>
+    <mat-tab label="VERIFICATION">
+      <div class="pa-2">
+        <app-concept-verification></app-concept-verification>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

@@ -1,0 +1,24 @@
+
+<mat-accordion displayMode="flat" [multi]="true"
+               [hideToggle]="true">
+  <mat-expansion-panel [hideToggle]="true">
+    <mat-expansion-panel-header>CERTIFIED LEAVES</mat-expansion-panel-header>
+    <ngx-datatable
+      class="material"
+      [rows]="leaves"
+      [columns]="columns"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      rowHeight="auto"
+    ></ngx-datatable>
+    <ng-template #documentTemplate let-row="row" let-value="value">
+      <button mat-flat-button color="accent" (click)="openViewDocDialog(value)">VIEW DOC</button>
+    </ng-template>
+    <ng-template #payLeaveTemplate let-row="row" let-value="value">
+      <mat-chip-list>
+        <mat-chip class="mat-deep-orange-400" matTooltip="Only click this if you already created a concept for this leave" (click)="confirmConceptCreated(value)">CONCEPT CREATED</mat-chip>
+      </mat-chip-list>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>

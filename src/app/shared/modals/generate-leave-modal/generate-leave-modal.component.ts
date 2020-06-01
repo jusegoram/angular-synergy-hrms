@@ -1,15 +1,12 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Employee } from '@synergy-app/shared/models/employee/employee';
-import { AdminService } from '@synergy-app/shared/services/admin.service';
+import { Employee, LeaveRequest } from '@synergy-app/shared/models';
+import { AdminService, EmployeeService, SessionService } from '@synergy-app/core/services';
 import { Observable, fromEvent } from 'rxjs';
 import { startWith, map, debounceTime } from 'rxjs/operators';
-import { TIME_VALUES, LEAVE_STATUS } from '@synergy/environments/enviroment.common';
-import { LeaveRequest } from '@synergy-app/shared/models/leave-request';
+import { TIME_VALUES, LEAVE_STATUS } from '@synergy/environments';
 import { CommonValidator } from '@synergy-app/shared/validators/common.validator';
-import { EmployeeService } from '@synergy-app/shared/services/employee.service';
-import { SessionService } from '@synergy-app/shared/services/session.service';
 
 @Component({
   selector: 'app-generate-leave-modal',

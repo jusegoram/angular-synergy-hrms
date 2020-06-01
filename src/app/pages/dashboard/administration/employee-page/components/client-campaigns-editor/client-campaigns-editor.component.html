@@ -1,0 +1,38 @@
+<mat-expansion-panel class="ma-1" #panel1 (opened)="onPanelOpened.emit()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ clientToEdit.name }}
+      </mat-panel-title>
+      <mat-panel-description>
+        Add or Modify Campaigns
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Client Name"
+        [(ngModel)]="clientToEdit.name"
+        name="editCli"
+      />
+    </mat-form-field>
+    <div class="ma-1" *ngFor="let campaign of clientToEdit?.campaigns">
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Campaign Name"
+          [(ngModel)]="campaign.name"
+          (change)="onCampagainNameInputChange.emit()"
+        />
+      </mat-form-field>
+    </div>
+    <br>
+    <button mat-flat-button color="primary" (click)="addNewClientCampaign()">
+      Add New Campaign <mat-icon>add_circle</mat-icon>
+    </button>
+
+</mat-expansion-panel>
+<button mat-button color="primary" 
+        [disabled]="!isValid"
+        (click)="onSaveButtonClicked.emit(clientToEdit)">
+  <mat-icon>save</mat-icon> &nbsp; SAVE
+</button>

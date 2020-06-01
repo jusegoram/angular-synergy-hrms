@@ -1,0 +1,452 @@
+<br />
+<mat-card-header>
+  <mat-card-title>Employee Work Patterns</mat-card-title>
+  <mat-card-subtitle>Edit · Add · Delete</mat-card-subtitle>
+</mat-card-header>
+<mat-card-content>
+  <div
+    style="width: 100%;"
+    fxLayout="column"
+    fxLayoutAlign="start start"
+    fxLayoutGap="gappx"
+  >
+    <div style="width: 100%;">
+      <mat-form-field appearance="fill" style="width: 35%;">
+        <mat-select
+          placeholder="Select Work Pattern"
+          name="item"
+          (selectionChange)="setSelection($event.value)"
+        >
+          <mat-option (click)="openNewWorkPatternDialog()">
+            <mat-icon>add_circle</mat-icon> New Work Pattern
+          </mat-option>
+          <mat-option *ngFor="let shift of wp" [value]="shift">
+            {{ shift.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      &nbsp; &nbsp; &nbsp; &nbsp;
+    </div>
+
+    <mat-card class="container">
+      <mat-card-header>
+        <mat-card-title *ngIf="!edit; else editNameTemplate">{{
+          this.currentwp ? this.currentwp?.name : "Please Select a Work Pattern"
+        }}</mat-card-title>
+        <ng-template #editNameTemplate>
+          <mat-form-field appearance="outline">
+            <input matInput [(ngModel)]="this.currentwp.name" />
+          </mat-form-field>
+        </ng-template>
+        <span class="fill-remaining-space"></span>
+        <span *ngIf="currentwp">
+          <button mat-icon-button [matMenuTriggerFor]="currWpMenu">
+            <mat-icon>more_horiz</mat-icon>
+          </button>
+          <mat-menu #currWpMenu="matMenu">
+            <button mat-menu-item (click)="editName()">
+              <mat-icon>create</mat-icon> Edit Work Pattern name
+            </button>
+            <button mat-menu-item (click)="deleteWorkPattern()">
+              <mat-icon color="warn">delete</mat-icon> Delete Work Pattern
+            </button>
+          </mat-menu>
+        </span>
+        <mat-card-subtitle
+          >Create a work pattern using the drop down menu</mat-card-subtitle
+        >
+      </mat-card-header>
+      <mat-card-content *ngIf="currentwp">
+        <mat-list>
+          <mat-list-item
+            >Monday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[0].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[0].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[0].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[0].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu0">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu0="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[0].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+          <mat-list-item
+            >Tuesday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[1].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[1].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[1].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[1].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu1">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu1="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[1].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-list-item
+            >Wednesday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[2].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[2].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[2].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[2].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu2">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu2="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[2].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-list-item
+            >Thursday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[3].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[3].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[3].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[3].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu3">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu3="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[3].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-list-item
+            >Friday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[4].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[4].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[4].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[4].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu4">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu4="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[4].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-list-item
+            >Saturday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[5].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[5].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[5].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[5].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu5">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu5="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[5].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+          <mat-divider [inset]="true"></mat-divider>
+
+          <mat-list-item
+            >Sunday
+            <span class="fill-remaining-space"></span>
+            <span>
+              {{
+                this.currentwp?.shift
+                  ? (this.currentwp?.shift)[6].startTime +
+                    " -- " +
+                    (this.currentwp?.shift)[6].endTime
+                  : " --:-- -- --:--"
+              }}
+            </span>
+            <span> </span>
+            <span class="fill-remaining-space"></span>
+            <button
+              mat-raised-button
+              [className]="
+                (this.currentwp?.shift)[6].onShift
+                  ? 'onshift mat-raised-button'
+                  : 'dayoff mat-raised-button'
+              "
+            >
+              {{ (this.currentwp?.shift)[6].onShift ? "ON SHIFT" : "DAY OFF" }}
+            </button>
+
+            &nbsp; &nbsp; &nbsp;
+            <button mat-icon-button [matMenuTriggerFor]="menu6">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu6="matMenu">
+              <button
+                mat-menu-item
+                (click)="openEditDialog((this.currentwp?.shift)[6].day)"
+              >
+                <mat-icon>create</mat-icon> Edit
+              </button>
+            </mat-menu>
+          </mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</mat-card-content>
+<button
+  class="fab-button"
+  mat-fab
+  color="primary"
+  matTooltip="Bulk work pattern upload"
+>
+  <mat-icon>cloud_upload</mat-icon>
+</button>
+<!-- <mat-card class="pa-2">
+  <h2>Work Patterns</h2>
+  <mat-form-field>
+    <mat-select placeholder="Select Shift" [ngModel]="'New'" (selectionChange)="setSelection($event.value)">
+      <mat-option [value]="defaultWp">New</mat-option>
+      <mat-option *ngFor="let element of wp" [value]="element" (click)="panel3.close()" >
+        {{element.name}}
+      </mat-option>
+    </mat-select>
+    <mat-hint>Select New for a new Work Pattern</mat-hint>
+  </mat-form-field>
+  <mat-expansion-panel class="ma-1" #panel3>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{this.currentWp.name}}
+      </mat-panel-title>
+      <mat-panel-description>
+        Add or Modify Work patterns
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <div fxLayout="column">
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[0].onShift">&nbsp;Monday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[0].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[0].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[1].onShift">&nbsp;Tuesday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[1].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[1].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[2].onShift">&nbsp;Wednesday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[2].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[2].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[3].onShift">&nbsp;Thursday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[3].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[3].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[4].onShift">&nbsp;Friday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[4].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[4].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[5].onShift">&nbsp;Saturday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[5].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[5].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+      <mat-checkbox [(ngModel)]="this.currentWp.shift[6].onShift">&nbsp;Sunday</mat-checkbox>
+      <div fxLayout="row">
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[6].startTime" placeholder="From (24:00)">
+        </mat-form-field>
+        <span>-</span>
+        <mat-form-field>
+          <input matInput [(ngModel)]="this.currentWp.shift[6].endTime" placeholder="To (24:00)">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <input matInput [(ngModel)]="this.currentWp.name" placeholder="Shift Name">
+      </mat-form-field>
+    </div>
+  </mat-expansion-panel>
+
+  <button mat-icon-button (click)="onAddWp()"><mat-icon>add</mat-icon></button>
+  <button mat-button color="primary" (click)="onSaveWp(this.wp)">
+    <mat-icon>save</mat-icon>
+    Save changes</button>
+</mat-card> -->

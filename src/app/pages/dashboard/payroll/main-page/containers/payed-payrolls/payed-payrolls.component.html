@@ -1,0 +1,101 @@
+<div>
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <div
+        fxLayout="row"
+        fxLayoutAlign="space-between start"
+        fxLayoutGap="10px"
+      >
+        <mat-card-subtitle>PAYED PAYROLLS STATS</mat-card-subtitle>
+        <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="5px">
+          <button mat-button color="primary" (click)="loadPayedPayrolls()">
+            REFRESH
+          </button>
+
+          <button mat-flat-button color="accent" (click)="openPayslipDialog()" *ngIf="statsRows && doughnutChartData">
+            SEND PAYSLIPS
+          </button>
+          
+          <button
+            mat-flat-button
+            *ngIf="statsRows && doughnutChartData"
+            color="primary"
+            (click)="export()"
+          >
+            EXPORT
+          </button>
+        </div>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <div style="width: 25%; height: 400px;">
+      <ngx-datatable
+        style="width: 100%; height: 400px;"
+        class="material"
+        [columns]="statsColumns"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="50"
+        [rowHeight]="50"
+        [limit]="5"
+        [rows]="statsRows"
+        [scrollbarV]="true"
+        [messages]="tableMessages"
+      >
+      </ngx-datatable>
+    </div>
+    <div
+      style="width: 40%; height: 400px;"
+      *ngIf="statsRows && doughnutChartData"
+    >
+      <fusioncharts
+        [width]="'100%'"
+        [height]="'400'"
+        [type]="'doughnut2d'"
+        [dataFormat]="'json'"
+        [dataSource]="doughnutChartData"
+        (dataplotClick)="dataplotClickHandler($event)"
+      >
+      </fusioncharts>
+    </div>
+    <div
+      style="width: 25%; height: 400px;"
+      *ngIf="statsRows && doughnutChartData"
+    >
+      <ngx-datatable
+        style="width: 100%; height: 400px;"
+        class="material"
+        [columns]="clientStatsColumns"
+        [columnMode]="ColumnMode.force"
+        [headerHeight]="50"
+        [rowHeight]="50"
+        [limit]="5"
+        [rows]="clientStatsRows"
+        [scrollbarV]="true"
+        [messages]="clientTableMessages"
+      >
+      </ngx-datatable>
+    </div>
+  </div>
+  <div>
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <mat-card-subtitle>SELECT PAYROLL</mat-card-subtitle>
+        <span class="fill-remaining-space"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <ngx-datatable
+      class="material"
+      [columns]="columns"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      rowHeight="auto"
+      [limit]="3"
+      [rows]="rows"
+      [selectionType]="SelectionType.single"
+      (select)="onSelect($event)"
+    >
+    </ngx-datatable>
+  </div>
+</div>

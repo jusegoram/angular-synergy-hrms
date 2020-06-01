@@ -1,0 +1,115 @@
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Employee Management</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-toolbar>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <mat-tab-group class="mat-card-top" backgroundColor="primary">
+    <mat-tab label="Dashboard">
+      <app-employee-dashboard></app-employee-dashboard>
+    </mat-tab>
+<!--    <mat-tab label="Work Patterns">-->
+<!--      <app-workpattern></app-workpattern>-->
+<!--    </mat-tab>-->
+    <mat-tab label="Company Positions">
+      <app-position></app-position>
+    </mat-tab>
+    <mat-tab label="Clients & Campaigns">
+      <app-client></app-client>
+    </mat-tab>
+<!--    <mat-tab label="Edit-Delete Employees">-->
+<!--      <mat-card class="pa-1">-->
+<!--        <h4>(Search - Edit - Delete) Employee's critical information</h4>-->
+
+<!--        <table>-->
+<!--          <tr>-->
+<!--            <td>-->
+<!--              <mat-form-field style="width: 150%;">-->
+<!--                <input-->
+<!--                  matInput-->
+<!--                  [formControl]="employeeCtrl"-->
+<!--                  #employee-->
+<!--                  [matAutocomplete]="auto"-->
+<!--                  placeholder="Employee"-->
+<!--                />-->
+<!--              </mat-form-field>-->
+
+<!--              <mat-autocomplete #auto="matAutocomplete">-->
+<!--                <mat-option-->
+<!--                  *ngFor="let employee of filteredEmployees | async"-->
+<!--                  [value]="employee.fullSearchName"-->
+<!--                  (click)="setEmployee(employee)"-->
+<!--                >-->
+<!--                  {{ employee.fullSearchName }}-->
+<!--                </mat-option>-->
+<!--              </mat-autocomplete>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--        </table>-->
+
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="Employee ID"-->
+<!--            [(ngModel)]="this.selectedEmployee.employeeId"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="First Name"-->
+<!--            [(ngModel)]="this.selectedEmployee.firstName"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="Middle Name"-->
+<!--            [(ngModel)]="this.selectedEmployee.middleName"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="Last Name"-->
+<!--            [(ngModel)]="this.selectedEmployee.lastName"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="Gender"-->
+<!--            [(ngModel)]="this.selectedEmployee.gender"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+<!--        <mat-form-field>-->
+<!--          <input-->
+<!--            matInput-->
+<!--            placeholder="Social Security"-->
+<!--            [(ngModel)]="this.selectedEmployee.socialSecurity"-->
+<!--          />-->
+<!--        </mat-form-field>-->
+
+<!--        <div-->
+<!--          fxLayout="row"-->
+<!--          fxLayoutAlign="start start"-->
+<!--          fxLayoutGap="gappx"-->
+<!--          *ngIf="employee.value !== ''"-->
+<!--        >-->
+<!--          <button mat-button color="primary" (click)="onUpdateEmployee()">-->
+<!--            <mat-icon>save</mat-icon> Update Record-->
+<!--          </button>-->
+<!--          <div class="fill-remaining-space"></div>-->
+<!--          <button mat-button color="warn" (click)="onDeleteEmployee()">-->
+<!--            <mat-icon>delete</mat-icon> Delete Employee Registry-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </mat-card>-->
+<!--    </mat-tab>-->
+  </mat-tab-group>
+</div>

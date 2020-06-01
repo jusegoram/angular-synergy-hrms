@@ -1,0 +1,21 @@
+.mat-table {
+  overflow: hidden;
+}
+
+.mat-header-cell.mat-sort-header-sorted {
+  color: black;
+}
+
+.mat-column-details {
+  flex: 0 0 180px;
+}
+
+.mat-column-selected,
+.mat-column-isPayed {
+  max-width: 50px;
+}
+
+.mat-column-fromDate,
+.mat-column-toDate {
+  flex: 0 0 250px;
+}

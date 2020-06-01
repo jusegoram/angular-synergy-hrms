@@ -1,0 +1,17 @@
+<app-recent-activities-table
+    title="RECENT LOGS"
+    [datasource]="logsDatasource"
+    [paginationOptions]="logsPaginationOptions"
+    [tableColumns]="logsTableColumns"
+    (onPaginationOptionsChange)="fetchLogs($event)"
+    [isLogsTable]="true"
+></app-recent-activities-table>
+
+<app-recent-activities-table
+    title="RECENT UPLOAD"
+    [datasource]="uploadsDatasource"
+    [paginationOptions]="uploadsPaginationOptions"
+    [tableColumns]="uploadsTableColumns"
+    (onPaginationOptionsChange)="fetchUploads($event)"
+    [isLogsTable]="false"
+></app-recent-activities-table>

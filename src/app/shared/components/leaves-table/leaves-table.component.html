@@ -1,0 +1,134 @@
+<ngx-datatable
+    #trackerInboxTable
+    class="material expandable expandable-datatable"
+    [rows]="leaves"
+    [loadingIndicator]="isLoading"
+    [headerHeight]="50"
+    [rowHeight]="60"
+    [limit]="10"
+    [footerHeight]="50"
+    [scrollbarH]="true"
+    columnMode="force"
+    >
+    <ngx-datatable-column
+    [width]="50"
+    [resizeable]="false"
+    [sortable]="false"
+    [canAutoResize]="false"
+    >
+    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+        <a
+        href="javascript:void(0)"
+        title="Expand/Collapse Row"
+        (click)="toggleExpandRow(row)"
+        >
+        <mat-icon [class.hidden]="!expanded">expand_less</mat-icon>
+        <mat-icon [class.hidden]="expanded">expand_more</mat-icon>
+        </a>
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="EMPLOYEE ID" [width]="90">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.employee.employeeId }}
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="NAME" prop="employee.fullName">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.employee.fullName }}
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="LEAVE TYPE" prop="leaveType.name">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.leaveType?.name }}
+        <span *ngIf="row?.leaveType?.isCashVacations">(Cashed)</span>
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="FROM" prop="excuseTimeFrom">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.excuseTimeFrom | date: 'MM/dd/yyyy' }}
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="TO" prop="excuseTimeTo">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row?.excuseTimeTo | date: 'MM/dd/yyyy' }}
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="REQUEST STATUS" prop="state" [sortable]="true">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        <button mat-stroked-button disableRipple="true" matTooltip="Current leave status">
+        {{ row?.state | leaveStatus }}
+        </button>
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="ACTIONS" [sortable]="false" width="auto" [resizeable]="false">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        <div *ngIf="!isHrSubPage && row.state==leaveStatusTypes.get('SENT').id" fxLayout="row">
+            <mat-chip-list>
+                <mat-chip
+                class="mat-lime-500"
+                matTooltip="Approve this leave"
+                [disabled]="(user._id!=row.creationFingerprint?._id || row?.leaveType?.isCashVacations) && !userIsWebAdmin"
+                (click)="onApproveButtonClicked.emit(row)">
+                <span>APPROVE</span>
+                </mat-chip>
+            </mat-chip-list>
+            <button mat-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="onEditButtonClicked.emit(row)"><mat-icon>edit</mat-icon>EDIT</button>
+                <button mat-menu-item (click)="onDeleteButtonClicked.emit(row)"><mat-icon>delete</mat-icon>DELETE</button>
+            </mat-menu>
+        </div>
+        <div *ngIf="isHrSubPage && row.state!=leaveStatusTypes.get('FINISHED').id" fxLayout="row">
+            <div [ngSwitch]="row.state">
+              <mat-chip-list *ngSwitchCase="leaveStatusTypes.get('CERTIFIED').id">
+                <mat-chip
+                  (click)="onSendFinanceButtonClicked.emit(row)"
+                  class="btn-leave-table-action mat-light-green-900">
+                  <span>SEND FINANCE</span>
+                </mat-chip>
+              </mat-chip-list>
+              <app-file-input-selector
+                *ngSwitchCase="leaveStatusTypes.get('APPROVED').id"
+                (onSelectedFile)="onSupportButtonClicked.emit({ file:$event, leaveRequest:row });"
+                [acceptedFilesTypes]="'image/jpeg,image/png,application/pdf'"
+                matTooltip="Attach the support document. Without this a leave will not be payed"
+                btnClass="btn-leave-table-action mat-yellow-600">
+                <mat-icon>attach_file</mat-icon>SUPPORT
+              </app-file-input-selector>
+
+              <app-file-input-selector
+                *ngSwitchCase="leaveStatusTypes.get('SUPPORTED').id"
+                (onSelectedFile)="onCertifyButtonClicked.emit({ file:$event, leaveRequest:row });"
+                [acceptedFilesTypes]="'image/jpeg,image/png,application/pdf'"
+                matTooltip="Attach the certification document. If there is none, simply upload an empty file"
+                btnClass="btn-leave-table-action mat-orange-800">
+                <mat-icon>attach_file</mat-icon>CERTIFY
+              </app-file-input-selector>
+              <mat-chip-list *ngSwitchDefault>
+                <mat-chip
+                  (click)="onApproveButtonClicked.emit(row)"
+                  [disabled]="(user._id!=row.creationFingerprint?._id ||row?.leaveType?.isCashVacations) && !userIsWebAdmin"
+                  matTooltip="Approve this leave"
+                  class="btn-leave-table-action mat-lime-500">
+                  <span>APPROVE</span>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+
+            <button [disabled]="row.state!=leaveStatusTypes.get('SENT').id && !userIsWebAdmin" mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="onEditButtonClicked.emit(row)"><mat-icon>edit</mat-icon>EDIT</button>
+                <button mat-menu-item (click)="onDeleteButtonClicked.emit(row)"><mat-icon>delete</mat-icon>DELETE</button>
+            </mat-menu>
+          </div>
+    </ng-template>
+    </ngx-datatable-column>
+
+    <!-- Tracker details -->
+    <ngx-datatable-row-detail rowHeight="auto" #myDetailRow>
+    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+        <app-leave-row-details [leaveRequest]="row" ></app-leave-row-details>
+    </ng-template>
+    </ngx-datatable-row-detail>
+
+</ngx-datatable>

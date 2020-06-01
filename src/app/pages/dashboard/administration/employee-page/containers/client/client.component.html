@@ -1,0 +1,21 @@
+<mat-card class="pa-2">
+  <h2>Clients</h2>
+  <app-client-selector
+    [defaultSelectedItem]="newClient"
+    [clients]="clients$ | async"
+    (onClientSelected)="setCurrentClient($event)"
+    (onSelectorItemClicked)="clientCampaignEditor.closePanel()"></app-client-selector>
+  
+  
+  <app-client-campaigns-editor
+    #clientCampaignEditor
+    [client]="currentClient"
+    (onSaveButtonClicked)="clientCampaignEditor.closePanel();saveClient($event);"
+    ></app-client-campaigns-editor>
+  
+  <mat-card-footer class="pa-2 mat-typography">
+    <span>
+      Select New > Open Dropdown > Edit Client Name > Add Campaigns > Save
+      Changes</span>
+  </mat-card-footer>
+</mat-card>

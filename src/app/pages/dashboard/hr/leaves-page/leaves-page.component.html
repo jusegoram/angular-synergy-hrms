@@ -1,0 +1,45 @@
+<div class="wrapper">
+    <mat-toolbar class="header" color="primary">
+      <mat-toolbar-row>
+        <span>HR Leaves</span>
+        <span class="fill-remaining-space"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="mat-card-top pa-2">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxLayout="row wrap" fxLayoutGap="10px">
+                <app-leave-search-filter
+                  [leaves]="data"
+                  [selectedLeaveStatusType]="selectedLeaveStatusType"
+                  (onLeavesFiltered)="filteredData= $event"
+                ></app-leave-search-filter>
+                <mat-form-field appearance="fill">
+                    <mat-label>SELECT TYPE</mat-label>
+                    <mat-select [(ngModel)]="selectedLeaveStatusType">
+                        <mat-option [value]="-2">-ALL-</mat-option>
+                        <mat-option *ngFor="let leaveStatus of leaveStatusTypes | keyvalue" [value]="leaveStatus.value.id">{{leaveStatus.value.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <button mat-raised-button color="primary" (click)="openGenerateLeaveDialog('create')">
+                NEW LEAVE
+            </button>
+        </div>
+      <mat-card>
+        <app-leaves-table
+          [leaves]="filteredData"
+          [user]="currentLoggedUser"
+          [userIsWebAdmin]="currentUserIsWebAdmin"
+          [isLoading]="isLoading"
+          [isHrSubPage]="true"
+          (onEditButtonClicked)="openGenerateLeaveDialog('edit', $event)"
+          (onDeleteButtonClicked)="openDeleteDialog($event)"
+          (onApproveButtonClicked)="openApproveDialog($event)"
+          (onSendFinanceButtonClicked)="openFinishDialog($event)"
+          (onSupportButtonClicked)="openUploadDocumentDialog($event.file,'SUPPORTED', $event.leaveRequest._id)"
+          (onCertifyButtonClicked)="openUploadDocumentDialog($event.file,'CERTIFIED', $event.leaveRequest._id)"
+        ></app-leaves-table>
+      </mat-card>
+    </div>
+  </div>

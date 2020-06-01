@@ -8,7 +8,7 @@ export class Client {
 }
 
 export class Campaign {
-  constructor(public _id: string, public name: string) {}
+  constructor(public _id?: string, public name?: string) {}
 }
 
 export class Department {

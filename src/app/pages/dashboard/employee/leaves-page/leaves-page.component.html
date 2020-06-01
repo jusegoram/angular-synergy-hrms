@@ -1,0 +1,34 @@
+<shared-on-error-alert #onErrorAlert
+                       [message]="'We could not save the changes made, please verify that the data was filled in correctly and try again'"></shared-on-error-alert>
+
+<div class="wrapper">
+    <mat-toolbar class="header" color="primary">
+      <mat-toolbar-row>
+        <span>Workface Leaves</span>
+        <span class="fill-remaining-space"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    <div class="mat-card-top pa-2">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+          <app-leave-search-filter
+            [leaves]="data"
+            (onLeavesFiltered)="filteredData= $event"
+          ></app-leave-search-filter>
+          <button mat-raised-button color="primary" (click)="openGenerateLeaveDialog('create')">
+              NEW LEAVE
+          </button>
+      </div>
+      <mat-card>
+        <app-leaves-table
+          [leaves]="filteredData"
+          [user]="currentLoggedUser"
+          [userIsWebAdmin]="currentUserIsWebAdmin"
+          [isLoading]="isLoading"
+          [isHrSubPage]="false"
+          (onEditButtonClicked)="openGenerateLeaveDialog('edit', $event)"
+          (onDeleteButtonClicked)="openDeleteDialog($event)"
+          (onApproveButtonClicked)="openApproveDialog($event)"
+        ></app-leaves-table>
+      </mat-card>
+    </div>
+  </div>

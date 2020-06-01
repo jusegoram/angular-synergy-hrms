@@ -1,0 +1,60 @@
+<div
+    fxLayout="column"
+    fxLayoutAlign="center center"
+    fxLayoutGap="5px"
+    >
+    <mat-card-subtitle
+        fxLayout="column"
+        fxLayoutAlign="center center"
+        fxLayoutGap="0px"
+    >
+        MENU ITEM CHILDREN
+    </mat-card-subtitle>
+    <mat-divider [inset]="true"> </mat-divider>
+    <mat-accordion *ngFor="let child of selectedMenu.children">
+        <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            {{ child.name }}
+        </mat-expansion-panel-header>
+        <div
+            fxLayout="row"
+            fxLayoutAlign="center center"
+            fxLayoutGap="10px"
+        >
+            <mat-form-field appearance="outline">
+            <mat-label> Child Name </mat-label>
+            <input matInput placeholder="Name" [(ngModel)]="child.name" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+            <mat-label> Child URL State </mat-label>
+            <input
+                matInput
+                placeholder="URL State"
+                [(ngModel)]="child.state"
+            />
+            </mat-form-field>
+        </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <p></p>
+    <mat-divider [inset]="true"> </mat-divider>
+
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <mat-form-field appearance="outline">
+        <mat-label> Child Name </mat-label>
+        <input matInput #childName placeholder="Name" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+        <mat-label> Child URL State </mat-label>
+        <input matInput #childState placeholder="URL State" />
+        </mat-form-field>
+        <button
+        mat-flat-button
+        class="submenu-button"
+        color="primary"
+        (click)="onAddSubmenu(childName.value, childState.value)"
+        >
+        ADD SUBMENU
+        </button>
+    </div>
+</div>

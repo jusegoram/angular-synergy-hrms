@@ -1,0 +1,206 @@
+<shared-on-delete-alert #onDeleteAlert (confirm)="onDelete($event)"></shared-on-delete-alert>
+<mat-accordion class="container">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        POSITION INFORMATION
+      </mat-panel-title>
+      <mat-panel-description>
+        EXPAND
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="example-container">
+      <div class="example-header">
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            (keyup)="applyFilter($event.target.value)"
+            placeholder="Filter"
+          />
+        </mat-form-field>
+      </div>
+      <mat-table #table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="client">
+          <mat-header-cell *matHeaderCellDef>CLIENT</mat-header-cell>
+          <mat-cell *matCellDef="let element"> {{ element.client }} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="positionId">
+          <mat-header-cell *matHeaderCellDef>POSITION ID</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element?.positionId }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="department">
+          <mat-header-cell *matHeaderCellDef>DEPARTMENT</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element?.department }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="position">
+          <mat-header-cell *matHeaderCellDef>POSITION</mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element?.name }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            STARTED
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element?.startDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="endDate">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            UNTIL
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            {{ element?.endDate | date: "MM/dd/yyyy" }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>
+            ACTION
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element">
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="onDeleteAlert.fire(element)">
+                <mat-icon color="warn">delete</mat-icon>
+                <span>DELETE</span>
+              </button>
+            </mat-menu>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+      <ng-container *ngIf="dataSource.data.length === 0">
+        <div
+          style="
+            width: 20%;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 25px;
+          "
+        >
+          No Positions Available
+        </div>
+      </ng-container>
+      <mat-paginator #paginator [pageSize]="3" [pageSizeOptions]="[3, 6, 9]">
+      </mat-paginator>
+    </div>
+    <ng-container
+      *ngIf="this.authorization.create && [_roles.HUMAN_RESOURCES.value, _roles.WEB_ADMINISTRATOR.value].includes(authorization.role)">
+      <div [formGroup]="positionForm" fxLayout.xs="column">
+        <table style="width: 100%;">
+          <tr fxLayout.xs="column">
+            <td colspan="2">
+              <mat-form-field appearance="outline">
+                <mat-label>CLIENT</mat-label>
+                <mat-select placeholder="SELECT CLIENT" formControlName="client">
+                  <mat-option
+                    *ngFor="let client of clients"
+                    [value]="client.name"
+                  >{{ client.name }}</mat-option
+                  >
+                </mat-select>
+                <mat-error> Client is required</mat-error>
+              </mat-form-field>
+            </td>
+            <td colspan="2">
+              <mat-form-field appearance="outline">
+                <mat-label>DEPARTMENT</mat-label>
+                <mat-select
+                  placeholder="SELECT DEPARTMENT"
+                  (selectionChange)="setPositions($event.value.positions)"
+                  formControlName="department"
+                >
+                  <mat-option
+                    *ngFor="let department of departments"
+                    [value]="department"
+                  >{{ department.name }}</mat-option
+                  >
+                </mat-select>
+                <mat-error> Department is required</mat-error>
+              </mat-form-field>
+            </td>
+            <td colspan="2">
+              <mat-form-field appearance="outline">
+                <mat-label>POSITION</mat-label>
+                <mat-select
+                  placeholder="SELECT POSITION"
+                  (selectionChange)="position = $event.value"
+                  formControlName="position"
+                >
+                  <mat-option
+                    *ngFor="let position of positions"
+                    [value]="position"
+                  >{{
+                    position.name + " - (" + position.positionId + ")"
+                    }}</mat-option
+                  >
+                </mat-select>
+                <mat-error> Position is required</mat-error>
+              </mat-form-field>
+            </td>
+          </tr>
+          <tr fxLayout.xs="column">
+            <td colspan="3">
+              <mat-form-field appearance="outline">
+                <mat-label>START</mat-label>
+                <input
+                  matInput
+                  placeholder="MM/DD/YYYY"
+                  [matDatepicker]="startPicker"
+                  formControlName="start"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="startPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+                <mat-error> Position's start date is required</mat-error>
+              </mat-form-field>
+            </td>
+            <td colspan="3">
+              <mat-form-field appearance="outline">
+                <mat-label>UNTIL</mat-label>
+                <input
+                  matInput
+                  placeholder="MM/DD/YYYY"
+                  [matDatepicker]="endPicker"
+                  formControlName="end"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="endPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div matTooltip="Please remember to fill in all the drop down menus.">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="onAdd()"
+        >
+          <mat-icon>add</mat-icon>
+          <span>ADD POSITION</span>
+        </button>
+      </div>
+    </ng-container>
+  </mat-expansion-panel>
+</mat-accordion>

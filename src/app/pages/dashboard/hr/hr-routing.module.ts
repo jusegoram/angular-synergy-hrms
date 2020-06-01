@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ReportsComponent } from './reports/reports.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -8,15 +8,15 @@ const routes: Routes = [
   },
   {
     path: 'reports',
-    component: ReportsComponent,
+    loadChildren: () => import('./reports-page/reports-page.module').then((m) => m.ReportsPageModule)
   },
   {
     path: 'trackers',
-    loadChildren: () => import('./trackers/trackers.module').then((m) => m.TrackersModule),
+    loadChildren: () => import('./trackers-page/trackers-page.module').then((m) => m.TrackersModule),
   },
   {
     path: 'leaves',
-    loadChildren: () => import('./leaves/leaves.module').then((m) => m.LeavesModule),
+    loadChildren: () => import('./leaves-page/leaves-page.module').then((m) => m.LeavesModule),
   },
 ];
 

@@ -1,0 +1,96 @@
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <span>Content Management</span>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <mat-card class="container pa-1">
+    <h2>Menus</h2>
+    <app-menu-selector
+        [menus]="menus$ | async"
+        (onMenuItemSelected)="setSelectedMenuItem($event)"
+    ></app-menu-selector>
+
+    <div class="menuCard pa-1">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>&nbsp;&nbsp;URL State</mat-label>
+          <input matInput placeholder="" [(ngModel)]="selectedMenu.state" />
+          <span
+            style="position: absolute; margin-top: -17px; margin-left: -5px;"
+            matPrefix
+            >/&nbsp;</span
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Menu Item Name</mat-label>
+          <input matInput placeholder="Name" [(ngModel)]="selectedMenu.name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Material Icon Name</mat-label>
+          <input matInput placeholder="Icon" [(ngModel)]="selectedMenu.icon" />
+        </mat-form-field>
+      </div>
+      <mat-form-field appearance="outline" style="width: 100%;">
+        <mat-label>Menu Type</mat-label>
+        <mat-select placeholder="Type" [(ngModel)]="selectedMenu.type">
+          <mat-option value="link">
+            Link ( without submenu )
+          </mat-option>
+          <mat-option value="sub">
+            Menu ( with submenu )
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <app-menu-items-editor 
+        *ngIf="selectedMenu.type === 'sub'; else addChildren"
+        [selectedMenu]="selectedMenu"
+      ></app-menu-items-editor>
+
+      <ng-template #addChildren> </ng-template>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="gappx">
+        <mat-form-field appearance="outline">
+          <mat-label>Page ID</mat-label>
+          <input
+            matInput
+            placeholder="Enter Page ID"
+            type="number"
+            [(ngModel)]="selectedMenu.page"
+          />
+        </mat-form-field>
+        <div class="fill-remaining-space"></div>
+        <mat-form-field appearance="outline">
+          <mat-label>Menu Item Position</mat-label>
+          <input
+            matInput
+            placeholder="Enter Position value"
+            type="number"
+            [(ngModel)]="selectedMenu.position"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <ng-container *ngIf="selectedMenu._id === 'new'; else elseTemplate">
+      <button color="primary" mat-stroked-button (click)="onAdd()">
+        ADD NEW MENU
+      </button>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="80%">
+        <button color="primary" mat-stroked-button (click)="onSave()">
+          SAVE
+        </button>
+
+        <button mat-icon-button color="warn" (click)="onDelete()">
+          DELETE
+        </button>
+      </div>
+    </ng-template>
+  </mat-card>
+</div>

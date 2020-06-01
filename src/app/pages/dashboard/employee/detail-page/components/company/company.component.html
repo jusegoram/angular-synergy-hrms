@@ -1,0 +1,265 @@
+<mat-divider
+  style="margin-top: 20px; margin-bottom: 30px;"
+  inset="true"
+></mat-divider>
+<mat-card-subtitle>
+  <span fxFlex="auto" fxFlexFill></span>
+  <span stype="white-space: nowrap;">COMPANY&nbsp;INFORMATION</span>
+  <span fxFlex="auto" fxFlexFill></span>
+</mat-card-subtitle>
+<form
+  class="ma-2"
+  [formGroup]="companyForm"
+  id="companyForm"
+  fxLayoutGap="5px"
+>
+  <table style="width: 100%;">
+    <tr fxLayout.xs="column">
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>BRANCH</mat-label>
+          <mat-select
+            placeholder="BRANCH"
+            formControlName="branch"
+          >
+            <mat-option value="belize-city">BELIZE CITY</mat-option>
+            <mat-option value="orange-walk-town">ORANGE WALK TOWN</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>CLIENT</mat-label>
+          <mat-select
+            placeholder="CLIENT"
+            (selectionChange)="refreshCampaigns($event.value)"
+            formControlName="client"
+          >
+            <mat-option
+              *ngFor="let client of clients"
+              [value]="client?.name"
+            >
+              {{ client.name | uppercase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>CAMPAIGN</mat-label>
+          <mat-select placeholder="CAMPAIGN" formControlName="campaign">
+            <mat-option
+              *ngFor="let campaign of campaigns"
+              [value]="campaign?.name"
+            >
+              {{ campaign.name | uppercase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr fxLayout.xs="column">
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>MANAGER</mat-label>
+          <mat-label>{{this.company.manager? ('&nbsp;|&nbsp;&nbsp;' + (this.company?.manager?.date | date: 'MM/dd/yyyy')) : ''}}</mat-label>
+          <mat-select
+            placeholder="MANAGER"
+            formControlName="manager"
+          >
+            <mat-option
+              *ngFor="let item of managers"
+              [value]="item.manager_id"
+            >
+              {{ item?.name | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>SHIFT MANAGER </mat-label>
+          <mat-label>{{this.company.shiftManager? ('&nbsp;|&nbsp;&nbsp;' + (this.company?.shiftManager?.date | date: 'MM/dd/yyyy')) : ''}}</mat-label>
+          <mat-select
+            placeholder="SHIFT MANAGER"
+            formControlName="shiftManager"
+          >
+            <mat-option
+              *ngFor="let item of shiftManagers"
+              [value]="item.manager_id"
+            >
+              {{ item?.name | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >          <mat-label>SUPERVISOR</mat-label>
+          <mat-label>{{this.company.supervisor? ('&nbsp;|&nbsp;&nbsp;' + (this.company?.supervisor?.date | date: 'MM/dd/yyyy')) : ''}}</mat-label>
+          <mat-select
+            placeholder="SUPERVISOR"
+            formControlName="supervisor"
+          >
+            <mat-option
+              *ngFor="let item of supervisors"
+              [value]="item.manager_id"
+            >
+              {{ item?.name | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+
+    </tr>
+    <tr fxLayout.xs="column">
+      <td colspan="2">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >          <mat-label>TRAINER</mat-label>
+          <mat-label>{{this.company.trainer? ('&nbsp;|&nbsp;&nbsp;' + (this.company?.trainer?.date | date: 'MM/dd/yyyy')) : ''}}</mat-label>
+
+          <mat-select
+            placeholder="TRAINER"
+            formControlName="trainer"
+          >
+            <mat-option
+              *ngFor="let item of trainers"
+              [value]="item.manager_id"
+            >
+              {{ item?.name | titlecase }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field appearance="outline">
+          <mat-label>GROUP NAME</mat-label>
+          <input
+            matInput
+            formControlName="trainingGroupRef"
+            placeholder="TRAINING GROUP NAME"
+            readonly="true"
+          />
+        </mat-form-field>
+      </td>
+      <td colspan="2">
+        <mat-form-field appearance="outline">
+          <mat-label>GROUP NO.</mat-label>
+          <input
+            matInput
+            formControlName="trainingGroupNum"
+            placeholder="GROUP NUMBER"
+            [readonly]="!auth.edit"
+            type="number"
+          />
+        </mat-form-field>
+      </td>
+    </tr>
+    <tr fxLayout.xs="column">
+      <td colspan="3">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+        >
+          <mat-label>HIRE DATE</mat-label>
+          <input
+            matInput
+            formControlName="hireDate"
+            placeholder="MM/DD/YYYY"
+            [matDatepicker]="hirePicker"
+            (focus)="hirePicker.open()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="hirePicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #hirePicker></mat-datepicker>
+        </mat-form-field>
+      </td>
+      <td colspan="3">
+        <mat-form-field
+          appearance="outline"
+          [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+          *ngIf="currentEmployee.status !== 'active'"
+        >
+          <mat-label>TERMINATION DATE</mat-label>
+          <input
+            matInput
+            formControlName="terminationDate"
+            placeholder="MM/DD/YYYY"
+            [matDatepicker]="terminationPicker"
+            (focus)="terminationPicker.open()"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="terminationPicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #terminationPicker></mat-datepicker>
+        </mat-form-field>
+      </td>
+    </tr>
+  </table>
+
+  <!-- reapplicant yes|no && reapplicant times (number)-->
+
+  <mat-checkbox
+    formControlName="reapplicant"
+    color="primary"
+    [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+    matTooltip="TICK THIS IF THE PERSON HAS BEEN AN EMPLOYEE BEFORE"
+  >
+    <span><b>REAPPLICANT</b></span>
+  </mat-checkbox>
+
+  <mat-form-field
+    *ngIf="this.companyForm.value.reapplicant"
+    appearance="outline"
+  >
+    <input
+      matInput
+      formControlName="reapplicantTimes"
+      placeholder="How many times?"
+      type="number"
+    />
+  </mat-form-field>
+
+  <mat-checkbox
+    formControlName="bilingual"
+    color="primary"
+    [ngClass]="{ 'readonly-wrapper': !auth.edit }"
+    matTooltip="TICK THIS IF THE PERSON IS BILINGUAL"
+  >
+  <span><b>BILINGUAL</b></span>
+  </mat-checkbox>
+</form>
+<mat-error *ngIf="companyForm.invalid && companyForm.touched">
+  <span>WOOPS! All RED fields are required and must have the correct information type (*)</span>
+</mat-error>
+<button
+  mat-stroked-button
+  color="primary"
+  (click)="onSubmit()"
+  *ngIf="auth.edit"
+>
+  <mat-icon>save</mat-icon>
+  <span>SAVE</span>
+</button>

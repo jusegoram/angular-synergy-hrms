@@ -1,0 +1,140 @@
+<shared-on-success-alert #successAlert [message]="'The changes were saved correctly'"></shared-on-success-alert>
+<shared-on-delete-alert #onDeleteAlert (confirm)="onDelete($event)"></shared-on-delete-alert>
+<shared-on-error-alert
+  #onErrorAlert
+  [message]="'We could not save the changes made, please verify that the data was filled in correctly and try again'"
+></shared-on-error-alert>
+
+<mat-toolbar class="header" color="primary">
+  <mat-toolbar-row>
+    <div fxLayout="row" fxLayoutAlign="space-between" style="width: 100vw">
+      <mat-chip-list>
+        <mat-chip [ngStyle]="{'background-color':employee.status === 'active'? '#2cb37c':'#cc4c4a', 'color': '#ffffff'}">{{ employee.status | uppercase }}</mat-chip>
+        <mat-chip [ngStyle]="{'background-color':'#e29a4b', 'color': '#ffffff'}" *ngIf="employee.onLeave">ON-LEAVE</mat-chip>
+        <mat-chip color="accent" *ngIf="!!employee.restriction" matTooltip="Employee restriction">{{ employee.restriction | uppercase }}</mat-chip>
+      </mat-chip-list>
+      <button mat-icon-button [matTooltip]="helpMessage" matTooltipHideDelay="500000" matTooltipClass="tooltip-text">
+        <mat-icon>help</mat-icon>
+      </button>
+    </div>
+
+  </mat-toolbar-row>
+  <mat-toolbar-row></mat-toolbar-row>
+  <mat-toolbar-row>
+    <div style="width: 300px"></div>
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="end end"
+      fxLayoutGap="10px"
+      style="width: 100%;"
+    >
+      <button mat-raised-button *ngIf="![_roles.OPERATIONS.value].includes(auth.role)" (click)="openStatusDialog()">
+        ATTRITION TRACKER
+      </button>
+      <button mat-raised-button *ngIf="![_roles.OPERATIONS.value].includes(auth.role)" (click)="openTransferDialog()">
+        TRANSFER TRACKER
+      </button>
+      <button mat-raised-button *ngIf="![_roles.OPERATIONS.value].includes(auth.role)" (click)="openCertifyDialog()">
+        CERTIFICATION TRACKER
+      </button>
+      <button mat-raised-button (click)="openRequestChangeDialog()">
+        REQUEST CHANGE
+      </button>
+    </div>
+  </mat-toolbar-row>
+  <mat-toolbar-row></mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <div class="profileImage">
+    <avatar-detail [id]="this.employee._id" [authorization]="this.auth" [embedded]="false"></avatar-detail>
+  </div>
+  <div fxLayout="column" fxLayout.xs="column">
+    <mat-card class="main-info pa-1">
+      <mat-card-header>
+        <mat-card-title>
+          {{
+            this.employee.firstName +
+              ' ' +
+              (this.employee.middleName !== ''
+                ? this.employee.middleName + ' ' + this.employee.lastName
+                : this.employee.lastName) | uppercase
+          }}
+          | <b> {{ this.employee.employeeId }} </b>
+        </mat-card-title>
+      </mat-card-header>
+
+      <app-main-info 
+        [employee]="this.employee" 
+        [authorization]="this.auth"
+        (onSubmitButtonClicked)="updateEmployeeMainInfo($event)">
+      </app-main-info>
+
+      <app-company-info
+        [employee]="this.employee"
+        [authorization]="this.auth"
+        [clients]="clients$ | async"
+        [superiors]="superiors$ | async"
+        (onSuperiorsDataRequest)="fetchSuperiors($event)"
+        (onSubmitButtonClicked)="saveCompany($event)"
+      ></app-company-info>
+    </mat-card>
+  </div>
+  <app-shift [employee]="this.employee" 
+         [authorization]="this.auth"
+         [shifts]="shifts$ | async"
+         (onResearchButtonClicked)="fetchEmployeeShifts($event)"
+         (onSaveButtonClicked)="updateEmployeeShift($event)"></app-shift>
+  <app-position-info
+    *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    [departments]="departments$ | async"
+    [clients]="clients$ | async"
+    (onSuccess)="onSuccess()"
+    (onError)="onError()"
+    (onDeleteConfirmation)="deletePosition($event)"
+    (onAddButtonClicked)="addPosition($event)"
+  ></app-position-info>
+  <app-payroll-info
+    *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    (onSaveButtonClicked)="savePayroll($event)"
+  ></app-payroll-info>
+  <app-personal-info
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    (onSaveButtonClicked)="savePersonalInfo($event)"
+  ></app-personal-info>
+
+
+  <app-family-info
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    (onError)="onError()"
+    (onSubmitButtonClicked)="saveFamily($event)"
+    (onDeleteConfirmation)="deleteFamily($event)"
+  ></app-family-info>
+  
+  <app-comment-info
+    *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    [currentUser]="currentUser"
+    (onError)="onError()"
+    (onSubmitButtonClicked)="saveComment($event)"
+    (onDeleteConfirmation)="deleteComment($event)"
+  ></app-comment-info>
+
+  <app-attrition-info
+    *ngIf="![_roles.OPERATIONS.value].includes(auth.role)"
+    [employee]="this.employee"
+    [authorization]="this.auth"
+    [currentUser]="currentUser"
+    (onError)="onError()"
+    (onSubmitButtonClicked)="saveAttrition($event)"
+    (onDeleteConfirmation)="deleteAttrition($event)"
+  ></app-attrition-info>
+
+  <div style="width: 100%; height: 80px;"></div>
+</div>

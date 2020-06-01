@@ -1,0 +1,54 @@
+<mat-toolbar class="header">
+  <mat-toolbar-row>
+    <mat-card-subtitle>OPEN PAYROLLS</mat-card-subtitle>
+    <span class="fill-remaining-space"></span>
+  </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+  <mat-toolbar-row> </mat-toolbar-row>
+</mat-toolbar>
+<div class="mat-card-top">
+  <div class="example-container">
+    <div class="example-header">
+      <mat-form-field appearance="outline">
+        <mat-select
+          placeholder="PAYROLL TYPE"
+          [(ngModel)]="selectedType"
+          name="item"
+        >
+          <mat-option
+            *ngFor="let item of type"
+            [value]="item.type"
+            (click)="reloadData($event)"
+          >
+            {{ item.view }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div fxFlex="75%"></div>
+      <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px">
+        <button mat-button (click)="reloadData($event)">
+          REFRESH
+        </button>
+      </div>
+      <div *ngIf="auth.create" style="padding-left: 10px;">
+        <button
+          mat-raised-button
+          color="primary"
+          [routerLink]="['/', 'payroll', 'new']"
+        >
+          NEW PAYROLL
+        </button>
+      </div>
+    </div>
+
+    <app-non-finalized-payrolls-table
+      [nonFinalizedPayrolls]="nonFinalizedPayrolls$ | async"
+      (onPaySelectedPayrollsBtnClicked)="onPaySelectedPayrolls($event)"
+    ></app-non-finalized-payrolls-table>
+  </div>
+
+  
+  <app-finalized-payrolls-table
+    [finalizedPayrolls]="finalizedPayrolls$ | async"
+  ></app-finalized-payrolls-table>
+</div>

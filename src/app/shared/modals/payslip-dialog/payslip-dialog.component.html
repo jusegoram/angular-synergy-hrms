@@ -1,0 +1,552 @@
+<div class="pa-1">
+  <mat-card-header>
+    <mat-card-title>PAYSLIP</mat-card-title>
+  </mat-card-header>
+  <h3>SINGLE</h3>
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <input
+      type="text"
+      placeholder="Pick one"
+      aria-label="Number"
+      matInput
+      [formControl]="myControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option
+        *ngFor="let option of filteredEmployees | async"
+        [value]="option.employeeName"
+        (onSelectionChange)="setEmployee(option)"
+      >
+        {{ option.fullSearchName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <div
+    class="pa-1"
+    fxLayout="row"
+    fxLayoutAlign="space-around center"
+    LayoutGap="20px"
+  >
+    <button mat-button (click)="onDownload()">DOWNLOAD</button>
+    <button mat-button (click)="onSend()">SEND PAYSLIP</button>
+  </div>
+  <mat-divider> </mat-divider>
+  <h3>BULK</h3>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="20px">
+    <button mat-button (click)="onSendAll()" [disabled]="bulkPayslipSent">
+      SEND ALL
+    </button>
+  </div>
+  <swal
+    #downloadSwal
+    title="GREAT!"
+    text="Your download will begin in a few seconds"
+    icon="success"
+  ></swal>
+  <swal
+    #sentSwal
+    title="EMAIL SENDING"
+    text="The emails will finish sending in 5 minutes"
+    icon="success"
+  ></swal>
+  <mat-card *ngIf="employeePayslip" class="hidden template">
+    <div id="payslip">
+      <div id="title">RCC BPO | PAYSLIP</div>
+      <div id="scope">
+        <div class="scope-entry">
+          <div class="title">PAY RUN</div>
+          <div class="value">
+            {{ employeePayslip?.paymentDate | date: "LLL dd, yyyy" }}
+          </div>
+        </div>
+        <div class="scope-entry">
+          <div class="title">PAY PERIOD</div>
+          <div class="value">
+            {{ employeePayslip?.fromDate | date: "LLL dd" }} -
+            {{ employeePayslip?.toDate | date: "LLL dd, yyyy" }}
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="left-panel">
+          <div id="employee">
+            <div id="name">
+              {{ employeePayslip?.employeeName }}
+            </div>
+            <div id="email">
+              {{ employeePayslip?.employeeEmail }}
+            </div>
+          </div>
+          <div class="details">
+            <div class="entry">
+              <div class="label">Employee ID</div>
+              <div class="value">{{ employeePayslip?.employeeId }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Hourly Rate</div>
+              <div class="value">
+                {{
+                  (employeePayslip?.positionHourlyRate)["$numberDecimal"]
+                    | currency: "$"
+                }}
+              </div>
+            </div>
+            <div class="entry">
+              <div class="label">Company Name</div>
+              <div class="value">RCC BPO</div>
+            </div>
+            <div class="entry">
+              <div class="label">Date Hired</div>
+              <div class="value">
+                {{
+                  employeePayslip?.employeeCompany.hireDate
+                    | date: "LLL dd, yyyy"
+                }}
+              </div>
+            </div>
+            <div class="entry">
+              <div class="label">Position</div>
+              <div class="value">{{ employeePayslip?.positionName }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Payroll Cycle</div>
+              <div class="value">{{ employeePayslip?.payrollType }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Cost Center</div>
+              <div class="value">Employee Payroll</div>
+            </div>
+            <div class="entry">
+              <div class="label">TIN</div>
+              <div class="value">
+                {{ employeePayslip?.employeePayroll.TIN }}
+              </div>
+            </div>
+            <div class="entry">
+              <div class="label">SSN</div>
+              <div class="value">{{ employeePayslip?.employeeSSN }}</div>
+            </div>
+            <div class="entry">
+              <div class="label">Prepared by</div>
+              <div class="value">Finance Department</div>
+            </div>
+          </div>
+          <div class="gross">
+            <div class="title">Gross Income</div>
+            <div class="entry">
+              <div class="label"></div>
+              <div class="value">
+                {{
+                  (employeePayslip?.grossPayment)["$numberDecimal"]
+                    | currency: "$"
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="contributions">
+            <div class="title">Employer Contribution</div>
+            <div class="entry">
+              <div class="label">SSS</div>
+              <div class="value">
+                {{
+                  (employeePayslip?.ssEmployerContribution)["$numberDecimal"]
+                    | currency: "$"
+                }}
+              </div>
+            </div>
+          </div>
+          <div class="ytd"></div>
+        </div>
+        <div class="right-panel">
+          <div class="details">
+            <div class="basic-pay">
+              <div class="entry">
+                <div class="label">Basic Pay</div>
+                <div class="detail"></div>
+                <div class="rate">
+                  {{
+                    (employeePayslip?.positionBaseWage * 12) / 26
+                      | currency: "$"
+                  }}/BI-WEEKLY
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.positionBaseWage * 12) / 26
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="salary">
+              <div class="entry">
+                <div class="label">Salary</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div class="entry">
+                <div class="label"></div>
+                <div class="detail">Regular Time</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalSystemRegularPayHours
+                      | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalSystemRegularPay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalSystemRegularPay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalSystemRegularPay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+              <div
+                class="entry"
+                *ngIf="employeePayslip.totalTosRegularPayHours > 0"
+              >
+                <div class="label"></div>
+                <div class="detail">Regular TOS</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalTosRegularPayHours | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalTosRegularPay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalTosRegularPay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalTosRegularPay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+              <!-- <div class="entry">
+              <div class="label"></div>
+              <div class="detail">Unworked Holiday</div>
+              <div class="rate">16hrs@259.62/hr</div>
+              <div class="amount">4,153.92</div>
+            </div> -->
+              <div
+                class="entry"
+                *ngIf="employeePayslip.totalSystemHolidayX1PayHours > 0"
+              >
+                <div class="label"></div>
+                <div class="detail">Holiday Time@ 1.5</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalSystemHolidayX1PayHours
+                      | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalSystemHolidayX1Pay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalSystemHolidayX1Pay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalSystemHolidayX1Pay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+              <div
+                class="entry"
+                *ngIf="employeePayslip.totalTosHolidayX1PayHours > 0"
+              >
+                <div class="label"></div>
+                <div class="detail">Holiday TOS@ 1.5</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalTosHolidayX1PayHours
+                      | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalTosHolidayX1Pay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalTosHolidayX1Pay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalTosHolidayX1Pay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+
+              <div
+                class="entry"
+                *ngIf="employeePayslip.totalSystemHolidayX2PayHours > 0"
+              >
+                <div class="label"></div>
+                <div class="detail">Holiday Time @2.0</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalSystemHolidayX2PayHours
+                      | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalSystemHolidayX2Pay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalSystemHolidayX2Pay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalSystemHolidayX2Pay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+              <div
+                class="entry"
+                *ngIf="employeePayslip.totalTosHolidayX2PayHours > 0"
+              >
+                <div class="label"></div>
+                <div class="detail">Holiday Time @2.0</div>
+                <div class="rate">
+                  {{
+                    employeePayslip?.totalTosHolidayX2PayHours
+                      | number: "1.2-2"
+                  }}hrs@{{
+                    (employeePayslip?.totalTosHolidayX2Pay)[0].rate[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}/hr
+                </div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalTosHolidayX2Pay)[0].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}<br />{{
+                    (employeePayslip?.totalTosHolidayX2Pay)[1].totalPayed[
+                      "$numberDecimal"
+                    ] | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="leaves">
+              <div class="entry">
+                <div class="label">Other&nbsp;Payments&nbsp;[+]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeOtherpays[0]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeOtherpays[1]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+            </div>
+            <div class="taxable_commission">
+              <div class="entry">
+                <div class="label">Total&nbsp;Bonus&nbsp;[+]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalTaxableBonus)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="nti">
+              <div class="entry">
+                <div class="label">TAXABLE INCOME</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.grossBeforeCSLPayment)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="non_taxable_commission">
+              <div class="entry">
+                <div class="label">Maternity&nbsp;&&nbsp;CSL&nbsp;[+]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeMaternities[0]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeMaternities[1]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeCSL[0]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+              <div
+                class="entry paid"
+                *ngFor="let item of employeePayslip.employeeCSL[1]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+            </div>
+            <div class="nti" *ngIf="employeePayslip.onFinalPayment === true">
+              <div class="entry">
+                <div class="label">FINAL PAYMENT</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.totalFinalPayments)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="nti">
+              <div class="entry">
+                <div class="label">TOTAL GROSS</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.grossPayment)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="contributions">
+              <div class="entry">
+                <div class="label">Social&nbsp;Contribution&nbsp;[-]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  ({{
+                    (employeePayslip?.ssEmployeeContribution)["$numberDecimal"]
+                      | currency: "$"
+                  }})
+                </div>
+              </div>
+            </div>
+            <div class="withholding_tax">
+              <div class="entry">
+                <div class="label">Income&nbsp;Tax&nbsp;[-]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.incomeTax)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+            <div class="deductions">
+              <div class="entry">
+                <div class="label">Total&nbsp;Deductions&nbsp;[-]</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount"></div>
+              </div>
+              <div
+                class="entry"
+                *ngFor="let item of employeePayslip.employeeDeductions[0]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+              <div
+                class="entry"
+                *ngFor="let item of employeePayslip.employeeDeductions[1]"
+              >
+                <div class="label"></div>
+                <div class="detail">{{ item.reason }}</div>
+                <div class="rate"></div>
+                <div class="amount">{{ item.amount | currency: "$" }}</div>
+              </div>
+            </div>
+            <div class="net_pay">
+              <div class="entry">
+                <div class="label">NET PAY</div>
+                <div class="detail"></div>
+                <div class="rate"></div>
+                <div class="amount">
+                  {{
+                    (employeePayslip?.netPayment)["$numberDecimal"]
+                      | currency: "$"
+                  }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

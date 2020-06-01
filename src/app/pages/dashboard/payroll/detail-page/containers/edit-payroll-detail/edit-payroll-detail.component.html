@@ -1,0 +1,20 @@
+<div>
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="10px">
+    <mat-card-subtitle>EDIT RECORD | {{ data.employeeName }}</mat-card-subtitle>
+    <button mat-icon-button color="warn" (click)="onClose()">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <mat-tab-group>
+    <mat-tab label="VACATIONS">
+      <app-edit-payroll-detail-vacations
+        [row]="data"
+        [user]="currentUser"
+        [concepts]="concepts$ | async"
+        (onAddVacationsButtonClicked)="savePayrollVacation($event)"
+        (onDeleteConceptButtonClicked)="deleteConcept($event)"
+        (onConfirmConceptButtonClicked)="confirmConcept($event)"
+      ></app-edit-payroll-detail-vacations>
+    </mat-tab>
+  </mat-tab-group>
+</div>
