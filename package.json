@@ -47,7 +47,7 @@
     "ngx-moment": "^3.5.0",
     "ngx-perfect-scrollbar": "^9.0.0",
     "ngx-socket-io": "^3.0.1",
-    "npm": "^6.13.7",
+    "npm": "^11.8.0",
     "pretty-quick": "^2.0.1",
     "rxjs": "^6.5.4",
     "saturn-datepicker": "^8.0.5",
